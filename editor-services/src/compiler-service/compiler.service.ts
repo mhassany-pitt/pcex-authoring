@@ -69,7 +69,7 @@ export class CompilerService {
             const source = this.sources.read(each.item);
 
             let lineNum = 1;
-            const lineList = source.code.split('\n')
+            const lineList = (source.code || '').split('\n')
                 .map((line: string) => ({
                     id: uuid4(),
                     number: lineNum++,
@@ -91,7 +91,7 @@ export class CompilerService {
                 userInput: source.userInput || '',
                 filename: source.filename,
                 lineList,
-                distractorList: source.distractors
+                distractorList: (source.distractors || [])
                     .map((distractor: any) => ({
                         id: uuid4(),
                         line: {
@@ -102,7 +102,7 @@ export class CompilerService {
                             indentLevel: this.indentLevel(distractor.code)
                         }
                     })),
-                blankLineList: Object.keys(source.lines)
+                blankLineList: Object.keys(source.lines || {})
                     .filter(lineNum => source.lines[lineNum].blank)
                     .map(lineNum => ({
                         id: uuid4(),

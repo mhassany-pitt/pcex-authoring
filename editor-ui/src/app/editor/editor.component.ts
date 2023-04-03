@@ -30,7 +30,8 @@ export class EditorComponent implements OnInit {
     lineNumbersMinChars: 0,
     lineDecorationsWidth: 0,
     glyphMargin: false,
-    renderLineHighlight: "none"
+    renderLineHighlight: "none",
+    scrollbar: { verticalScrollbarSize: 0 }
   };
 
   jsonViewerOptions = {
@@ -62,6 +63,7 @@ export class EditorComponent implements OnInit {
     this.api.read(params.id).subscribe(
       (source: any) => {
         this.model = source;
+
         this.updateTitle();
         this.changeLang();
       },
@@ -106,6 +108,8 @@ export class EditorComponent implements OnInit {
     // this.editor.onDidFocusEditorText((e: any) => (e: any) => {
     //   this.ngZone.run(() => this.selectLineNum(this.editor.getPosition().lineNumber))
     // });
+
+    this.reloadLineMarkers();
   }
 
   selectLineNum(lineNum: number) {
@@ -125,7 +129,7 @@ export class EditorComponent implements OnInit {
       this.selectedLine = {};
     }
 
-    this.reloadLineMarkers();
+    this.reloadLineMarkers(lineNum);
   }
 
   ignoreUntouchedLines() {
@@ -137,7 +141,7 @@ export class EditorComponent implements OnInit {
     })
   }
 
-  reloadLineMarkers() {
+  reloadLineMarkers(lineNum?: number) {
     this.editor.deltaDecorations(this.decorations, []);
     this.decorations = [];
 
@@ -148,8 +152,8 @@ export class EditorComponent implements OnInit {
         && (line.blank || line.comments.filter(($: any) => $.content).length);
     });
 
-    this.decorations = this.editor.deltaDecorations(
-      [], lineNums.map((lineNum: any) => ({
+    const decorations: any = lineNums
+      .map((lineNum: any) => ({
         range: new Range(parseInt(lineNum), 1, parseInt(lineNum), 1000),
         options: {
           isWholeLine: false,
@@ -157,7 +161,14 @@ export class EditorComponent implements OnInit {
           glyphMarginClassName: 'marked-line--glyph',
           stickiness: 1,
         }
-      })));
+      }));
+    if (lineNum) {
+      decorations.push({
+        range: new Range(lineNum, 1, lineNum, 1),
+        options: { isWholeLine: true, className: 'current-line--customized' }
+      });
+    }
+    this.decorations = this.editor.deltaDecorations([], decorations);
   }
 
   addDistractor() {
@@ -200,7 +211,7 @@ export class EditorComponent implements OnInit {
       filename += '.java';
     }
     const ext = filename.substring(index);
-    const map: any = { '.java': 'JAVA', '.py': 'PYTHON' };
+    const map: any = { '.java': 'JAVA', '.py': 'PYTHON', '.r': 'R' };
 
     this.model.filename = filename;
     this.model.language = map[ext];
