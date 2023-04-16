@@ -19,6 +19,28 @@ export class CompilerService {
     private config: ConfigService,
   ) {
     ensureDirSync(this.root);
+
+    [
+      '# take input from the user',
+      'num = as.integer(readline(prompt="Enter a number: "))',
+      '# initialize sum',
+      '',
+      'sum = 0',
+      '# find the sum of the cube of each digit',
+      'temp = num',
+      'while(temp > 0) {',
+      '    ',
+      '    ',
+      '    ',
+      '}',
+      '# display the result',
+      'if(num == sum) {',
+      '    ',
+      '} else {',
+      '    ',
+      '}',
+      'sum = 1',
+    ].forEach(l => this.indentLevel(l));
   }
 
   get root() {
@@ -56,7 +78,10 @@ export class CompilerService {
   }
 
   async compile(id: any) {
-    const activity = this.activities.read(id);
+    return this.compile$(this.activities.read(id), { json: true, queries: true });
+  }
+
+  async compile$(activity: any, config: { json: boolean, queries: boolean }) {
     if (activity == null)
       return null;
 
@@ -67,7 +92,7 @@ export class CompilerService {
     ensureDirSync(inputs);
 
     activity.items.forEach(each => {
-      const source = this.sources.read(each.item);
+      const source = each.item$ || this.sources.read(each.item);
 
       let lineNum = 1;
       const lineList = (source.code || '').split('\n')
@@ -78,6 +103,7 @@ export class CompilerService {
           commentList: `${lineNum}` in source.lines
             ? source.lines[`${lineNum}`].comments
               .map(comment => comment.content)
+              .filter(content => content)
             : [],
           indentLevel: this.indentLevel(line)
         }));
@@ -114,38 +140,53 @@ export class CompilerService {
       });
     });
 
+    const resp: any = {};
+
     const outputs = `${workspace}/outputs/`;
     if (existsSync(outputs))
       rmSync(outputs, { recursive: true });
 
-    const queries = `${workspace}/queries/`;
-    if (existsSync(queries))
-      rmSync(queries, { recursive: true });
+    if (config.json || config.queries /* prerequisite for queries */) {
+      const PcExParserRunner = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
+        `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.PcExParserRunner "../${inputs}" "../${outputs}"`);
 
-    const PcExParserRunner = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
-      `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.PcExParserRunner "../${inputs}" "../${outputs}"`);
-    const UMActivityQueryGenerator = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
-      `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.UMActivityQueryGenerator "../${outputs}" "../${queries}"`);
-
-    return {
-      PcExParserRunner: {
+      resp.PcExParserRunner = {
         code: PcExParserRunner.code,
         stdout: PcExParserRunner.stdout,
         stderr: PcExParserRunner.stderr,
-      },
-      UMActivityQueryGenerator: {
+      };
+    }
+
+    if (config.queries) {
+      const queries = `${workspace}/queries/`;
+      if (existsSync(queries))
+        rmSync(queries, { recursive: true });
+
+      const UMActivityQueryGenerator = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
+        `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.UMActivityQueryGenerator "../${outputs}" "../${queries}"`);
+
+      resp.UMActivityQueryGenerator = {
         code: UMActivityQueryGenerator.code,
         stdout: UMActivityQueryGenerator.stdout,
         stderr: UMActivityQueryGenerator.stderr,
-      }
-    };
+      };
+    }
+
+    return resp;
+  }
+
+  preview(id: string) {
+    const outputs = `${this.root}/${id}/outputs`;
+    if (!existsSync(outputs))
+      return null;
+    return `${outputs}/${readdirSync(outputs)[0]}`;
   }
 
   indentLevel(line: string) {
-    line = line.replace(/^(\s+).*$/, "$1");
-    var spaces = line.length - line.replace(/[ ]/g, "").length;
-    var tabs = line.length - line.replace(/\t/g, "").length;
-    return tabs || Math.floor(spaces / 4);
+    // \t = 4 whitespaces
+    line = line.replace(/^\t+/g, '    ');
+    const leading = line.match(/^\s+/);
+    return leading ? leading[0].length / 4 : 0;
   }
 
   async archive(id: string) {

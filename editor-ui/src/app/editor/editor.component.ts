@@ -1,5 +1,5 @@
 import { Component, Input, NgZone, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeyCode, KeyMod, Range, } from 'monaco-editor';
 import { SourcesService } from '../sources.service';
@@ -46,6 +46,8 @@ export class EditorComponent implements OnInit {
   selectedLine: any;
   decorations: any[] = [];
 
+  previewLink: any = null;
+
   tt: any = {} // ui toggles
 
   langSet = true;
@@ -56,6 +58,7 @@ export class EditorComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private title: Title,
+    private sanitizer: DomSanitizer,
   ) { }
 
   ngOnInit(): void {
@@ -224,5 +227,14 @@ export class EditorComponent implements OnInit {
 
     this.langSet = false;
     setTimeout(() => this.langSet = true, 0);
+  }
+
+  preview() {
+    this.api.genPreviewJson(this.model).subscribe(
+      (resp: any) => this.previewLink = this.sanitizer.bypassSecurityTrustResourceUrl(
+        `http://localhost:4200/assets/preview/index.html?load=${this.api.previewJsonLink(this.model)}&_t=${new Date().getTime()}`
+      ),
+      (error: any) => console.log(error)
+    )
   }
 }

@@ -28,6 +28,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ActivityComponent } from './activity/activity.component';
 import { ActivitiesService } from './activities.service';
 import { CompilerService } from './compiler.service';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { CompilerService } from './compiler.service';
     AccordionModule,
     TableModule,
     InputTextModule,
+    DialogModule,
     InputTextareaModule,
     HttpClientModule,
     RouterModule,

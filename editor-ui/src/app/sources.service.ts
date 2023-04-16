@@ -27,6 +27,14 @@ export class SourcesService {
     return this.http.patch(`${environment.apiUrl}/sources/${source.id}`, source);
   }
 
+  genPreviewJson(source: any) {
+    return this.http.patch(`${environment.apiUrl}/sources/${source.id}/preview`, source);
+  }
+
+  previewJsonLink(source: any) {
+    return `${environment.apiUrl}/sources/${source.id}/preview`;
+  }
+
   remove(id: string) {
     return this.http.delete(`${environment.apiUrl}/sources/${id}`);
   }
