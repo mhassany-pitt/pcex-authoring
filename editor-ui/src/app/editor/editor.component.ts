@@ -3,6 +3,7 @@ import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeyCode, KeyMod, Range, } from 'monaco-editor';
 import { SourcesService } from '../sources.service';
+import { ActivitiesService } from '../activities.service';
 
 @Component({
   selector: 'app-editor',
@@ -55,10 +56,10 @@ export class EditorComponent implements OnInit {
   constructor(
     private ngZone: NgZone,
     private api: SourcesService,
+    private activities: ActivitiesService,
     private router: Router,
     private route: ActivatedRoute,
     private title: Title,
-    private sanitizer: DomSanitizer,
   ) { }
 
   ngOnInit(): void {
@@ -230,10 +231,12 @@ export class EditorComponent implements OnInit {
   }
 
   preview() {
-    this.api.genPreviewJson(this.model).subscribe(
-      (resp: any) => this.previewLink = this.sanitizer.bypassSecurityTrustResourceUrl(
-        `http://localhost:4200/assets/preview/index.html?load=${this.api.previewJsonLink(this.model)}&_t=${new Date().getTime()}`
-      ),
+    this.activities.genPreviewJson({
+      "id": this.model.id,
+      "name": this.model.name,
+      "items": [{ "item$": this.model, "type": "example" }],
+    }).subscribe(
+      (resp: any) => this.previewLink = this.activities.previewJsonLink(this.model),
       (error: any) => console.log(error)
     )
   }

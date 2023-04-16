@@ -14,6 +14,8 @@ export class ActivitiesComponent implements OnInit {
   activities: any;
   activity: any;
 
+  previewLink: any = null;
+
   constructor(
     private api: ActivitiesService,
     private compiler: CompilerService,
@@ -53,5 +55,13 @@ export class ActivitiesComponent implements OnInit {
         (error: any) => console.log(error)
       )
     }
+  }
+
+  async preview(activity: any) {
+    activity = await this.api.read(activity.id).toPromise();
+    this.api.genPreviewJson(activity).subscribe(
+      (resp: any) => this.previewLink = this.api.previewJsonLink(activity),
+      (error: any) => console.log(error)
+    )
   }
 }

@@ -1,21 +1,23 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Res, StreamableFile } from '@nestjs/common';
 import { v4 as uuid4 } from 'uuid';
 import { ActivitiesService } from '../activities-service/activities.service';
 import { CompilerService } from '../compiler-service/compiler.service';
+import { createReadStream } from 'fs-extra';
+import { Response } from 'express';
 
 @Controller('activities')
 export class ActivitiesController {
 
   constructor(
     private api: ActivitiesService,
-    private transform: CompilerService,
+    private compiler: CompilerService,
   ) { }
 
   @Get()
   index() {
     return this.api.list().map((id: any) => {
       const activity = this.api.read(id);
-      return { id, name: activity.name, stat: this.transform.stat(id) };
+      return { id, name: activity.name, stat: this.compiler.stat(id) };
     });
   }
 
@@ -51,5 +53,19 @@ export class ActivitiesController {
       throw new NotFoundException();
 
     this.api.remove(id);
+  }
+
+  @Patch(':id/preview')
+  genPreview(@Param('id') id: string, @Body() activity: any) {
+    this.compiler.compile$(activity, { json: true, queries: false });
+  }
+
+  @Get(':id/preview')
+  getPreview(@Param('id') id: string, @Res({ passthrough: true }) res: Response) {
+    const file = createReadStream(this.compiler.preview(id));
+    res.header('Content-Type', 'application/json');
+    res.header('Content-Disposition', `attachment; filename="preview.json"`);
+
+    return new StreamableFile(file);
   }
 }
