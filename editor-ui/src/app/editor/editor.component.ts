@@ -47,7 +47,8 @@ export class EditorComponent implements OnInit {
   selectedLine: any;
   decorations: any[] = [];
 
-  previewLink: any = null;
+  previewLink: any;
+  showPreview = false;
 
   tt: any = {} // ui toggles
 
@@ -236,7 +237,10 @@ export class EditorComponent implements OnInit {
       "name": this.model.name,
       "items": [{ "item$": this.model, "type": "example" }],
     }).subscribe(
-      (resp: any) => this.previewLink = this.activities.previewJsonLink(this.model),
+      (resp: any) => {
+        this.previewLink = this.activities.previewJsonLink(this.model);
+        this.showPreview = true;
+      },
       (error: any) => console.log(error)
     )
   }

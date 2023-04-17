@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-  ensureDirSync, writeJsonSync, statSync,
+  ensureDirSync, writeJsonSync, statSync, readJSONSync,
   existsSync, rmSync, readJsonSync, readdirSync, createWriteStream
 } from 'fs-extra';
 import { v4 as uuid4 } from 'uuid';
@@ -9,6 +9,7 @@ import { exec, cd } from 'shelljs';
 import { SourcesService } from '../sources-service/sources.service';
 import { ActivitiesService } from '../activities-service/activities.service';
 import { create } from 'archiver';
+import deepEqual from 'deep-equal';
 
 @Injectable()
 export class CompilerService {
@@ -19,28 +20,21 @@ export class CompilerService {
     private config: ConfigService,
   ) {
     ensureDirSync(this.root);
+  }
 
-    [
-      '# take input from the user',
-      'num = as.integer(readline(prompt="Enter a number: "))',
-      '# initialize sum',
-      '',
-      'sum = 0',
-      '# find the sum of the cube of each digit',
-      'temp = num',
-      'while(temp > 0) {',
-      '    ',
-      '    ',
-      '    ',
-      '}',
-      '# display the result',
-      'if(num == sum) {',
-      '    ',
-      '} else {',
-      '    ',
-      '}',
-      'sum = 1',
-    ].forEach(l => this.indentLevel(l));
+  copyJson(json) {
+    return JSON.parse(JSON.stringify(json));
+  }
+
+  removeAttribute(json, attrName) {
+    for (var key in json) {
+      if (typeof json[key] === 'object' && json[key] !== null) {
+        this.removeAttribute(json[key], attrName);
+      } else if (key === attrName) {
+        delete json[key];
+      }
+    }
+    return json;
   }
 
   get root() {
@@ -91,7 +85,7 @@ export class CompilerService {
     const inputs = `${workspace}/inputs/`;
     ensureDirSync(inputs);
 
-    activity.items.forEach(each => {
+    const changes = activity.items.filter(each => {
       const source = each.item$ || this.sources.read(each.item);
 
       let lineNum = 1;
@@ -108,7 +102,7 @@ export class CompilerService {
           indentLevel: this.indentLevel(line)
         }));
 
-      writeJsonSync(`${inputs}${source.id}`, {
+      const newJson = {
         id: source.id,
         activityName: activity.name,
         order: 0,
@@ -137,10 +131,23 @@ export class CompilerService {
             helpList: lineList[parseInt(lineNum) - 1].commentList
           })),
         fullyWorkedOut: each.type == 'example'
-      });
+      };
+
+      const jsonfile = `${inputs}${source.id}`;
+      if (existsSync(jsonfile) && deepEqual(
+        this.removeAttribute(readJsonSync(jsonfile), 'id'),
+        this.removeAttribute(this.copyJson(newJson), 'id')
+      )) return false; // skip unchanged source items
+
+      writeJsonSync(jsonfile, newJson);
+      return true;
     });
 
     const resp: any = {};
+
+    // skip compilation if nothing is changed
+    if (changes.length < 1)
+      return resp;
 
     const outputs = `${workspace}/outputs/`;
     if (existsSync(outputs))
@@ -186,7 +193,7 @@ export class CompilerService {
     // \t = 4 whitespaces
     line = line.replace(/^\t+/g, '    ');
     const leading = line.match(/^\s+/);
-    return leading ? leading[0].length / 4 : 0;
+    return leading ? Math.floor(leading[0].length / 4) : 0;
   }
 
   async archive(id: string) {
