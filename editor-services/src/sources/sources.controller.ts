@@ -1,6 +1,10 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body, Controller, Delete, Get,
+  NotFoundException, Param, Patch, Post, UseGuards
+} from '@nestjs/common';
 import { SourcesService } from '../sources-service/sources.service';
-import { v4 as uuid4 } from 'uuid';
+import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
+import { toObject, useId } from 'src/utils';
 
 @Controller('sources')
 export class SourcesController {
@@ -10,48 +14,41 @@ export class SourcesController {
   ) { }
 
   @Get()
-  index() {
-    return this.api.list().map((id: any) => {
-      const source = this.api.read(id);
-      return {
-        id,
-        name: source.name,
-        description: source.description
-      };
+  @UseGuards(AuthenticatedGuard)
+  async index() {
+    return (await this.api.list()).map(source => {
+      const { _id: id, name, description } = source;
+      return { id, name, description };
     });
   }
 
   @Post()
-  create() {
-    const source = { id: uuid4() };
-    this.api.write(source.id, source);
-    return source;
+  async create() {
+    const source = toObject(await this.api.create({}));
+    return { id: source._id };
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
-    if (!this.api.exists(id))
-      throw new NotFoundException();
+  async read(@Param('id') id: string) {
+    const source = await this.api.read(id);
+    if (!source) throw new NotFoundException();
 
-    return this.api.read(id);
+    return useId(source);
   }
 
   @Patch(':id')
-  patch(@Param('id') id: string, @Body() updates: any) {
-    if (!this.api.exists(id))
-      throw new NotFoundException();
+  async patch(@Param('id') id: string, @Body() updates: any) {
+    const source = await this.api.read(id);
+    if (!source) throw new NotFoundException();
 
-    this.api.write(id, {
-      ... this.api.read(id),
-      ...updates
-    });
+    await this.api.update({ ...updates, _id: id });
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if (!this.api.exists(id))
-      throw new NotFoundException();
+  async remove(@Param('id') id: string) {
+    const source = await this.api.read(id);
+    if (!source) throw new NotFoundException();
 
-    this.api.remove(id);
+    await this.api.remove(id);
   }
 }

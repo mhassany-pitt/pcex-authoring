@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivitiesService } from '../activities.service';
 import { CompilerService } from '../compiler.service';
-import { SourcesService } from '../sources.service';
 
 @Component({
   selector: 'app-activities',

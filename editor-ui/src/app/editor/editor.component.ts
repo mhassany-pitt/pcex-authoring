@@ -1,5 +1,5 @@
 import { Component, Input, NgZone, OnInit } from '@angular/core';
-import { DomSanitizer, Title } from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { KeyCode, KeyMod, Range, } from 'monaco-editor';
 import { SourcesService } from '../sources.service';
@@ -23,6 +23,8 @@ export class EditorComponent implements OnInit {
     glyphMargin: true,
     trimAutoWhitespace: false,
     tabSize: 4,
+    scrollBeyondLastLine: false,
+    automaticLayout: true,
   };
 
   distEditorOptions = {
@@ -32,7 +34,7 @@ export class EditorComponent implements OnInit {
     lineDecorationsWidth: 0,
     glyphMargin: false,
     renderLineHighlight: "none",
-    scrollbar: { verticalScrollbarSize: 0 }
+    scrollbar: { verticalScrollbarSize: 0 },
   };
 
   jsonViewerOptions = {
@@ -45,19 +47,22 @@ export class EditorComponent implements OnInit {
   editor: any;
   selectedLineNum: any;
   selectedLine: any;
+  blankLineNums: any[] = [];
   decorations: any[] = [];
 
+  tabHeaders = ['Annotations', /* 'Variations', */ 'Distractors', 'Program Input'];
+  currentTab = 'Annotations';
   previewLink: any;
   showPreview = false;
-
-  tt: any = {} // ui toggles
-
   langSet = true;
+
+  get titleDescCollapsed() { return localStorage.getItem('pcex.prefs.titleDescCollapsed') == 'true'; }
+  set titleDescCollapsed(value) { localStorage.setItem('pcex.prefs.titleDescCollapsed', `${value}`); }
 
   constructor(
     private ngZone: NgZone,
-    private api: SourcesService,
     private activities: ActivitiesService,
+    private api: SourcesService,
     private router: Router,
     private route: ActivatedRoute,
     private title: Title,
@@ -67,6 +72,8 @@ export class EditorComponent implements OnInit {
     const params: any = this.route.snapshot.params;
     this.api.read(params.id).subscribe(
       (source: any) => {
+        source.variations = source.variations || [];
+        source.distractors = source.distractors || [];
         this.model = source;
 
         this.updateTitle();
@@ -77,44 +84,51 @@ export class EditorComponent implements OnInit {
   }
 
   updateTitle() {
-    this.title.setTitle('PCEX Authoring: ' + this.model.name);
+    this.title.setTitle(`PCEX Authoring: ${this.model.name}`);
   }
 
-  setupDistractorEditor(monaco: any) {
+  setupSourceEditor(editor: any) {
+    this.editor = editor;
+
+    editor.onDidChangeCursorPosition((e: any) => {
+      this.ngZone.run(() => this.selectLineNum(e.position.lineNumber));
+    });
+
+    this.reloadLineMarkers();
+  }
+
+  setupDistractorEditor(editor: any) {
+    this.setupAsSingleLineEditor(editor);
+  }
+
+  setupVariationEditor(editor: any, lineNum: number) {
+    this.setupAsSingleLineEditor(editor);
+
+    editor.onDidFocusEditorWidget((e: any) => {
+      this.ngZone.run(() => {
+        this.editor.setPosition({ lineNumber: lineNum, column: 1 });
+        this.editor.revealPosition({ lineNumber: lineNum, column: 1 });
+      })
+    });
+  }
+
+  private setupAsSingleLineEditor(editor: any) {
     // --------------->>
     // https://github.com/vikyd/vue-monaco-singleline/blob/1de219c2f1ddd89f6b473e43716bbb3dfb662542/src/monaco-singleline.vue#L150
-    monaco.addCommand(KeyMod.CtrlCmd | KeyCode.KEY_F, () => { })
-    monaco.addCommand(KeyCode.Enter, () => {
-      monaco.trigger('', 'acceptSelectedSuggestion');
-    })
-    monaco.onDidPaste((e: any) => {
+    editor.addCommand(KeyMod.CtrlCmd | KeyCode.KEY_F, () => { });
+    editor.addCommand(KeyCode.Enter, () => editor.trigger('', 'acceptSelectedSuggestion'));
+    editor.onDidPaste((e: any) => {
       if (e.endLineNumber <= 1) return;
       let content = '';
-      const model = monaco.getModel();
+      const model = editor.getModel();
       const lc = model.getLineCount();
       for (let i = 0; i < lc; i += 1)
         content += model.getLineContent(i + 1);
       model.setValue(content);
-      monaco.setPosition({ column: content.length + 1, lineNumber: 1 });
+      editor.setPosition({ column: content.length + 1, lineNumber: 1 });
     });
-    monaco.addCommand(KeyCode.F1, () => { });
+    editor.addCommand(KeyCode.F1, () => { });
     // <<---------------
-  }
-
-  setupSourceEditor(monaco: any) {
-    this.editor = monaco;
-
-    this.editor.onDidChangeCursorPosition((e: any) => {
-      this.ngZone.run(() => this.selectLineNum(e.position.lineNumber))
-    });
-    // this.editor.onDidBlurEditorText((e: any) => {
-    //   this.ngZone.run(() => this.ignoreUntouchedLines())
-    // });
-    // this.editor.onDidFocusEditorText((e: any) => (e: any) => {
-    //   this.ngZone.run(() => this.selectLineNum(this.editor.getPosition().lineNumber))
-    // });
-
-    this.reloadLineMarkers();
   }
 
   selectLineNum(lineNum: number) {
@@ -122,14 +136,11 @@ export class EditorComponent implements OnInit {
 
     if (!this.model.lines)
       this.model.lines = {};
-    // else
-    //   this.ignoreUntouchedLines();
 
-    if (this.selectedLineNum) { // init line with defaults
-      if (!(this.selectedLineNum in this.model.lines))
-        this.model.lines[this.selectedLineNum] = { comments: [{}] }
-
-      this.selectedLine = this.model.lines[this.selectedLineNum];
+    if (lineNum) { // init line with defaults
+      if (lineNum in this.model.lines == false)
+        this.model.lines[lineNum] = { comments: [{}] }
+      this.selectedLine = this.model.lines[lineNum];
     } else {
       this.selectedLine = {};
     }
@@ -137,55 +148,52 @@ export class EditorComponent implements OnInit {
     this.reloadLineMarkers(lineNum);
   }
 
+  toggleBlankLine() {
+    this.selectedLine.blank = !this.selectedLine.blank;
+    this.reloadLineMarkers();
+  }
+
   ignoreUntouchedLines() {
     // remove untouched lines
-    Object.keys(this.model.lines).forEach((lineNum: any) => {
-      const line = this.model.lines[lineNum];
-      if (!(line.blank || line.comments.filter(($: any) => $.content).length))
-        delete this.model.lines[lineNum];
+    Object.keys(this.model.lines).forEach(ln => {
+      const line = this.model.lines[ln];
+      if (!(line.blank || line.comments.filter((c: any) => c.content).length))
+        delete this.model.lines[ln];
     })
   }
 
   reloadLineMarkers(lineNum?: number) {
-    this.editor.deltaDecorations(this.decorations, []);
+    this.editor.deltaDecorations(this.decorations || [], []);
     this.decorations = [];
 
-    const lineCount = this.model.code?.split('\n').length;
-    const lineNums = Object.keys(this.model.lines).filter((lineNum: any) => {
-      const line = this.model.lines[lineNum];
-      return parseInt(lineNum) <= lineCount
-        && (line.blank || line.comments.filter(($: any) => $.content).length);
+    const clines = this.model.code?.split('\n');
+    const createRange = (ln: any) => ({
+      range: new Range(parseInt(ln), 1, parseInt(ln), clines[ln - 1].length + 1),
+      options: {
+        isWholeLine: true,
+        className: 'marked-line--background',
+        glyphMarginClassName: this.model.lines[ln].blank ? 'marked-line--glyph' : '',
+        stickiness: 1,
+      }
     });
 
-    const decorations: any = lineNums
-      .map((lineNum: any) => ({
-        range: new Range(parseInt(lineNum), 1, parseInt(lineNum), 1000),
-        options: {
-          isWholeLine: false,
-          className: 'marked-line--background',
-          glyphMarginClassName: 'marked-line--glyph',
-          stickiness: 1,
-        }
-      }));
-    if (lineNum) {
-      decorations.push({
-        range: new Range(lineNum, 1, lineNum, 1),
-        options: { isWholeLine: true, className: 'current-line--customized' }
-      });
-    }
+    const mlines = Object.keys(this.model.lines)
+      .map(ln => parseInt(ln))
+      .filter(ln => ln <= clines.length);
+
+    this.blankLineNums = mlines.filter(ln => this.model.lines[ln].blank);
+
+    const decorations: any[] = mlines.filter(ln => {
+      const line = this.model.lines[ln];
+      return (line.blank || line.comments.filter(($: any) => $.content).length);
+    }).map(createRange);
+
+    if (lineNum) decorations.push({
+      range: new Range(lineNum, 1, lineNum, 1),
+      options: { isWholeLine: true, className: 'current-line--customized' }
+    });
+
     this.decorations = this.editor.deltaDecorations([], decorations);
-  }
-
-  addDistractor() {
-    if (!this.model.distractors)
-      this.model.distractors = [];
-
-    this.model.distractors.push({ code: '', description: '' });
-  }
-
-  removeDistractor(distractor: any) {
-    const i = this.model.distractors.indexOf(distractor);
-    if (i > -1) this.model.distractors.splice(i, 1);
   }
 
   addLineComment() {
@@ -193,7 +201,22 @@ export class EditorComponent implements OnInit {
   }
 
   removeLineComment(comment: any) {
-    this.selectedLine.comments.splice(this.selectedLine.comments.indexOf(comment), 1);
+    this.selectedLine.comments.splice(
+      this.selectedLine.comments.indexOf(comment), 1);
+  }
+
+  addVariation() {
+    const clines = this.model.code.split('\n');
+    const lines: any = {};
+    Object.keys(this.model.lines)
+      .map(ln => parseInt(ln))
+      .filter(ln => this.model.lines[ln].blank)
+      .forEach(ln => lines[ln] = { code: clines[ln - 1], description: '' });
+    this.model.variations.push({ lines, output: '' })
+  }
+
+  removeVariation(variation: any) {
+    this.model.variations.splice(this.model.variations.indexOf(variation), 1);
   }
 
   back() {
@@ -210,16 +233,32 @@ export class EditorComponent implements OnInit {
 
   changeLang() {
     let filename = this.model.filename || '.java';
-    let index = filename.lastIndexOf('.');
-    if (index < 0) {
-      index = filename.length - 1;
+    if (!filename.includes('.'))
       filename += '.java';
-    }
-    const ext = filename.substring(index);
-    const map: any = { '.java': 'JAVA', '.py': 'PYTHON', '.r': 'R' };
+
+    const extension = `.${filename.split('.').pop()}`;
+    const map: any = {
+      '.py': 'PYTHON',
+      '.java': 'JAVA',
+      '.go': 'GO',
+      '.cpp': 'CPP',
+      '.js': 'JAVASCRIPT',
+      '.ts': 'TYPESCRIPT',
+      '.php': 'PHP',
+      '.c': 'C',
+      '.rb': 'RUBY',
+      '.cs': 'CSHARP',
+      '.rs': 'RUST',
+      '.scala': 'SCALA',
+      '.kt': 'KOTLIN',
+      '.swift': 'SWIFT',
+      '.dart': 'DART',
+      '.pl': 'PERL',
+      '.r': 'R',
+    };
 
     this.model.filename = filename;
-    this.model.language = map[ext];
+    this.model.language = extension in map ? map[extension] : 'unknown';
 
     const editorLang = this.model.language.toLowerCase();
 
@@ -245,3 +284,9 @@ export class EditorComponent implements OnInit {
     )
   }
 }
+
+// - activity preview (should show all the sources)
+// - green question marks in the preview (there may be an extra or missing quotation mark or ...) 
+// - restrict the delete button (maybe archive)
+// - the id used for inserting the queries (should be check - avoid overwrite)
+// - execute all queries in a transaction

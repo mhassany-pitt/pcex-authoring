@@ -16,19 +16,18 @@ export class CompilerController {
   ) { }
 
   @Patch(':id')
-  create(@Param('id') id: string) {
-    if (!this.activities.exists(id))
-      throw new NotFoundException();
+  async create(@Param('id') id: string) {
+    const activity = await this.activities.read(id);
+    if (!activity) throw new NotFoundException();
 
     this.api.compile(id);
   }
 
   @Get(':id')
   async get(@Param('id') id: string, @Res({ passthrough: true }) res: Response) {
-    if (!this.api.exists(id))
-      throw new NotFoundException();
+    const activity = await this.activities.read(id);
+    if (!activity) throw new NotFoundException();
 
-    const activity = this.api.read(id);
     const filename = activity.length ? activity[0].activityName : `Activity-${id}`;
 
     const file = createReadStream(await this.api.archive(id));

@@ -1,42 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-    existsSync, ensureDirSync, readdirSync,
-    readJsonSync, removeSync, writeJsonSync
-} from 'fs-extra';
-import { validate as uuid4_validate } from 'uuid';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Source } from './source.schema';
+import { toObject } from 'src/utils';
 
 @Injectable()
 export class SourcesService {
-    constructor(private config: ConfigService) {
-        ensureDirSync(this.root);
-    }
 
-    get root() {
-        return this.config.get('STORAGE') + '/sources';
-    }
+  constructor(
+    private config: ConfigService,
+    @InjectModel('sources') private sources: Model<Source>,
+  ) { }
 
-    list() {
-        return readdirSync(this.root).filter(file => uuid4_validate(file));
-    }
+  async list() {
+    return (await this.sources.find()).map(toObject);
+  }
 
-    write(id: string, content: any) {
-        if (uuid4_validate(id))
-            writeJsonSync(this.root + '/' + id, content, { flag: 'w' });
-    }
+  async create(model: any) {
+    return await this.sources.create(model);
+  }
 
-    exists(id: string) {
-        if (uuid4_validate(id))
-            return existsSync(this.root + '/' + id);
-    }
+  async read(_id: string) {
+    return toObject(await this.sources.findOne({ _id }));
+  }
 
-    read(id: string) {
-        if (uuid4_validate(id))
-            return readJsonSync(this.root + '/' + id);
-    }
+  async update({ _id, ...model }) {
+    return await this.sources.updateOne({ _id }, model);
+  }
 
-    remove(id: string) {
-        if (uuid4_validate(id))
-            removeSync(this.root + '/' + id);
-    }
+  async remove(_id: string) {
+    return await this.sources.deleteOne({ _id });
+  }
 }

@@ -8,10 +8,6 @@ import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { SourcesService } from './sources.service';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { SourcesComponent } from './sources/sources.component';
-import { ActivitiesComponent } from './activities/activities.component';
-import { EditorComponent } from './editor/editor.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -25,43 +21,39 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { ActivityComponent } from './activity/activity.component';
 import { ActivitiesService } from './activities.service';
 import { CompilerService } from './compiler.service';
 import { DialogModule } from 'primeng/dialog';
+import { AuthenticatedAuthorGuard } from './auth-guards/authenticated-author.guard';
+import { AppAdminGuard } from './auth-guards/app-admin.guard';
+import { AuthenticatedGuard } from './auth-guards/authenticated.guard';
+import { PublicGuard } from './auth-guards/public.guard';
+import { HandshakeGuard } from './auth-guards/handshake.guard';
+import { AppService } from './app.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent,
-    SourcesComponent,
-    EditorComponent,
-    ActivitiesComponent,
-    ActivityComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    FormsModule,
     MonacoEditorModule.forRoot(),
     LoadingBarRouterModule,
     LoadingBarHttpClientModule,
-    CommonModule,
-    ButtonModule,
-    AccordionModule,
-    TableModule,
-    InputTextModule,
-    DialogModule,
-    InputTextareaModule,
-    HttpClientModule,
-    RouterModule,
-    CheckboxModule,
-    DropdownModule,
-    SelectButtonModule,
+    CommonModule, HttpClientModule, RouterModule,
+    FormsModule, ButtonModule, AccordionModule, TableModule,
+    InputTextModule, DialogModule, InputTextareaModule,
+    CheckboxModule, DropdownModule, SelectButtonModule,
     AutoCompleteModule,
   ],
-  providers: [SourcesService, ActivitiesService, CompilerService],
+  providers: [
+    AppService,
+    SourcesService, ActivitiesService, CompilerService,
+    AuthenticatedAuthorGuard, HandshakeGuard,
+    AppAdminGuard, AuthenticatedGuard, PublicGuard,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

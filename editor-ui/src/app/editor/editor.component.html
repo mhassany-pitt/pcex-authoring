@@ -1,18 +1,22 @@
-<div class="flex flex-col">
-  <form *ngIf="model" #form="ngForm" (ngSubmit)="update()">
+<div class="h-full flex flex-col pcex__source-editor">
+  <form *ngIf="model" #form="ngForm" (ngSubmit)="update()" class="flex-grow flex flex-col">
     <div class="bg-gray-100 shadow-md py-4">
-      <div class="container mx-auto flex items-center">
-        <h1 class="text-xl font-bold">
-          <span routerLink="/dashboard" class="cursor-pointer text-blue-700">PCEX Authoring</span>
-          <span *ngIf="model?.name" class="ml-1">
-            <i class="pi pi-chevron-right"></i>
-            {{ model.name }}
-          </span>
-        </h1>
+      <div class="container mx-auto flex items-center gap-4">
+        <img src="./assets/logo.png" class="h-8 w-8" />
+        <span routerLink="/dashboard" class="cursor-pointer text-blue-700 text-xl font-bold min-w-max">
+          PCEX Authoring
+        </span>
+        <ng-container *ngIf="model?.name">
+          <i class="pi pi-chevron-right -mx-2"></i>
+          <span class="text-xl truncate">{{ model.name }}</span>
+        </ng-container>
 
         <span class="flex-grow"></span>
 
         <div class="flex items-center gap-2">
+          <button pButton type="button" label="Preview" icon="pi pi-eye"
+            class="p-button-sm p-button-help p-button-text -my-2" (click)="preview()">
+          </button>
           <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
             class="p-button-sm p-button-secondary p-button-text -my-2" (click)="back()">
           </button>
@@ -23,141 +27,226 @@
       </div>
     </div>
 
-    <div class="container mx-auto my-10 pb-20">
-      <div class="flex flex-col gap-4">
-        <div class="flex flex-col">
-          <input type="text" name="name" pInputText [(ngModel)]="model.name" (ngModelChange)="updateTitle()"
-            placeholder="Name" required class="text-xl" />
-          <span class="my-1"></span>
-          <textarea pInputTextarea name="description" [(ngModel)]="model.description" placeholder="Description"
-            class="p-inputtext-sm" [rows]="2 + (tt['description-expanded'] ? model.description.split('\n').length : 0)"
-            (focus)="tt['description-prev'] = tt['description-expanded']; tt['description-expanded'] = true;"
-            (blur)="tt['description-expanded'] = tt['description-prev']"></textarea>
-          <span (click)="tt['description-expanded'] = !tt['description-expanded']"
-            class="cursor-pointer text-center bg-gray-50 hover:bg-gray-100 text-gray-300 hover:text-black">
-            <i [class]="'pi pi-chevron-' + (tt['description-expanded'] ? 'up' : 'down')" style="font-size: 0.75rem"></i>
-          </span>
+    <div class="flex-grow container mx-auto my-8 flex flex-col gap-2">
+      <!-- name & description -->
+      <div class="flex flex-col gap-2 bg-gray-100 p-2 rounded-sm relative">
+        <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText [(ngModel)]="model.name"
+          (ngModelChange)="updateTitle()" placeholder="Name" class="text-xl border-gray-200" required />
+
+        <textarea *ngIf="!titleDescCollapsed" pInputTextarea name="description" [autoResize]="true"
+          [(ngModel)]="model.description" placeholder="Description" rows="1"
+          class="p-inputtext-sm w-full border-gray-200"></textarea>
+
+        <div class="flex items-center gap-2 cursor-pointer text-gray-400"
+          (click)="titleDescCollapsed = !titleDescCollapsed">
+          <i class="pi text-xs" [ngClass]="{ 
+            'pi-chevron-up' : !titleDescCollapsed, 
+            'pi-chevron-down': titleDescCollapsed
+           }"></i>
+          <span class="flex-grow text-xs">{{ titleDescCollapsed ? model.name : '' }}</span>
         </div>
+      </div>
 
-        <div class="flex flex-col bg-gray-50 px-1">
-          <span (click)="tt['program-inputs'] = !tt['program-inputs']" class="cursor-pointer flex items-center"
-            [ngClass]="{ 'font-bold text-xl': tt['program-inputs'] }">
-            <span>Program Input</span>
-            <i [class]="'mx-2 pi pi-chevron-' + (tt['program-inputs'] ? 'up' : 'down')"></i>
-          </span>
-          <span class="text-gray-400 text-xs">
-            Available through System.in (Java), stdin (C, C++), ...
-          </span>
-          <textarea *ngIf="tt['program-inputs']" pInputTextarea [autoResize]="true" name="program-input"
-            [(ngModel)]="model.programInput" rows="1" placeholder="" class="mt-3 p-inputtext-sm"></textarea>
-        </div>
+      <div class="flex-grow flex items-stretch gap-2">
 
-        <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
-          <div class="flex flex-col gap-4">
-            <span class="flex items-center bg-gray-50 px-1">
-              <span class="text-xl font-bold flex-grow">
-                Source Code
-              </span>
+        <div class="w-2/5 flex flex-col gap-2 bg-gray-100 rounded-sm p-2">
+          <!-- tab headers -->
+          <p-selectButton name="current-tab" [options]="tabHeaders" [(ngModel)]="currentTab"
+            class="p-button-sm tabview-headers text-xs">
+          </p-selectButton>
 
-              <input type="text" name="filename" pInputText [(ngModel)]="model.filename" placeholder="File Name"
-                class="p-inputtext-sm" size="25" required (blur)="changeLang()" />
-              <!-- <p-dropdown name="language" [(ngModel)]="model.language" [options]="[
-                      { label: 'Java', value: 'java'}, 
-                      { label: 'Python', value: 'python' },
-                  ]" styleClass="px-0 py-0 p-inputtext-sm" (onChange)="changeLang($event)">
-              </p-dropdown> -->
-            </span>
-            <ngx-monaco-editor *ngIf="langSet" name="code" [(ngModel)]="model.code" [options]="srcEditorOptions"
-              (onInit)="setupSourceEditor($event)" required class="flex-grow border px-1 rounded-md"
-              style="height: auto; min-height: 250px;">
-            </ngx-monaco-editor>
-          </div>
+          <!-- tab contents -->
+          <div class="p-2 flex-grow border border-gray-200">
+            <!-- annotations -->
+            <div *ngIf="currentTab == 'Annotations'" class="h-full flex flex-col gap-2 relative">
+              <ng-container *ngIf="selectedLineNum">
+                <div class="flex items-center">
+                  <span class="flex items-center gap-2 cursor-pointer" (click)="toggleBlankLine()">
+                    <i class="w-4 h-4 rounded-sm border-2 border-blue-400"
+                      [ngClass]="{'bg-blue-400': selectedLine.blank, 'bg-white': !selectedLine.blank}"></i>
+                    <span>It is a blank line</span>
+                  </span>
 
-          <div class="flex flex-col gap-2 relative">
-            <div class="flex flex-col bg-gray-50 px-1">
-              <span class="text-xl font-bold">
-                Line Annotation
-              </span>
-              <span class="text-gray-400 text-xs">
-                Annotations are attached to line numbers (NOT line contents).
-              </span>
+                  <span class="flex-grow"></span>
+
+                  <button pButton type="button" icon="pi pi-plus" class="p-button-outlined p-button-sm p-button-help"
+                    style="padding: 0.25rem 0.5rem;" (click)="addLineComment()">
+                  </button>
+                </div>
+
+                <div class="flex flex-col flex-grow gap-1 h-80 overflow-y-scroll overflow-x-hidden -mr-2 pr-2">
+                  <div *ngFor="let comment of selectedLine.comments; let i = index"
+                    class="flex items-center gap-2 relative">
+                    <textarea pInputTextarea [autoResize]="true" [name]="'linecomment-' + i"
+                      [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Comment"
+                      class="flex-grow px-2 py-1 border-gray-200" style="font-size: 0.75rem;"
+                      (ngModelChange)="reloadLineMarkers()"></textarea>
+
+                    <i class="pi pi-trash cursor-pointer text-xs text-red-300 hover:text-red-600"
+                      (click)="removeLineComment(comment)"></i>
+                  </div>
+                </div>
+
+                <span class="text-xs text-gray-400">
+                  <b>Note:</b> Annotations are attached to line number (NOT content).
+                </span>
+              </ng-container>
+              <ng-container *ngIf="!selectedLineNum">
+                <span class="text-gray-500 text-sm text-right">
+                  to start annotating, place the cursor in a line →
+                </span>
+              </ng-container>
             </div>
-            <ng-container *ngIf="selectedLineNum">
+
+            <!-- variations -->
+            <div *ngIf="false && currentTab == 'Variations'" class="h-full flex flex-col gap-2 relative">
               <div class="flex items-center">
-                <p-checkbox name="blank" [binary]="true" label="Is a blank line" [(ngModel)]="selectedLine.blank"
-                  [disabled]="!selectedLineNum" (onChange)="reloadLineMarkers()"></p-checkbox>
-
-                <span class="flex-grow"></span>
-
-                <button pButton type="button" icon="pi pi-plus" class="p-button-rounded p-button-text"
-                  (click)="addLineComment()">
+                <span class="flex-grow text-xs text-gray-400">
+                  Define different variations of the code.
+                </span>
+                <button pButton type="button" icon="pi pi-plus" class="p-button-outlined p-button-sm p-button-help"
+                  style="padding: 0.25rem 0.5rem;" (click)="addVariation()">
                 </button>
               </div>
+              <div class="flex flex-col flex-grow gap-2 h-80 overflow-y-scroll overflow-x-hidden -mr-2 pr-2">
+                <div *ngFor="let variation of model.variations; let i = index"
+                  class="flex items-stretch gap-2 variation border px-2 rounded-md shadow-sm hover:shadow-md">
 
-              <div *ngFor="let comment of selectedLine.comments; let i = index" class="flex flex-col gap-1 relative">
-                <textarea pInputTextarea [autoResize]="true" [name]="'linecomment-' + i" [(ngModel)]="comment.content"
-                  [disabled]="!selectedLineNum" rows="1" placeholder="Comment" class="p-inputtext-sm"
-                  (ngModelChange)="reloadLineMarkers()"></textarea>
+                  <div class="flex items-center justify-center text-sm">
+                    {{ i + 1 }}.
+                  </div>
 
-                <button pButton type="button" icon="pi pi-times"
-                  class="p-button-rounded p-button-danger p-button-text absolute top-0 right-0"
-                  (click)="removeLineComment(comment)">
-                </button>
+                  <span class="border-r border-gray-200"></span>
+
+                  <div class="flex flex-col gap-0.5 flex-grow">
+                    <div *ngFor="let ln of blankLineNums" class="flex items-start gap-2 relative">
+                      <span class="w-3 text-right line-number">
+                        {{ ln }}
+                      </span>
+                      <div class="flex flex-col flex-grow border rounded-sm">
+                        <ngx-monaco-editor *ngIf="langSet" [name]="'var-line-' + i + '_' + ln"
+                          [(ngModel)]="variation.lines[ln].code" [options]="distEditorOptions"
+                          (onInit)="setupVariationEditor($event, ln)" class="px-1 bg-white"
+                          style="height: 1.15rem; border: none;">
+                        </ngx-monaco-editor>
+                        <span *ngIf="!variation.lines[ln].code"
+                          class="absolute text-xs text-gray-400 pointer-events-none"
+                          style="top: 0.125rem; left: 1.5rem;">
+                          Type your snippet here...
+                        </span>
+                        <span class="border-t border-gray-200"></span>
+                        <textarea pInputTextarea [autoResize]="true" [name]="'var-line-desc-' + i + '_' + ln"
+                          [(ngModel)]="variation.lines[ln].description" placeholder="Description" rows="1"
+                          class="text-xs border-0 rounded-none" style="padding: 0.125rem 0.25rem;"></textarea>
+                      </div>
+                    </div>
+
+                    <div class="flex items-start gap-2 relative">
+                      <span class="w-3 text-center line-number">→</span>
+                      <textarea pInputTextarea [autoResize]="true" [name]="'var-line-input-' + i"
+                        [(ngModel)]="variation.input" placeholder="Input" rows="1"
+                        class="text-xs border-gray-200 rounded-none flex-grow"
+                        style="padding: 0.125rem 0.25rem;"></textarea>
+                    </div>
+                    <div class="flex items-start gap-2 relative">
+                      <span class="w-3 text-center line-number">←</span>
+                      <textarea pInputTextarea [autoResize]="true" [name]="'var-line-output-' + i"
+                        [(ngModel)]="variation.output" placeholder="Output" rows="1"
+                        class="text-xs border-gray-200 rounded-none flex-grow"
+                        style="padding: 0.125rem 0.25rem;"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-center">
+                    <i class="pi pi-trash cursor-pointer text-xs text-red-300 hover:text-red-600"
+                      (click)="removeVariation(variation)"></i>
+                  </div>
+                </div>
               </div>
-            </ng-container>
-            <ng-container *ngIf="!selectedLineNum">
-              <span class="text-gray-500 text-sm">
-                ← to start annotating, place the cursor in a line.
-              </span>
-            </ng-container>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-4 bg-gray-50 px-1">
-          <div class="flex flex-col flex-grow">
-            <span class="cursor-pointer" (click)="tt['distractors-expanded'] = !tt['distractors-expanded']"
-              class="cursor-pointer flex items-center">
-              <span [ngClass]="{ 'font-bold text-xl': tt['distractors-expanded'] }">
-                Distractors ({{ model.distractors?.length || 0 }})
-              </span>
-              <i [class]="'mx-2 pi pi-chevron-' + (tt['distractors-expanded'] ? 'up' : 'down')"></i>
-            </span>
-            <span class="text-gray-400 text-xs">
-              Blank line possible replacements
-            </span>
-          </div>
-
-          <button pButton type="button" icon="pi pi-plus" class="p-button-rounded p-button-text"
-            (click)="addDistractor()">
-          </button>
-        </div>
-        <div *ngIf="tt['distractors-expanded']" class="flex flex-col gap-1">
-          <div *ngIf="model.distractors?.length < 1" class="flex gap-2 p-2 border rounded-md">
-            <span class="mx-auto">
-              Use the <i class="pi pi-plus text-blue-500 mx-2 cursor-pointer" (click)="addDistractor()"></i>
-              button to add a distractor.
-            </span>
-          </div>
-          <div *ngFor="let distractor of model.distractors; let i = index" class="flex items-start gap-2">
-            <span class="w-4 text-right text-sm">
-              {{ i + 1 }}.
-            </span>
-            <div class="flex flex-col flex-grow p-1 border rounded-md">
-              <ngx-monaco-editor *ngIf="langSet" [name]="'distractor-' + i" [(ngModel)]="distractor.code"
-                [options]="distEditorOptions" (onInit)="setupDistractorEditor($event)"
-                style="height: 1.15rem; border: none;">
-              </ngx-monaco-editor>
-              <textarea pInputTextarea [autoResize]="true" [name]="'dist-description-' + i"
-                [(ngModel)]="distractor.description" placeholder="Description" rows="1" class="text-xs border-t"
-                style="border-bottom: none; border-left: none; border-right: none; border-radius: 0; padding: 0.125rem 0.25rem;"></textarea>
             </div>
-            <button pButton type="button" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text"
-              (click)="removeDistractor(distractor)">
-            </button>
+
+            <!-- distractors -->
+            <div *ngIf="currentTab == 'Distractors'" class="h-full flex flex-col relative">
+              <div class="flex items-center gap-4">
+                <span class="text-gray-400 text-xs flex-grow">
+                  One-liners that can placed in blank lines.
+                </span>
+
+                <button #addDistractorEl pButton type="button" icon="pi pi-plus"
+                  class="p-button-outlined p-button-sm p-button-help" style="padding: 0.25rem 0.5rem;"
+                  (click)="model.distractors.push({ code: '', description: '' })">
+                </button>
+              </div>
+              <div class="flex flex-col gap-1 mt-2">
+                <div *ngIf="model.distractors?.length < 1" class="flex items-center justify-center border">
+                  <span class="mx-auto text-sm m-4">
+                    Use the <i class="pi pi-plus text-sm text-blue-500 mx-1 cursor-pointer"
+                      (click)="addDistractorEl.click()"></i>
+                    button to add a distractor.
+                  </span>
+                </div>
+
+                <div class="flex flex-col flex-grow gap-2 h-80 overflow-y-scroll overflow-x-hidden -mr-2 pr-2">
+                  <div *ngFor="let distractor of model.distractors; let i = index"
+                    class="flex items-center gap-2 border px-2 rounded-md relative shadow-sm hover:shadow-md">
+                    <span class="text-center text-sm">{{ i + 1 }}.</span>
+                    <div class="flex flex-col flex-grow">
+                      <ngx-monaco-editor *ngIf="langSet" [name]="'distractor-' + i" [(ngModel)]="distractor.code"
+                        [options]="distEditorOptions" (onInit)="setupDistractorEditor($event)" class="px-1 bg-white"
+                        style="height: 1.15rem; border: none;">
+                      </ngx-monaco-editor>
+                      <span *ngIf="!distractor.code" class="absolute text-xs text-gray-400 pointer-events-none"
+                        style="top: 0.125rem; left: 1.875rem;">
+                        Type your snippet here...
+                      </span>
+                      <span class="border-t border-gray-200"></span>
+                      <textarea pInputTextarea [autoResize]="true" [name]="'dist-description-' + i"
+                        [(ngModel)]="distractor.description" placeholder="Description" rows="1"
+                        class="text-xs border-0 rounded-none" style="padding: 0.125rem 0.25rem;"></textarea>
+                    </div>
+                    <i class="pi pi-trash cursor-pointer text-xs text-red-300 hover:text-red-600"
+                      (click)="model.distractors.splice(model.distractors.indexOf(distractor), 1)">
+                    </i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- program input -->
+            <div *ngIf="currentTab == 'Program Input'" class="h-full flex flex-col relative">
+              <div class="flex items-center h-8">
+                <span class="text-gray-400 text-xs">
+                  Available through System.in (Java), stdin (C, C++), ...
+                </span>
+              </div>
+              <textarea pInputTextarea name="program-input" [autoResize]="true" [(ngModel)]="model.programInput"
+                placeholder="e.g.: 5 10 15 20" class="mt-2 text-xs rounded-none"></textarea>
+            </div>
           </div>
         </div>
 
-        <!-- 
+        <!-- source code -->
+        <div class="w-3/5 flex flex-col bg-gray-100 p-2 rounded-sm">
+          <input type="text" name="filename" pInputText [(ngModel)]="model.filename" placeholder="filename.ext"
+            class="p-inputtext-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" required
+            (blur)="changeLang()" />
+
+          <div class="flex items-center gap-2 my-1 text-gray-400">
+            <i class="pi pi-info-circle text-xs "></i>
+            <span class="text-xs">filename.ext must follow the language's naming convention</span>
+          </div>
+
+          <ngx-monaco-editor id="src-editor" *ngIf="langSet" name="code" [(ngModel)]="model.code"
+            [options]="srcEditorOptions" (onInit)="setupSourceEditor($event)" required class="flex-grow border"
+            style="height: auto; min-height: 250px;">
+          </ngx-monaco-editor>
+          <span *ngIf="!model.code" class="absolute top-1 left-12 text-xs text-gray-400 pointer-events-none">
+            type your source code here...
+          </span>
+        </div>
+      </div>
+
+      <!-- 
         <hr />
 
         <span class="text-xl font-bold">JSON Representation</span>
@@ -165,16 +254,11 @@
             class="flex-grow border px-1 rounded-md" style="height: 30rem;">
         </ngx-monaco-editor> 
         -->
-      </div>
     </div>
 
     <p-dialog [(visible)]="showPreview" [modal]="true" [style]="{width: '85vw', height: '85vh'}"
       (onHide)="previewLink = null">
       <iframe *ngIf="previewLink" [src]="previewLink" style="width: 100%; height: 100%"></iframe>
     </p-dialog>
-
-    <button pButton type="button" label="Preview" icon="pi pi-eye"
-      class="p-button-sm p-button-secondary p-button-outlined fixed bottom-4 right-4 rounded-2xl" (click)="preview()">
-    </button>
   </form>
 </div>

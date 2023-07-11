@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-  ensureDirSync, writeJsonSync, statSync, readJSONSync,
+  ensureDirSync, writeJsonSync, statSync,
   existsSync, rmSync, readJsonSync, readdirSync, createWriteStream
 } from 'fs-extra';
 import { v4 as uuid4 } from 'uuid';
-import { exec, cd } from 'shelljs';
+import { exec } from 'shelljs';
 import { SourcesService } from '../sources-service/sources.service';
 import { ActivitiesService } from '../activities-service/activities.service';
 import { create } from 'archiver';
 import deepEqual from 'deep-equal';
+import { useId } from 'src/utils';
+import { renameSync } from 'fs';
 
 @Injectable()
 export class CompilerService {
@@ -38,7 +40,7 @@ export class CompilerService {
   }
 
   get root() {
-    return `${this.config.get('STORAGE')}/compiler`;
+    return `${this.config.get('STORAGE_PATH')}/compiler`;
   }
 
   exists(id: string) {
@@ -46,7 +48,7 @@ export class CompilerService {
     return existsSync(outputsDir) && readdirSync(outputsDir).length > 0;
   }
 
-  stat(id: string) {
+  getSizeLastModified(id: string) {
     if (this.exists(id)) {
       const outputsDir = `${this.root}/${id}/outputs`;
       const outputs = readdirSync(outputsDir);
@@ -56,23 +58,23 @@ export class CompilerService {
         lastTimeModified: stat.mtimeMs,
       };
     }
-
     return null;
   }
 
-  path(id: string) {
-    const outputsDir = `${this.root}/${id}/outputs`;
-    const outputs = readdirSync(outputsDir);
-    return outputs.length ? `${outputsDir}/${outputs[0]}` : null;
+  getOutputJsonPath(activityId: string) {
+    const dir = `${this.root}/${activityId}/outputs`;
+    const files = readdirSync(dir);
+    return files.length ? `${dir}/${files[0]}` : null;
   }
 
-  read(id: string) {
-    const path = this.path(id);
+  readOutputJson(activityId: string) {
+    const path = this.getOutputJsonPath(activityId);
     return path ? readJsonSync(path) : null;
   }
 
-  async compile(id: any) {
-    return this.compile$(this.activities.read(id), { json: true, queries: true });
+  async compile(activityId: any) {
+    const activity = useId(await this.activities.read(activityId));
+    return this.compile$(activity, { json: true, queries: true });
   }
 
   async compile$(activity: any, config: { json: boolean, queries: boolean }) {
@@ -85,22 +87,25 @@ export class CompilerService {
     const inputs = `${workspace}/inputs/`;
     ensureDirSync(inputs);
 
-    const changes = activity.items.filter(each => {
-      const source = each.item$ || this.sources.read(each.item);
+    const changes = [];
+    for (const each of activity.items) {
+      const source = each.item$ || useId(await this.sources.read(each.item));
 
-      let lineNum = 1;
       const lineList = (source.code || '').split('\n')
-        .map((line: string) => ({
-          id: uuid4(),
-          number: lineNum++,
-          content: line,
-          commentList: `${lineNum}` in source.lines
-            ? source.lines[`${lineNum}`].comments
-              .map(comment => comment.content)
-              .filter(content => content)
-            : [],
-          indentLevel: this.indentLevel(line)
-        }));
+        .map((line: string, index: number) => {
+          const lineNum = index + 1;
+          return {
+            id: uuid4(),
+            number: lineNum,
+            content: line,
+            commentList: `${lineNum}` in source.lines
+              ? source.lines[`${lineNum}`].comments
+                .map(comment => comment.content)
+                .filter(content => content)
+              : [],
+            indentLevel: this.calcIndentLevel(line)
+          };
+        });
 
       const newJson = {
         id: source.id,
@@ -120,7 +125,7 @@ export class CompilerService {
               number: 0,
               content: distractor.code,
               commentList: [distractor.description],
-              indentLevel: this.indentLevel(distractor.code)
+              indentLevel: this.calcIndentLevel(distractor.code)
             }
           })),
         blankLineList: Object.keys(source.lines || {})
@@ -140,8 +145,8 @@ export class CompilerService {
       )) return false; // skip unchanged source items
 
       writeJsonSync(jsonfile, newJson);
-      return true;
-    });
+      changes.push(each);
+    }
 
     const resp: any = {};
 
@@ -172,6 +177,12 @@ export class CompilerService {
       const UMActivityQueryGenerator = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
         `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.UMActivityQueryGenerator "../${outputs}" "../${queries}"`);
 
+      // temporary append .sql extension to all files
+      readdirSync(queries).forEach(dir =>
+        readdirSync(`${queries}/${dir}`)
+          .filter(file => !file.endsWith('.sql'))
+          .forEach(file => renameSync(`${queries}/${dir}/${file}`, `${queries}/${dir}/${file}.sql`)));
+
       resp.UMActivityQueryGenerator = {
         code: UMActivityQueryGenerator.code,
         stdout: UMActivityQueryGenerator.stdout,
@@ -182,29 +193,28 @@ export class CompilerService {
     return resp;
   }
 
-  preview(id: string) {
-    const outputs = `${this.root}/${id}/outputs`;
-    if (!existsSync(outputs))
-      return null;
+  preview(activityId: string) {
+    const outputs = `${this.root}/${activityId}/outputs`;
+    if (!existsSync(outputs)) return null;
     return `${outputs}/${readdirSync(outputs)[0]}`;
   }
 
-  indentLevel(line: string) {
+  calcIndentLevel(line: string) {
     // \t = 4 whitespaces
     line = line.replace(/^\t+/g, '    ');
     const leading = line.match(/^\s+/);
     return leading ? Math.floor(leading[0].length / 4) : 0;
   }
 
-  async archive(id: string) {
-    const workspace = `${this.root}/${id}`;
+  async archive(activityId: string) {
+    const workspace = `${this.root}/${activityId}`;
     if (!existsSync(workspace))
       return null;
 
-    const tmpdir = `${this.config.get('STORAGE')}/tmp/`;
+    const tmpdir = `${this.config.get('STORAGE_PATH')}/tmp/`;
     ensureDirSync(tmpdir);
 
-    const output = `${tmpdir}${id}.zip`;
+    const output = `${tmpdir}${activityId}.zip`;
     if (existsSync(output))
       rmSync(output);
 

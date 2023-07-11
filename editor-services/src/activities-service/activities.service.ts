@@ -1,42 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  existsSync, ensureDirSync, readdirSync,
-  removeSync, writeJsonSync, readJsonSync,
-} from 'fs-extra';
-import { validate as uuid4_validate } from 'uuid';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Activity } from './activity.schema';
+import { toObject } from 'src/utils';
 
 @Injectable()
 export class ActivitiesService {
-  constructor(private config: ConfigService) {
-    ensureDirSync(this.root);
+
+  constructor(
+    private config: ConfigService,
+    @InjectModel('activities') private activities: Model<Activity>
+  ) { }
+
+  async list() {
+    return (await this.activities.find()).map(toObject);
   }
 
-  get root() {
-    return this.config.get('STORAGE') + '/activities';
+  async create(model: any) {
+    return await this.activities.create(model);
   }
 
-  list() {
-    return readdirSync(this.root).filter(file => uuid4_validate(file));
+  async read(_id: string) {
+    return toObject(await this.activities.findOne({ _id }));
   }
 
-  store(id: string, content: any) {
-    if (uuid4_validate(id))
-      writeJsonSync(this.root + '/' + id, content, { flag: 'w' });
+  async update({ _id, ...model }) {
+    return await this.activities.updateOne({ _id }, model);
   }
 
-  exists(id: string) {
-    if (uuid4_validate(id))
-      return existsSync(this.root + '/' + id);
-  }
-
-  read(id: string) {
-    if (uuid4_validate(id))
-      return readJsonSync(this.root + '/' + id);
-  }
-
-  remove(id: string) {
-    if (uuid4_validate(id))
-      removeSync(this.root + '/' + id);
+  async remove(_id: string) {
+    return await this.activities.deleteOne({ _id });
   }
 }

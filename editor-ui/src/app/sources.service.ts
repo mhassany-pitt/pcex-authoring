@@ -12,19 +12,19 @@ export class SourcesService {
   ) { }
 
   sources() {
-    return this.http.get(`${environment.apiUrl}/sources`);
+    return this.http.get(`${environment.apiUrl}/sources`, { withCredentials: true });
   }
 
   create() {
-    return this.http.post(`${environment.apiUrl}/sources`, {});
+    return this.http.post(`${environment.apiUrl}/sources`, {}, { withCredentials: true });
   }
 
   read(id: string) {
-    return this.http.get(`${environment.apiUrl}/sources/${id}`);
+    return this.http.get(`${environment.apiUrl}/sources/${id}`, { withCredentials: true });
   }
 
   update(source: any) {
-    return this.http.patch(`${environment.apiUrl}/sources/${source.id}`, source);
+    return this.http.patch(`${environment.apiUrl}/sources/${source.id}`, source, { withCredentials: true });
   }
 
   remove(id: string) {
