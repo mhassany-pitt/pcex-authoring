@@ -43,7 +43,7 @@ export class HubComponent implements OnInit {
       clearTimeout(this.searchTimeout);
 
     this.searchTimeout = setTimeout(() => {
-      this.http.get(`${environment.apiUrl}/hub?search=${value}`).subscribe(
+      this.http.get(`${environment.apiUrl}/hub?key=${value}`).subscribe(
         (resp: any) => {
           this.activities = resp;
         },

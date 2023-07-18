@@ -13,8 +13,10 @@ export class HubService {
     @InjectModel('activities') private activities: Model<Activity>
   ) { }
 
-  async list() {
-    return (await this.activities.find({ published: true })).map(toObject);
+  async list({ key }) {
+    const filter = { published: true };
+    if (key) filter['name'] = { $regex: key, $options: 'i' };
+    return (await this.activities.find(filter)).map(toObject);
   }
 
   async get(id: string) {

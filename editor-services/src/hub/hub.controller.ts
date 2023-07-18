@@ -1,6 +1,6 @@
 import {
   Controller, Get, NotFoundException,
-  Param, Res, StreamableFile
+  Param, Query, Res, StreamableFile
 } from '@nestjs/common';
 import { HubService } from './hub.service';
 import { createReadStream } from 'fs';
@@ -17,8 +17,8 @@ export class HubController {
   ) { }
 
   @Get()
-  async index() {
-    return (await this.service.list()).map(activity => {
+  async index(@Query('key') key: string) {
+    return (await this.service.list({ key })).map(activity => {
       const { id, name, items } = useId(activity);
       return { id, name, items };
     });
