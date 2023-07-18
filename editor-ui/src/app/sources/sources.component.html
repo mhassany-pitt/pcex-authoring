@@ -23,6 +23,9 @@
     <p-table #table [value]="sources" [globalFilterFields]="['name','description']">
       <ng-template pTemplate="caption">
         <div class="flex items-center gap-2">
+          <p-checkbox name="archived" label="Include Archives" [binary]="true" [(ngModel)]="archived"
+            (ngModelChange)="reload()"></p-checkbox>
+
           <span class="flex-grow"></span>
 
           <button pButton type="button" label="New Source" icon="pi pi-plus" class="p-button-sm"
@@ -44,8 +47,10 @@
         <tr>
           <td>
             <div class="flex flex-col items-center justify-center gap-1">
-              <button pButton type="button" icon="pi pi-trash"
-                class="p-button-text p-button-sm p-button-danger remove-btn" (click)="remove(source)">
+              <button pButton type="button" icon="pi pi-briefcase"
+                [title]="source.archived ? 'Unarchive source' : 'Archive source'"
+                class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': source.archived }"
+                (click)="toggleArchive(source)">
               </button>
               <button pButton type="button" icon="pi pi-eye" title="Preview"
                 class="p-button-text p-button-sm p-button-help preview-btn" (click)="preview(source)">
@@ -54,7 +59,7 @@
             </div>
           </td>
           <td>
-            <div class="flex flex-col">
+            <div class="flex flex-col gap-2" [ngClass]="{ 'line-through': source.archived }">
               <span [routerLink]="['/editor', source.id]" class="font-bold cursor-pointer text-blue-700">
                 {{source.name || '[name not specified]'}}
               </span>

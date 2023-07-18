@@ -11,8 +11,8 @@ export class SourcesService {
     private http: HttpClient
   ) { }
 
-  sources() {
-    return this.http.get(`${environment.apiUrl}/sources`, { withCredentials: true });
+  sources({ archived }: any) {
+    return this.http.get(`${environment.apiUrl}/sources${archived ? '?include=archived' : ''}`, { withCredentials: true });
   }
 
   create() {
@@ -25,9 +25,5 @@ export class SourcesService {
 
   update(source: any) {
     return this.http.patch(`${environment.apiUrl}/sources/${source.id}`, source, { withCredentials: true });
-  }
-
-  remove(id: string) {
-    return this.http.delete(`${environment.apiUrl}/sources/${id}`);
   }
 }

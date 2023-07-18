@@ -16,11 +16,11 @@ export class ActivitiesService {
   ) { }
 
   sources() {
-    return this.api.sources();
+    return this.api.sources({ archived: false });
   }
 
-  activities() {
-    return this.http.get(`${environment.apiUrl}/activities`, { withCredentials: true });
+  activities({ archived }: any) {
+    return this.http.get(`${environment.apiUrl}/activities${archived ? '?include=archived' : ''}`, { withCredentials: true });
   }
 
   create(activity: any) {
@@ -33,10 +33,6 @@ export class ActivitiesService {
 
   update(activity: any) {
     return this.http.patch(`${environment.apiUrl}/activities/${activity.id}`, activity, { withCredentials: true });
-  }
-
-  remove(id: string) {
-    return this.http.delete(`${environment.apiUrl}/activities/${id}`, { withCredentials: true });
   }
 
   genPreviewJson(activity: any, type: string) {

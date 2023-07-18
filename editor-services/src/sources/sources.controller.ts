@@ -1,6 +1,6 @@
 import {
   Body, Controller, Delete, Get,
-  NotFoundException, Param, Patch, Post, Req, UseGuards
+  NotFoundException, Param, Patch, Post, Query, Req, UseGuards
 } from '@nestjs/common';
 import { SourcesService } from '../sources-service/sources.service';
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
@@ -18,10 +18,10 @@ export class SourcesController {
 
   @Get()
   @UseGuards(AuthenticatedGuard)
-  async index(@Req() req: Request) {
-    return (await this.sources.list({ user: this.getUserEmail(req) })).map(source => {
-      const { _id: id, name, description } = source;
-      return { id, name, description };
+  async index(@Req() req: Request, @Query('include') include: string) {
+    return (await this.sources.list({ user: this.getUserEmail(req), archived: include == 'archived' })).map(source => {
+      const { _id: id, archived, name, description } = source;
+      return { id, archived, name, description };
     });
   }
 

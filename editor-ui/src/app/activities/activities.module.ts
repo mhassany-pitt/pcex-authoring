@@ -12,6 +12,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 import { InputTextModule } from 'primeng/inputtext';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import { InputTextModule } from 'primeng/inputtext';
     TableModule, ButtonModule,
     DialogModule, DropdownModule,
     SelectButtonModule, UserAuthCtrlModule,
-    InputTextModule,
+    InputTextModule, CheckboxModule,
   ]
 })
 export class ActivitiesModule { }

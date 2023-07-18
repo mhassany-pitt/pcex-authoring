@@ -11,6 +11,7 @@ import { AppService } from '../app.service';
 })
 export class SourcesComponent implements OnInit {
 
+  archived: boolean = false;
   sources: any = [];
 
   previewLink: any;
@@ -32,7 +33,7 @@ export class SourcesComponent implements OnInit {
   }
 
   reload() {
-    this.api.sources().subscribe(
+    this.api.sources({ archived: this.archived }).subscribe(
       (sources: any) => this.sources = sources,
       (error: any) => console.log(error)
     )
@@ -45,13 +46,12 @@ export class SourcesComponent implements OnInit {
     )
   }
 
-  remove(source: any) {
-    if (confirm('Deleting Source! Are you sure?')) {
-      this.api.remove(source.id).subscribe(
-        (source: any) => this.reload(),
-        (error: any) => console.log(error)
-      )
-    }
+  toggleArchive(source: any) {
+    source.archived = !source.archived;
+    this.api.update(source).subscribe(
+      (source: any) => this.reload(),
+      (error: any) => console.log(error)
+    );
   }
 
   async preview(source: any) {

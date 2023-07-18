@@ -9,6 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ButtonModule } from 'primeng/button';
     UserAuthCtrlModule,
     TableModule, DialogModule,
     InputTextModule, ButtonModule,
+    CheckboxModule,
   ]
 })
 export class SourcesModule { }

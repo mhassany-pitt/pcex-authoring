@@ -1,4 +1,7 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Req, Res, StreamableFile, UseGuards } from '@nestjs/common';
+import {
+  Body, Controller, Delete, Get, NotFoundException, Param,
+  Patch, Post, Query, Req, Res, StreamableFile, UseGuards
+} from '@nestjs/common';
 import { ActivitiesService } from '../activities-service/activities.service';
 import { CompilerService } from '../compiler-service/compiler.service';
 import { createReadStream } from 'fs-extra';
@@ -20,11 +23,11 @@ export class ActivitiesController {
 
   @Get()
   @UseGuards(AuthenticatedGuard)
-  async index(@Req() req: Request) {
-    return (await this.activities.list({ user: this.getUserEmail(req) })).map(activity => {
-      const { _id: id, published, name, items } = activity;
+  async index(@Req() req: Request, @Query('include') include: string) {
+    return (await this.activities.list({ user: this.getUserEmail(req), archived: include == 'archived' })).map(activity => {
+      const { _id: id, published, archived, name, items } = activity;
       return {
-        id, published, name, items,
+        id, published, archived, name, items,
         stat: this.compiler.getSizeLastModified(id)
       };
     });

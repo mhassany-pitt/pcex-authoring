@@ -13,8 +13,10 @@ export class ActivitiesService {
     @InjectModel('activities') private activities: Model<Activity>
   ) { }
 
-  async list({ user }) {
-    return (await this.activities.find({ user })).map(toObject);
+  async list({ user, archived }) {
+    const filter = { user };
+    if (!archived) filter['archived'] = { $ne: true };
+    return (await this.activities.find(filter)).map(toObject);
   }
 
   async create(model: any) {

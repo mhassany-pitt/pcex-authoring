@@ -13,8 +13,10 @@ export class SourcesService {
     @InjectModel('sources') private sources: Model<Source>,
   ) { }
 
-  async list({ user }) {
-    return (await this.sources.find({ user })).map(toObject);
+  async list({ user, archived }) {
+    const filter = { user };
+    if (!archived) filter['archived'] = { $ne: true };
+    return (await this.sources.find(filter)).map(toObject);
   }
 
   async create(model: any) {

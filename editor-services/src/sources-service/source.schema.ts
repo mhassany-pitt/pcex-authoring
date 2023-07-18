@@ -6,6 +6,7 @@ export type SourceDocument = HydratedDocument<Source>;
 @Schema()
 export class Source {
   @Prop() user: string;
+  @Prop() archived: boolean;
   @Prop() name: string;
   @Prop() description: string;
   @Prop() language: string;

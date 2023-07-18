@@ -8,6 +8,7 @@ import { ActivitiesService } from '../activities.service';
 })
 export class ActivitiesComponent implements OnInit {
 
+  archived: boolean = false;
   create = true;
   activities: any;
   activity: any;
@@ -29,7 +30,7 @@ export class ActivitiesComponent implements OnInit {
 
   reload() {
     this.create = false;
-    this.api.activities().subscribe(
+    this.api.activities({ archived: this.archived }).subscribe(
       (activities: any) => this.activities = activities,
       (error: any) => console.log(error)
     );
@@ -39,13 +40,12 @@ export class ActivitiesComponent implements OnInit {
     this.api.download(activity);
   }
 
-  remove(activity: any) {
-    if (confirm('Deleting Activity! Are you sure?')) {
-      this.api.remove(activity.id).subscribe(
-        (activity: any) => this.reload(),
-        (error: any) => console.log(error)
-      )
-    }
+  toggleArchive(activity: any) {
+    activity.archived = !activity.archived;
+    this.api.update(activity).subscribe(
+      (activity: any) => this.reload(),
+      (error: any) => console.log(error)
+    );
   }
 
   async preview(activity: any) {

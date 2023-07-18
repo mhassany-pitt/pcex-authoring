@@ -7,6 +7,7 @@ export type ActivityDocument = HydratedDocument<Activity>;
 export class Activity {
   @Prop() user: string;
   @Prop() published: boolean;
+  @Prop() archived: boolean;
   @Prop() name: string;
   @Prop({ type: [Object] }) items: any[];
 }
