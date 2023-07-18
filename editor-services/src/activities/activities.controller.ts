@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Res, StreamableFile } from '@nestjs/common';
-import { v4 as uuid4 } from 'uuid';
 import { ActivitiesService } from '../activities-service/activities.service';
 import { CompilerService } from '../compiler-service/compiler.service';
 import { createReadStream } from 'fs-extra';
@@ -54,15 +53,13 @@ export class ActivitiesController {
 
   @Patch(':id/preview')
   async genPreview(@Param('id') id: string, @Body() activity: any) {
-    await this.compiler.compile$(activity, { json: true, queries: false });
+    await this.compiler.compileActivity(activity, { json: true, queries: false });
   }
 
   @Get(':id/preview')
   async getPreview(@Param('id') id: string, @Res({ passthrough: true }) res: Response) {
-    const file = createReadStream(this.compiler.preview(id));
     res.header('Content-Type', 'application/json');
     res.header('Content-Disposition', `attachment; filename="preview.json"`);
-
-    return new StreamableFile(file);
+    return new StreamableFile(createReadStream(this.compiler.preview(id)));
   }
 }

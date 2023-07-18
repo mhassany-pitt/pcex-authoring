@@ -72,12 +72,12 @@ export class CompilerService {
     return path ? readJsonSync(path) : null;
   }
 
-  async compile(activityId: any) {
+  async compileActivityId(activityId: any) {
     const activity = useId(await this.activities.read(activityId));
-    return this.compile$(activity, { json: true, queries: true });
+    return this.compileActivity(activity, { json: true, queries: true });
   }
 
-  async compile$(activity: any, config: { json: boolean, queries: boolean }) {
+  async compileActivity(activity: any, config: { json: boolean, queries: boolean }) {
     if (activity == null)
       return null;
 

@@ -20,7 +20,7 @@ export class CompilerController {
     const activity = await this.activities.read(id);
     if (!activity) throw new NotFoundException();
 
-    this.api.compile(id);
+    this.api.compileActivityId(id);
   }
 
   @Get(':id')
