@@ -13,23 +13,23 @@ export class SourcesService {
     @InjectModel('sources') private sources: Model<Source>,
   ) { }
 
-  async list() {
-    return (await this.sources.find()).map(toObject);
+  async list({ user }) {
+    return (await this.sources.find({ user })).map(toObject);
   }
 
   async create(model: any) {
     return await this.sources.create(model);
   }
 
-  async read(_id: string) {
-    return toObject(await this.sources.findOne({ _id }));
+  async read({ user, id: _id }) {
+    return toObject(await this.sources.findOne({ user, _id }));
   }
 
-  async update({ _id, ...model }) {
-    return await this.sources.updateOne({ _id }, model);
+  async update({ user, _id, ...model }) {
+    return await this.sources.updateOne({ user, _id }, model);
   }
 
-  async remove(_id: string) {
-    return await this.sources.deleteOne({ _id });
+  async remove({ user, id: _id }) {
+    return await this.sources.deleteOne({ user, _id });
   }
 }

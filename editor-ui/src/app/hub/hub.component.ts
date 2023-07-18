@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, Title } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -21,14 +21,16 @@ export class HubComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private sanitizer: DomSanitizer,
+    private title: Title,
   ) { }
 
   ngOnInit(): void {
+    this.title.setTitle('PCEX Hub');
     this.search('');
   }
 
   getLink(activity: any) {
-    return `${document.querySelector('base')?.href}assets/preview/index.html?load=${`${environment.apiUrl}/hub/${activity.id}`}`;
+    return `${document.querySelector('base')?.href}assets/preview/index.html?load=${environment.apiUrl}/hub/${activity.id}`;
   }
 
   async preview(activity: any) {

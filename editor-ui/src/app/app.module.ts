@@ -22,7 +22,6 @@ import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ActivitiesService } from './activities.service';
-import { CompilerService } from './compiler.service';
 import { DialogModule } from 'primeng/dialog';
 import { AuthenticatedAuthorGuard } from './auth-guards/authenticated-author.guard';
 import { AppAdminGuard } from './auth-guards/app-admin.guard';
@@ -50,7 +49,7 @@ import { AppService } from './app.service';
   ],
   providers: [
     AppService,
-    SourcesService, ActivitiesService, CompilerService,
+    SourcesService, ActivitiesService,
     AuthenticatedAuthorGuard, HandshakeGuard,
     AppAdminGuard, AuthenticatedGuard, PublicGuard,
   ],

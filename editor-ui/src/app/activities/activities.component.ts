@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivitiesService } from '../activities.service';
-import { CompilerService } from '../compiler.service';
 
 @Component({
   selector: 'app-activities',
@@ -18,7 +17,6 @@ export class ActivitiesComponent implements OnInit {
 
   constructor(
     private api: ActivitiesService,
-    private compiler: CompilerService,
   ) { }
 
   ngOnInit(): void {
@@ -38,14 +36,7 @@ export class ActivitiesComponent implements OnInit {
   }
 
   download(activity: any) {
-    this.compiler.download(activity.id);
-  }
-
-  compile(activity: any) {
-    this.compiler.compile(activity.id).subscribe(
-      (resp: any) => this.reload(),
-      (error: any) => console.log(error)
-    )
+    this.api.download(activity);
   }
 
   remove(activity: any) {
@@ -59,9 +50,9 @@ export class ActivitiesComponent implements OnInit {
 
   async preview(activity: any) {
     activity = await this.api.read(activity.id).toPromise();
-    this.api.genPreviewJson(activity).subscribe(
+    this.api.genPreviewJson(activity, "activity").subscribe(
       (resp: any) => {
-        this.previewLink = this.api.previewJsonLink(activity);
+        this.previewLink = this.api.previewJsonLink(activity, "activity");
         this.showPreview = true;
       },
       (error: any) => console.log(error)

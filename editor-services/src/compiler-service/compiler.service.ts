@@ -72,12 +72,7 @@ export class CompilerService {
     return path ? readJsonSync(path) : null;
   }
 
-  async compileActivityId(activityId: any) {
-    const activity = useId(await this.activities.read(activityId));
-    return this.compileActivity(activity, { json: true, queries: true });
-  }
-
-  async compileActivity(activity: any, config: { json: boolean, queries: boolean }) {
+  async compile(activity: any) {
     if (activity == null)
       return null;
 
@@ -89,7 +84,7 @@ export class CompilerService {
 
     const changes = [];
     for (const each of activity.items) {
-      const source = each.item$ || useId(await this.sources.read(each.item));
+      const source = each.item$ || useId(await this.sources.read({ user: activity.user, id: each.item }));
 
       const lineList = (source.code || '').split('\n')
         .map((line: string, index: number) => {
@@ -158,37 +153,33 @@ export class CompilerService {
     if (existsSync(outputs))
       rmSync(outputs, { recursive: true });
 
-    if (config.json || config.queries /* prerequisite for queries */) {
-      const PcExParserRunner = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
-        `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.PcExParserRunner "../${inputs}" "../${outputs}"`);
+    const PcExParserRunner = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
+      `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.PcExParserRunner "../${inputs}" "../${outputs}"`);
 
-      resp.PcExParserRunner = {
-        code: PcExParserRunner.code,
-        stdout: PcExParserRunner.stdout,
-        stderr: PcExParserRunner.stderr,
-      };
-    }
+    resp.PcExParserRunner = {
+      code: PcExParserRunner.code,
+      stdout: PcExParserRunner.stdout,
+      stderr: PcExParserRunner.stderr,
+    };
 
-    if (config.queries) {
-      const queries = `${workspace}/queries/`;
-      if (existsSync(queries))
-        rmSync(queries, { recursive: true });
+    const queries = `${workspace}/queries/`;
+    if (existsSync(queries))
+      rmSync(queries, { recursive: true });
 
-      const UMActivityQueryGenerator = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
-        `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.UMActivityQueryGenerator "../${outputs}" "../${queries}"`);
+    const UMActivityQueryGenerator = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
+      `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.UMActivityQueryGenerator "../${outputs}" "../${queries}"`);
 
-      // temporary append .sql extension to all files
-      readdirSync(queries).forEach(dir =>
-        readdirSync(`${queries}/${dir}`)
-          .filter(file => !file.endsWith('.sql'))
-          .forEach(file => renameSync(`${queries}/${dir}/${file}`, `${queries}/${dir}/${file}.sql`)));
+    // temporary append .sql extension to all files
+    readdirSync(queries).forEach(dir =>
+      readdirSync(`${queries}/${dir}`)
+        .filter(file => !file.endsWith('.sql'))
+        .forEach(file => renameSync(`${queries}/${dir}/${file}`, `${queries}/${dir}/${file}.sql`)));
 
-      resp.UMActivityQueryGenerator = {
-        code: UMActivityQueryGenerator.code,
-        stdout: UMActivityQueryGenerator.stdout,
-        stderr: UMActivityQueryGenerator.stderr,
-      };
-    }
+    resp.UMActivityQueryGenerator = {
+      code: UMActivityQueryGenerator.code,
+      stdout: UMActivityQueryGenerator.stdout,
+      stderr: UMActivityQueryGenerator.stderr,
+    };
 
     return resp;
   }

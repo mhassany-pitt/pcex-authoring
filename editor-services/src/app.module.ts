@@ -4,7 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { SourcesModule } from './sources/sources.module';
 import { ActivitiesModule } from './activities/activities.module';
-import { CompilerModule } from './compiler/compiler.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -27,7 +26,6 @@ import { HubModule } from './hub/hub.module';
     }),
     SourcesModule,
     ActivitiesModule,
-    CompilerModule,
     AuthModule, UsersModule,
     UserAdminModule, HubModule,
   ],

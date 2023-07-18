@@ -124,16 +124,23 @@ var pcex = {
 		var svc = url('?svc') ? url('?svc'): 'masterygrids';  //SVC is an optional parameter
 				
     const load = url('?load');
-    if (load) $.getJSON(load, function (data) {
-      pcex.jsonData = data[0];
-			
-			pcex.numberOfGoals = pcex.jsonData.activityGoals.length;
-			pcex.goalSolvedStates = new Array(pcex.numberOfGoals);
-			pcex.goalShowResultStates = new Array(pcex.numberOfGoals);
-			pcex.setLanguageSettings(language);
-			pcex.setUserCredentials(usr, grp, sid,svc);
-			pcex.init();
-		});
+    if (load) $.ajax({
+      url: load, 
+      dataType: 'json',
+      xhrFields: {
+        withCredentials: true
+      },
+      success: function (data) {
+        pcex.jsonData = data[0];
+        
+        pcex.numberOfGoals = pcex.jsonData.activityGoals.length;
+        pcex.goalSolvedStates = new Array(pcex.numberOfGoals);
+        pcex.goalShowResultStates = new Array(pcex.numberOfGoals);
+        pcex.setLanguageSettings(language);
+        pcex.setUserCredentials(usr, grp, sid,svc);
+        pcex.init();
+      }
+    });
   },
   
   setUserCredentials: function(usr, grp, sid,svc) {

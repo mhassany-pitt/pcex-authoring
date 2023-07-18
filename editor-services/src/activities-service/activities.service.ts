@@ -13,23 +13,23 @@ export class ActivitiesService {
     @InjectModel('activities') private activities: Model<Activity>
   ) { }
 
-  async list() {
-    return (await this.activities.find()).map(toObject);
+  async list({ user }) {
+    return (await this.activities.find({ user })).map(toObject);
   }
 
   async create(model: any) {
     return await this.activities.create(model);
   }
 
-  async read(_id: string) {
-    return toObject(await this.activities.findOne({ _id }));
+  async read({ user, id: _id }) {
+    return toObject(await this.activities.findOne({ user, _id }));
   }
 
-  async update({ _id, ...model }) {
-    return await this.activities.updateOne({ _id }, model);
+  async update({ user, _id, ...model }) {
+    return await this.activities.updateOne({ user, _id }, model);
   }
 
-  async remove(_id: string) {
-    return await this.activities.deleteOne({ _id });
+  async remove({ user, id: _id }) {
+    return await this.activities.deleteOne({ user, _id });
   }
 }

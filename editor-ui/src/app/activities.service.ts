@@ -20,32 +20,49 @@ export class ActivitiesService {
   }
 
   activities() {
-    return this.http.get(`${environment.apiUrl}/activities`);
+    return this.http.get(`${environment.apiUrl}/activities`, { withCredentials: true });
   }
 
   create(activity: any) {
-    return this.http.post(`${environment.apiUrl}/activities`, activity);
+    return this.http.post(`${environment.apiUrl}/activities`, activity, { withCredentials: true });
   }
 
   read(id: string) {
-    return this.http.get(`${environment.apiUrl}/activities/${id}`);
+    return this.http.get(`${environment.apiUrl}/activities/${id}`, { withCredentials: true });
   }
 
   update(activity: any) {
-    return this.http.patch(`${environment.apiUrl}/activities/${activity.id}`, activity);
+    return this.http.patch(`${environment.apiUrl}/activities/${activity.id}`, activity, { withCredentials: true });
   }
 
   remove(id: string) {
-    return this.http.delete(`${environment.apiUrl}/activities/${id}`);
+    return this.http.delete(`${environment.apiUrl}/activities/${id}`, { withCredentials: true });
   }
 
-  genPreviewJson(activity: any) {
-    return this.http.patch(`${environment.apiUrl}/activities/${activity.id}/preview`, activity);
+  genPreviewJson(activity: any, type: string) {
+    return this.http.patch(`${environment.apiUrl}/activities/${activity.id}/preview?type=${type}`, activity, { withCredentials: true });
   }
 
-  previewJsonLink(activity: any) {
+  previewJsonLink(activity: any, type: string) {
+    const baseHref = document.querySelector('base')?.href;
     return this.sanitizer.bypassSecurityTrustResourceUrl(
-      `http://localhost:4200/assets/preview/index.html?load=${`${environment.apiUrl}/activities/${activity.id}/preview`}?_t=${new Date().getTime()}`
+      `${baseHref}/assets/preview/index.html` +
+      `?load=${environment.apiUrl}/activities/${activity.id}/preview` +
+      /**/ `?type=${type}&_t=${new Date().getTime()}`
     );
+  }
+
+  download(activity: any) {
+    this.http.get(`${environment.apiUrl}/activities/${activity.id}/download`, {
+      responseType: 'blob',
+      withCredentials: true
+    }).subscribe((blob: Blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${activity.name}.zip`;
+      link.dispatchEvent(new MouseEvent('click'));
+      URL.revokeObjectURL(url);
+    }, err => console.error('Error during file download:', err));
   }
 }

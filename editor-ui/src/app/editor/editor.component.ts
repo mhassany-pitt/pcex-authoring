@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { KeyCode, KeyMod, Range, } from 'monaco-editor';
 import { SourcesService } from '../sources.service';
 import { ActivitiesService } from '../activities.service';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-editor',
@@ -66,6 +67,7 @@ export class EditorComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private title: Title,
+    private app: AppService,
   ) { }
 
   ngOnInit(): void {
@@ -154,12 +156,16 @@ export class EditorComponent implements OnInit {
   }
 
   ignoreUntouchedLines() {
-    // remove untouched lines
-    Object.keys(this.model.lines).forEach(ln => {
+    // remove non-blank or no comments lines
+    const lnCount = this.model.code.split('\n').length;
+    Object.keys(this.model.lines).filter(ln => {
       const line = this.model.lines[ln];
-      if (!(line.blank || line.comments.filter((c: any) => c.content).length))
-        delete this.model.lines[ln];
-    })
+      return parseInt(ln) > lnCount
+        || (
+          !line.blank
+          && line.comments.filter((c: any) => c.content).length == 0
+        );
+    }).forEach(ln => delete this.model.lines[ln]);
   }
 
   reloadLineMarkers(lineNum?: number) {
@@ -220,13 +226,13 @@ export class EditorComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/sources']);
   }
 
   update() {
     this.ignoreUntouchedLines();
     this.api.update(this.model).subscribe(
-      (source: any) => this.router.navigate(['/dashboard']),
+      (source: any) => this.router.navigate(['/sources']),
       (error: any) => console.log(error)
     )
   }
@@ -271,13 +277,14 @@ export class EditorComponent implements OnInit {
   }
 
   preview() {
+    this.ignoreUntouchedLines();
     this.activities.genPreviewJson({
       "id": this.model.id,
       "name": this.model.name,
       "items": [{ "item$": this.model, "type": "example" }],
-    }).subscribe(
+    }, "source").subscribe(
       (resp: any) => {
-        this.previewLink = this.activities.previewJsonLink(this.model);
+        this.previewLink = this.activities.previewJsonLink(this.model, "source");
         this.showPreview = true;
       },
       (error: any) => console.log(error)
@@ -285,8 +292,5 @@ export class EditorComponent implements OnInit {
   }
 }
 
-// - activity preview (should show all the sources)
-// - green question marks in the preview (there may be an extra or missing quotation mark or ...) 
-// - restrict the delete button (maybe archive)
 // - the id used for inserting the queries (should be check - avoid overwrite)
 // - execute all queries in a transaction

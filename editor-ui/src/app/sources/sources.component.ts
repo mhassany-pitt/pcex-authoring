@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SourcesService } from '../sources.service';
 import { ActivitiesService } from '../activities.service';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-sources',
@@ -19,6 +20,7 @@ export class SourcesComponent implements OnInit {
     private api: SourcesService,
     private activities: ActivitiesService,
     private router: Router,
+    private app: AppService,
   ) { }
 
   ngOnInit(): void {
@@ -59,9 +61,9 @@ export class SourcesComponent implements OnInit {
       "id": source.id,
       "name": source.name,
       "items": [{ "item$": source, "type": blankLns.length ? "challenge" : "example" }],
-    }).subscribe(
+    }, "source").subscribe(
       (resp: any) => {
-        this.previewLink = this.activities.previewJsonLink(source);
+        this.previewLink = this.activities.previewJsonLink(source, "source");
         this.showPreview = true;
       },
       (error: any) => console.log(error)
