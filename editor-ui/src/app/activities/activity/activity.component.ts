@@ -8,7 +8,7 @@ import { ActivitiesService } from '../../activities.service';
 })
 export class ActivityComponent implements OnInit {
 
-  sources: any;
+  sources: any[] = [];
   @Input() activity: any = [{}];
 
   model: any;
@@ -22,10 +22,7 @@ export class ActivityComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.sources().subscribe(
-      (sources: any) => this.sources = sources.map((source: any) => ({
-        label: source.name,
-        value: source.id
-      })),
+      (sources: any) => this.sources = sources,
       (error: any) => console.log(error)
     )
 
@@ -50,7 +47,15 @@ export class ActivityComponent implements OnInit {
     this.model.items.splice(this.model.items.indexOf(item), 1);
   }
 
-  update() {
+  async update() {
+    for (const item of this.model.items) {
+      const details = this.sources.find(source => source.id == item.item);
+      if (details) item.details = {
+        name: details.name,
+        description: details.description,
+      };
+    }
+
     (this.model.id
       ? this.api.update(this.model)
       : this.api.create(this.model)

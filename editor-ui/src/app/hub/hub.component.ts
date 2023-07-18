@@ -53,7 +53,11 @@ export class HubComponent implements OnInit {
   }
 
   setLinkActivity(activity: any) {
-    this.linkAcitivty = activity;
-    setTimeout(() => this.linkAcitivty = null, 10000);
+    if (this.linkAcitivty == activity)
+      this.linkAcitivty = null;
+    else {
+      this.linkAcitivty = activity;
+      setTimeout(() => this.linkAcitivty = null, 10000);
+    }
   }
 }
