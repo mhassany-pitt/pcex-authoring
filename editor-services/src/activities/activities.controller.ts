@@ -16,8 +16,11 @@ export class ActivitiesController {
   @Get()
   async index() {
     return (await this.api.list()).map(activity => {
-      const { _id: id, name, items } = activity;
-      return { id, name, items, stat: this.compiler.getSizeLastModified(id) };
+      const { _id: id, published, name, items } = activity;
+      return {
+        id, published, name, items,
+        stat: this.compiler.getSizeLastModified(id)
+      };
     });
   }
 

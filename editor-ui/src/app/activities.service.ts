@@ -45,7 +45,7 @@ export class ActivitiesService {
 
   previewJsonLink(activity: any) {
     return this.sanitizer.bypassSecurityTrustResourceUrl(
-      `http://localhost:4200/assets/preview/index.html?load=${`${environment.apiUrl}/activities/${activity.id}/preview`}&_t=${new Date().getTime()}`
+      `http://localhost:4200/assets/preview/index.html?load=${`${environment.apiUrl}/activities/${activity.id}/preview`}?_t=${new Date().getTime()}`
     );
   }
 }

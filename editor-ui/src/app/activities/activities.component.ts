@@ -67,4 +67,12 @@ export class ActivitiesComponent implements OnInit {
       (error: any) => console.log(error)
     )
   }
+
+  togglePublish(activity: any) {
+    activity.published = !activity.published;
+    this.api.update(activity).subscribe(
+      (resp: any) => this.reload(),
+      (error: any) => console.log(error)
+    )
+  }
 }

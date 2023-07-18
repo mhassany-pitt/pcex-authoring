@@ -1,0 +1,48 @@
+<div class="flex flex-col">
+  <div class="container mx-auto my-10 flex flex-col gap-4" style="max-width: 48rem;">
+    <div class="flex flex-col gap-4 p-4 bg-gray-100 shadow-md">
+      <div class="flex items-center justify-center gap-4">
+        <img src="./assets/logo.png" class="h-14 w-14" />
+        <span class="text-4xl">Program Construction Examples</span>
+      </div>
+      <input #searchInputEl type="text" name="name" pInputText placeholder="Search ..."
+        class="text-xl border-gray-200 text-center" (keyup)="search(searchInputEl.value)" />
+    </div>
+
+    <div class="border shadow-md">
+      <p-table #table [value]="activities">
+        <ng-template pTemplate="body" let-activity let-rowIndex="rowIndex">
+          <tr>
+            <td>
+              <div class="flex items-center gap-2">
+                <span>{{ rowIndex + 1 }}.</span>
+                <span class="font-bold cursor-pointer text-blue-700" (click)="preview(activity)">
+                  {{ activity.name || '[name not specified]' }}
+                </span>
+                <i class="pi pi-link text-sm hover:text-blue-500 cursor-pointer"
+                  (click)="setLinkActivity(activity)"></i>
+              </div>
+              <pre *ngIf="linkAcitivty == activity"
+                class="text-xs bg-gray-500 text-gray-50 p-2 rounded-sm mt-1">{{ getLink(activity) }}</pre>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="2">
+              <div class="text-xs text-center text-gray-400 w-full">
+                no activities matched, revise your filter keyword
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog [(visible)]="showPreview" [modal]="true" class="preview-dialog" [style]="{width: '85vw', height: '85vh'}"
+  (onHide)="previewLink = null">
+  <iframe *ngIf="previewLink" [src]="previewLink" style="width: 100%; height: 100%"></iframe>
+</p-dialog>

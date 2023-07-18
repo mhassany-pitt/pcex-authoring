@@ -8,7 +8,7 @@ import { CompilerServiceModule } from 'src/compiler-service/compiler-service.mod
 
 @Module({
   controllers: [ActivitiesController],
-  imports: [ConfigModule, ActivitiesServiceModule, CompilerServiceModule],
+  imports: [ActivitiesServiceModule, CompilerServiceModule],
   providers: [],
   exports: []
 })

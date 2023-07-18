@@ -31,6 +31,11 @@ const routes: Routes = [
   //   canActivate: [HandshakeGuard]
   // },
   {
+    path: 'hub',
+    loadChildren: () => import('./hub/hub.module').then(m => m.HubModule),
+    canActivate: [HandshakeGuard]
+  },
+  {
     path: 'user-admin',
     loadChildren: () => import('./user-admin/user-admin.module').then(m => m.UserAdminModule),
     canActivate: [AppAdminGuard]
@@ -45,7 +50,7 @@ const routes: Routes = [
     loadChildren: () => import('./update-password/update-password.module').then(m => m.UpdatePasswordModule),
     canActivate: [HandshakeGuard]
   },
-  { path: '**', redirectTo: 'sources' }
+  { path: '**', redirectTo: 'hub' }
 ];
 
 @NgModule({

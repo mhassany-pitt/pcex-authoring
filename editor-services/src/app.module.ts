@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { UserAdminModule } from './user-admin/user-admin.module';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
+import { HubModule } from './hub/hub.module';
 
 @Module({
   imports: [
@@ -27,10 +28,11 @@ import { MongooseModule } from '@nestjs/mongoose';
     SourcesModule,
     ActivitiesModule,
     CompilerModule,
-    AuthModule, UsersModule, UserAdminModule,
+    AuthModule, UsersModule,
+    UserAdminModule, HubModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ConfigService],
   exports: [AppService]
 })
 export class AppModule { }
