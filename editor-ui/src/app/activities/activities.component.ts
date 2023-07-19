@@ -8,7 +8,12 @@ import { ActivitiesService } from '../activities.service';
 })
 export class ActivitiesComponent implements OnInit {
 
-  archived: boolean = false;
+  _archived: boolean = localStorage.getItem('pcex-activities-archived') == 'true';
+  get archived() { return this._archived; }
+  set archived(bool) {
+    this._archived = bool;
+    localStorage.setItem('pcex-activities-archived', `${bool}`.toLowerCase());
+  }
   create = true;
   activities: any;
   activity: any;

@@ -11,7 +11,12 @@ import { AppService } from '../app.service';
 })
 export class SourcesComponent implements OnInit {
 
-  archived: boolean = false;
+  _archived: boolean = localStorage.getItem('pcex-sources-archived') == 'true';
+  get archived() { return this._archived; }
+  set archived(bool) {
+    this._archived = bool;
+    localStorage.setItem('pcex-sources-archived', `${bool}`.toLowerCase());
+  }
   sources: any = [];
 
   previewLink: any;
