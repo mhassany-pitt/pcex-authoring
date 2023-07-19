@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-login',
@@ -15,11 +16,12 @@ export class LoginComponent {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private app: AppService,
   ) { }
 
   login() {
     this.http.post(`${environment.apiUrl}/auth/login`, this.model, { withCredentials: true }).subscribe({
-      next: (resp: any) => this.router.navigate(['/']),
+      next: (resp: any) => this.router.navigate(['/activities']),
       error: (error: any) => {
         if (error.status == 401)
           alert(error.error.message);
