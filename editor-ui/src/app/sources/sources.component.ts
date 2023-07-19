@@ -61,7 +61,8 @@ export class SourcesComponent implements OnInit {
 
   async preview(source: any) {
     source = await this.api.read(source.id).toPromise();
-    const blankLns = Object.keys(source.lines).filter(ln => source.lines[ln].blank);
+    const blankLns = Object.keys(source.lines || {})
+      .filter(ln => source.lines[ln].blank);
     this.activities.genPreviewJson({
       "id": source.id,
       "name": source.name,

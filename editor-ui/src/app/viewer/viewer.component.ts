@@ -98,7 +98,7 @@ export class ViewerComponent implements OnInit {
       }
     });
 
-    this.lineNums = Object.keys(this.model.lines)
+    this.lineNums = Object.keys(this.model.lines || {})
       .map(ln => parseInt(ln))
       .filter(ln => ln <= codeLines.length);
 
@@ -134,7 +134,7 @@ export class ViewerComponent implements OnInit {
   setExplanationIdx(alpha: number) {
     this.explanationIdx = Math.max(0, Math.min(
       this.explanationIdx + alpha,
-      Object.keys(this.model.lines).length - 1
+      Object.keys(this.model.lines || {}).length - 1
     ));
     this.explanationSubIdx = 0;
 

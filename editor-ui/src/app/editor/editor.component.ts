@@ -74,7 +74,8 @@ export class EditorComponent implements OnInit {
     const params: any = this.route.snapshot.params;
     this.api.read(params.id).subscribe(
       (source: any) => {
-        source.variations = source.variations || [];
+        // source.variations = source.variations || [];
+        source.lines = source.lines || {};
         source.distractors = source.distractors || [];
         this.model = source;
 
@@ -135,9 +136,6 @@ export class EditorComponent implements OnInit {
 
   selectLineNum(lineNum: number) {
     this.selectedLineNum = lineNum;
-
-    if (!this.model.lines)
-      this.model.lines = {};
 
     if (lineNum) { // init line with defaults
       if (lineNum in this.model.lines == false)
