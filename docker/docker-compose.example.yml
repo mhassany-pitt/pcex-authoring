@@ -1,0 +1,23 @@
+# run: docker-compose up
+version: "3"
+services:
+  webapp:
+    container_name: pcex-editor
+    build:
+      context: ./pcex-editor/editor-services/
+      dockerfile: ../Dockerfile
+    env_file:
+      - .env.production.pcex-editor
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./pcex-editor-storage:/pcex-editor/storage
+    depends_on:
+      - mongodb
+  mongodb:
+    container_name: mongodb
+    image: bitnami/mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./pcex-editor-storage:/bitnami/mongodb
