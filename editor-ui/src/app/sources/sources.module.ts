@@ -8,6 +8,7 @@ import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 
@@ -21,7 +22,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     UserAuthCtrlModule,
     TableModule, DialogModule,
     InputTextModule, ButtonModule,
-    CheckboxModule,
+    CheckboxModule, DropdownModule,
   ]
 })
 export class SourcesModule { }

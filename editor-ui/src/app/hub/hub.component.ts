@@ -16,8 +16,6 @@ export class HubComponent implements OnInit {
   searchTimeout: any;
   activities: any[] = [];
 
-  linkAcitivty: any = null;
-
   constructor(
     private http: HttpClient,
     private sanitizer: DomSanitizer,
@@ -50,14 +48,5 @@ export class HubComponent implements OnInit {
         (error: any) => console.log(error),
       );
     }, 300);
-  }
-
-  setLinkActivity(activity: any) {
-    if (this.linkAcitivty == activity)
-      this.linkAcitivty = null;
-    else {
-      this.linkAcitivty = activity;
-      setTimeout(() => this.linkAcitivty = null, 10000);
-    }
   }
 }

@@ -25,7 +25,7 @@ export class SourcesComponent implements OnInit {
   constructor(
     private api: SourcesService,
     private activities: ActivitiesService,
-    private router: Router,
+    public router: Router,
     private app: AppService,
   ) { }
 

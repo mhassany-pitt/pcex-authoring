@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivitiesService } from '../activities.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-activities',
@@ -23,6 +24,7 @@ export class ActivitiesComponent implements OnInit {
 
   constructor(
     private api: ActivitiesService,
+    public router: Router,
   ) { }
 
   ngOnInit(): void {
