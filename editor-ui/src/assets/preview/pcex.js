@@ -311,8 +311,12 @@ var pcex = {
 				}				
 			}
 		} else {
-			lineContent.innerHTML=indentedCode + "\n";
+			lineContent.innerHTML = indentedCode;
 		}
+    // if absent, the post-comment line will be highlighted as comment as well
+    // -->
+    lineContent.innerHTML += '\n'; 
+    // <--
 		var lineNumberSpan = document.createElement('span');
 		var lineNumber;
 		if(isTileDrop) {

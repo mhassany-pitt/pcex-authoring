@@ -88,21 +88,18 @@ export class CompilerService {
       for (const each of activity.items) {
         const source = each.item$ || useId(await this.sources.read({ user: activity.user, id: each.item }));
 
-        const lineList = (source.code || '').split('\n')
-          .map((line: string, index: number) => {
-            const lineNum = index + 1;
-            return {
-              id: uuid4(),
-              number: lineNum,
-              content: line,
-              commentList: `${lineNum}` in (source.lines || {})
-                ? source.lines[`${lineNum}`].comments
-                  .map(comment => comment.content)
-                  .filter(content => content)
-                : [],
-              indentLevel: this.calcIndentLevel(line)
-            };
-          });
+        const clines = (source.code || '').split('\n');
+        const lineList = clines.map((line: string, lineNum: number) => ({
+          id: uuid4(),
+          number: ++lineNum, // ++: index->lineNum
+          content: line,
+          commentList: `${lineNum}` in (source.lines || {})
+            ? source.lines[`${lineNum}`].comments
+              .map(comment => comment.content)
+              .filter(content => content)
+            : [],
+          indentLevel: this.calcIndentLevel(line)
+        }));
 
         const newJson = {
           id: source.id,
