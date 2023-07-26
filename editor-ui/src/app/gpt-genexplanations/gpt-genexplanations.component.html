@@ -1,1 +1,38 @@
-<p>gpt-genexplanations works!</p>
+<div class="h-full flex flex-col relative gap-2">
+  <div class="flex flex-col p-2 border border-gray-200 rounded-sm">
+    <div>
+      Given the selected line within this program, generate
+      <p-dropdown [options]="[
+          {label: 'an', value: 'one'},
+          {label: 'two', value: 'two'},
+          {label: 'three', value: 'three'},
+          {label: 'many', value: 'many'},
+        ]" [(ngModel)]="lnExplanationCount" class="ln-expct-dropdown -mr-1 bg-gray-100 rounded-sm" appendTo="body">
+      </p-dropdown>
+      explanation{{ lnExplanationCount == 'one' ? '' : 's' }} that
+      <span #el2 contenteditable="true" class="mx-1 bg-gray-100 rounded-sm" (keyup)="lnPropmpt = el2.textContent">
+        highlights the associated programming concept
+        ...
+      </span>
+    </div>
+
+    <div class="flex mt-2">
+      <button pButton type="button" label="Generate" icon="pi pi-send" class="p-button-sm p-button-secondary"
+        style="padding: 0.125rem 0.5rem;" (click)="generate()">
+      </button>
+
+      <span class="flex-grow"></span>
+
+      <button *ngIf="lnExplanations" pButton type="button" label="Use the Explanations" icon="pi pi-check"
+        class="p-button-sm" style="padding: 0.125rem 0.5rem;" (click)="useExplanations()">
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="lnExplanations" class="flex-grow flex flex-col gap-2 h-full overflow-y-auto border rounded-sm p-2">
+    <span *ngFor="let lnExplanation of lnExplanations; let i = index" class="text-xs"
+      [ngClass]="{'bg-gray-100': i % 2 == 0}">
+      {{ i + 1 }}. {{ lnExplanation }}
+    </span>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { Component, Input, NgZone, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { KeyCode, KeyMod, Range, } from 'monaco-editor';
+import { KeyCode, KeyMod, Range } from 'monaco-editor';
 import { SourcesService } from '../sources.service';
 import { ActivitiesService } from '../activities.service';
 import { AppService } from '../app.service';
@@ -9,10 +9,9 @@ import { AppService } from '../app.service';
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.less']
+  styleUrls: ['./editor.component.less'],
 })
 export class EditorComponent implements OnInit {
-
   @Input() language = 'java';
 
   srcEditorOptions = {
@@ -34,7 +33,7 @@ export class EditorComponent implements OnInit {
     lineNumbersMinChars: 0,
     lineDecorationsWidth: 0,
     glyphMargin: false,
-    renderLineHighlight: "none",
+    renderLineHighlight: 'none',
     scrollbar: { verticalScrollbarSize: 0 },
   };
 
@@ -51,18 +50,28 @@ export class EditorComponent implements OnInit {
   blankLineNums: any[] = [];
   decorations: any[] = [];
 
-  tabHeaders = ['Annotations', /* 'Variations', */ 'Distractors', 'Program Input'];
+  tabHeaders = [
+    'Annotations',
+    /* 'Variations', */ 'Distractors',
+    'Program Input',
+  ];
   currentTab = 'Annotations';
   previewLink: any;
   showPreview = false;
   langSet = true;
 
-  get titleDescCollapsed() { return localStorage.getItem('pcex.prefs.titleDescCollapsed') == 'true'; }
-  set titleDescCollapsed(value) { localStorage.setItem('pcex.prefs.titleDescCollapsed', `${value}`); }
+  get titleDescCollapsed() {
+    return localStorage.getItem('pcex.prefs.titleDescCollapsed') == 'true';
+  }
+  set titleDescCollapsed(value) {
+    localStorage.setItem('pcex.prefs.titleDescCollapsed', `${value}`);
+  }
 
-  gptGenAll = true;
+  gptGenAll = false;
   gptGenExplanation = false;
+  gptGenExplanation_selectedLine: any;
   gptGenExplanations = false;
+  gptGenExplanations_selectedExplanation: any;
 
   constructor(
     private ngZone: NgZone,
@@ -71,8 +80,8 @@ export class EditorComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private title: Title,
-    private app: AppService,
-  ) { }
+    private app: AppService
+  ) {}
 
   ngOnInit(): void {
     const params: any = this.route.snapshot.params;
@@ -115,35 +124,37 @@ export class EditorComponent implements OnInit {
       this.ngZone.run(() => {
         this.editor.setPosition({ lineNumber: lineNum, column: 1 });
         this.editor.revealPosition({ lineNumber: lineNum, column: 1 });
-      })
+      });
     });
   }
 
   private setupAsSingleLineEditor(editor: any) {
     // --------------->>
     // https://github.com/vikyd/vue-monaco-singleline/blob/1de219c2f1ddd89f6b473e43716bbb3dfb662542/src/monaco-singleline.vue#L150
-    editor.addCommand(KeyMod.CtrlCmd | KeyCode.KEY_F, () => { });
-    editor.addCommand(KeyCode.Enter, () => editor.trigger('', 'acceptSelectedSuggestion'));
+    editor.addCommand(KeyMod.CtrlCmd | KeyCode.KEY_F, () => {});
+    editor.addCommand(KeyCode.Enter, () =>
+      editor.trigger('', 'acceptSelectedSuggestion')
+    );
     editor.onDidPaste((e: any) => {
       if (e.endLineNumber <= 1) return;
       let content = '';
       const model = editor.getModel();
       const lc = model.getLineCount();
-      for (let i = 0; i < lc; i += 1)
-        content += model.getLineContent(i + 1);
+      for (let i = 0; i < lc; i += 1) content += model.getLineContent(i + 1);
       model.setValue(content);
       editor.setPosition({ column: content.length + 1, lineNumber: 1 });
     });
-    editor.addCommand(KeyCode.F1, () => { });
+    editor.addCommand(KeyCode.F1, () => {});
     // <<---------------
   }
 
   selectLineNum(lineNum: number) {
     this.selectedLineNum = lineNum;
 
-    if (lineNum) { // init line with defaults
+    if (lineNum) {
+      // init line with defaults
       if (lineNum in this.model.lines == false)
-        this.model.lines[lineNum] = { comments: [{}] }
+        this.model.lines[lineNum] = { comments: [{}] };
       this.selectedLine = this.model.lines[lineNum];
     } else {
       this.selectedLine = {};
@@ -160,14 +171,16 @@ export class EditorComponent implements OnInit {
   ignoreUntouchedLines() {
     // remove non-blank or no comments lines
     const lnCount = this.model.code.split('\n').length;
-    Object.keys(this.model.lines).filter(ln => {
-      const line = this.model.lines[ln];
-      return parseInt(ln) > lnCount
-        || (
-          !line.blank
-          && line.comments.filter((c: any) => c.content).length == 0
+    Object.keys(this.model.lines)
+      .filter((ln) => {
+        const line = this.model.lines[ln];
+        return (
+          parseInt(ln) > lnCount ||
+          (!line.blank &&
+            line.comments.filter((c: any) => c.content).length == 0)
         );
-    }).forEach(ln => delete this.model.lines[ln]);
+      })
+      .forEach((ln) => delete this.model.lines[ln]);
   }
 
   reloadLineMarkers(lineNum?: number) {
@@ -176,30 +189,40 @@ export class EditorComponent implements OnInit {
 
     const clines = this.model.code?.split('\n');
     const createRange = (ln: any) => ({
-      range: new Range(parseInt(ln), 1, parseInt(ln), clines[ln - 1].length + 1),
+      range: new Range(
+        parseInt(ln),
+        1,
+        parseInt(ln),
+        clines[ln - 1].length + 1
+      ),
       options: {
         isWholeLine: true,
         className: 'marked-line--background',
-        glyphMarginClassName: this.model.lines[ln].blank ? 'marked-line--glyph' : '',
+        glyphMarginClassName: this.model.lines[ln].blank
+          ? 'marked-line--glyph'
+          : '',
         stickiness: 1,
-      }
+      },
     });
 
     const mlines = Object.keys(this.model.lines)
-      .map(ln => parseInt(ln))
-      .filter(ln => ln <= clines.length);
+      .map((ln) => parseInt(ln))
+      .filter((ln) => ln <= clines.length);
 
-    this.blankLineNums = mlines.filter(ln => this.model.lines[ln].blank);
+    this.blankLineNums = mlines.filter((ln) => this.model.lines[ln].blank);
 
-    const decorations: any[] = mlines.filter(ln => {
-      const line = this.model.lines[ln];
-      return (line.blank || line.comments.filter(($: any) => $.content).length);
-    }).map(createRange);
+    const decorations: any[] = mlines
+      .filter((ln) => {
+        const line = this.model.lines[ln];
+        return line.blank || line.comments.filter(($: any) => $.content).length;
+      })
+      .map(createRange);
 
-    if (lineNum) decorations.push({
-      range: new Range(lineNum, 1, lineNum, 1),
-      options: { isWholeLine: true, className: 'current-line--customized' }
-    });
+    if (lineNum)
+      decorations.push({
+        range: new Range(lineNum, 1, lineNum, 1),
+        options: { isWholeLine: true, className: 'current-line--customized' },
+      });
 
     this.decorations = this.editor.deltaDecorations([], decorations);
   }
@@ -210,17 +233,19 @@ export class EditorComponent implements OnInit {
 
   removeLineComment(comment: any) {
     this.selectedLine.comments.splice(
-      this.selectedLine.comments.indexOf(comment), 1);
+      this.selectedLine.comments.indexOf(comment),
+      1
+    );
   }
 
   addVariation() {
     const clines = this.model.code.split('\n');
     const lines: any = {};
     Object.keys(this.model.lines)
-      .map(ln => parseInt(ln))
-      .filter(ln => this.model.lines[ln].blank)
-      .forEach(ln => lines[ln] = { code: clines[ln - 1], description: '' });
-    this.model.variations.push({ lines, output: '' })
+      .map((ln) => parseInt(ln))
+      .filter((ln) => this.model.lines[ln].blank)
+      .forEach((ln) => (lines[ln] = { code: clines[ln - 1], description: '' }));
+    this.model.variations.push({ lines, output: '' });
   }
 
   removeVariation(variation: any) {
@@ -236,13 +261,12 @@ export class EditorComponent implements OnInit {
     this.api.update(this.model).subscribe(
       (source: any) => this.router.navigate(['/sources']),
       (error: any) => console.log(error)
-    )
+    );
   }
 
   changeLang() {
     let filename = this.model.filename || '.java';
-    if (!filename.includes('.'))
-      filename += '.java';
+    if (!filename.includes('.')) filename += '.java';
 
     const extension = `.${filename.split('.').pop()}`;
     const map: any = {
@@ -275,25 +299,39 @@ export class EditorComponent implements OnInit {
     this.jsonViewerOptions.language = editorLang;
 
     this.langSet = false;
-    setTimeout(() => this.langSet = true, 0);
+    setTimeout(() => (this.langSet = true), 0);
   }
 
   preview() {
     this.ignoreUntouchedLines();
-    this.activities.genPreviewJson({
-      "id": this.model.id,
-      "name": this.model.name,
-      "items": [{ "item$": this.model, "type": "example" }],
-    }, "source").subscribe(
-      (resp: any) => {
-        this.previewLink = this.activities.previewJsonLink(this.model, "source");
-        this.showPreview = true;
-      },
-      (error: any) => console.log(error)
-    )
+    this.activities
+      .genPreviewJson(
+        {
+          id: this.model.id,
+          name: this.model.name,
+          items: [{ item$: this.model, type: 'example' }],
+        },
+        'source'
+      )
+      .subscribe(
+        (resp: any) => {
+          this.previewLink = this.activities.previewJsonLink(
+            this.model,
+            'source'
+          );
+          this.showPreview = true;
+        },
+        (error: any) => console.log(error)
+      );
   }
 
   gptGenAllCompleted($event: any) {
+    console.log($event);
+  }
+  gptGenExplanationCompleted($event: any) {
+    console.log($event);
+  }
+  gptGenExplanationsCompleted($event: any) {
     console.log($event);
   }
 }

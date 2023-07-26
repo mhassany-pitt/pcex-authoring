@@ -11,6 +11,7 @@ import { UserAdminModule } from './user-admin/user-admin.module';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HubModule } from './hub/hub.module';
+import { GptGenaiModule } from './gpt-genai/gpt-genai.module';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { HubModule } from './hub/hub.module';
     SourcesModule,
     ActivitiesModule,
     AuthModule, UsersModule,
-    UserAdminModule, HubModule,
+    UserAdminModule, HubModule, GptGenaiModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],

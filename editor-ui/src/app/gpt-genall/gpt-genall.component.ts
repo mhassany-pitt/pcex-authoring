@@ -83,11 +83,13 @@ export class GptGenallComponent implements OnInit {
     this.lnsExplanations = {};
     lines.forEach((ln) => {
       this.lnsExplanations[ln] = [];
-      for (let i = 0; i < 1 + Math.random() * 5; i++)
+      for (let i = 0; i < 20 + Math.random() * 5; i++)
         this.lnsExplanations[ln].push(`Explanation ${i + 1} for line ${ln}`);
     });
 
     this.decorations = this.editor.deltaDecorations([], lines.map(createRange));
+    this.editor.revealLinesInCenter(lines[0], lines[0]);
+    this.editor.setPosition({ lineNumber: lines[0], column: 0 });
   }
 
   selectLineNum(ln: any) {
