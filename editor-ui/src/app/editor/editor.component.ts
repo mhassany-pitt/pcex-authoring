@@ -60,6 +60,10 @@ export class EditorComponent implements OnInit {
   get titleDescCollapsed() { return localStorage.getItem('pcex.prefs.titleDescCollapsed') == 'true'; }
   set titleDescCollapsed(value) { localStorage.setItem('pcex.prefs.titleDescCollapsed', `${value}`); }
 
+  gptGenAll = true;
+  gptGenExplanation = false;
+  gptGenExplanations = false;
+
   constructor(
     private ngZone: NgZone,
     private activities: ActivitiesService,
@@ -287,6 +291,10 @@ export class EditorComponent implements OnInit {
       },
       (error: any) => console.log(error)
     )
+  }
+
+  gptGenAllCompleted($event: any) {
+    console.log($event);
   }
 }
 

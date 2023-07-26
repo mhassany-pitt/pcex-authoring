@@ -60,7 +60,7 @@
             <!-- annotations -->
             <div *ngIf="currentTab == 'Annotations'" class="h-full flex flex-col gap-2 relative">
               <ng-container *ngIf="selectedLineNum">
-                <div class="flex items-center">
+                <div class="flex items-center gap-2">
                   <span class="flex items-center gap-2 cursor-pointer" (click)="toggleBlankLine()">
                     <i class="w-4 h-4 rounded-sm border-2 border-blue-400"
                       [ngClass]="{'bg-blue-400': selectedLine.blank, 'bg-white': !selectedLine.blank}"></i>
@@ -69,6 +69,9 @@
 
                   <span class="flex-grow"></span>
 
+                  <button pButton type="button" icon="pi pi-list" class="p-button-outlined p-button-sm p-button-help"
+                    style="padding: 0.25rem 0.5rem;" (click)="gptGenExplanations = true">
+                  </button>
                   <button pButton type="button" icon="pi pi-plus" class="p-button-outlined p-button-sm p-button-help"
                     style="padding: 0.25rem 0.5rem;" (click)="addLineComment()">
                   </button>
@@ -81,6 +84,8 @@
                       [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Comment"
                       class="flex-grow px-2 py-1 border-gray-200" style="font-size: 0.75rem;"
                       (ngModelChange)="reloadLineMarkers()"></textarea>
+
+                    <i class="pi pi-list text-xs cursor-pointer" (click)="gptGenExplanation = true"></i>
 
                     <i class="pi pi-trash cursor-pointer text-xs text-red-300 hover:text-red-600"
                       (click)="removeLineComment(comment)"></i>
@@ -123,7 +128,7 @@
                       <span class="w-3 text-right line-number">
                         {{ ln }}
                       </span>
-                      <div class="flex flex-col flex-grow border rounded-sm">
+                      <div class="flex flex-col flex-grow border rounded-sm relative">
                         <ngx-monaco-editor *ngIf="langSet" [name]="'var-line-' + i + '_' + ln"
                           [(ngModel)]="variation.lines[ln].code" [options]="distEditorOptions"
                           (onInit)="setupVariationEditor($event, ln)" class="px-1 bg-white"
@@ -131,7 +136,7 @@
                         </ngx-monaco-editor>
                         <span *ngIf="!variation.lines[ln].code"
                           class="absolute text-xs text-gray-400 pointer-events-none"
-                          style="top: 0.125rem; left: 1.5rem;">
+                          style="top: 0.125rem; left: 0.375rem;">
                           Type your snippet here...
                         </span>
                         <span class="border-t border-gray-200"></span>
@@ -190,7 +195,7 @@
                   <div *ngFor="let distractor of model.distractors; let i = index"
                     class="flex items-center gap-2 border px-2 rounded-md relative shadow-sm hover:shadow-md">
                     <span class="text-center text-sm">{{ i + 1 }}.</span>
-                    <div class="flex flex-col flex-grow">
+                    <div class="flex flex-col flex-grow relative">
                       <ngx-monaco-editor *ngIf="langSet" [name]="'distractor-' + i" [(ngModel)]="distractor.code"
                         [options]="distEditorOptions" (onInit)="setupDistractorEditor($event)" class="px-1 bg-white"
                         style="height: 1.15rem; border: none;">
@@ -231,18 +236,24 @@
             class="p-inputtext-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" required
             (blur)="changeLang()" />
 
-          <div class="flex items-center gap-2 my-1 text-gray-400">
-            <i class="pi pi-info-circle text-xs "></i>
-            <span class="text-xs">filename.ext must follow the language's naming convention</span>
+          <div class="flex items-center gap-2 my-1 ">
+            <i class="pi pi-info-circle text-xs text-gray-400"></i>
+            <span class="text-xs text-gray-400">filename.ext must follow the language's naming convention</span>
+
+            <span class="flex-grow"></span>
+
+            <i class="pi pi-list text-xs cursor-pointer" (click)="gptGenAll = true"></i>
           </div>
 
-          <ngx-monaco-editor id="src-editor" *ngIf="langSet" name="code" [(ngModel)]="model.code"
-            [options]="srcEditorOptions" (onInit)="setupSourceEditor($event)" required class="flex-grow border"
-            style="height: auto; min-height: 250px;">
-          </ngx-monaco-editor>
-          <span *ngIf="!model.code" class="absolute top-1 left-12 text-xs text-gray-400 pointer-events-none">
-            type your source code here...
-          </span>
+          <div class="flex-grow flex flex-col relative">
+            <ngx-monaco-editor id="src-editor" *ngIf="langSet" name="code" [(ngModel)]="model.code"
+              [options]="srcEditorOptions" (onInit)="setupSourceEditor($event)" required class="flex-grow border"
+              style="height: auto; min-height: 250px;">
+            </ngx-monaco-editor>
+            <span *ngIf="!model.code" class="absolute top-0.5 left-12 text-xs text-gray-400 pointer-events-none">
+              type your source code here...
+            </span>
+          </div>
         </div>
       </div>
 
@@ -259,6 +270,18 @@
     <p-dialog [(visible)]="showPreview" [modal]="true" [style]="{width: '85vw', height: '85vh'}"
       (onHide)="previewLink = null">
       <iframe *ngIf="previewLink" [src]="previewLink" style="width: 100%; height: 100%"></iframe>
+    </p-dialog>
+    <p-dialog [(visible)]="gptGenAll" [modal]="true" header="Identify and Explain Lines"
+      [style]="{width: '60vw', height: '60vh'}">
+      <app-gpt-genall [code]="model.code" class="block h-full"
+        (complete)="gptGenAllCompleted($event); gptGenAll = false;">
+      </app-gpt-genall>
+    </p-dialog>
+    <p-dialog [(visible)]="gptGenExplanation" [modal]="true" [style]="{width: '60vw', height: '60vh'}">
+      <app-gpt-genexplanation></app-gpt-genexplanation>
+    </p-dialog>
+    <p-dialog [(visible)]="gptGenExplanations" [modal]="true" [style]="{width: '60vw', height: '60vh'}">
+      <app-gpt-genexplanations></app-gpt-genexplanations>
     </p-dialog>
   </form>
 </div>

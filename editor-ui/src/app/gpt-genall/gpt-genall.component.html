@@ -1,0 +1,52 @@
+<div class="h-full flex flex-col relative gap-2 p-2">
+  <div class="flex flex-col p-2 border border-gray-200 rounded-sm">
+    <div>
+      Given the following program, select lines that
+      <span #el1 contenteditable="true" class="px-1 bg-gray-100 rounded-sm" (keyup)="lnSelectPrompt = el1.textContent">
+        contains concept xyz, ...
+      </span>
+      then for each line generate
+      <p-dropdown [options]="[
+          {label: 'a', value: 'a'},
+          {label: 'two', value: 'two'},
+          {label: 'three', value: 'three'},
+          {label: 'at least three', value: 'at-least-three'},
+        ]" [(ngModel)]="lnExplanationCount" class="ln-expct-dropdown -mr-1 bg-gray-100 rounded-sm" appendTo="body">
+      </p-dropdown>
+      explanation{{ lnExplanationCount == 'a' ? '' : 's' }} that
+      <span #el2 contenteditable="true" class="px-1 bg-gray-100 rounded-sm" (keyup)="eachLnPropmpt = el2.textContent">
+        highlights the associated programming concept
+        ...
+      </span>
+    </div>
+
+    <div class="flex mt-2">
+      <button pButton type="button" label="Generate" icon="pi pi-send" class="p-button-sm p-button-secondary"
+        style="padding: 0.125rem 0.5rem;" (click)="generate()">
+      </button>
+
+      <span class="flex-grow"></span>
+
+      <button *ngIf="lnsExplanations" pButton type="button" label="Use the Explanations" icon="pi pi-check"
+        class="p-button-sm" style="padding: 0.125rem 0.5rem;" (click)="useExplanations()">
+      </button>
+    </div>
+  </div>
+
+  <div class="flex-grow flex items-stretch gap-2">
+    <ngx-monaco-editor name="code" [(ngModel)]="code" [options]="editorOptions" (onInit)="setupEditor($event)"
+      class="flex-grow bg-white border border-gray-200 rounded-sm" [ngClass]="{'w-2/3': lnsExplanations}"
+      style="height: 100%;">
+    </ngx-monaco-editor>
+
+    <div *ngIf="lnsExplanations" class="flex flex-col w-1/3">
+      <span *ngIf="!lnExplanations" class="text-xs text-gray-400">
+        put the cursor in a line to see the explanations
+      </span>
+      <span *ngFor="let lnExplanation of lnExplanations; let i = index" class="text-xs"
+        [ngClass]="{'bg-gray-100': i % 2 == 0}">
+        {{ i + 1 }}. {{ lnExplanation }}
+      </span>
+    </div>
+  </div>
+</div>
