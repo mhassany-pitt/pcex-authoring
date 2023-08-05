@@ -3,7 +3,7 @@
     <div>
       Given the program, identify lines that
       <span #el1 contenteditable="true" class="mx-1 bg-gray-100 rounded-sm" (keyup)="lnSelectPrompt = el1.textContent">
-        contains concept xyz, ...
+        are important steps in the program
       </span>
       , then for each line generate
       <p-dropdown [options]="[
@@ -15,8 +15,7 @@
       </p-dropdown>
       explanation{{ lnExplanationCount == 'one' ? '' : 's' }} that
       <span #el2 contenteditable="true" class="mx-1 bg-gray-100 rounded-sm" (keyup)="eachLnPropmpt = el2.textContent">
-        highlights the associated programming concept
-        ...
+        explains what the line is doing, why it is important according to the problem statement
       </span>
     </div>
 
@@ -47,7 +46,10 @@
       </span>
       <span *ngFor="let lnExplanation of lnExplanations; let i = index" class="text-xs"
         [ngClass]="{'bg-gray-100': i % 2 == 0}">
-        {{ i + 1 }}. {{ lnExplanation }}
+        <i class="pi mr-1 cursor-pointer hover:bg-gray-200"
+          [ngClass]="{'pi-check text-green-600': !tt[ln+'-'+i], 'pi-times text-red-400': tt[ln+'-'+i]}"
+          style="font-size: 0.65rem" (click)="tt[ln+'-'+i] = !tt[ln+'-'+i]"></i>
+        <span>{{ lnExplanation }}</span>
       </span>
     </div>
   </div>

@@ -11,8 +11,7 @@
       </p-dropdown>
       explanation{{ lnExplanationCount == 'one' ? '' : 's' }} that
       <span #el2 contenteditable="true" class="mx-1 bg-gray-100 rounded-sm" (keyup)="lnPropmpt = el2.textContent">
-        highlights the associated programming concept
-        ...
+        explains why the selected line is important
       </span>
     </div>
 
@@ -32,7 +31,10 @@
   <div *ngIf="lnExplanations" class="flex-grow flex flex-col gap-2 h-full overflow-y-auto border rounded-sm p-2">
     <span *ngFor="let lnExplanation of lnExplanations; let i = index" class="text-xs"
       [ngClass]="{'bg-gray-100': i % 2 == 0}">
-      {{ i + 1 }}. {{ lnExplanation }}
+      <i class="pi mr-1 cursor-pointer hover:bg-gray-200"
+        [ngClass]="{'pi-check text-green-600': !tt[i], 'pi-times text-red-400': tt[i]}" style="font-size: 0.65rem"
+        (click)="tt[i] = !tt[i]"></i>
+      <span>{{ lnExplanation }}</span>
     </span>
   </div>
 </div>

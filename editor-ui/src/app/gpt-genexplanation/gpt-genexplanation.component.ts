@@ -24,7 +24,8 @@ export class GptGenexplanationComponent implements OnInit {
   ngOnInit(): void {}
 
   generate() {
-    this.lnExplanation = Math.random().toString(36).substring(2, 15);
+    this.lnExplanation =
+      'The while loop (line 9) ensures that the program handles all the test cases provided as input, allowing the solution to process multiple test cases effectively.';
   }
 
   useExplanation() {
