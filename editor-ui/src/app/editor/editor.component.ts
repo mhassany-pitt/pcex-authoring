@@ -69,9 +69,9 @@ export class EditorComponent implements OnInit {
 
   gptGenAll = false;
   gptGenExplanation = false;
-  gptGenExplanation_selectedLine: any;
-  gptGenExplanations = false;
-  gptGenExplanations_selectedExplanation: any;
+  // gptGenExplanation_selectedLine: any;
+  // gptGenExplanations = false;
+  // gptGenExplanations_selectedExplanation: any;
 
   constructor(
     private ngZone: NgZone,
@@ -325,15 +325,22 @@ export class EditorComponent implements OnInit {
       );
   }
 
-  gptGenAllCompleted($event: any) {
-    console.log($event);
+  gptGenAllCompleted(explanations: any) {
+    const lineNums = Object.keys(explanations).map((ln) => parseInt(ln));
+    lineNums.forEach((lineNum) => {
+      this.model.lines[lineNum] = {
+        comments: explanations[`${lineNum}`] //
+          .map((content: any) => ({ content })),
+      };
+    });
+    this.selectLineNum(Math.min(...lineNums));
   }
-  gptGenExplanationCompleted($event: any) {
-    console.log($event);
-  }
-  gptGenExplanationsCompleted($event: any) {
-    console.log($event);
-  }
+  // gptGenExplanationCompleted($event: any) {
+  //   console.log($event);
+  // }
+  // gptGenExplanationsCompleted($event: any) {
+  //   console.log($event);
+  // }
 }
 
 // - the id used for inserting the queries (should be check - avoid overwrite)

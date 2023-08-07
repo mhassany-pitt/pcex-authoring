@@ -30,7 +30,7 @@ export class CompilerService {
   }
 
   removeAttribute(json, attrName) {
-    for (var key in json) {
+    for (const key in json) {
       if (typeof json[key] === 'object' && json[key] !== null) {
         this.removeAttribute(json[key], attrName);
       } else if (key === attrName) {

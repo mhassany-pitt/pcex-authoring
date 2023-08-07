@@ -1,27 +1,34 @@
 <div class="h-full flex flex-col relative gap-2">
   <div class="flex flex-col p-2 border border-gray-200 rounded-sm">
-    <div>
-      Given the program, identify lines that
-      <span #el1 contenteditable="true" class="mx-1 bg-gray-100 rounded-sm" (keyup)="lnSelectPrompt = el1.textContent">
-        are important steps in the program
+    <div class="leading-5">
+      <span>
+        Given the following program description and accompanying source code, identify and explain lines of the code
+        that contributes directly to the program objectives and goals.
       </span>
-      , then for each line generate
-      <p-dropdown [options]="[
-          {label: 'an', value: 'one'},
-          {label: 'two', value: 'two'},
-          {label: 'three', value: 'three'},
-          {label: 'many', value: 'many'},
-        ]" [(ngModel)]="lnExplanationCount" class="ln-expct-dropdown -mr-1 bg-gray-100 rounded-sm" appendTo="body">
-      </p-dropdown>
-      explanation{{ lnExplanationCount == 'one' ? '' : 's' }} that
-      <span #el2 contenteditable="true" class="mx-1 bg-gray-100 rounded-sm" (keyup)="eachLnPropmpt = el2.textContent">
-        explains what the line is doing, why it is important according to the problem statement
+
+      <span #inclusionEl contenteditable="true" class="px-1 bg-green-100 rounded-sm"
+        (blur)="prompt.inclusion = inclusionEl.textContent">
+        {{ prompt.inclusion }}
+      </span>
+      &nbsp;
+      <span #exclusionEl contenteditable="true" class="px-1 bg-red-100 rounded-sm"
+        (blur)="prompt.exclusion = exclusionEl.textContent">
+        {{ prompt.exclusion }}
+      </span>
+
+      <br />
+      <br />
+
+      <span #explanationEl contenteditable="true" class="px-1 bg-gray-200 rounded-sm"
+        (blur)="prompt.explanation = explanationEl.textContent">
+        {{ prompt.explanation }}
       </span>
     </div>
 
     <div class="flex mt-2">
-      <button pButton type="button" label="Generate" icon="pi pi-send" class="p-button-sm p-button-secondary"
-        style="padding: 0.125rem 0.5rem;" (click)="generate()">
+      <button pButton type="button" [label]="generating ? 'Generating' : 'Generate'" icon="pi pi-send"
+        class="p-button-sm p-button-secondary" style="padding: 0.125rem 0.5rem;" [loading]="generating"
+        (click)="generate()">
       </button>
 
       <span class="flex-grow"></span>
@@ -34,7 +41,7 @@
 
   <div class="flex-grow flex items-stretch gap-2">
     <div #editorEl class="flex-grow bg-white border border-gray-200 rounded-sm" [ngClass]="{'w-2/3': lnsExplanations}">
-      <ngx-monaco-editor name="code" [(ngModel)]="code" [options]="editorOptions" (onInit)="setupEditor($event)"
+      <ngx-monaco-editor name="source" [(ngModel)]="source" [options]="editorOptions" (onInit)="setupEditor($event)"
         class="" style="height: 100%; min-height: 256px;">
       </ngx-monaco-editor>
     </div>

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Req, Controller, Post, UseGuards } from '@nestjs/common';
 import { GptGenaiService } from './gpt-genai.service';
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
 
@@ -8,10 +8,7 @@ export class GptGenaiController {
 
   @Post()
   @UseGuards(AuthenticatedGuard)
-  async generate(@Body() body: any) {
-    const resp = await this.service.prompt([
-      { role: 'user', content: body.message },
-    ]);
-    return resp.data.choices[0].message.content;
+  async generate(@Req() req, @Body() body: any) {
+    return await this.service.generate({ user: req.user.email, ...body });
   }
 }
