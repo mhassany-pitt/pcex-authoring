@@ -1,7 +1,19 @@
+import {
+  preparePrompt1,
+  preparePrompt2,
+  preparePrompt3,
+} from './gpt-genai.prompts';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Configuration, OpenAIApi } from 'openai';
-import { ensureDirSync, writeJsonSync, writeFileSync } from 'fs-extra';
+import {
+  ensureDirSync,
+  writeJsonSync,
+  writeFileSync,
+  readFileSync,
+  readdirSync,
+  removeSync,
+} from 'fs-extra';
 
 @Injectable()
 export class GptGenaiService {
@@ -20,26 +32,45 @@ export class GptGenaiService {
 
   async submit(messages: any[]) {
     return await this.openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
+      model:
+        JSON.stringify(messages).length > 10000
+          ? 'gpt-3.5-turbo-16k'
+          : 'gpt-3.5-turbo',
       messages,
       temperature: 0,
-      max_tokens: 2048,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
     });
   }
 
-  async generate({ user, id, description, source, prompt }) {
-    const ws = `${this.root}/${user}--${id}__${new Date().toISOString()}`;
+  async sleep(ms: number) {
+    return new Promise((r) => setTimeout(r, ms));
+  }
+
+  async generate({ skip, wsdir, user, id, description, source, prompt }) {
+    wsdir = wsdir || this.root;
+    const ws = `${wsdir}/${user}--${id}__${new Date().toISOString()}`;
+
+    const existing = readdirSync(wsdir) //
+      .filter((f) => f.startsWith(`${user}--${id}`));
+    if (skip && existing.length > 0) {
+      const existing_dir = `${wsdir}/${existing[0]}`;
+      const files = readdirSync(existing_dir) //
+        .filter((f) => f.indexOf('-response_') > -1);
+      const file = files.sort((a, b) => b.localeCompare(a))[0];
+      return readFileSync(`${existing_dir}/${file}`);
+    }
+
     ensureDirSync(ws);
 
-    let resp: any = '[]';
+    let resp = '[]',
+      prev = '[]';
     try {
       writeFileSync(`${ws}/00-source.txt`, source);
       writeFileSync(
         `${ws}/00-prompt.txt`,
-        this.preparePrompt1({ description, source, prompt }),
+        preparePrompt1({ description, source, prompt }),
       );
 
       // 1st prompt
@@ -50,7 +81,7 @@ export class GptGenaiService {
         },
         {
           role: 'user',
-          content: this.preparePrompt1({ description, source, prompt }),
+          content: preparePrompt1({ description, source, prompt }),
         },
       ];
       writeFileSync(
@@ -62,75 +93,48 @@ export class GptGenaiService {
 
       // 2nd prompt
       messages.push({ role: 'assistant', content: resp });
-      messages.push({ role: 'user', content: this.preparePrompt2() });
+      messages.push({ role: 'user', content: preparePrompt2() });
       writeFileSync(
         `${ws}/03-prompt_${new Date().toISOString()}.json`,
         JSON.stringify(messages),
       );
+      prev = resp;
       resp = (await this.submit(messages)).data.choices[0].message.content;
       writeFileSync(`${ws}/04-response_${new Date().toISOString()}.json`, resp);
 
-      // 3rd prompt
-      messages.push({ role: 'assistant', content: resp });
-      messages.push({ role: 'user', content: this.preparePrompt3() });
-      writeFileSync(
-        `${ws}/05-prompt_${new Date().toISOString()}.json`,
-        JSON.stringify(messages),
-      );
-      resp = (await this.submit(messages)).data.choices[0].message.content;
-      writeFileSync(`${ws}/06-response_${new Date().toISOString()}.json`, resp);
+      // upto 5th prompt
+      for (let i = 0, seq = 5; resp != prev && i < 3; i++) {
+        messages.push({ role: 'assistant', content: resp });
+        messages.push({ role: 'user', content: preparePrompt3() });
+        writeFileSync(
+          `${ws}/${(seq++)
+            .toString()
+            .padStart(2, '0')}-prompt_${new Date().toISOString()}.json`,
+          JSON.stringify(messages),
+        );
+        prev = resp;
+        resp = (await this.submit(messages)).data.choices[0].message.content;
+        writeFileSync(
+          `${ws}/${(seq++)
+            .toString()
+            .padStart(2, '0')}-response_${new Date().toISOString()}.json`,
+          resp,
+        );
+      }
     } catch (exp) {
-      writeJsonSync(`${ws}/error_${new Date().toISOString()}.json`, {
-        status: exp.response.status,
-        statusText: exp.response.statusText,
-      });
-      console.log(exp);
+      console.log(
+        'failed! cleaning up...',
+        JSON.stringify({
+          status: exp.response.status,
+          statusText: exp.response.statusText,
+        }),
+      );
+      removeSync(ws);
+      // writeJsonSync(`${ws}/error_${new Date().toISOString()}.json`, {
+      //   status: exp.response.status,
+      //   statusText: exp.response.statusText,
+      // });
     }
     return resp;
-  }
-
-  preparePrompt1({ description, source, prompt }) {
-    return `
-Given the following program description and accompanying source code, identify and explain lines of the code that contributes directly to the program objectives and goals. ${
-      prompt.inclusion
-    } ${prompt.exclusion}
-
-${prompt.explanation}
-
-Program Description:
-${description}
-
-Program Source Code:
-The line number is defined as /*line_num*/ at the start of each line.
-
-'''java
-${source
-  .split('\n')
-  .map((line, i) => `/*${i + 1}*/${line}`)
-  .join('\n')}
-'''
-
-Output format:
-You must respond ONLY with the following JSON format:
-
-'''json
-[
-  {
-    "line_num": "[the line number]",
-    "content": "[the line content]",
-    "explanations": [
-      "[the list of explanations]",
-      ...
-    ]
-  },
-  ...
-]
-'''`;
-  }
-  preparePrompt2() {
-    return `Update your explanations with more insightful and complementary YET COMPLETELY new explanations. If you missed a line, this is the time to include them.`;
-  }
-  preparePrompt3() {
-    return `Please repeat that once more.`;
   }
 }
