@@ -1,13 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  NgZone,
-  OnInit,
-  Output,
-} from '@angular/core';
 import { Range } from 'monaco-editor';
+import { HttpClient } from '@angular/common/http';
+import { Component, EventEmitter, Input, NgZone, OnInit, Output } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -36,10 +29,8 @@ export class GptGenallComponent implements OnInit {
   };
 
   prompt: any = {
-    inclusion: 'Also include lines that handles input/ouput.',
-    exclusion:
-      'But ignore main class and method definitions, ' +
-      'common import statements and java comments.',
+    inclusion: '',
+    exclusion: '',
     explanation:
       'When considering each identified line, ' +
       'ensure explanations provide the reasons that led to the line inclusion, ' +
@@ -58,9 +49,9 @@ export class GptGenallComponent implements OnInit {
   generating = false;
   tt: any = {};
 
-  constructor(private ngZone: NgZone, private http: HttpClient) {}
+  constructor(private ngZone: NgZone, private http: HttpClient) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   setupEditor(editor: any) {
     this.editor = editor;
@@ -91,9 +82,7 @@ export class GptGenallComponent implements OnInit {
           this.generating = false;
           this.history.push(resp);
           const explanations: any = {};
-          resp.forEach(
-            (line: any) => (explanations[line.line_num] = line.explanations)
-          );
+          resp.forEach((line: any) => (explanations[line.line_num] = line.explanations));
           this.lnsExplanations = explanations;
           this.preview();
         },
@@ -140,7 +129,26 @@ export class GptGenallComponent implements OnInit {
         : null;
   }
 
+  toggleLineExclusion(ln: any) {
+    this.tt[ln + '-all'] = !this.tt[ln + '-all'];
+    for (let i = 0; i < this.lnsExplanations[ln].length; i++)
+      this.tt[ln + '-' + i] = this.tt[ln + '-all'];
+  }
+
   useExplanations() {
-    this.complete.emit(this.lnsExplanations);
+    const explanations = this.lnsExplanations;
+    const filtered = Object.keys(explanations)
+      .filter(ln => !this.tt[ln + '-all'])
+      .reduce((obj, ln) => {
+        obj[ln] = explanations[ln].filter((exp: any, i: any) => !this.tt[ln + '-' + i]);
+        return obj;
+      }, {} as any);
+    this.complete.emit(filtered);
+  }
+
+  placeholder(el: any, text: string) {
+    const content = el.textContent?.trim();
+    el.innerHTML = content || `<span class="text-gray-400 italic">${text}</span>`;
+    return content;
   }
 }

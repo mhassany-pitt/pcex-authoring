@@ -1,19 +1,11 @@
-import {
-  preparePrompt1,
-  preparePrompt2,
-  preparePrompt3,
-} from './gpt-genai.prompts';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Configuration, OpenAIApi } from 'openai';
 import {
-  ensureDirSync,
-  writeJsonSync,
-  writeFileSync,
-  readFileSync,
-  readdirSync,
-  removeSync,
+  ensureDirSync, writeJsonSync, writeFileSync,
+  readFileSync, readdirSync
 } from 'fs-extra';
+import { preparePrompt1, preparePrompt2 } from './gpt-genai.prompts';
 
 @Injectable()
 export class GptGenaiService {
@@ -75,14 +67,8 @@ export class GptGenaiService {
 
       // 1st prompt
       const messages = [
-        {
-          role: 'system',
-          content: 'You are a professor who teaches computer programming.',
-        },
-        {
-          role: 'user',
-          content: preparePrompt1({ description, source, prompt }),
-        },
+        { role: 'system', content: 'You are a professor who teaches computer programming.' },
+        { role: 'user', content: preparePrompt1({ description, source, prompt }) },
       ];
       writeFileSync(
         `${ws}/01-prompt_${new Date().toISOString()}.json`,
@@ -102,25 +88,26 @@ export class GptGenaiService {
       resp = (await this.submit(messages)).data.choices[0].message.content;
       writeFileSync(`${ws}/04-response_${new Date().toISOString()}.json`, resp);
 
-      // upto 5th prompt
-      for (let i = 0, seq = 5; resp != prev && i < 3; i++) {
-        messages.push({ role: 'assistant', content: resp });
-        messages.push({ role: 'user', content: preparePrompt3() });
-        writeFileSync(
-          `${ws}/${(seq++)
-            .toString()
-            .padStart(2, '0')}-prompt_${new Date().toISOString()}.json`,
-          JSON.stringify(messages),
-        );
-        prev = resp;
-        resp = (await this.submit(messages)).data.choices[0].message.content;
-        writeFileSync(
-          `${ws}/${(seq++)
-            .toString()
-            .padStart(2, '0')}-response_${new Date().toISOString()}.json`,
-          resp,
-        );
-      }
+      // // disabled for now
+      // // 3rd prompt and more (upto 5th prompt)
+      // for (let i = 0, seq = 5; resp != prev && i < 3; i++) {
+      //   messages.push({ role: 'assistant', content: resp });
+      //   messages.push({ role: 'user', content: preparePrompt3() });
+      //   writeFileSync(
+      //     `${ws}/${(seq++)
+      //       .toString()
+      //       .padStart(2, '0')}-prompt_${new Date().toISOString()}.json`,
+      //     JSON.stringify(messages),
+      //   );
+      //   prev = resp;
+      //   resp = (await this.submit(messages)).data.choices[0].message.content;
+      //   writeFileSync(
+      //     `${ws}/${(seq++)
+      //       .toString()
+      //       .padStart(2, '0')}-response_${new Date().toISOString()}.json`,
+      //     resp,
+      //   );
+      // }
     } catch (exp) {
       console.log(
         'failed! cleaning up...',
@@ -129,11 +116,11 @@ export class GptGenaiService {
           statusText: exp.response.statusText,
         }),
       );
-      removeSync(ws);
-      // writeJsonSync(`${ws}/error_${new Date().toISOString()}.json`, {
-      //   status: exp.response.status,
-      //   statusText: exp.response.statusText,
-      // });
+      // removeSync(ws);
+      writeJsonSync(`${ws}/error_${new Date().toISOString()}.json`, {
+        status: exp.response.status,
+        statusText: exp.response.statusText,
+      });
     }
     return resp;
   }

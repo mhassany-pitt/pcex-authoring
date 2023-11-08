@@ -19,4 +19,4 @@ import { ButtonModule } from 'primeng/button';
   ],
   exports: [GptGenallComponent],
 })
-export class GptGenallModule {}
+export class GptGenallModule { }

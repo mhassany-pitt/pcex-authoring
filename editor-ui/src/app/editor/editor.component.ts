@@ -81,7 +81,7 @@ export class EditorComponent implements OnInit {
     private route: ActivatedRoute,
     private title: Title,
     private app: AppService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const params: any = this.route.snapshot.params;
@@ -131,7 +131,7 @@ export class EditorComponent implements OnInit {
   private setupAsSingleLineEditor(editor: any) {
     // --------------->>
     // https://github.com/vikyd/vue-monaco-singleline/blob/1de219c2f1ddd89f6b473e43716bbb3dfb662542/src/monaco-singleline.vue#L150
-    editor.addCommand(KeyMod.CtrlCmd | KeyCode.KEY_F, () => {});
+    editor.addCommand(KeyMod.CtrlCmd | KeyCode.KEY_F, () => { });
     editor.addCommand(KeyCode.Enter, () =>
       editor.trigger('', 'acceptSelectedSuggestion')
     );
@@ -144,7 +144,7 @@ export class EditorComponent implements OnInit {
       model.setValue(content);
       editor.setPosition({ column: content.length + 1, lineNumber: 1 });
     });
-    editor.addCommand(KeyCode.F1, () => {});
+    editor.addCommand(KeyCode.F1, () => { });
     // <<---------------
   }
 
@@ -225,6 +225,13 @@ export class EditorComponent implements OnInit {
       });
 
     this.decorations = this.editor.deltaDecorations([], decorations);
+  }
+
+  removeLine(ln: any) {
+    if (confirm('Are you sure?')) {
+      this.selectedLine.comments = [];
+      this.reloadLineMarkers();
+    }
   }
 
   addLineComment() {

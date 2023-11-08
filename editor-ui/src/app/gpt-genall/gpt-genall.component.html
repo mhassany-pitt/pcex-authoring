@@ -1,5 +1,5 @@
 <div class="h-full flex flex-col relative gap-2">
-  <div class="flex flex-col p-2 border border-gray-200 rounded-sm">
+  <div class="flex flex-col gap-2 p-2 border border-gray-200 rounded-sm">
     <div class="leading-5">
       <span>
         Given the following program description and accompanying source code, identify and explain lines of the code
@@ -7,57 +7,74 @@
       </span>
 
       <span #inclusionEl contenteditable="true" class="px-1 bg-green-100 rounded-sm"
-        (blur)="prompt.inclusion = inclusionEl.textContent">
+        (blur)="prompt.inclusion = placeholder(inclusionEl, 'Also include lines that ...')">
         {{ prompt.inclusion }}
+        <span *ngIf="!prompt.inclusion" class="text-gray-400 italic">Also include lines that ...</span>
       </span>
       &nbsp;
       <span #exclusionEl contenteditable="true" class="px-1 bg-red-100 rounded-sm"
-        (blur)="prompt.exclusion = exclusionEl.textContent">
+        (blur)="prompt.exclusion = placeholder(exclusionEl, 'But exclude lines that ...')">
         {{ prompt.exclusion }}
+        <span *ngIf="!prompt.exclusion" class="text-gray-400 italic">But exclude lines that ...</span>
       </span>
 
       <br />
       <br />
 
       <span #explanationEl contenteditable="true" class="px-1 bg-gray-200 rounded-sm"
-        (blur)="prompt.explanation = explanationEl.textContent">
+        (blur)="prompt.explanation = explanationEl.textContent?.trim()">
         {{ prompt.explanation }}
       </span>
     </div>
 
-    <div class="flex mt-2">
+    <div class="flex items-center gap-2">
       <button pButton type="button" [label]="generating ? 'Generating' : 'Generate'" icon="pi pi-send"
-        class="p-button-sm p-button-secondary" style="padding: 0.125rem 0.5rem;" [loading]="generating"
+        class="p-button-sm p-button-secondary" style="padding: 0.25rem 0.5rem;" [loading]="generating"
         (click)="generate()">
       </button>
-
-      <span class="flex-grow"></span>
-
-      <button *ngIf="lnsExplanations" pButton type="button" label="Use the Explanations" icon="pi pi-check"
-        class="p-button-sm" style="padding: 0.125rem 0.5rem;" (click)="useExplanations()">
-      </button>
+      <span *ngIf="generating" class="text-xs text-gray-400">
+        Based on how big the source is, it may take up to a minute!
+      </span>
     </div>
   </div>
 
   <div class="flex-grow flex items-stretch gap-2">
-    <div #editorEl class="flex-grow bg-white border border-gray-200 rounded-sm" [ngClass]="{'w-2/3': lnsExplanations}">
-      <ngx-monaco-editor name="source" [(ngModel)]="source" [options]="editorOptions" (onInit)="setupEditor($event)"
-        class="" style="height: 100%; min-height: 256px;">
+    <div #editorEl class="flex-grow bg-white border border-gray-200 rounded-sm h-64"
+      [ngClass]="{'w-2/3': lnsExplanations}">
+      <ngx-monaco-editor name="source" [(ngModel)]="source" [options]="editorOptions"
+        style="height: 100%; min-height: 256px;" (onInit)="setupEditor($event)">
       </ngx-monaco-editor>
     </div>
 
-    <div *ngIf="lnsExplanations" class="flex flex-col gap-2 w-1/3 h-full overflow-y-auto border rounded-sm p-2"
-      [ngStyle]="{'height': editorEl.offsetHeight + 'px'}">
-      <span *ngIf="!lnExplanations" class="text-xs text-gray-400">
-        ← put the cursor in a line to see the explanations
-      </span>
-      <span *ngFor="let lnExplanation of lnExplanations; let i = index" class="text-xs"
-        [ngClass]="{'bg-gray-100': i % 2 == 0}">
-        <i class="pi mr-1 cursor-pointer hover:bg-gray-200"
-          [ngClass]="{'pi-check text-green-600': !tt[ln+'-'+i], 'pi-times text-red-400': tt[ln+'-'+i]}"
-          style="font-size: 0.65rem" (click)="tt[ln+'-'+i] = !tt[ln+'-'+i]"></i>
-        <span>{{ lnExplanation }}</span>
-      </span>
+    <div *ngIf="lnsExplanations" class="w-1/3 flex flex-col gap-2 h-64">
+      <div class="flex-grow flex flex-col border rounded-sm p-2 gap-1">
+        <span *ngIf="!lnExplanations" class="text-xs text-gray-400">
+          ← put the cursor in a marked line to see its explanations
+        </span>
+
+        <div *ngIf="lnExplanations" class="text-xs font-bold">
+          [<i class="pi cursor-pointer hover:bg-gray-200"
+            [ngClass]="{'pi-check text-green-600': !tt[ln+'-all'], 'pi-times text-red-400': tt[ln+'-all']}"
+            style="font-size: 0.65rem" (click)="toggleLineExclusion(ln)"></i>]
+          <span *ngIf="tt[ln+'-all']">Exclude this line</span>
+          <span *ngIf="!tt[ln+'-all']">Include this line</span>
+        </div>
+        <hr class="-mx-2" />
+
+        <div class="max-h-40 flex flex-col gap-1 overflow-y-auto">
+          <div *ngFor="let lnExplanation of lnExplanations; let i = index" class="text-xs"
+            [ngClass]="{'bg-gray-100': i % 2 == 0}">
+            [<i class="pi cursor-pointer hover:bg-gray-200"
+              [ngClass]="{'pi-check text-green-600': !tt[ln+'-'+i], 'pi-times text-red-400': tt[ln+'-'+i]}"
+              style="font-size: 0.65rem" (click)="tt[ln+'-'+i] = !tt[ln+'-'+i]"></i>]
+            <span [ngClass]="{ 'line-through': tt[ln+'-'+i] }">{{ lnExplanation }}</span>
+          </div>
+        </div>
+      </div>
+
+      <button pButton type="button" label="Use Explanations" icon="pi pi-check" class="p-button-sm h-8"
+        style="padding: 0.25rem 0.5rem;" (click)="useExplanations()">
+      </button>
     </div>
   </div>
 </div>
