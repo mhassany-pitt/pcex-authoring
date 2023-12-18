@@ -1,5 +1,6 @@
 FROM node:18-alpine
 RUN apk add --no-cache openjdk11-jre
+RUN apk add --no-cache python3
 WORKDIR /pcex-editor
 COPY package*.json ./
 RUN npm install
