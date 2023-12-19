@@ -106,8 +106,11 @@ export class EditorComponent implements OnInit {
   setupSourceEditor(editor: any) {
     this.editor = editor;
 
-    editor.onDidChangeCursorPosition((e: any) => {
-      this.ngZone.run(() => this.selectLineNum(e.position.lineNumber));
+    editor.onDidChangeCursorPosition((e: any) =>
+      this.ngZone.run(() => this.selectLineNum(e.position.lineNumber)));
+    editor.onMouseDown(($event: any) => {
+      if ($event.target.type == 2)
+        this.selectLineNum($event.target.position.lineNumber);
     });
 
     this.reloadLineMarkers();
@@ -188,35 +191,22 @@ export class EditorComponent implements OnInit {
     this.decorations = [];
 
     const clines = this.model.code?.split('\n');
-    const createRange = (ln: any) => ({
-      range: new Range(
-        parseInt(ln),
-        1,
-        parseInt(ln),
-        clines[ln - 1].length + 1
-      ),
-      options: {
-        isWholeLine: true,
-        className: 'marked-line--background',
-        glyphMarginClassName: this.model.lines[ln].blank
-          ? 'marked-line--glyph'
-          : '',
-        stickiness: 1,
-      },
-    });
+    const createRange = (ln: any) => {
+      const blank = this.model.lines[ln].blank;
+      const commented = this.model.lines[ln].comments.filter((c: any) => c.content).length > 0;
+      return {
+        range: new Range(parseInt(ln), 1, parseInt(ln), clines[ln - 1].length + 1),
+        options: {
+          isWholeLine: true,
+          glyphMarginClassName: `annotated-line__glyph${blank ? '--blank' : ''}${commented ? '--commented' : ''}`,
+          stickiness: 1,
+        },
+      };
+    };
 
-    const mlines = Object.keys(this.model.lines)
-      .map((ln) => parseInt(ln))
-      .filter((ln) => ln <= clines.length);
-
+    const mlines = Object.keys(this.model.lines).map((ln) => parseInt(ln)).filter((ln) => ln <= clines.length);
     this.blankLineNums = mlines.filter((ln) => this.model.lines[ln].blank);
-
-    const decorations: any[] = mlines
-      .filter((ln) => {
-        const line = this.model.lines[ln];
-        return line.blank || line.comments.filter(($: any) => $.content).length;
-      })
-      .map(createRange);
+    const decorations: any[] = mlines.map(createRange);
 
     if (lineNum)
       decorations.push({
@@ -236,6 +226,7 @@ export class EditorComponent implements OnInit {
 
   addLineComment() {
     this.selectedLine.comments.push({});
+    this.reloadLineMarkers();
   }
 
   removeLineComment(comment: any) {
@@ -243,6 +234,7 @@ export class EditorComponent implements OnInit {
       this.selectedLine.comments.indexOf(comment),
       1
     );
+    this.reloadLineMarkers();
   }
 
   addVariation() {
