@@ -311,25 +311,23 @@ export class EditorComponent implements OnInit {
 
   preview() {
     this.ignoreUntouchedLines();
-    this.activities
-      .genPreviewJson(
-        {
-          id: this.model.id,
-          name: this.model.name,
-          items: [{ item$: this.model, type: 'example' }],
-        },
-        'source'
-      )
-      .subscribe(
-        (resp: any) => {
-          this.previewLink = this.activities.previewJsonLink(
-            this.model,
-            'source'
-          );
-          this.showPreview = true;
-        },
-        (error: any) => console.log(error)
-      );
+    const id = this.model.id;
+    const items = [{ item$: { ...this.model, id: `${id}_ex` }, type: 'example' }];
+    const canBeAChallenge = Object.keys(this.model.lines).filter(ln => this.model.lines[ln].blank);
+    if (canBeAChallenge) items.push({ item$: { ...this.model, id: `${id}_ch` }, type: 'challenge' });
+    this.activities.genPreviewJson(
+      { id: this.model.id, name: this.model.name, items },
+      'activity'
+    ).subscribe(
+      (resp: any) => {
+        this.previewLink = this.activities.previewJsonLink(
+          this.model,
+          'activity'
+        );
+        this.showPreview = true;
+      },
+      (error: any) => console.log(error)
+    );
   }
 
   gptGenAllCompleted(explanations: any) {

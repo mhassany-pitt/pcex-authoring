@@ -68,17 +68,17 @@ export class ActivitiesController {
   }
 
   private async authorizePreview(req: Request, id: string, type: string) {
-    let found = null, payload = { user: this.getUserEmail(req), id };
-    /**/ if (type === 'source') found = await this.sources.read(payload);
-    else if (type === 'activity') found = await this.activities.read(payload);
-    if (!found) throw new NotFoundException();
+    // TODO: should we authorize?!
+    // let found = null, payload = { user: this.getUserEmail(req), id };
+    // /**/ if (type === 'source') found = await this.sources.read(payload);
+    // else if (type === 'activity') found = await this.activities.read(payload);
+    // if (!found) throw new NotFoundException();
   }
 
   @Patch(':id/preview')
   @UseGuards(AuthenticatedGuard)
   async genPreview(@Req() req: Request, @Param('id') id: string, @Body() activity: any, @Query('type') type: string) {
     await this.authorizePreview(req, id, type);
-
     await this.compiler.compile({ ...activity, id });
   }
 
@@ -86,7 +86,6 @@ export class ActivitiesController {
   @UseGuards(AuthenticatedGuard)
   async getPreview(@Req() req: Request, @Param('id') id: string, @Res({ passthrough: true }) res: Response, @Query('type') type: string) {
     await this.authorizePreview(req, id, type);
-
     res.header('Content-Type', 'application/json');
     res.header('Content-Disposition', `attachment; filename="preview.json"`);
     return new StreamableFile(createReadStream(this.compiler.preview(id)));
