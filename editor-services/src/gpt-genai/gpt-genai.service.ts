@@ -40,7 +40,7 @@ export class GptGenaiService {
     return new Promise((r) => setTimeout(r, ms));
   }
 
-  async generate({ skip, wsdir, user, id, description, source, prompt }) {
+  async generate({ skip, wsdir, user, id, description, source, prompt, language }) {
     wsdir = wsdir || this.root;
     const ws = `${wsdir}/${user}--${id}__${new Date().toISOString()}`;
 
@@ -62,13 +62,13 @@ export class GptGenaiService {
       writeFileSync(`${ws}/00-source.txt`, source);
       writeFileSync(
         `${ws}/00-prompt.txt`,
-        preparePrompt1({ description, source, prompt }),
+        preparePrompt1({ description, source, prompt, language }),
       );
 
       // 1st prompt
       const messages = [
         { role: 'system', content: 'You are a professor who teaches computer programming.' },
-        { role: 'user', content: preparePrompt1({ description, source, prompt }) },
+        { role: 'user', content: preparePrompt1({ description, source, prompt, language }) },
       ];
       writeFileSync(
         `${ws}/01-prompt_${new Date().toISOString()}.json`,

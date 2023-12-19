@@ -1,4 +1,4 @@
-export const preparePrompt1 = ({ description, source, prompt }) => {
+export const preparePrompt1 = ({ description, source, prompt, language }) => {
   return (
 `Given the following program description and accompanying source code, ` +
 `identify and explain lines of the code that contributes directly to the program objectives and goals. ` +
@@ -12,7 +12,7 @@ ${description}
 Program Source Code:
 The line number is defined as /*line_num*/ at the start of each line.
 
-'''java
+'''${language?.toLowerCase()}
 ${source.split('\n').map((line, i) => `/*${i + 1}*/${line}`).join('\n')}
 '''
 

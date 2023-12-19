@@ -12,10 +12,11 @@ export class GptGenallComponent implements OnInit {
   @Input() sourceId: string = '';
   @Input() description: string = '';
   @Input() source: string = '';
+  @Input() language: string = '';
   @Output() complete = new EventEmitter();
 
   editorOptions = {
-    language: 'java',
+    language: 'java', // overwritten in ngOnInit
     theme: 'vs', // vs-dark
     minimap: { enabled: false },
     lineNumbersMinChars: 2,
@@ -38,6 +39,7 @@ export class GptGenallComponent implements OnInit {
       'while also preventing any unnecessary duplication or repetition of information.',
   };
 
+  ready = false;
   editor: any;
   decorations: any[] = [];
 
@@ -51,73 +53,82 @@ export class GptGenallComponent implements OnInit {
 
   constructor(private ngZone: NgZone, private http: HttpClient) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.editorOptions.language = this.language.toLowerCase();
+    this.ready = true;
+  }
 
   setupEditor(editor: any) {
     this.editor = editor;
-    const messageContribution = editor.getContribution(
-      'editor.contrib.messageController'
-    );
+    const messageContribution = editor.getContribution('editor.contrib.messageController');
     editor.onDidAttemptReadOnlyEdit(() => messageContribution.dispose());
 
-    editor.onDidChangeCursorPosition((e: any) => {
-      this.ngZone.run(() => this.selectLineNum(e.position.lineNumber));
+    editor.onDidChangeCursorPosition((e: any) =>
+      this.ngZone.run(() => this.selectLineNum(e.position.lineNumber)));
+    editor.onMouseDown(($event: any) => {
+      if ($event.target.type == 2)
+        this.selectLineNum($event.target.position.lineNumber);
     });
   }
 
   generate() {
     this.generating = true;
-    const payload = {
-      id: this.sourceId,
-      description: this.description,
-      source: this.source,
-      prompt: this.prompt,
-    };
-    this.http
-      .post(`${environment.apiUrl}/gpt-genai`, payload, {
-        withCredentials: true,
-      })
-      .subscribe(
-        (resp: any) => {
-          this.generating = false;
-          this.history.push(resp);
-          const explanations: any = {};
-          resp.forEach((line: any) => (explanations[line.line_num] = line.explanations));
-          this.lnsExplanations = explanations;
-          this.preview();
-        },
-        (err) => {
-          this.generating = false;
-          console.log(err);
-        }
-      );
+    this.http.post(
+      `${environment.apiUrl}/gpt-genai`,
+      {
+        id: this.sourceId,
+        description: this.description,
+        source: this.source,
+        prompt: this.prompt,
+        language: this.language,
+      },
+      { withCredentials: true }
+    ).subscribe(
+      (resp: any) => {
+        this.generating = false;
+        this.history.push(resp);
+        const explanations: any = {};
+        resp.forEach((line: any) => (explanations[line.line_num] = line.explanations));
+        this.lnsExplanations = explanations;
+        this.reloadLineMarkers();
+      },
+      (err) => {
+        this.generating = false;
+        console.log(err);
+      }
+    );
   }
 
-  preview() {
+  reloadLineMarkers(lineNum?: number) {
     this.editor.deltaDecorations(this.decorations || [], []);
     this.decorations = [];
 
     const clines = this.source.split('\n');
     const createRange = (ln: any) => ({
-      range: new Range(
-        parseInt(ln),
-        1,
-        parseInt(ln),
-        clines[ln - 1].length + 1
-      ),
+      range: new Range(parseInt(ln), 1, parseInt(ln), clines[ln - 1].length + 1),
       options: {
         isWholeLine: true,
-        className: 'marked-line--background',
+        glyphMarginClassName: `${this.tt[ln + '-all'] ? 'annotated-line__glyph--excluded' : 'annotated-line__glyph--commented'}`,
         stickiness: 1,
       },
     });
 
-    const lines = Object.keys(this.lnsExplanations).map((ln) => parseInt(ln));
-    this.decorations = this.editor.deltaDecorations([], lines.map(createRange));
-    const line = clines[lines[0] - 1];
+    const mlines = Object.keys(this.lnsExplanations || {}).map((ln) => parseInt(ln));
+    const lines: any[] = mlines.map(createRange);
+    lineNum = lineNum || mlines[0];
+
+    if (lineNum)
+      lines.push({
+        range: new Range(lineNum, 1, lineNum, 1),
+        options: { isWholeLine: true, className: 'current-line--customized' },
+      });
+
+    this.decorations = this.editor.deltaDecorations([], lines);
+
+    const line = clines[lineNum - 1];
     const column = line.indexOf(`${line.trim().charAt(0)}`) + 1;
-    this.editor.revealLinesInCenter(lines[0], column);
-    this.editor.setPosition({ lineNumber: lines[0], column });
+    this.editor.revealLinesInCenter(lineNum, column);
+    this.editor.setPosition({ lineNumber: lineNum, column });
     this.editor.focus();
   }
 
@@ -127,12 +138,14 @@ export class GptGenallComponent implements OnInit {
       this.lnsExplanations && ln in this.lnsExplanations
         ? this.lnsExplanations[ln]
         : null;
+    this.reloadLineMarkers(ln);
   }
 
   toggleLineExclusion(ln: any) {
     this.tt[ln + '-all'] = !this.tt[ln + '-all'];
     for (let i = 0; i < this.lnsExplanations[ln].length; i++)
       this.tt[ln + '-' + i] = this.tt[ln + '-all'];
+    this.reloadLineMarkers(ln);
   }
 
   useExplanations() {

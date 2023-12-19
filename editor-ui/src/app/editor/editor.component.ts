@@ -206,15 +206,14 @@ export class EditorComponent implements OnInit {
 
     const mlines = Object.keys(this.model.lines).map((ln) => parseInt(ln)).filter((ln) => ln <= clines.length);
     this.blankLineNums = mlines.filter((ln) => this.model.lines[ln].blank);
-    const decorations: any[] = mlines.map(createRange);
-
+    const lines: any[] = mlines.map(createRange);
     if (lineNum)
-      decorations.push({
+      lines.push({
         range: new Range(lineNum, 1, lineNum, 1),
         options: { isWholeLine: true, className: 'current-line--customized' },
       });
 
-    this.decorations = this.editor.deltaDecorations([], decorations);
+    this.decorations = this.editor.deltaDecorations([], lines);
   }
 
   removeLine(ln: any) {
@@ -292,7 +291,6 @@ export class EditorComponent implements OnInit {
     this.model.language = extension in map ? map[extension] : 'unknown';
 
     const editorLang = this.model.language.toLowerCase();
-
     this.srcEditorOptions.language = editorLang;
     this.distEditorOptions.language = editorLang;
     this.jsonViewerOptions.language = editorLang;
