@@ -312,9 +312,9 @@ export class EditorComponent implements OnInit {
   preview() {
     this.ignoreUntouchedLines();
     const id = this.model.id;
-    const items = [{ item$: { ...this.model, id: `${id}_ex` }, type: 'example' }];
-    const canBeAChallenge = Object.keys(this.model.lines).filter(ln => this.model.lines[ln].blank);
-    if (canBeAChallenge) items.push({ item$: { ...this.model, id: `${id}_ch` }, type: 'challenge' });
+    const items = [{ item$: { ...this.model, id: `${id}_example` }, type: 'example' }];
+    const challenge = Object.keys(this.model.lines).filter(ln => this.model.lines[ln].blank);
+    if (challenge) items.push({ item$: { ...this.model, id: `${id}_challenge` }, type: 'challenge' });
     this.activities.genPreviewJson(
       { id: this.model.id, name: this.model.name, items },
       'activity'

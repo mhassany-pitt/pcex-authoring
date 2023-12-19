@@ -85,8 +85,8 @@ export class CompilerService {
       ensureDirSync(inputs);
 
       const changes = [];
-      for (const each of activity.items) {
-        const source = each.item$ || useId(await this.sources.read({ user: activity.user, id: each.item }));
+      for (const item of activity.items) {
+        const source = item.item$ || useId(await this.sources.read({ user: activity.user, id: item.item }));
 
         const clines = (source.code || '').split('\n');
         const lineList = clines.map((line: string, lineNum: number) => ({
@@ -129,17 +129,17 @@ export class CompilerService {
               line: lineList[parseInt(lineNum) - 1],
               helpList: lineList[parseInt(lineNum) - 1].commentList
             })),
-          fullyWorkedOut: each.type == 'example'
+          fullyWorkedOut: item.type == 'example'
         };
 
-        const jsonfile = `${inputs}${source.id}`;
+        const jsonfile = `${inputs}${source.id}_${item.type}`;
         if (existsSync(jsonfile) && deepEqual(
           this.removeAttribute(readJsonSync(jsonfile), 'id'),
           this.removeAttribute(this.copyJson(newJson), 'id')
         )) return false; // skip unchanged source items
 
         writeJsonSync(jsonfile, newJson);
-        changes.push(each);
+        changes.push(item);
       }
 
       const resp: any = {};
