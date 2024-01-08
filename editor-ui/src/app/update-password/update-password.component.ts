@@ -15,7 +15,7 @@ export class UpdatePasswordComponent {
   pass_confirm = '';
   model: any = { new_password: '', token: '' };
 
-  get isLoggedIn() { return this.app.user != null; }
+  get isLoggedIn() { return !!this.app.user; }
 
   constructor(
     private http: HttpClient,

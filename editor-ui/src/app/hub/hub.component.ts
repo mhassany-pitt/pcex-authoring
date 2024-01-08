@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-hub',
@@ -16,10 +18,14 @@ export class HubComponent implements OnInit {
   searchTimeout: any;
   activities: any[] = [];
 
+  get isLoggedIn() { return !!this.app.user; }
+
   constructor(
     private http: HttpClient,
+    public router: Router,
     private sanitizer: DomSanitizer,
     private title: Title,
+    private app: AppService,
   ) { }
 
   ngOnInit(): void {

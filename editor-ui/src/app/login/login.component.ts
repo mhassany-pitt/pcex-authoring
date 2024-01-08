@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { AppService } from '../app.service';
 
@@ -16,12 +16,14 @@ export class LoginComponent {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private route: ActivatedRoute,
     private app: AppService,
   ) { }
 
   login() {
+    const redirect = this.route.snapshot.queryParams['redirect'] || '/sources';
     this.http.post(`${environment.apiUrl}/auth/login`, this.model, { withCredentials: true }).subscribe({
-      next: (resp: any) => this.router.navigate(['/sources']),
+      next: (resp: any) => this.router.navigate([redirect]),
       error: (error: any) => {
         if (error.status == 401)
           alert(error.error.message);

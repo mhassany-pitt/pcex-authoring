@@ -1,11 +1,8 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { AppService } from '../app.service';
-import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-auth-ctrl',
@@ -14,6 +11,9 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class UserAuthCtrlComponent {
 
+  @Input() loginRedirect = '/sources';
+  @Input() logoutRedirect = '/login';
+
   constructor(
     public app: AppService,
     private http: HttpClient,
@@ -21,8 +21,14 @@ export class UserAuthCtrlComponent {
   ) { }
 
   logout() {
-    this.http.post(`${environment.apiUrl}/auth/logout`, {}, { withCredentials: true }).subscribe({
-      next: () => this.router.navigate(['/login']),
+    this.http.post(
+      `${environment.apiUrl}/auth/logout`, {},
+      { withCredentials: true }
+    ).subscribe({
+      next: () => this.app.handshake().subscribe({
+        next: () => this.router.navigate([this.logoutRedirect]),
+        error: (error) => console.log(error),
+      }),
       error: (error) => console.log(error),
     });
   }
