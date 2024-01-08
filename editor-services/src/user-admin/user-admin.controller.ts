@@ -80,7 +80,7 @@ export class UserAdminController {
     for (const email of emails) {
       const reset_pass_token = {
         token: sha256(Math.random().toString(36).substring(2)).toString(),
-        expires: Date.now() + 2 * 24 * 60 * 60 * 1000, // 2 days
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
       };
 
       if ((await this.service.update(email, { reset_pass_token })).modifiedCount > 0)
