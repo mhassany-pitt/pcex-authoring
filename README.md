@@ -1,4 +1,4 @@
-# PCEX-Editor
+# PCEX-Authoring
 
 # Editor UI
 [angular app - ui](./editor-ui/README.md)

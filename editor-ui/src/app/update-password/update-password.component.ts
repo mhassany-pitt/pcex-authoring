@@ -32,7 +32,8 @@ export class UpdatePasswordComponent {
 
   update() {
     this.http.patch(`${environment.apiUrl}/auth/update-password`, this.model, { withCredentials: true }).subscribe({
-      next: (resp: any) => this.router.navigate(['/']),
+      next: (resp: any) =>
+        this.router.navigate([this.isLoggedIn ? '/sources' : '/login']),
       error: (error: any) => {
         if (error.status == 422)
           alert(error.error.message);

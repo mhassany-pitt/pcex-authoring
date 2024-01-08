@@ -21,7 +21,7 @@ export class LoginComponent {
 
   login() {
     this.http.post(`${environment.apiUrl}/auth/login`, this.model, { withCredentials: true }).subscribe({
-      next: (resp: any) => this.router.navigate(['/activities']),
+      next: (resp: any) => this.router.navigate(['/sources']),
       error: (error: any) => {
         if (error.status == 401)
           alert(error.error.message);

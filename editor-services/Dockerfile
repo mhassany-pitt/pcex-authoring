@@ -1,7 +1,7 @@
 FROM node:18-alpine
 RUN apk add --no-cache openjdk11-jre
 RUN apk add --no-cache python3
-WORKDIR /pcex-editor
+WORKDIR /pcex-authoring
 COPY package*.json ./
 RUN npm install
 COPY . .

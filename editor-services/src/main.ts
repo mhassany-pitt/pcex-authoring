@@ -24,7 +24,7 @@ async function bootstrap() {
     secret: config.get('SESSION_SECRET'),
     resave: true,
     saveUninitialized: true,
-    name: 'pcex-examples-session',
+    name: 'pcex-authoring-session',
     store: new (FileStore(session))({ path: config.get('STORAGE_PATH') + '/sessions' }),
     cookie: {
       secure: false,
