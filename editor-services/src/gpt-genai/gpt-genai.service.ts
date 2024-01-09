@@ -14,6 +14,7 @@ export class GptGenaiService {
   constructor(private config: ConfigService) {
     const configuration = new Configuration({
       apiKey: this.config.get('OPENAI_API_KEY'),
+      organization: this.config.get('OPENAI_ORG_ID'),
     });
     this.openai = new OpenAIApi(configuration);
   }

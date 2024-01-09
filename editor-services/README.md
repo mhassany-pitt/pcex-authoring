@@ -1,6 +1,6 @@
 ## Editor Services
 
-backend services for pcex editor.
+backend services for pcex authoring.
 
 ## Installation
 
