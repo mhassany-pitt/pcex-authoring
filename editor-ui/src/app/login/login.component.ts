@@ -22,8 +22,13 @@ export class LoginComponent {
 
   login() {
     const redirect = this.route.snapshot.queryParams['redirect'] || '/sources';
-    this.http.post(`${environment.apiUrl}/auth/login`, this.model, { withCredentials: true }).subscribe({
-      next: (resp: any) => this.router.navigate([redirect]),
+    this.http.post(
+      `${environment.apiUrl}/auth/login`,
+      this.model, { withCredentials: true }
+    ).subscribe({
+      next: (resp: any) => {
+        this.router.navigate([redirect]);
+      },
       error: (error: any) => {
         if (error.status == 401)
           alert(error.error.message);
