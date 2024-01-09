@@ -74,12 +74,12 @@ export class GptGenallComponent implements OnInit {
     editor.onDidAttemptReadOnlyEdit(() => messageContribution.dispose());
 
     editor.onDidChangeCursorPosition((e: any) => this.ngZone.run(() => {
-      if (e.reason == 3 /* mouse */) {
+      if (e.reason == 3 /* mouse */ && this.ln != e.position.lineNumber) {
         this.selectLineNum(e.position.lineNumber);
       }
     }));
     editor.onMouseDown(($event: any) => {
-      if ($event.target.type == 2) {
+      if ($event.target.type == 2 && this.ln != $event.target.position.lineNumber) {
         this.selectLineNum($event.target.position.lineNumber);
       }
     });
@@ -178,7 +178,7 @@ export class GptGenallComponent implements OnInit {
 
     this.log$(this.tt[ln + '-' + i] ? 'genexps-exclude-explanation' : 'genexps-include-explanation', {
       line_num: ln,
-      explanation_i: i,
+      index: i,
       explanation: this.lnsExplanations[ln][i],
     });
   }
@@ -189,7 +189,7 @@ export class GptGenallComponent implements OnInit {
     this.log$('genexps-like-explanation', {
       line_num: ln,
       value: this.tt[ln + '-' + i + '-liked'],
-      explanation_i: i,
+      index: i,
       explanation: this.lnsExplanations[ln][i],
     });
   }

@@ -163,12 +163,12 @@ export class EditorComponent implements OnInit {
     });
 
     editor.onDidChangeCursorPosition((e: any) => this.ngZone.run(() => {
-      if (e.reason == 3 /* mouse */) {
+      if (e.reason == 3 /* mouse */ && this.selectedLineNum != e.position.lineNumber) {
         this.selectLineNum(e.position.lineNumber);
       }
     }));
     editor.onMouseDown(($event: any) => {
-      if ($event.target.type == 2) {
+      if ($event.target.type == 2 && this.selectedLineNum != $event.target.position.lineNumber) {
         this.selectLineNum($event.target.position.lineNumber);
       }
     });
@@ -246,7 +246,7 @@ export class EditorComponent implements OnInit {
 
   toggleBlankLine() {
     this.selectedLine.blank = !this.selectedLine.blank;
-    this.reloadLineMarkers();
+    this.reloadLineMarkers(this.selectedLineNum);
   }
 
   ignoreUntouchedLines() {
@@ -305,7 +305,7 @@ export class EditorComponent implements OnInit {
 
     if (confirm('Are you sure?')) {
       this.selectedLine.comments = [];
-      this.reloadLineMarkers();
+      this.reloadLineMarkers(this.selectedLineNum);
 
       this.log({ type: 'remove-line-confirmed', ...logpayload });
     } else {
@@ -315,7 +315,7 @@ export class EditorComponent implements OnInit {
 
   addLineComment() {
     this.selectedLine.comments.push({});
-    this.reloadLineMarkers();
+    this.reloadLineMarkers(this.selectedLineNum);
 
     this.log({
       type: 'add-explanation',
@@ -337,7 +337,16 @@ export class EditorComponent implements OnInit {
     });
 
     this.selectedLine.comments.splice(i, 1);
-    this.reloadLineMarkers();
+    this.reloadLineMarkers(this.selectedLineNum);
+  }
+
+  addDistractor() {
+    this.model.distractors.push({ code: '', description: '' });
+
+    this.log({
+      type: 'add-distractor',
+      distractors: this.model.distractors,
+    });
   }
 
   removeDistractor(distractor: any, i: number) {
