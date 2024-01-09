@@ -7,6 +7,7 @@ import { createReadStream } from 'fs';
 import { Response } from 'express';
 import { CompilerService } from 'src/compiler-service/compiler.service';
 import { useId } from 'src/utils';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('hub')
 export class HubController {
@@ -14,13 +15,20 @@ export class HubController {
   constructor(
     private service: HubService,
     private compiler: CompilerService,
+    private users: UsersService
   ) { }
 
   @Get()
   async index(@Query('key') key: string) {
+    const users = (await this.users.listInfo())
+      .reduce((map, { email, fullname }) => {
+        map[email] = { fullname, email };
+        return map;
+      }, {});
+
     return (await this.service.list({ key })).map(activity => {
       const { id, name, items, user } = useId(activity);
-      return { id, name, items, user };
+      return { id, name, items, author: users[user] };
     });
   }
 

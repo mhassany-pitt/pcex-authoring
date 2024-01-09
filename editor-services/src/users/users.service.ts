@@ -32,6 +32,10 @@ export class UsersService {
     return (await this.users.find()).map(toObject);
   }
 
+  async listInfo() {
+    return (await this.users.find()).map(toObject).map(({ _id, fullname, email }) => ({ _id, fullname, email }));
+  }
+
   async create(model: any) {
     return await this.users.create(model);
   }
