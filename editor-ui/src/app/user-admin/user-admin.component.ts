@@ -51,6 +51,7 @@ export class UserAdminComponent {
   }
 
   reload() {
+    this.selected = [];
     this.service.list().subscribe({
       next: (users: any) => this.users = users
     });
