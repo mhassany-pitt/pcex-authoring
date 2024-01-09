@@ -73,6 +73,9 @@ export class EditorComponent implements OnInit {
   // gptGenExplanations = false;
   // gptGenExplanations_selectedExplanation: any;
 
+  dtime0 = Date.now();
+  lastValue: any = null;
+
   constructor(
     private ngZone: NgZone,
     private activities: ActivitiesService,
@@ -82,6 +85,46 @@ export class EditorComponent implements OnInit {
     private title: Title,
     private app: AppService
   ) { }
+
+  log(event: any) {
+    event = { ...event, dtime: Date.now() };
+    event.since_dtime0 = event.dtime - this.dtime0;
+    let tries = 0;
+    const log$ = () => this.api.log(this.model.id, event).subscribe({
+      error: (error: any) => {
+        console.log(error);
+        if (tries++ < 5) {
+          setTimeout(log$, tries * 1000);
+        }
+      },
+    });
+    log$();
+  }
+
+  onExplanationFocus(comment: any, i: number) {
+    this.lastValue = comment;
+
+    this.log({
+      type: 'explanation-focus',
+      line_num: this.selectedLineNum,
+      line_content: this.model.code.split('\n')[this.selectedLineNum - 1],
+      is_blank: this.selectedLine.blank,
+      index: i,
+      value: comment,
+    });
+  }
+
+  onExplanationBlur(comment: any, i: number) {
+    this.log({
+      type: 'explanation-blur',
+      line_num: this.selectedLineNum,
+      line_content: this.model.code.split('\n')[this.selectedLineNum - 1],
+      is_blank: this.selectedLine.blank,
+      index: i,
+      prev_value: this.lastValue,
+      value: comment,
+    });
+  }
 
   ngOnInit(): void {
     const params: any = this.route.snapshot.params;
@@ -94,6 +137,11 @@ export class EditorComponent implements OnInit {
 
         this.updateTitle();
         this.changeLang();
+
+        if (this.editor)
+          this.reloadLineMarkers();
+
+        this.log({ type: 'loaded' });
       },
       (error: any) => console.log(error)
     );
@@ -106,30 +154,59 @@ export class EditorComponent implements OnInit {
   setupSourceEditor(editor: any) {
     this.editor = editor;
 
-    editor.onDidChangeCursorPosition((e: any) =>
-      this.ngZone.run(() => this.selectLineNum(e.position.lineNumber)));
+    editor.onDidFocusEditorText((e: any) => {
+      this.lastValue = this.model.code;
+      this.log({ type: 'editor-focus', content: this.model.code });
+    });
+    editor.onDidBlurEditorText((e: any) => {
+      this.log({ type: 'editor-blur', prev_content: this.lastValue, content: this.model.code });
+    });
+
+    editor.onDidChangeCursorPosition((e: any) => this.ngZone.run(() => {
+      if (e.reason == 3 /* mouse */) {
+        this.selectLineNum(e.position.lineNumber);
+      }
+    }));
     editor.onMouseDown(($event: any) => {
-      if ($event.target.type == 2)
+      if ($event.target.type == 2) {
         this.selectLineNum($event.target.position.lineNumber);
+      }
     });
 
     this.reloadLineMarkers();
   }
 
-  setupDistractorEditor(editor: any) {
-    this.setupAsSingleLineEditor(editor);
-  }
-
-  setupVariationEditor(editor: any, lineNum: number) {
+  setupDistractorEditor(editor: any, distractor: any, i: number) {
     this.setupAsSingleLineEditor(editor);
 
-    editor.onDidFocusEditorWidget((e: any) => {
-      this.ngZone.run(() => {
-        this.editor.setPosition({ lineNumber: lineNum, column: 1 });
-        this.editor.revealPosition({ lineNumber: lineNum, column: 1 });
+    editor.onDidFocusEditorText((e: any) => {
+      this.lastValue = distractor.code;
+      this.log({
+        type: 'distractor-focus',
+        index: i,
+        content: distractor.code
+      });
+    });
+    editor.onDidBlurEditorText((e: any) => {
+      this.log({
+        type: 'distractor-blur',
+        index: i,
+        prev_content: this.lastValue,
+        content: distractor.code
       });
     });
   }
+
+  // setupVariationEditor(editor: any, lineNum: number) {
+  //   this.setupAsSingleLineEditor(editor);
+
+  //   editor.onDidFocusEditorWidget((e: any) => {
+  //     this.ngZone.run(() => {
+  //       this.editor.setPosition({ lineNumber: lineNum, column: 1 });
+  //       this.editor.revealPosition({ lineNumber: lineNum, column: 1 });
+  //     });
+  //   });
+  // }
 
   private setupAsSingleLineEditor(editor: any) {
     // --------------->>
@@ -164,6 +241,7 @@ export class EditorComponent implements OnInit {
     }
 
     this.reloadLineMarkers(lineNum);
+    this.log({ type: 'select-line', line_num: lineNum });
   }
 
   toggleBlankLine() {
@@ -217,38 +295,75 @@ export class EditorComponent implements OnInit {
   }
 
   removeLine(ln: any) {
+    const logpayload = {
+      line_num: ln,
+      line_content: this.model.code.split('\n')[ln - 1],
+      is_blank: this.model.lines[ln].blank,
+      explanations: this.model.lines[ln].comments,
+    };
+    this.log({ type: 'remove-line', ...logpayload });
+
     if (confirm('Are you sure?')) {
       this.selectedLine.comments = [];
       this.reloadLineMarkers();
+
+      this.log({ type: 'remove-line-confirmed', ...logpayload });
+    } else {
+      this.log({ type: 'remove-line-cancelled', ...logpayload });
     }
   }
 
   addLineComment() {
     this.selectedLine.comments.push({});
     this.reloadLineMarkers();
+
+    this.log({
+      type: 'add-explanation',
+      line_num: this.selectedLineNum,
+      line_content: this.model.code.split('\n')[this.selectedLineNum - 1],
+      is_blank: this.model.lines[this.selectedLineNum].blank,
+      explanations: this.model.lines[this.selectedLineNum].comments,
+    });
   }
 
-  removeLineComment(comment: any) {
-    this.selectedLine.comments.splice(
-      this.selectedLine.comments.indexOf(comment),
-      1
-    );
+  removeLineComment(comment: any, i: number) {
+    this.log({
+      type: 'remove-explanation',
+      line_num: this.selectedLineNum,
+      line_content: this.model.code.split('\n')[this.selectedLineNum - 1],
+      is_blank: this.model.lines[this.selectedLineNum].blank,
+      explanations: this.model.lines[this.selectedLineNum].comments,
+      index: i,
+    });
+
+    this.selectedLine.comments.splice(i, 1);
     this.reloadLineMarkers();
   }
 
-  addVariation() {
-    const clines = this.model.code.split('\n');
-    const lines: any = {};
-    Object.keys(this.model.lines)
-      .map((ln) => parseInt(ln))
-      .filter((ln) => this.model.lines[ln].blank)
-      .forEach((ln) => (lines[ln] = { code: clines[ln - 1], description: '' }));
-    this.model.variations.push({ lines, output: '' });
+  removeDistractor(distractor: any, i: number) {
+    this.log({
+      type: 'remove-distractor',
+      content: distractor.code,
+      description: distractor.description,
+      index: i,
+    });
+
+    this.model.distractors.splice(i, 1);
   }
 
-  removeVariation(variation: any) {
-    this.model.variations.splice(this.model.variations.indexOf(variation), 1);
-  }
+  // addVariation() {
+  //   const clines = this.model.code.split('\n');
+  //   const lines: any = {};
+  //   Object.keys(this.model.lines)
+  //     .map((ln) => parseInt(ln))
+  //     .filter((ln) => this.model.lines[ln].blank)
+  //     .forEach((ln) => (lines[ln] = { code: clines[ln - 1], description: '' }));
+  //   this.model.variations.push({ lines, output: '' });
+  // }
+
+  // removeVariation(variation: any) {
+  //   this.model.variations.splice(this.model.variations.indexOf(variation), 1);
+  // }
 
   back() {
     this.router.navigate(['/sources']);
@@ -257,7 +372,10 @@ export class EditorComponent implements OnInit {
   update() {
     this.ignoreUntouchedLines();
     this.api.update(this.model).subscribe(
-      (source: any) => this.router.navigate(['/sources']),
+      (source: any) => {
+        this.log({ type: 'updated' });
+        this.router.navigate(['/sources']);
+      },
       (error: any) => console.log(error)
     );
   }
@@ -325,10 +443,11 @@ export class EditorComponent implements OnInit {
     lineNums.forEach((lineNum) => {
       this.model.lines[lineNum] = {
         comments: explanations[`${lineNum}`] //
-          .map((content: any) => ({ content })),
+          .map((content: any) => ({ content, gpt: content })),
       };
     });
     this.selectLineNum(Math.min(...lineNums));
+    this.log({ type: 'use-expgen-explanations', explanations });
   }
   // gptGenExplanationCompleted($event: any) {
   //   console.log($event);
@@ -337,6 +456,3 @@ export class EditorComponent implements OnInit {
   //   console.log($event);
   // }
 }
-
-// - the id used for inserting the queries (should be check - avoid overwrite)
-// - execute all queries in a transaction

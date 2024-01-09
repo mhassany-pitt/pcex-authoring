@@ -27,7 +27,9 @@ export class SourcesController {
 
   @Post()
   async create(@Req() req: Request) {
-    const source = toObject(await this.sources.create({ user: this.getUserEmail(req) }));
+    const user = this.getUserEmail(req);
+    const source = toObject(await this.sources.create({ user }));
+    await this.sources.log({ id: source._id, log: { type: 'create', user } });
     return { id: source._id };
   }
 
@@ -53,5 +55,10 @@ export class SourcesController {
     if (!source) throw new NotFoundException();
 
     await this.sources.remove({ user: this.getUserEmail(req), id });
+  }
+
+  @Post(':id/log')
+  async log(@Req() req: Request, @Param('id') id: string, @Body() log: any) {
+    await this.sources.log({ id, log });
   }
 }

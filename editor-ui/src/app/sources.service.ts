@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,10 @@ export class SourcesService {
 
   update(source: any) {
     return this.http.patch(`${environment.apiUrl}/sources/${source.id}`, source, { withCredentials: true });
+  }
+
+  log(id: string, log: any) {
+    return this.http.post(`${environment.apiUrl}/sources/${id}/log`, log,
+      { withCredentials: true, context: new HttpContext().set(NGX_LOADING_BAR_IGNORED, true) });
   }
 }

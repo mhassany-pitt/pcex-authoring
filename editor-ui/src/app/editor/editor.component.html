@@ -31,11 +31,15 @@
       <!-- name & description -->
       <div class="flex flex-col gap-2 bg-gray-100 p-2 rounded-sm relative">
         <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText [(ngModel)]="model.name"
-          (ngModelChange)="updateTitle()" placeholder="Name" class="text-xl border-gray-200" required />
+          (ngModelChange)="updateTitle()" placeholder="Name" class="text-xl border-gray-200" required
+          (focus)="lastValue = model.name; log({ type: 'name-focus', value: model.name })"
+          (blur)="log({ type: 'name-blur', prev_value: lastValue, value: model.name })" />
 
         <textarea *ngIf="!titleDescCollapsed" pInputTextarea name="description" [autoResize]="true"
           [(ngModel)]="model.description" placeholder="Description" rows="1"
-          class="p-inputtext-sm w-full border-gray-200"></textarea>
+          class="p-inputtext-sm w-full border-gray-200"
+          (focus)="lastValue = model.description; log({ type: 'description-focus', value: model.description })"
+          (blur)="log({ type: 'description-blur', prev_value: lastValue, value: model.description })"></textarea>
 
         <div class="flex items-center gap-2 cursor-pointer text-gray-400"
           (click)="titleDescCollapsed = !titleDescCollapsed">
@@ -61,7 +65,8 @@
             <div *ngIf="currentTab == 'Annotations'" class="h-full flex flex-col gap-2 relative">
               <ng-container *ngIf="selectedLineNum">
                 <div class="flex items-center gap-2">
-                  <span class="flex items-center gap-2 cursor-pointer" (click)="toggleBlankLine()">
+                  <span class="flex items-center gap-2 cursor-pointer"
+                    (click)="toggleBlankLine(); log({ type: 'line-toggle-blank', value: selectedLine.blank, line_num: selectedLineNum })">
                     <i class="w-4 h-4 rounded-sm border-2 border-blue-400"
                       [ngClass]="{'bg-blue-400': selectedLine.blank, 'bg-white': !selectedLine.blank}"></i>
                     <span>It is a blank line</span>
@@ -87,13 +92,14 @@
                     <textarea pInputTextarea [autoResize]="true" [name]="'linecomment-' + i"
                       [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Comment"
                       class="flex-grow px-2 py-1 border-gray-200" style="font-size: 0.75rem;"
-                      (ngModelChange)="reloadLineMarkers()"></textarea>
+                      (ngModelChange)="reloadLineMarkers()" (focus)="onExplanationFocus(comment, i)"
+                      (blur)="onExplanationBlur(comment, i)"></textarea>
 
                     <!-- <i class="genai-icon absolute right-6"
                       (click)="gptGenExplanation = true; gptGenExplanations_selectedExplanation = comment.content"></i> -->
 
                     <i class="pi pi-trash cursor-pointer text-xs text-red-300 hover:text-red-600"
-                      (click)="removeLineComment(comment)"></i>
+                      (click)="removeLineComment(comment, i)"></i>
                   </div>
                 </div>
 
@@ -109,7 +115,7 @@
             </div>
 
             <!-- variations -->
-            <div *ngIf="false && currentTab == 'Variations'" class="h-full flex flex-col gap-2 relative">
+            <!-- <div *ngIf="false && currentTab == 'Variations'" class="h-full flex flex-col gap-2 relative">
               <div class="flex items-center">
                 <span class="flex-grow text-xs text-gray-400">
                   Define different variations of the code.
@@ -173,7 +179,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <!-- distractors -->
             <div *ngIf="currentTab == 'Distractors'" class="h-full flex flex-col relative">
@@ -202,8 +208,8 @@
                     <span class="text-center text-sm">{{ i + 1 }}.</span>
                     <div class="flex flex-col flex-grow relative">
                       <ngx-monaco-editor *ngIf="langSet" [name]="'distractor-' + i" [(ngModel)]="distractor.code"
-                        [options]="distEditorOptions" (onInit)="setupDistractorEditor($event)" class="px-1 bg-white"
-                        style="height: 1.15rem; border: none;">
+                        [options]="distEditorOptions" (onInit)="setupDistractorEditor($event, distractor, i)"
+                        class="px-1 bg-white" style="height: 1.15rem; border: none;">
                       </ngx-monaco-editor>
                       <span *ngIf="!distractor.code" class="absolute text-xs text-gray-400 pointer-events-none"
                         style="top: 0.125rem; left: 1.875rem;">
@@ -212,10 +218,12 @@
                       <span class="border-t border-gray-200"></span>
                       <textarea pInputTextarea [autoResize]="true" [name]="'dist-description-' + i"
                         [(ngModel)]="distractor.description" placeholder="Description" rows="1"
-                        class="text-xs border-0 rounded-none" style="padding: 0.125rem 0.25rem;"></textarea>
+                        class="text-xs border-0 rounded-none" style="padding: 0.125rem 0.25rem;"
+                        (focus)="lastValue = distractor.description; log({ type: 'distractor-description-focus', value: distractor.description })"
+                        (blur)="log({ type: 'distractor-description-blur', prev_value: lastValue, value: distractor.description })"></textarea>
                     </div>
                     <i class="pi pi-trash cursor-pointer text-xs text-red-300 hover:text-red-600"
-                      (click)="model.distractors.splice(model.distractors.indexOf(distractor), 1)">
+                      (click)="removeDistractor(distractor, i)">
                     </i>
                   </div>
                 </div>
@@ -230,7 +238,9 @@
                 </span>
               </div>
               <textarea pInputTextarea name="program-input" [autoResize]="true" [(ngModel)]="model.programInput"
-                placeholder="e.g.: 5 10 15 20" class="mt-2 text-xs rounded-none"></textarea>
+                placeholder="e.g.: 5 10 15 20" class="mt-2 text-xs rounded-none"
+                (focus)="lastValue = model.programInput; log({type: 'program-input-focus', value: model.programInput})"
+                (blur)="log({type: 'program-input-blur', prev_value: lastValue, value: model.programInput})"></textarea>
             </div>
           </div>
         </div>
@@ -239,7 +249,8 @@
         <div class="w-3/5 flex flex-col bg-gray-100 p-2 rounded-sm">
           <input type="text" name="filename" pInputText [(ngModel)]="model.filename" placeholder="filename.ext"
             class="p-inputtext-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" required
-            (blur)="changeLang()" />
+            (focus)="lastValue = model.filename; log({ type: 'filename-focus', value: model.filename })"
+            (blur)="changeLang(); log({type: 'filename-blur', prev_value: lastValue, value: model.filename });" />
 
           <div class="flex items-center gap-2 my-1 ">
             <i class="pi pi-info-circle text-xs text-gray-400"></i>
@@ -278,13 +289,15 @@
     </div>
 
     <p-dialog [(visible)]="showPreview" [modal]="true" [style]="{width: '85vw', height: '85vh'}"
-      (onHide)="previewLink = null">
+      (onShow)="log({ type: 'open-preview-dialog' })"
+      (onHide)="previewLink = null; log({ type: 'close-preview-dialog' })">
       <iframe *ngIf="previewLink" [src]="previewLink" style="width: 100%; height: 100%"></iframe>
     </p-dialog>
     <p-dialog [(visible)]="gptGenAll" [modal]="true" header="Identify and Explain Lines"
-      [style]="{'max-width': '48rem'}">
+      [style]="{'max-width': '48rem'}" (onShow)="log({ type: 'open-expgen-dialog' });"
+      (onHide)="log({ type: 'close-expgen-dialog' });">
       <app-gpt-genall *ngIf="gptGenAll" [sourceId]="model.id" [description]="model.description" [source]="model.code"
-        [language]="model.language" (complete)="gptGenAllCompleted($event); gptGenAll = false;">
+        [language]="model.language" (complete)="gptGenAllCompleted($event); gptGenAll = false;" (log)="log($event)">
       </app-gpt-genall>
     </p-dialog>
     <!-- <p-dialog [(visible)]="gptGenExplanations" [modal]="true" header="Explain the Selected Line"

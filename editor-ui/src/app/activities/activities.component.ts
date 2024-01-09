@@ -74,3 +74,6 @@ export class ActivitiesComponent implements OnInit {
     )
   }
 }
+
+// TODO: the id used for inserting the queries (should be check - avoid overwrite)
+// TODO: execute all queries in a transaction

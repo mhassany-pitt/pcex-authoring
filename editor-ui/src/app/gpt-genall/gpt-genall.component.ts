@@ -14,6 +14,7 @@ export class GptGenallComponent implements OnInit {
   @Input() source: string = '';
   @Input() language: string = '';
   @Output() complete = new EventEmitter();
+  @Output() log = new EventEmitter();
 
   editorOptions = {
     language: 'java', // overwritten in ngOnInit
@@ -39,6 +40,9 @@ export class GptGenallComponent implements OnInit {
       'while also preventing any unnecessary duplication or repetition of information.',
   };
 
+  defInclusion = 'Also include lines that ...';
+  defExclusion = 'But exclude lines that ...';
+
   ready = false;
   editor: any;
   decorations: any[] = [];
@@ -50,6 +54,12 @@ export class GptGenallComponent implements OnInit {
 
   generating = false;
   tt: any = {};
+
+  // logger stuff
+  lastValue: any = null;
+  curLogSessionId = Math.random().toString(36).substring(2, 15);
+  log$(type: string, event: any = {}) { this.log.emit({ session: this.curLogSessionId, type, ...event }); }
+  // --- end logger stuff
 
   constructor(private ngZone: NgZone, private http: HttpClient) { }
 
@@ -63,15 +73,21 @@ export class GptGenallComponent implements OnInit {
     const messageContribution = editor.getContribution('editor.contrib.messageController');
     editor.onDidAttemptReadOnlyEdit(() => messageContribution.dispose());
 
-    editor.onDidChangeCursorPosition((e: any) =>
-      this.ngZone.run(() => this.selectLineNum(e.position.lineNumber)));
+    editor.onDidChangeCursorPosition((e: any) => this.ngZone.run(() => {
+      if (e.reason == 3 /* mouse */) {
+        this.selectLineNum(e.position.lineNumber);
+      }
+    }));
     editor.onMouseDown(($event: any) => {
-      if ($event.target.type == 2)
+      if ($event.target.type == 2) {
         this.selectLineNum($event.target.position.lineNumber);
+      }
     });
   }
 
   generate() {
+    this.log$('genexps-generate');
+
     this.generating = true;
     this.http.post(
       `${environment.apiUrl}/gpt-genai`,
@@ -91,6 +107,8 @@ export class GptGenallComponent implements OnInit {
         resp.forEach((line: any) => (explanations[line.line_num] = line.explanations));
         this.lnsExplanations = explanations;
         this.reloadLineMarkers();
+
+        this.log$('genexps-generated', { value: explanations });
       },
       (err) => {
         this.generating = false;
@@ -139,6 +157,8 @@ export class GptGenallComponent implements OnInit {
         ? this.lnsExplanations[ln]
         : null;
     this.reloadLineMarkers(ln);
+
+    this.log$('genexps-select-line', { line_num: ln });
   }
 
   toggleLineExclusion(ln: any) {
@@ -146,6 +166,32 @@ export class GptGenallComponent implements OnInit {
     for (let i = 0; i < this.lnsExplanations[ln].length; i++)
       this.tt[ln + '-' + i] = this.tt[ln + '-all'];
     this.reloadLineMarkers(ln);
+
+    this.log$(this.tt[ln + '-all'] ? 'genexps-exclude-line' : 'genexps-include-line', {
+      line_num: ln,
+      explanations: this.lnsExplanations[ln]
+    });
+  }
+
+  toggleExplanationExclusion(ln: any, i: any) {
+    this.tt[ln + '-' + i] = !this.tt[ln + '-' + i];
+
+    this.log$(this.tt[ln + '-' + i] ? 'genexps-exclude-explanation' : 'genexps-include-explanation', {
+      line_num: ln,
+      explanation_i: i,
+      explanation: this.lnsExplanations[ln][i],
+    });
+  }
+
+  toggleExplanationLike(ln: any, i: any) {
+    this.tt[ln + '-' + i + '-liked'] = !this.tt[ln + '-' + i + '-liked'];
+
+    this.log$('genexps-like-explanation', {
+      line_num: ln,
+      value: this.tt[ln + '-' + i + '-liked'],
+      explanation_i: i,
+      explanation: this.lnsExplanations[ln][i],
+    });
   }
 
   useExplanations() {
@@ -163,5 +209,9 @@ export class GptGenallComponent implements OnInit {
     const content = el.textContent?.trim();
     el.innerHTML = content || `<span class="text-gray-400 italic">${text}</span>`;
     return content;
+  }
+
+  onPromptBlur(type: string, el: any) {
+    this.log$(type, { prev_value: this.lastValue, value: el.textContent?.trim() });
   }
 }

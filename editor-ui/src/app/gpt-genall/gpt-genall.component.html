@@ -7,22 +7,25 @@
       </span>
 
       <span #inclusionEl contenteditable="true" class="px-1 bg-green-100 rounded-sm"
-        (blur)="prompt.inclusion = placeholder(inclusionEl, 'Also include lines that ...')">
+        (focus)="lastValue = prompt.inclusion; log.emit({ session: curLogSessionId, type: 'genexps-prompt-inclusion-focus' })"
+        (blur)="onPromptBlur('genexps-prompt-inclusion-blur', inclusionEl); prompt.inclusion = placeholder(inclusionEl, defInclusion)">
         {{ prompt.inclusion }}
-        <span *ngIf="!prompt.inclusion" class="text-gray-400 italic">Also include lines that ...</span>
+        <span *ngIf="!prompt.inclusion" class="text-gray-400 italic">{{ defInclusion }}</span>
       </span>
       &nbsp;
       <span #exclusionEl contenteditable="true" class="px-1 bg-red-100 rounded-sm"
-        (blur)="prompt.exclusion = placeholder(exclusionEl, 'But exclude lines that ...')">
+        (focus)="lastValue = prompt.exclusion; log.emit({ session: curLogSessionId, type: 'genexps-prompt-exclusion-focus' })"
+        (blur)="onPromptBlur('genexps-prompt-exclusion-blur', exclusionEl); prompt.exclusion = placeholder(exclusionEl, defExclusion)">
         {{ prompt.exclusion }}
-        <span *ngIf="!prompt.exclusion" class="text-gray-400 italic">But exclude lines that ...</span>
+        <span *ngIf="!prompt.exclusion" class="text-gray-400 italic">{{ defExclusion }}</span>
       </span>
 
       <br />
       <br />
 
       <span #explanationEl contenteditable="true" class="px-1 bg-gray-200 rounded-sm"
-        (blur)="prompt.explanation = explanationEl.textContent?.trim()">
+        (focus)="lastValue = prompt.explanation; log.emit({ session: curLogSessionId, type: 'genexps-prompt-explanation-focus' })"
+        (blur)="onPromptBlur('genexps-prompt-explanation-blur', explanationEl); prompt.explanation = explanationEl.textContent?.trim()">
         {{ prompt.explanation }}
       </span>
     </div>
@@ -53,9 +56,10 @@
         </span>
 
         <div *ngIf="lnExplanations" class="text-xs font-bold">
-          [<i class="pi cursor-pointer hover:bg-gray-200"
-            [ngClass]="{'pi-check text-green-600': !tt[ln+'-all'], 'pi-times text-red-400': tt[ln+'-all']}"
-            style="font-size: 0.65rem" (click)="toggleLineExclusion(ln)"></i>]
+          [<i class="pi cursor-pointer hover:text-blue-600 hover:font-bold" [ngClass]="{ 
+              'pi-check text-green-600 font-bold': !tt[ln+'-all'], 
+              'pi-times text-red-400': tt[ln+'-all']
+            }" style="font-size: 0.65rem" (click)="toggleLineExclusion(ln)"></i>]
           <span *ngIf="tt[ln+'-all']">Exclude this line</span>
           <span *ngIf="!tt[ln+'-all']">Include this line</span>
         </div>
@@ -64,10 +68,15 @@
         <div class="max-h-40 flex flex-col gap-1 overflow-y-auto">
           <div *ngFor="let lnExplanation of lnExplanations; let i = index" class="text-xs"
             [ngClass]="{'bg-gray-100': i % 2 == 0}">
-            [<i class="pi cursor-pointer hover:bg-gray-200"
-              [ngClass]="{'pi-check text-green-600': !tt[ln+'-'+i], 'pi-times text-red-400': tt[ln+'-'+i]}"
-              style="font-size: 0.65rem" (click)="tt[ln+'-'+i] = !tt[ln+'-'+i]"></i>]
-            <span [ngClass]="{ 'line-through': tt[ln+'-'+i] }">{{ lnExplanation }}</span>
+            [<i class="pi cursor-pointer hover:text-blue-600 hover:font-bold" [ngClass]="{
+                'pi-check text-green-600 font-bold': !tt[ln+'-'+i], 
+                'pi-times text-red-400': tt[ln+'-'+i]
+              }" style="font-size: 0.65rem" (click)="toggleExplanationExclusion(ln, i)"></i>]
+            <i class="pi cursor-pointer hover:text-blue-600 hover:font-bold" [ngClass]="{ 
+                'pi-thumbs-up-fill text-green-600 font-bold': tt[ln+'-'+i+'-liked'],
+                'pi-thumbs-up text-gray-400': !tt[ln+'-'+i+'-liked']
+              }" style="font-size: 0.65rem" (click)="toggleExplanationLike(ln, i)"></i>
+            <span class="ml-1" [ngClass]="{ 'line-through': tt[ln+'-'+i] }">{{ lnExplanation }}</span>
           </div>
         </div>
       </div>

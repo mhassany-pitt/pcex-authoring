@@ -4,14 +4,19 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Source } from './source.schema';
 import { toObject } from 'src/utils';
+import { ensureDirSync, writeFile, writeFileSync } from 'fs-extra';
 
 @Injectable()
 export class SourcesService {
 
+  STORAGE_PATH = this.config.get('STORAGE_PATH');
+
   constructor(
     private config: ConfigService,
     @InjectModel('sources') private sources: Model<Source>,
-  ) { }
+  ) {
+    ensureDirSync(`${this.STORAGE_PATH}/logs`);
+  }
 
   async list({ user, archived }) {
     const filter = { user };
@@ -33,5 +38,13 @@ export class SourcesService {
 
   async remove({ user, id: _id }) {
     return await this.sources.deleteOne({ user, _id });
+  }
+
+  async log({ id, log }) {
+    await writeFile(
+      `${this.STORAGE_PATH}/logs/${id}.log`,
+      `${Date.now()} - ${JSON.stringify(log)}\n`,
+      { flag: 'a' }
+    );
   }
 }
