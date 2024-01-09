@@ -19,8 +19,8 @@ export class HubController {
   @Get()
   async index(@Query('key') key: string) {
     return (await this.service.list({ key })).map(activity => {
-      const { id, name, items } = useId(activity);
-      return { id, name, items };
+      const { id, name, items, user } = useId(activity);
+      return { id, name, items, user };
     });
   }
 
@@ -35,3 +35,5 @@ export class HubController {
     return new StreamableFile(createReadStream(this.compiler.preview(id)));
   }
 }
+
+// TODO: preview caching doesn't work properly: it still loads an old version of the preview.
