@@ -84,7 +84,7 @@ export class CompilerService {
       const inputs = `${workspace}/inputs/`;
       ensureDirSync(inputs);
 
-      const changes = [];
+      // const changes = [];
       for (const item of activity.items) {
         const source = item.item$ || useId(await this.sources.read({ user: activity.user, id: item.item }));
 
@@ -133,20 +133,20 @@ export class CompilerService {
         };
 
         const jsonfile = `${inputs}${source.id}_${item.type}`;
-        if (existsSync(jsonfile) && deepEqual(
-          this.removeAttribute(readJsonSync(jsonfile), 'id'),
-          this.removeAttribute(this.copyJson(newJson), 'id')
-        )) return false; // skip unchanged source items
+        // if (existsSync(jsonfile) && deepEqual(
+        //   this.removeAttribute(readJsonSync(jsonfile), 'id'),
+        //   this.removeAttribute(this.copyJson(newJson), 'id')
+        // )) return false; // skip unchanged source items
 
         writeJsonSync(jsonfile, newJson);
-        changes.push(item);
+        // changes.push(item);
       }
 
       const resp: any = {};
 
-      // skip compilation if nothing is changed
-      if (changes.length < 1)
-        return resp;
+      // // skip compilation if nothing is changed
+      // if (changes.length < 1)
+      //   return resp;
 
       const outputs = `${workspace}/outputs/`;
       if (existsSync(outputs))
