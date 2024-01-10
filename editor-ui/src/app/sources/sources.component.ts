@@ -26,7 +26,7 @@ export class SourcesComponent implements OnInit {
     private api: SourcesService,
     private activities: ActivitiesService,
     public router: Router,
-    private app: AppService,
+    public app: AppService,
   ) { }
 
   ngOnInit(): void {

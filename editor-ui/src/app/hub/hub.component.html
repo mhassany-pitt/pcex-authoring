@@ -1,9 +1,9 @@
 <div class="flex flex-col">
   <div class="px-10 py-4 bg-gray-100 shadow-md">
-    <div class="container mx-auto flex items-center gap-4 max-w-4xl">
+    <div class="container mx-auto flex items-center gap-2 max-w-4xl">
       <img src="./assets/logo.png" class="h-8 w-8" />
       <span class="text-xl font-bold">PCEX Authoring</span>
-      <i *ngIf="isLoggedIn" class="pi pi-chevron-right -mx-2"></i>
+      <i *ngIf="isLoggedIn" class="pi pi-chevron-right"></i>
 
       <p-dropdown *ngIf="isLoggedIn" [options]="[
           {label: 'Hub', value: '/hub'},
@@ -12,7 +12,14 @@
         ]" [ngModel]="'/hub'" class="-my-2 pcex-nav-dropdown"
         (onChange)="router.navigate([$event.value]);"></p-dropdown>
 
-      <span class=" flex-grow"></span>
+      <span class="flex-grow"></span>
+
+      <ng-container *ngIf="app.user?.roles?.includes('app-admin')">
+        <button pButton type="button" label="Users" icon="pi pi-users" class="p-button-sm p-button-text"
+          style="padding: 0.25rem 0.5rem;" routerLink="/user-admin">
+        </button>
+        <span class="border-r w-1 h-6"></span>
+      </ng-container>
 
       <app-user-auth-ctrl loginRedirect="/hub" logoutRedirect="/hub"></app-user-auth-ctrl>
     </div>

@@ -25,7 +25,7 @@ export class HubComponent implements OnInit {
     public router: Router,
     private sanitizer: DomSanitizer,
     private title: Title,
-    private app: AppService,
+    public app: AppService,
   ) { }
 
   ngOnInit(): void {
