@@ -139,7 +139,7 @@ export class EditorComponent implements OnInit {
         this.changeLang();
 
         if (this.editor)
-          this.reloadLineMarkers();
+          setTimeout(() => this.reloadLineMarkers(), 0);
 
         this.log({ type: 'loaded' });
       },
@@ -173,7 +173,7 @@ export class EditorComponent implements OnInit {
       }
     });
 
-    this.reloadLineMarkers();
+    setTimeout(() => this.reloadLineMarkers(), 0);
   }
 
   setupDistractorEditor(editor: any, distractor: any, i: number) {

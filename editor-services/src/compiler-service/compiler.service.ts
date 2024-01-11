@@ -82,10 +82,13 @@ export class CompilerService {
 
     try {
       const inputs = `${workspace}/inputs/`;
+      if (existsSync(inputs))
+        rmSync(inputs, { recursive: true });
       ensureDirSync(inputs);
 
       // const changes = [];
-      for (const item of activity.items) {
+      for (let i = 0; i < activity.items.length; i++) {
+        const item = activity.items[i];
         const source = item.item$ || useId(await this.sources.read({ user: activity.user, id: item.item }));
 
         const clines = (source.code || '').split('\n');
@@ -132,7 +135,7 @@ export class CompilerService {
           fullyWorkedOut: item.type == 'example'
         };
 
-        const jsonfile = `${inputs}${source.id}_${item.type}`;
+        const jsonfile = `${inputs}${source.id}_${item.type}_${i}`;
         // if (existsSync(jsonfile) && deepEqual(
         //   this.removeAttribute(readJsonSync(jsonfile), 'id'),
         //   this.removeAttribute(this.copyJson(newJson), 'id')
