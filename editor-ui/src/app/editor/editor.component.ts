@@ -451,8 +451,11 @@ export class EditorComponent implements OnInit {
     const lineNums = Object.keys(explanations).map((ln) => parseInt(ln));
     lineNums.forEach((lineNum) => {
       this.model.lines[lineNum] = {
-        comments: explanations[`${lineNum}`] //
-          .map((content: any) => ({ content, gpt: content })),
+        comments: [
+          ...this.model.lines[lineNum].comments,
+          ...explanations[`${lineNum}`] //
+            .map((content: any) => ({ content, gpt: content }))
+        ],
       };
     });
     this.selectLineNum(Math.min(...lineNums));
