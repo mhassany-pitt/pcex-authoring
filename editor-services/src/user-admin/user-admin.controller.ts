@@ -37,7 +37,7 @@ export class UserAdminController {
     const accounts = emails.split(',').map(text => {
       let [fullname, email] = text.indexOf(':') >= 0 ? text.split(':') : ['', text];
       fullname = fullname.trim();
-      email = email.trim();
+      email = email.toLowerCase().trim();
       if (!EmailValidator.validate(email))
         return null;
       return { fullname, email };

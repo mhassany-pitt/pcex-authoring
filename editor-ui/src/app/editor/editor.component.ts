@@ -452,9 +452,8 @@ export class EditorComponent implements OnInit {
     lineNums.forEach((lineNum) => {
       this.model.lines[lineNum] = {
         comments: [
-          ...this.model.lines[lineNum].comments,
-          ...explanations[`${lineNum}`] //
-            .map((content: any) => ({ content, gpt: content }))
+          ...(lineNum in this.model.lines ? this.model.lines[lineNum].comments : []),
+          ...explanations[`${lineNum}`].map((content: any) => ({ content, gpt: content }))
         ],
       };
     });
