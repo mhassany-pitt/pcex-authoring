@@ -15,6 +15,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { ChipsModule } from 'primeng/chips';
 import { RouterModule } from '@angular/router';
 import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 
@@ -30,7 +31,7 @@ import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
     InputTextModule, DialogModule,
     InputTextareaModule, SelectButtonModule,
     SplitButtonModule, MultiSelectModule,
-    ConfirmDialogModule,
+    ConfirmDialogModule, ChipsModule,
   ],
   providers: [UserAdminService, ConfirmationService]
 })

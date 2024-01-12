@@ -11,6 +11,7 @@ export class User {
   @Prop() fullname: string;
   @Prop() email: string;
   @Prop() password: string;
+  @Prop() tags: [string];
   @Prop() roles: [string];
   @Prop() permissions: [string];
   @Prop({ type: Object }) reset_pass_token: any;

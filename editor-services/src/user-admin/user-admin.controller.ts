@@ -22,8 +22,8 @@ export class UserAdminController {
   async list(@Req() req) {
     const myEmail = this.getMyEmail(req);
     return (await this.service.list()).map((user: any) => {
-      const { active, fullname, email, roles } = user;
-      const resp: any = { active, fullname, email, roles };
+      const { active, fullname, email, tags, roles } = user;
+      const resp: any = { active, fullname, email, tags, roles };
       if (email == myEmail)
         resp.itIsMe = true;
       return resp;
@@ -32,7 +32,7 @@ export class UserAdminController {
 
   @Post()
   @UseGuards(AuthenticatedGuard)
-  async create(@Req() req, @Body() { roles, emails }: any) {
+  async create(@Req() req, @Body() { roles, emails, tags }: any) {
     const myEmail = this.getMyEmail(req);
     const accounts = emails.split(',').map(text => {
       let [fullname, email] = text.indexOf(':') >= 0 ? text.split(':') : ['', text];
@@ -49,7 +49,7 @@ export class UserAdminController {
         token: sha256(Math.random().toString(36).substring(2)).toString(),
         expires: Date.now() + 60 * 60 * 1000,
       };
-      await this.service.create({ fullname, email, password, roles, reset_pass_token });
+      await this.service.create({ fullname, email, password, tags, roles, reset_pass_token });
     }
 
     return {};
