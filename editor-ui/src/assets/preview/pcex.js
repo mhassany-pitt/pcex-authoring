@@ -172,6 +172,11 @@ var pcex = {
 		pcex.currentGoal = pcex.jsonData.activityGoals[pcex.currentGoalIndex];
 		pcex.isInLastGoal = pcex.currentGoalIndex == pcex.numberOfGoals - 1;
 
+		if (pcex.isInLastGoal) {
+			$('#shortcut-next-button').attr('disabled', true).hide();
+			$('#next-button').hide();
+		}
+
 		var pre = document.createElement('pre');
 		var code = document.createElement('code');
 		code.setAttribute("class", pcex.codeHighlightClass);

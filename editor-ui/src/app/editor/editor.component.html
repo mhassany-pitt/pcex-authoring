@@ -61,17 +61,12 @@
             (blur)="changeLang(); log({type: 'filename-blur', prev_value: lastValue, value: model.filename });" />
 
           <div class="flex items-center gap-2 my-1 ">
-            <i class="pi pi-info-circle text-xs text-gray-400"></i>
-            <span class="text-xs text-gray-400">filename.ext must follow the language's naming convention</span>
+            <i class="pi pi-info-circle text-xs text-gray-500"></i>
+            <span class="text-xs text-gray-500">filename.ext must follow the language's naming convention</span>
 
             <span class="flex-grow"></span>
 
-            <!-- <span class="flex items-center gap-1 border rounded-md px-2 py-1 text-gray-600 hover:bg-gray-200 cursor-pointer"
-              (click)="gptGenAll = true">
-              <span>Generate Explanations</span>
-              <i class="genai-icon"></i>
-            </span> -->
-            <button pButton type="button" class="p-button-sm p-button-help p-button-outlined rounded-sm"
+            <button pButton type="button" class="p-button-sm p-button-secondary p-button-outlined rounded-sm"
               style="padding: 0.125rem 0 0.125rem 0.25rem;" (click)="gptGenAll = true">
               <span class="flex items-center gap-1">
                 <span>Generate Explanations</span>
@@ -112,10 +107,7 @@
 
                   <span class="flex-grow"></span>
 
-                  <!-- <i class="genai-icon"
-                    (click)="gptGenExplanations = true; gptGenExplanation_selectedLine = selectedLine;">
-                  </i> -->
-                  <button pButton type="button" label="Remove Explanations" icon="pi pi-trash"
+                  <button pButton type="button" label="Remove All" icon="pi pi-trash"
                     class="p-button-outlined p-button-sm p-button-danger" style="padding: 0.25rem 0.5rem;"
                     (click)="removeLine(selectedLineNum)">
                   </button>
@@ -133,9 +125,6 @@
                       (ngModelChange)="reloadLineMarkers()" (focus)="onExplanationFocus(comment, i)"
                       (blur)="onExplanationBlur(comment, i)"></textarea>
 
-                    <!-- <i class="genai-icon absolute right-6"
-                      (click)="gptGenExplanation = true; gptGenExplanations_selectedExplanation = comment.content"></i> -->
-
                     <i class="pi pi-trash cursor-pointer text-xs text-red-300 hover:text-red-600"
                       (click)="removeLineComment(comment, i)"></i>
                   </div>
@@ -151,73 +140,6 @@
                 </span>
               </ng-container>
             </div>
-
-            <!-- variations -->
-            <!-- <div *ngIf="false && currentTab == 'Variations'" class="h-full flex flex-col gap-2 relative">
-              <div class="flex items-center">
-                <span class="flex-grow text-xs text-gray-400">
-                  Define different variations of the code.
-                </span>
-                <button pButton type="button" icon="pi pi-plus" class="p-button-outlined p-button-sm p-button-help"
-                  style="padding: 0.25rem 0.5rem;" (click)="addVariation()">
-                </button>
-              </div>
-              <div class="flex flex-col flex-grow gap-2 h-80 overflow-y-scroll overflow-x-hidden -mr-2 pr-2">
-                <div *ngFor="let variation of model.variations; let i = index"
-                  class="flex items-stretch gap-2 variation border px-2 rounded-md shadow-sm hover:shadow-md">
-
-                  <div class="flex items-center justify-center text-sm">
-                    {{ i + 1 }}.
-                  </div>
-
-                  <span class="border-r border-gray-200"></span>
-
-                  <div class="flex flex-col gap-0.5 flex-grow">
-                    <div *ngFor="let ln of blankLineNums" class="flex items-start gap-2 relative">
-                      <span class="w-3 text-right line-number">
-                        {{ ln }}
-                      </span>
-                      <div class="flex flex-col flex-grow border rounded-sm relative">
-                        <ngx-monaco-editor *ngIf="langSet" [name]="'var-line-' + i + '_' + ln"
-                          [(ngModel)]="variation.lines[ln].code" [options]="distEditorOptions"
-                          (onInit)="setupVariationEditor($event, ln)" class="px-1 bg-white"
-                          style="height: 1.15rem; border: none;">
-                        </ngx-monaco-editor>
-                        <span *ngIf="!variation.lines[ln].code"
-                          class="absolute text-xs text-gray-400 pointer-events-none"
-                          style="top: 0.125rem; left: 0.375rem;">
-                          Type your snippet here...
-                        </span>
-                        <span class="border-t border-gray-200"></span>
-                        <textarea pInputTextarea [autoResize]="true" [name]="'var-line-desc-' + i + '_' + ln"
-                          [(ngModel)]="variation.lines[ln].description" placeholder="Description" rows="1"
-                          class="text-xs border-0 rounded-none" style="padding: 0.125rem 0.25rem;"></textarea>
-                      </div>
-                    </div>
-
-                    <div class="flex items-start gap-2 relative">
-                      <span class="w-3 text-center line-number">→</span>
-                      <textarea pInputTextarea [autoResize]="true" [name]="'var-line-input-' + i"
-                        [(ngModel)]="variation.input" placeholder="Input" rows="1"
-                        class="text-xs border-gray-200 rounded-none flex-grow"
-                        style="padding: 0.125rem 0.25rem;"></textarea>
-                    </div>
-                    <div class="flex items-start gap-2 relative">
-                      <span class="w-3 text-center line-number">←</span>
-                      <textarea pInputTextarea [autoResize]="true" [name]="'var-line-output-' + i"
-                        [(ngModel)]="variation.output" placeholder="Output" rows="1"
-                        class="text-xs border-gray-200 rounded-none flex-grow"
-                        style="padding: 0.125rem 0.25rem;"></textarea>
-                    </div>
-                  </div>
-
-                  <div class="flex items-center justify-center">
-                    <i class="pi pi-trash cursor-pointer text-xs text-red-300 hover:text-red-600"
-                      (click)="removeVariation(variation)"></i>
-                  </div>
-                </div>
-              </div>
-            </div> -->
 
             <!-- distractors -->
             <div *ngIf="currentTab == 'Distractors'" class="h-full flex flex-col relative">
@@ -283,15 +205,6 @@
           </div>
         </div>
       </div>
-
-      <!--
-        <hr />
-
-        <span class="text-xl font-bold">JSON Representation</span>
-        <ngx-monaco-editor name="json" [ngModel]="model | json" [options]="jsonViewerOptions"
-            class="flex-grow border px-1 rounded-md" style="height: 30rem;">
-        </ngx-monaco-editor>
-        -->
     </div>
 
     <p-dialog [(visible)]="showPreview" [modal]="true" [style]="{width: '85vw', height: '85vh'}"
@@ -299,25 +212,13 @@
       (onHide)="previewLink = null; log({ type: 'close-preview-dialog' })">
       <iframe *ngIf="previewLink" [src]="previewLink" style="width: 100%; height: 100%"></iframe>
     </p-dialog>
-    <p-dialog [(visible)]="gptGenAll" [modal]="true" header="Identify and Explain Lines"
-      [style]="{'max-width': '50rem'}" (onShow)="log({ type: 'open-expgen-dialog' });"
+    <p-dialog [(visible)]="gptGenAll" [modal]="true" [closeOnEscape]="false" position="top"
+      header="Generate Explanations" [style]="{'max-width': '60rem'}" (onShow)="log({ type: 'open-expgen-dialog' });"
       (onHide)="log({ type: 'close-expgen-dialog' });">
-      <app-gpt-genall *ngIf="gptGenAll" [sourceId]="model.id" [description]="model.description" [source]="model.code"
-        [language]="model.language" (complete)="gptGenAllCompleted($event); gptGenAll = false;" (log)="log($event)">
+      <app-gpt-genall *ngIf="gptGenAll" [sourceId]="model.id"
+        [params]="{ source: model.code, language: model.language, description: model.description }"
+        (complete)="gptGenAllCompleted($event); gptGenAll = false;" (log)="log($event)">
       </app-gpt-genall>
     </p-dialog>
-    <!-- <p-dialog [(visible)]="gptGenExplanations" [modal]="true" header="Explain the Selected Line"
-      [style]="{'max-width': '32rem'}">
-      <app-gpt-genexplanations *ngIf="gptGenExplanations" [line]="gptGenExplanation_selectedLine" class="block h-full"
-        (complete)="gptGenExplanationsCompleted($event); gptGenExplanations = false; gptGenExplanation_selectedLine = null;">
-      </app-gpt-genexplanations>
-    </p-dialog>
-    <p-dialog [(visible)]="gptGenExplanation" [modal]="true" header="Update the Explanation"
-      [style]="{'max-width': '32rem'}">
-      <app-gpt-genexplanation *ngIf="gptGenExplanation" [explanation]="gptGenExplanations_selectedExplanation"
-        class="block h-full"
-        (complete)="gptGenExplanationCompleted($event); gptGenExplanation = false; gptGenExplanations_selectedExplanation = null;">
-      </app-gpt-genexplanation>
-    </p-dialog> -->
   </form>
 </div>

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Configuration, OpenAIApi } from 'openai';
 import {
   ensureDirSync, writeJsonSync, writeFileSync,
-  readFileSync, readdirSync
+  readFileSync, readdirSync, existsSync, readJsonSync, exists
 } from 'fs-extra';
 import { preparePrompt1, preparePrompt2 } from './gpt-genai.prompts';
 
@@ -21,6 +21,20 @@ export class GptGenaiService {
 
   get root() {
     return `${this.config.get('STORAGE_PATH')}/gpt-genai`;
+  }
+
+  async history({ user, id }) {
+    const ws = `${this.root}/${user}/${id}/`;
+    return existsSync(ws) ? readdirSync(ws).sort().reverse() : [];
+  }
+
+  async load({ user, id, timestamp }) {
+    const ws = `${this.root}/${user}/${id}/${timestamp}/`;
+    const resp = readdirSync(ws).filter(f => f.indexOf('-response_') >= 0).sort().reverse()[0];
+    return {
+      params: existsSync(`${ws}/00-prompt.json`) ? readJsonSync(`${ws}/00-prompt.json`) : null,
+      explanations: readJsonSync(`${ws}/${resp}`)
+    };
   }
 
   async submit(messages: any[]) {
@@ -43,7 +57,7 @@ export class GptGenaiService {
 
   async generate({ skip, wsdir, user, id, description, source, prompt, language }) {
     wsdir = wsdir || this.root;
-    const ws = `${wsdir}/${user}--${id}__${new Date().toISOString()}`;
+    const ws = `${wsdir}/${user}/${id}/${new Date().toISOString()}`;
 
     const existing = readdirSync(wsdir) //
       .filter((f) => f.startsWith(`${user}--${id}`));
@@ -57,14 +71,11 @@ export class GptGenaiService {
 
     ensureDirSync(ws);
 
-    let resp = '[]',
-      prev = '[]';
+    let resp = '[]', prev = '[]';
     try {
       writeFileSync(`${ws}/00-source.txt`, source);
-      writeFileSync(
-        `${ws}/00-prompt.txt`,
-        preparePrompt1({ description, source, prompt, language }),
-      );
+      writeFileSync(`${ws}/00-prompt.txt`, preparePrompt1({ description, source, prompt, language }));
+      writeJsonSync(`${ws}/00-prompt.json`, { id, description, source, prompt, language });
 
       // 1st prompt
       const messages = [

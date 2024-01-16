@@ -1,8 +1,35 @@
 <div class="h-full flex flex-col relative gap-2">
+  <div class="border border-gray-200 rounded-sm p-2 flex flex-col gap-2">
+    <div class="flex items-center">
+      <h1 *ngIf="toggles['show-history']" class="font-bold">History (in descending order):</h1>
+
+      <span class="flex-grow"></span>
+
+      <button pButton type="button" [label]="'History ' + (history ? '('+history.length+')' : '')" icon="pi pi-calendar"
+        iconPos="right" class="p-button-sm p-button-plain tight-btn"
+        [ngClass]="{'p-button-outlined': !toggles['show-history']}" [disabled]="!history || history.length == 0"
+        (click)="toggles['show-history'] = !toggles['show-history']">
+      </button>
+    </div>
+
+    <ng-container *ngIf="toggles['show-history']">
+      <span class="text-xs text-gray-400">Click on a timestamp to load the session.</span>
+      <div class="flex flex-wrap items-center gap-1 ml-4">
+        <button *ngFor="let timestamp of history" pButton type="button" label="{{ timestamp | date:'medium' }}"
+          iconPos="right" class="p-button-sm p-button-plain"
+          [ngClass]="{'p-button-outlined': historyTimestamp != timestamp}"
+          style="font-size: 0.75rem; padding: 0.125rem 0.25rem;" [loading]="toggles[timestamp]"
+          (click)="loadHistory(timestamp)">
+        </button>
+      </div>
+      <span class="text-xs text-gray-400">Changes are persisted ONLY within the current dialog.</span>
+    </ng-container>
+  </div>
+
   <div class="flex flex-col gap-2 p-2 border border-gray-200 rounded-sm">
     <h1 class="font-bold">GPT Prompt:</h1>
 
-    <div class="leading-5 ml-4">
+    <div *ngIf="prompt" class="leading-5 ml-4">
       <span>
         Given the following program description and accompanying source code, identify and explain lines of the code
         that contributes directly to the program objectives and goals.
@@ -30,61 +57,108 @@
         (blur)="onPromptBlur('genexps-prompt-explanation-blur', explanationEl); prompt.explanation = explanationEl.textContent?.trim()">
         {{ prompt.explanation }}
       </span>
+
+      <ng-container *ngIf="params.description">
+        <br />
+        <br />
+
+        <span class="font-bold mr-2">Program Description:</span>
+        <span>{{ params.description }}</span>
+      </ng-container>
     </div>
 
-    <div class="flex items-center gap-2">
-      <button pButton type="button" [label]="generating ? 'Generating' : 'Generate'" icon="pi pi-send"
-        class="p-button-sm p-button-secondary" style="padding: 0.25rem 0.5rem;" [loading]="generating"
-        (click)="generate()">
-      </button>
+    <div class="flex items-center justify-end gap-2">
       <span *ngIf="generating" class="text-xs text-gray-400">
-        Based on how big the source is, this may take up to a minute!
+        Based on how big the source is, <br /> this may take up to a minute!
       </span>
+      <button pButton type="button" [label]="generating ? 'Generating' : 'Generate'" icon="pi pi-send"
+        class="p-button-sm p-button-secondary tight-btn" [loading]="generating" (click)="generate()">
+      </button>
     </div>
   </div>
 
   <div class="flex-grow flex items-stretch gap-2">
-    <div #editorEl class="flex-grow bg-white border border-gray-200 rounded-sm h-64"
-      [ngClass]="{'w-2/3': lnsExplanations}">
-      <ngx-monaco-editor *ngIf="ready" name="source" [(ngModel)]="source" [options]="editorOptions"
+    <div #editorEl class="flex-grow bg-white border border-gray-200 rounded-sm" [ngClass]="{'w-3/5': allExplanations}"
+      style="max-height: 20rem;">
+      <ngx-monaco-editor name="source" [(ngModel)]="params.source" [options]="editorOptions"
         style="height: 100%; min-height: 256px;" (onInit)="setupEditor($event)">
       </ngx-monaco-editor>
     </div>
 
-    <div *ngIf="lnsExplanations" class="w-1/3 flex flex-col gap-2 h-64">
-      <div class="flex-grow flex flex-col border rounded-sm p-2 gap-1">
-        <span *ngIf="!lnExplanations" class="text-xs text-gray-400">
+    <div *ngIf="allExplanations" class="w-2/5 flex flex-col gap-2">
+      <div class="flex-grow flex flex-col border rounded-sm pl-2 py-2 gap-1" style="max-height: 17.5rem;">
+        <span *ngIf="!lineExplanations" class="text-xs text-gray-400">
           ← put the cursor in an explained line to see its explanations
         </span>
 
-        <div *ngIf="lnExplanations" class="text-xs font-bold">
-          [<i class="pi cursor-pointer hover:text-blue-600 hover:font-bold" [ngClass]="{ 
-              'pi-check text-green-600 font-bold': !tt[ln+'-all'], 
-              'pi-times text-red-400': tt[ln+'-all']
-            }" style="font-size: 0.65rem" (click)="toggleLineExclusion(ln)"></i>]
-          <span *ngIf="tt[ln+'-all']">Exclude this line</span>
-          <span *ngIf="!tt[ln+'-all']">Include this line</span>
-        </div>
-        <hr class="-mx-2" />
+        <div class="flex items-center gap-2 mr-2">
+          <div *ngIf="lineExplanations" class="flex items-center gap-2 text-xs cursor-pointer"
+            (click)="toggleLineExclusion(lineNum)">
+            <i class="pi hover:bg-gray-200 font-bold" [ngClass]="{ 
+            'pi-check text-green-600': !toggles[lineNum+'-all'], 
+            'pi-times text-red-400': toggles[lineNum+'-all']
+          }" style="font-size: 0.85rem"></i>
+            <span *ngIf="toggles[lineNum+'-all']" class="font-bold">Exclude this line</span>
+            <span *ngIf="!toggles[lineNum+'-all']" class="font-bold">Include this line</span>
+          </div>
 
-        <div class="max-h-40 flex flex-col gap-1 overflow-y-auto">
-          <div *ngFor="let lnExplanation of lnExplanations; let i = index" class="text-xs"
-            [ngClass]="{'bg-gray-100': i % 2 == 0}">
-            [<i class="pi cursor-pointer hover:text-blue-600 hover:font-bold" [ngClass]="{
-                'pi-check text-green-600 font-bold': !tt[ln+'-'+i], 
-                'pi-times text-red-400': tt[ln+'-'+i]
-              }" style="font-size: 0.65rem" (click)="toggleExplanationExclusion(ln, i)"></i>]
-            <i class="pi cursor-pointer hover:text-blue-600 hover:font-bold" [ngClass]="{ 
-                'pi-thumbs-up-fill text-green-600 font-bold': tt[ln+'-'+i+'-liked'],
-                'pi-thumbs-up text-gray-400': !tt[ln+'-'+i+'-liked']
-              }" style="font-size: 0.65rem" (click)="toggleExplanationLike(ln, i)"></i>
-            <span class="ml-1" [ngClass]="{ 'line-through': tt[ln+'-'+i] }">{{ lnExplanation }}</span>
+          <span class="flex-grow"></span>
+
+          <button pButton type="button" label="Merge All" icon="pi pi-link" iconPos="right"
+            class="p-button-sm p-button-plain p-button-outlined" style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
+            (click)="mergeExplanations()" [disabled]="!lineExplanations">
+          </button>
+        </div>
+
+        <hr class="-ml-2" />
+
+        <div class="flex flex-col gap-1 overflow-y-auto">
+          <div *ngFor="let exp of lineExplanations; let i = index" #el class="flex items-center gap-2 mr-2"
+            [ngClass]="{'border border-dashed border-gray-400': dragOverIndex == i}"
+            (dragstart)="onExplanationDrag($event, i)" (dragover)="onExplanationDragOver($event, i)"
+            (drop)="onExplanationDrop($event, i)" (dragend)="el.removeAttribute('draggable'); dragEnabled = false;">
+            <!-- include/exclude-btn -->
+            <i class="pi cursor-pointer hover:bg-gray-200" [ngClass]="{
+                'pi-check text-green-600': !toggles[lineNum+'-'+exp.id], 
+                'pi-times text-red-500': toggles[lineNum+'-'+exp.id]
+              }" style="font-size: 0.85rem" (click)="toggleExplanationExclusion(lineNum, exp.id)"></i>
+
+            <!-- like-btn -->
+            <i class="pi cursor-pointer hover:bg-gray-200" [ngClass]="{ 
+              'pi-thumbs-up-fill text-green-600': toggles[lineNum+'-'+exp.id+'-liked'],
+              'pi-thumbs-up text-gray-500': !toggles[lineNum+'-'+exp.id+'-liked']
+            }" style="font-size: 0.85rem" (click)="toggleExplanationLike(lineNum, exp.id)"></i>
+
+            <!-- explanation -->
+            <textarea pInputTextarea [autoResize]="true" [name]="'linecomment-' + i" [(ngModel)]="exp.content" rows="1"
+              placeholder="Explanation" class="flex-grow px-2 py-1 border-gray-200"
+              [ngClass]="{ 'line-through': toggles[lineNum+'-'+exp.id] }" style="font-size: 0.75rem;"></textarea>
+
+            <!-- delete-btn -->
+            <i class="pi pi-trash text-red-300 hover:text-red-600 cursor-pointer" style="font-size: 0.85rem;"
+              (click)="removeExplanation(i)"></i>
+
+            <!-- reorder-bar -->
+            <i class="pi pi-sort text-gray-500 reorder-bar" style="font-size: 0.85rem;"
+              (mousedown)="el.setAttribute('draggable', 'true'); dragEnabled = true;"></i>
+          </div>
+          <div class="flex items-center gap-2 mr-2">
+            <hr class="flex-grow" />
+            <button pButton type="button" label="add an explanation" icon="pi pi-plus"
+              class="p-button-sm p-button-plain p-button-outlined"
+              style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
+              (click)="lineExplanations.push({id: lineExplanations.length, content: ''})">
+            </button>
+            <hr class="flex-grow" />
           </div>
         </div>
       </div>
 
-      <button pButton type="button" label="Use Explanations" icon="pi pi-check" class="p-button-sm h-8"
-        style="padding: 0.25rem 0.5rem;" (click)="useExplanations()">
+      <button pButton type="button" class="p-button-sm h-8 tight-btn" (click)="applyAndUse()">
+        <span class="w-full flex item-center justify-center gap-2">
+          <i class="pi pi-check text-sm"></i>
+          <span>Apply Changes & Use Explanations</span>
+        </span>
       </button>
     </div>
   </div>
