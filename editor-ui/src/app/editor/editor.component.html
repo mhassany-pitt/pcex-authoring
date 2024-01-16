@@ -20,7 +20,7 @@
           <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
             class="p-button-sm p-button-secondary p-button-text -my-2" (click)="back()">
           </button>
-          <button pButton type="submit" label="Update" icon="pi pi-check" class="p-button-sm -my-2"
+          <button pButton type="submit" label="Save" icon="pi pi-check" class="p-button-sm -my-2"
             [disabled]="form.invalid">
           </button>
         </div>
@@ -53,6 +53,44 @@
 
       <div class="flex-grow flex items-stretch gap-2">
 
+        <!-- source code -->
+        <div class="w-3/5 flex flex-col bg-gray-100 p-2 rounded-sm">
+          <input type="text" name="filename" pInputText [(ngModel)]="model.filename" placeholder="filename.ext"
+            class="p-inputtext-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" required
+            (focus)="lastValue = model.filename; log({ type: 'filename-focus', value: model.filename })"
+            (blur)="changeLang(); log({type: 'filename-blur', prev_value: lastValue, value: model.filename });" />
+
+          <div class="flex items-center gap-2 my-1 ">
+            <i class="pi pi-info-circle text-xs text-gray-400"></i>
+            <span class="text-xs text-gray-400">filename.ext must follow the language's naming convention</span>
+
+            <span class="flex-grow"></span>
+
+            <!-- <span class="flex items-center gap-1 border rounded-md px-2 py-1 text-gray-600 hover:bg-gray-200 cursor-pointer"
+              (click)="gptGenAll = true">
+              <span>Generate Explanations</span>
+              <i class="genai-icon"></i>
+            </span> -->
+            <button pButton type="button" class="p-button-sm p-button-help p-button-outlined rounded-sm"
+              style="padding: 0.125rem 0 0.125rem 0.25rem;" (click)="gptGenAll = true">
+              <span class="flex items-center gap-1">
+                <span>Generate Explanations</span>
+                <i class="genai-icon"></i>
+              </span>
+            </button>
+          </div>
+
+          <div class="flex-grow flex flex-col relative">
+            <ngx-monaco-editor id="src-editor" *ngIf="langSet" name="code" [(ngModel)]="model.code"
+              [options]="srcEditorOptions" (onInit)="setupSourceEditor($event)" required class="flex-grow border"
+              style="height: auto; min-height: 250px;">
+            </ngx-monaco-editor>
+            <span *ngIf="!model.code" class="absolute top-0.5 left-12 text-xs text-gray-400 pointer-events-none">
+              type your source code here...
+            </span>
+          </div>
+        </div>
+
         <div class="w-2/5 flex flex-col gap-2 bg-gray-100 rounded-sm p-2">
           <!-- tab headers -->
           <p-selectButton name="current-tab" [options]="tabHeaders" [(ngModel)]="currentTab"
@@ -77,7 +115,7 @@
                   <!-- <i class="genai-icon"
                     (click)="gptGenExplanations = true; gptGenExplanation_selectedLine = selectedLine;">
                   </i> -->
-                  <button pButton type="button" label="Clear Line" icon="pi pi-trash"
+                  <button pButton type="button" label="Remove Explanations" icon="pi pi-trash"
                     class="p-button-outlined p-button-sm p-button-danger" style="padding: 0.25rem 0.5rem;"
                     (click)="removeLine(selectedLineNum)">
                   </button>
@@ -90,7 +128,7 @@
                   <div *ngFor="let comment of selectedLine.comments; let i = index"
                     class="flex items-center gap-2 relative">
                     <textarea pInputTextarea [autoResize]="true" [name]="'linecomment-' + i"
-                      [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Comment"
+                      [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
                       class="flex-grow px-2 py-1 border-gray-200" style="font-size: 0.75rem;"
                       (ngModelChange)="reloadLineMarkers()" (focus)="onExplanationFocus(comment, i)"
                       (blur)="onExplanationBlur(comment, i)"></textarea>
@@ -108,8 +146,8 @@
                 </span>
               </ng-container>
               <ng-container *ngIf="!selectedLineNum">
-                <span class="text-gray-500 text-sm text-right">
-                  to start annotating, place the cursor in a line →
+                <span class="text-gray-600 text-sm text-left">
+                  ← to start annotating, place the cursor in a line
                 </span>
               </ng-container>
             </div>
@@ -184,7 +222,7 @@
             <!-- distractors -->
             <div *ngIf="currentTab == 'Distractors'" class="h-full flex flex-col relative">
               <div class="flex items-center gap-4">
-                <span class="text-gray-400 text-xs flex-grow">
+                <span class="text-gray-600 text-xs flex-grow">
                   One-liners that can placed in blank lines.
                 </span>
 
@@ -204,7 +242,7 @@
 
                 <div class="flex flex-col flex-grow gap-2 h-80 overflow-y-scroll overflow-x-hidden -mr-2 pr-2">
                   <div *ngFor="let distractor of model.distractors; let i = index"
-                    class="flex items-center gap-2 border px-2 rounded-md relative shadow-sm hover:shadow-md">
+                    class="flex items-center gap-2 border border-gray-600 px-2 rounded-sm relative shadow-sm hover:shadow-md">
                     <span class="text-center text-sm">{{ i + 1 }}.</span>
                     <div class="flex flex-col flex-grow relative">
                       <ngx-monaco-editor *ngIf="langSet" [name]="'distractor-' + i" [(ngModel)]="distractor.code"
@@ -212,12 +250,12 @@
                         class="px-1 bg-white" style="height: 1.15rem; border: none;">
                       </ngx-monaco-editor>
                       <span *ngIf="!distractor.code" class="absolute text-xs text-gray-400 pointer-events-none"
-                        style="top: 0.125rem; left: 1.875rem;">
+                        style="top: 0.125rem; left: 0.25rem;">
                         Type your snippet here...
                       </span>
                       <span class="border-t border-gray-200"></span>
                       <textarea pInputTextarea [autoResize]="true" [name]="'dist-description-' + i"
-                        [(ngModel)]="distractor.description" placeholder="Description" rows="1"
+                        [(ngModel)]="distractor.description" placeholder="Explanation" rows="1"
                         class="text-xs border-0 rounded-none" style="padding: 0.125rem 0.25rem;"
                         (focus)="lastValue = distractor.description; log({ type: 'distractor-description-focus', index: i, value: distractor.description })"
                         (blur)="log({ type: 'distractor-description-blur', index: i, prev_value: lastValue, value: distractor.description })"></textarea>
@@ -233,7 +271,7 @@
             <!-- program input -->
             <div *ngIf="currentTab == 'Program Input'" class="h-full flex flex-col relative">
               <div class="flex items-center h-8">
-                <span class="text-gray-400 text-xs">
+                <span class="text-gray-600 text-xs">
                   Available through System.in (Java), stdin (C, C++), ...
                 </span>
               </div>
@@ -242,38 +280,6 @@
                 (focus)="lastValue = model.programInput; log({type: 'program-input-focus', value: model.programInput})"
                 (blur)="log({type: 'program-input-blur', prev_value: lastValue, value: model.programInput})"></textarea>
             </div>
-          </div>
-        </div>
-
-        <!-- source code -->
-        <div class="w-3/5 flex flex-col bg-gray-100 p-2 rounded-sm">
-          <input type="text" name="filename" pInputText [(ngModel)]="model.filename" placeholder="filename.ext"
-            class="p-inputtext-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" required
-            (focus)="lastValue = model.filename; log({ type: 'filename-focus', value: model.filename })"
-            (blur)="changeLang(); log({type: 'filename-blur', prev_value: lastValue, value: model.filename });" />
-
-          <div class="flex items-center gap-2 my-1 ">
-            <i class="pi pi-info-circle text-xs text-gray-400"></i>
-            <span class="text-xs text-gray-400">filename.ext must follow the language's naming convention</span>
-
-            <span class="flex-grow"></span>
-
-            <span
-              class="flex items-center gap-1 border rounded-md px-1 text-xs text-gray-400 hover:bg-gray-200 cursor-pointer"
-              (click)="gptGenAll = true">
-              <span>Generate Explanations</span>
-              <i class="genai-icon"></i>
-            </span>
-          </div>
-
-          <div class="flex-grow flex flex-col relative">
-            <ngx-monaco-editor id="src-editor" *ngIf="langSet" name="code" [(ngModel)]="model.code"
-              [options]="srcEditorOptions" (onInit)="setupSourceEditor($event)" required class="flex-grow border"
-              style="height: auto; min-height: 250px;">
-            </ngx-monaco-editor>
-            <span *ngIf="!model.code" class="absolute top-0.5 left-12 text-xs text-gray-400 pointer-events-none">
-              type your source code here...
-            </span>
           </div>
         </div>
       </div>
@@ -294,7 +300,7 @@
       <iframe *ngIf="previewLink" [src]="previewLink" style="width: 100%; height: 100%"></iframe>
     </p-dialog>
     <p-dialog [(visible)]="gptGenAll" [modal]="true" header="Identify and Explain Lines"
-      [style]="{'max-width': '48rem'}" (onShow)="log({ type: 'open-expgen-dialog' });"
+      [style]="{'max-width': '50rem'}" (onShow)="log({ type: 'open-expgen-dialog' });"
       (onHide)="log({ type: 'close-expgen-dialog' });">
       <app-gpt-genall *ngIf="gptGenAll" [sourceId]="model.id" [description]="model.description" [source]="model.code"
         [language]="model.language" (complete)="gptGenAllCompleted($event); gptGenAll = false;" (log)="log($event)">

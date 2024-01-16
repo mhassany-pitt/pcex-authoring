@@ -205,10 +205,12 @@ export class GptGenallComponent implements OnInit {
     this.complete.emit(filtered);
   }
 
-  placeholder(el: any, text: string) {
+  placeholder(el: any, dflt: string) {
     const content = el.textContent?.trim();
-    el.innerHTML = content || `<span class="text-gray-400 italic">${text}</span>`;
-    return content;
+    const content_lower = content?.toLowerCase();
+    const defOrEmpty = content_lower == dflt.toLowerCase().trim() || !content_lower;
+    el.innerHTML = defOrEmpty ? `<span class="text-gray-400 italic">${dflt}</span>` : content;
+    return defOrEmpty ? '' : content;
   }
 
   onPromptBlur(type: string, el: any) {
