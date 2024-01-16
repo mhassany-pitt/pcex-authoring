@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Source } from './source.schema';
 import { toObject } from 'src/utils';
 import { ensureDirSync, writeFile, writeFileSync } from 'fs-extra';
+import { readFile, readdir } from 'fs/promises';
 
 @Injectable()
 export class SourcesService {
@@ -16,6 +17,19 @@ export class SourcesService {
     @InjectModel('sources') private sources: Model<Source>,
   ) {
     ensureDirSync(`${this.STORAGE_PATH}/logs`);
+    (async () => {
+      const files = await readdir(`${this.STORAGE_PATH}/logs`);
+      for (const file of files) {
+        const path = `${this.STORAGE_PATH}/logs/${file}`;
+        const content = await readFile(path);
+        if (content.indexOf('- {"type":"create","user":"') > -1)
+          continue;
+        const id = file.replace('.log', '');
+        const source = await this.sources.findOne({ _id: id });
+        await this.log({ id, log: { type: 'create', user: source.user, fix: true } });
+        console.log('log created for', id);
+      }
+    })();
   }
 
   async list({ user, archived }) {
