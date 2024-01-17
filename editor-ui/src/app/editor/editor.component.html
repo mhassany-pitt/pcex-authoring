@@ -96,10 +96,10 @@
           <div class="p-2 flex-grow border border-gray-200">
             <!-- annotations -->
             <div *ngIf="currentTab == 'Annotations'" class="h-full flex flex-col gap-2 relative">
-              <ng-container *ngIf="selectedLineNum">
+              <ng-container *ngIf="lineNum">
                 <div class="flex items-center gap-2">
                   <span class="flex items-center gap-2 cursor-pointer"
-                    (click)="toggleBlankLine(); log({ type: 'line-toggle-blank', value: selectedLine.blank, line_num: selectedLineNum })">
+                    (click)="toggleBlankLine(); log({ type: 'line-toggle-blank', value: selectedLine.blank, line_num: lineNum })">
                     <i class="w-4 h-4 rounded-sm border-2 border-blue-400"
                       [ngClass]="{'bg-blue-400': selectedLine.blank, 'bg-white': !selectedLine.blank}"></i>
                     <span>It is a blank line</span>
@@ -109,7 +109,7 @@
 
                   <button pButton type="button" label="Remove All" icon="pi pi-trash"
                     class="p-button-outlined p-button-sm p-button-danger" style="padding: 0.25rem 0.5rem;"
-                    (click)="removeLine(selectedLineNum)">
+                    (click)="removeLine(lineNum)">
                   </button>
                   <button pButton type="button" icon="pi pi-plus" class="p-button-outlined p-button-sm p-button-help"
                     style="padding: 0.25rem 0.5rem;" (click)="addLineComment()">
@@ -123,7 +123,7 @@
                     (dragstart)="onExplanationDrag($event, i)" (dragover)="onExplanationDragOver($event, i)"
                     (drop)="onExplanationDrop($event, i)" (dragend)="onExplanationDragEnd(expEl, $event, i)">
                     <textarea pInputTextarea [autoResize]="true" [name]="'linecomment-' + i"
-                      [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
+                      [(ngModel)]="comment.content" [disabled]="!lineNum" rows="1" placeholder="Explanation"
                       class="flex-grow px-2 py-1 border-gray-200" style="font-size: 0.75rem;"
                       (ngModelChange)="reloadLineMarkers()" (focus)="onExplanationFocus(comment, i)"
                       (blur)="onExplanationBlur(comment, i)"></textarea>
@@ -137,7 +137,7 @@
                   </div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="!selectedLineNum">
+              <ng-container *ngIf="!lineNum">
                 <span class="text-gray-600 text-sm text-left">
                   ← to start annotating, place the cursor in a line
                 </span>

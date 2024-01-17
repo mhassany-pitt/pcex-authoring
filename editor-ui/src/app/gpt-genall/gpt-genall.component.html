@@ -90,70 +90,71 @@
     <div *ngIf="allExplanations" class="w-2/5 flex flex-col gap-2">
       <div class="flex-grow flex flex-col border rounded-sm pl-2 py-2 gap-1" style="max-height: 17.5rem;">
         <span *ngIf="!lineExplanations" class="text-xs text-gray-400">
-          ← put the cursor in an explained line to see its explanations
+          ← put the cursor in a line with explanations to see them here.
         </span>
+        <ng-container *ngIf="lineExplanations">
+          <div class="flex items-center gap-2 mr-2">
+            <div class="flex items-center gap-2 text-xs cursor-pointer" (click)="toggleLineExclusion(lineNum)">
+              <i class="pi hover:bg-gray-200 font-bold" [ngClass]="{ 
+                  'pi-check text-green-600': !toggles[lineNum+'-all'], 
+                  'pi-times text-red-400': toggles[lineNum+'-all']
+                }" style="font-size: 0.85rem"></i>
+              <span *ngIf="toggles[lineNum+'-all']" class="font-bold">Exclude this line</span>
+              <span *ngIf="!toggles[lineNum+'-all']" class="font-bold">Include this line</span>
+            </div>
 
-        <div class="flex items-center gap-2 mr-2">
-          <div *ngIf="lineExplanations" class="flex items-center gap-2 text-xs cursor-pointer"
-            (click)="toggleLineExclusion(lineNum)">
-            <i class="pi hover:bg-gray-200 font-bold" [ngClass]="{ 
-            'pi-check text-green-600': !toggles[lineNum+'-all'], 
-            'pi-times text-red-400': toggles[lineNum+'-all']
-          }" style="font-size: 0.85rem"></i>
-            <span *ngIf="toggles[lineNum+'-all']" class="font-bold">Exclude this line</span>
-            <span *ngIf="!toggles[lineNum+'-all']" class="font-bold">Include this line</span>
+            <span class="flex-grow"></span>
+
+            <button pButton type="button" label="Merge All" icon="pi pi-link" iconPos="right"
+              class="p-button-sm p-button-plain p-button-outlined"
+              style="font-size: 0.75rem; padding: 0.125rem 0.25rem;" (click)="mergeExplanations()"
+              [disabled]="!lineExplanations">
+            </button>
           </div>
 
-          <span class="flex-grow"></span>
+          <hr class="-ml-2" />
 
-          <button pButton type="button" label="Merge All" icon="pi pi-link" iconPos="right"
-            class="p-button-sm p-button-plain p-button-outlined" style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-            (click)="mergeExplanations()" [disabled]="!lineExplanations">
-          </button>
-        </div>
-
-        <hr class="-ml-2" />
-
-        <div class="flex flex-col gap-1 overflow-y-auto">
-          <div *ngFor="let exp of lineExplanations; let i = index" #expEl class="flex items-center gap-2 mr-2"
-            [ngClass]="{'border border-dashed border-gray-400': dragOverIndex == i}"
-            (dragstart)="onExplanationDrag($event, i)" (dragover)="onExplanationDragOver($event, i)"
-            (drop)="onExplanationDrop($event, i)" (dragend)="onExplanationDragEnd(expEl, $event, i)">
-            <!-- include/exclude-btn -->
-            <i class="pi cursor-pointer hover:bg-gray-200" [ngClass]="{
+          <div class="flex flex-col gap-1 overflow-y-auto">
+            <div *ngFor="let exp of lineExplanations; let i = index" #expEl class="flex items-center gap-2 mr-2"
+              [ngClass]="{'border border-dashed border-gray-400': dragOverIndex == i}"
+              (dragstart)="onExplanationDrag($event, i)" (dragover)="onExplanationDragOver($event, i)"
+              (drop)="onExplanationDrop($event, i)" (dragend)="onExplanationDragEnd(expEl, $event, i)">
+              <!-- include/exclude-btn -->
+              <i class="pi cursor-pointer hover:bg-gray-200" [ngClass]="{
                 'pi-check text-green-600': !toggles[lineNum+'-'+exp.id], 
                 'pi-times text-red-500': toggles[lineNum+'-'+exp.id]
               }" style="font-size: 0.85rem" (click)="toggleExplanationExclusion(lineNum, exp.id)"></i>
 
-            <!-- like-btn -->
-            <i class="pi cursor-pointer hover:bg-gray-200" [ngClass]="{ 
+              <!-- like-btn -->
+              <i class="pi cursor-pointer hover:bg-gray-200" [ngClass]="{ 
               'pi-thumbs-up-fill text-green-600': toggles[lineNum+'-'+exp.id+'-liked'],
               'pi-thumbs-up text-gray-500': !toggles[lineNum+'-'+exp.id+'-liked']
             }" style="font-size: 0.85rem" (click)="toggleExplanationLike(lineNum, exp.id)"></i>
 
-            <!-- explanation -->
-            <textarea pInputTextarea [autoResize]="true" [name]="'linecomment-' + i" [(ngModel)]="exp.content" rows="1"
-              placeholder="Explanation" class="flex-grow px-2 py-1 border-gray-200"
-              [ngClass]="{ 'line-through': toggles[lineNum+'-'+exp.id] }" style="font-size: 0.75rem;"></textarea>
+              <!-- explanation -->
+              <textarea pInputTextarea [autoResize]="true" [name]="'linecomment-' + i" [(ngModel)]="exp.content"
+                rows="1" placeholder="Explanation" class="flex-grow px-2 py-1 border-gray-200"
+                [ngClass]="{ 'line-through': toggles[lineNum+'-'+exp.id] }" style="font-size: 0.75rem;"></textarea>
 
-            <!-- delete-btn -->
-            <i class="pi pi-trash text-red-300 hover:text-red-600 cursor-pointer" style="font-size: 0.85rem;"
-              (click)="removeExplanation(i)"></i>
+              <!-- delete-btn -->
+              <i class="pi pi-trash text-red-300 hover:text-red-600 cursor-pointer" style="font-size: 0.85rem;"
+                (click)="removeExplanation(i)"></i>
 
-            <!-- reorder-bar -->
-            <i class="pi pi-sort text-gray-500 reorder-bar" style="font-size: 0.85rem;"
-              (mousedown)="expEl.setAttribute('draggable', 'true'); dragEnabled = true;"></i>
+              <!-- reorder-bar -->
+              <i class="pi pi-sort text-gray-500 reorder-bar" style="font-size: 0.85rem;"
+                (mousedown)="expEl.setAttribute('draggable', 'true'); dragEnabled = true;"></i>
+            </div>
+            <div class="flex items-center gap-2 mr-2">
+              <hr class="flex-grow" />
+              <button pButton type="button" label="add an explanation" icon="pi pi-plus"
+                class="p-button-sm p-button-plain p-button-outlined"
+                style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
+                (click)="lineExplanations.push({id: lineExplanations.length, content: ''})">
+              </button>
+              <hr class="flex-grow" />
+            </div>
           </div>
-          <div class="flex items-center gap-2 mr-2">
-            <hr class="flex-grow" />
-            <button pButton type="button" label="add an explanation" icon="pi pi-plus"
-              class="p-button-sm p-button-plain p-button-outlined"
-              style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-              (click)="lineExplanations.push({id: lineExplanations.length, content: ''})">
-            </button>
-            <hr class="flex-grow" />
-          </div>
-        </div>
+        </ng-container>
       </div>
 
       <button pButton type="button" class="p-button-sm h-8 tight-btn" (click)="applyAndUse()">

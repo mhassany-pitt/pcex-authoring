@@ -46,7 +46,7 @@ export class EditorComponent implements OnInit {
   model: any;
 
   editor: any;
-  selectedLineNum: any;
+  lineNum: any;
   selectedLine: any;
   blankLineNums: any[] = [];
   decorations: any[] = [];
@@ -106,8 +106,8 @@ export class EditorComponent implements OnInit {
 
     this.log({
       type: 'explanation-focus',
-      line_num: this.selectedLineNum,
-      line_content: this.model.code.split('\n')[this.selectedLineNum - 1],
+      line_num: this.lineNum,
+      line_content: this.model.code.split('\n')[this.lineNum - 1],
       is_blank: this.selectedLine.blank,
       index: i,
       value: comment,
@@ -117,8 +117,8 @@ export class EditorComponent implements OnInit {
   onExplanationBlur(comment: any, i: number) {
     this.log({
       type: 'explanation-blur',
-      line_num: this.selectedLineNum,
-      line_content: this.model.code.split('\n')[this.selectedLineNum - 1],
+      line_num: this.lineNum,
+      line_content: this.model.code.split('\n')[this.lineNum - 1],
       is_blank: this.selectedLine.blank,
       index: i,
       prev_value: this.lastValue,
@@ -163,13 +163,13 @@ export class EditorComponent implements OnInit {
     });
 
     editor.onDidChangeCursorPosition((e: any) => this.ngZone.run(() => {
-      if (this.selectedLineNum != e.position.lineNumber) {
-        this.selectLineNum(e.position.lineNumber, false);
+      if (this.lineNum != e.position.lineNumber) {
+        this.selectLine(e.position.lineNumber, false);
       }
     }));
     editor.onMouseDown(($event: any) => {
-      if ($event.target.type == 2 && this.selectedLineNum != $event.target.position.lineNumber) {
-        this.selectLineNum($event.target.position.lineNumber);
+      if ($event.target.type == 2 && this.lineNum != $event.target.position.lineNumber) {
+        this.selectLine($event.target.position.lineNumber);
       }
     });
 
@@ -217,8 +217,8 @@ export class EditorComponent implements OnInit {
     // <<---------------
   }
 
-  selectLineNum(lineNum: number, reveal = true) {
-    this.selectedLineNum = lineNum;
+  selectLine(lineNum: number, reveal = true) {
+    this.lineNum = lineNum;
 
     if (lineNum) {
       // init line with defaults
@@ -229,13 +229,21 @@ export class EditorComponent implements OnInit {
       this.selectedLine = {};
     }
 
-    this.reloadLineMarkers(lineNum, reveal);
+    if (reveal) {
+      const line = this.model.code?.split('\n')[0][lineNum - 1];
+      const column = line.indexOf(`${line.trim().charAt(0)}`) + 1;
+      this.editor.revealLinesInCenter(lineNum, column);
+      this.editor.setPosition({ lineNumber: lineNum, column });
+      this.editor.focus();
+    }
+
+    this.reloadLineMarkers();
     this.log({ type: 'select-line', line_num: lineNum });
   }
 
   toggleBlankLine() {
     this.selectedLine.blank = !this.selectedLine.blank;
-    this.reloadLineMarkers(this.selectedLineNum);
+    this.reloadLineMarkers();
   }
 
   ignoreUntouchedLines() {
@@ -253,7 +261,7 @@ export class EditorComponent implements OnInit {
       .forEach((ln) => delete this.model.lines[ln]);
   }
 
-  reloadLineMarkers(lineNum?: number, reveal = true) {
+  reloadLineMarkers() {
     this.editor.deltaDecorations(this.decorations || [], []);
     this.decorations = [];
 
@@ -273,22 +281,7 @@ export class EditorComponent implements OnInit {
 
     const mlines = Object.keys(this.model.lines).map((ln) => parseInt(ln)).filter((ln) => ln <= clines.length);
     this.blankLineNums = mlines.filter((ln) => this.model.lines[ln].blank);
-    const lines: any[] = mlines.map(createRange);
-    // if (lineNum)
-    //   lines.push({
-    //     range: new Range(lineNum, 1, lineNum, 1),
-    //     options: { isWholeLine: true, className: 'current-line--customized' },
-    //   });
-    this.decorations = this.editor.deltaDecorations([], lines);
-
-    if (reveal) {
-      lineNum = lineNum || mlines[0];
-      const line = clines[lineNum - 1];
-      const column = line.indexOf(`${line.trim().charAt(0)}`) + 1;
-      this.editor.revealLinesInCenter(lineNum, column);
-      this.editor.setPosition({ lineNumber: lineNum, column });
-      this.editor.focus();
-    }
+    this.decorations = this.editor.deltaDecorations([], mlines.map(createRange));
   }
 
   removeLine(ln: any) {
@@ -302,7 +295,7 @@ export class EditorComponent implements OnInit {
 
     if (confirm('Are you sure you want to remove this line?')) {
       this.selectedLine.comments = [];
-      this.reloadLineMarkers(this.selectedLineNum);
+      this.reloadLineMarkers();
 
       this.log({ type: 'remove-line-confirmed', ...logpayload });
     } else {
@@ -312,30 +305,31 @@ export class EditorComponent implements OnInit {
 
   addLineComment() {
     this.selectedLine.comments.push({});
-    this.reloadLineMarkers(this.selectedLineNum);
+    this.reloadLineMarkers();
 
     this.log({
       type: 'add-explanation',
-      line_num: this.selectedLineNum,
-      line_content: this.model.code.split('\n')[this.selectedLineNum - 1],
-      is_blank: this.model.lines[this.selectedLineNum].blank,
-      explanations: this.model.lines[this.selectedLineNum].comments,
+      line_num: this.lineNum,
+      line_content: this.model.code.split('\n')[this.lineNum - 1],
+      is_blank: this.model.lines[this.lineNum].blank,
+      explanations: this.model.lines[this.lineNum].comments,
     });
   }
 
   removeLineComment(comment: any, i: number) {
-    if (confirm('Are you sure you want to remove this explanation?')) {
+    const content = this.selectedLine.comments[i].content?.trim();
+    if (!content || confirm('Are you sure you want to remove this explanation?')) {
       this.log({
         type: 'remove-explanation',
-        line_num: this.selectedLineNum,
-        line_content: this.model.code.split('\n')[this.selectedLineNum - 1],
-        is_blank: this.model.lines[this.selectedLineNum].blank,
-        explanations: this.model.lines[this.selectedLineNum].comments,
+        line_num: this.lineNum,
+        line_content: this.model.code.split('\n')[this.lineNum - 1],
+        is_blank: this.model.lines[this.lineNum].blank,
+        explanations: this.model.lines[this.lineNum].comments,
         index: i,
       });
 
       this.selectedLine.comments.splice(i, 1);
-      this.reloadLineMarkers(this.selectedLineNum);
+      this.reloadLineMarkers();
     }
   }
 
@@ -358,7 +352,7 @@ export class EditorComponent implements OnInit {
     const from = parseInt($event.dataTransfer.getData('index'));
     this.log({
       type: $event.altKey ? 'merge-explanation' : 'reorder-explanation',
-      line_num: this.selectedLineNum, explanations: this.selectedLine.comments, from, to: i
+      line_num: this.lineNum, explanations: this.selectedLine.comments, from, to: i
     });
     if ($event.altKey) {
       if (from != i) {
@@ -371,7 +365,7 @@ export class EditorComponent implements OnInit {
     }
     this.log({
       type: $event.altKey ? 'explanation-merged' : 'explanation-reordered',
-      line_num: this.selectedLineNum, explanations: this.selectedLine.comments, from, to: i
+      line_num: this.lineNum, explanations: this.selectedLine.comments, from, to: i
     });
   }
 
@@ -494,7 +488,7 @@ export class EditorComponent implements OnInit {
       };
     });
 
-    this.selectLineNum(Math.min(...lineNums));
+    this.selectLine(Math.min(...lineNums));
     this.log({ type: 'use-expgen-explanations', explanations });
   }
 }

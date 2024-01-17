@@ -189,7 +189,26 @@ export class GptGenallComponent implements OnInit {
     );
   }
 
-  reloadLineMarkers(lineNum?: number, reveal = true) {
+  selectLineNum(lineNum: any, reveal = true) {
+    this.lineNum = lineNum;
+    this.lineExplanations =
+      this.allExplanations && lineNum in this.allExplanations
+        ? this.allExplanations[lineNum]
+        : null;
+
+    if (reveal) {
+      const line = this.params.source.split('\n')[lineNum - 1];
+      const column = line.indexOf(`${line.trim().charAt(0)}`) + 1;
+      this.editor.revealLinesInCenter(lineNum, column);
+      this.editor.setPosition({ lineNumber: lineNum, column });
+      this.editor.focus();
+    }
+
+    this.reloadLineMarkers();
+    this.log$('genexps-select-line', { line_num: lineNum });
+  }
+
+  reloadLineMarkers() {
     this.editor.deltaDecorations(this.decorations || [], []);
     this.decorations = [];
 
@@ -205,40 +224,14 @@ export class GptGenallComponent implements OnInit {
 
     const mlines = Object.keys(this.allExplanations || {}).map((ln) => parseInt(ln));
     const lines: any[] = mlines.map(createRange);
-    // if (lineNum)
-    //   lines.push({
-    //     range: new Range(lineNum, 1, lineNum, 1),
-    //     options: { isWholeLine: false, className: 'current-line--customized' },
-    //   });
-
     this.decorations = this.editor.deltaDecorations([], lines);
-
-    if (reveal) {
-      lineNum = lineNum || mlines[0];
-      const line = clines[lineNum - 1];
-      const column = line.indexOf(`${line.trim().charAt(0)}`) + 1;
-      this.editor.revealLinesInCenter(lineNum, column);
-      this.editor.setPosition({ lineNumber: lineNum, column });
-      this.editor.focus();
-    }
-  }
-
-  selectLineNum(lineNum: any, reveal = true) {
-    this.lineNum = lineNum;
-    this.lineExplanations =
-      this.allExplanations && lineNum in this.allExplanations
-        ? this.allExplanations[lineNum]
-        : null;
-    this.reloadLineMarkers(lineNum, reveal);
-
-    this.log$('genexps-select-line', { line_num: lineNum });
   }
 
   toggleLineExclusion(lineNum: any) {
     this.toggles[lineNum + '-all'] = !this.toggles[lineNum + '-all'];
     for (let i = 0; i < this.allExplanations[lineNum].length; i++)
       this.toggles[lineNum + '-' + i] = this.toggles[lineNum + '-all'];
-    this.reloadLineMarkers(lineNum);
+    this.reloadLineMarkers();
 
     this.log$('genexps-exclude-line', {
       line_num: lineNum, explanations: this.allExplanations[lineNum],
@@ -255,7 +248,7 @@ export class GptGenallComponent implements OnInit {
     });
 
     this.toggles[lineNum + '-all'] = !this.allExplanations[lineNum].some((exp: any) => !this.toggles[lineNum + '-' + exp.id]);
-    this.reloadLineMarkers(lineNum);
+    this.reloadLineMarkers();
   }
 
   toggleExplanationLike(lineNum: any, i: any) {
@@ -319,7 +312,7 @@ export class GptGenallComponent implements OnInit {
   }
 
   removeExplanation(i: number) {
-    const content = this.lineExplanations[i].content.trim();
+    const content = this.lineExplanations[i].content?.trim();
     this.log$('genexps-remove-explanation',
       { line_num: this.lineNum, index: i, explanations: this.lineExplanations });
     if (!content || confirm('Are you sure you want to remove this explanation?')) {
