@@ -88,8 +88,8 @@
 
         <div class="w-2/5 flex flex-col gap-2 bg-gray-100 rounded-sm p-2">
           <!-- tab headers -->
-          <p-selectButton name="current-tab" [options]="tabHeaders" [(ngModel)]="currentTab"
-            class="p-button-sm tabview-headers text-xs">
+          <p-selectButton name="current-tab" [options]="['Annotations','Distractors','Program Input']"
+            [(ngModel)]="currentTab" class="p-button-sm tabview-headers text-xs">
           </p-selectButton>
 
           <!-- tab contents -->
@@ -117,8 +117,11 @@
                 </div>
 
                 <div class="flex flex-col flex-grow gap-1 h-80 overflow-y-scroll overflow-x-hidden -mr-2 pr-2">
-                  <div *ngFor="let comment of selectedLine.comments; let i = index"
-                    class="flex items-center gap-2 relative">
+                  <div *ngFor="let comment of selectedLine.comments; let i = index" #expEl
+                    class="flex items-center gap-2 relative"
+                    [ngClass]="{'border border-dashed border-gray-400': dragOverIndex == i}"
+                    (dragstart)="onExplanationDrag($event, i)" (dragover)="onExplanationDragOver($event, i)"
+                    (drop)="onExplanationDrop($event, i)" (dragend)="onExplanationDragEnd(expEl, $event, i)">
                     <textarea pInputTextarea [autoResize]="true" [name]="'linecomment-' + i"
                       [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
                       class="flex-grow px-2 py-1 border-gray-200" style="font-size: 0.75rem;"
@@ -127,12 +130,12 @@
 
                     <i class="pi pi-trash cursor-pointer text-xs text-red-300 hover:text-red-600"
                       (click)="removeLineComment(comment, i)"></i>
+
+                    <!-- reorder-bar -->
+                    <i class="pi pi-sort text-gray-500 reorder-bar" style="font-size: 0.85rem;"
+                      (mousedown)="expEl.setAttribute('draggable', 'true'); dragEnabled = true;"></i>
                   </div>
                 </div>
-
-                <span class="text-xs text-gray-400">
-                  <b>Note:</b> Annotations are attached to line number (NOT content).
-                </span>
               </ng-container>
               <ng-container *ngIf="!selectedLineNum">
                 <span class="text-gray-600 text-sm text-left">

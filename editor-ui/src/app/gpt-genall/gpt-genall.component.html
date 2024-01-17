@@ -8,18 +8,20 @@
       <button pButton type="button" [label]="'History ' + (history ? '('+history.length+')' : '')" icon="pi pi-calendar"
         iconPos="right" class="p-button-sm p-button-plain tight-btn"
         [ngClass]="{'p-button-outlined': !toggles['show-history']}" [disabled]="!history || history.length == 0"
-        (click)="toggles['show-history'] = !toggles['show-history']">
+        (click)="toggles['show-history'] = !toggles['show-history']; log$('genexps-show-history', {value: toggles['show-history']})">
       </button>
     </div>
 
     <ng-container *ngIf="toggles['show-history']">
-      <span class="text-xs text-gray-400">Click on a timestamp to load the session.</span>
+      <span class="text-xs text-gray-400">
+        Click on a timestamp to load the session (prompt, program description, and source code).
+      </span>
       <div class="flex flex-wrap items-center gap-1 ml-4">
         <button *ngFor="let timestamp of history" pButton type="button" label="{{ timestamp | date:'medium' }}"
           iconPos="right" class="p-button-sm p-button-plain"
           [ngClass]="{'p-button-outlined': historyTimestamp != timestamp}"
           style="font-size: 0.75rem; padding: 0.125rem 0.25rem;" [loading]="toggles[timestamp]"
-          (click)="loadHistory(timestamp)">
+          (click)="loadHistory(timestamp); log$('genexps-load-history', {value: timestamp})">
         </button>
       </div>
       <span class="text-xs text-gray-400">Changes are persisted ONLY within the current dialog.</span>
@@ -35,36 +37,36 @@
         that contributes directly to the program objectives and goals.
       </span>
 
-      <span #inclusionEl contenteditable="true" class="px-1 bg-green-100 rounded-sm"
+      <span #inclusionEl contenteditable="true" class="px-0.5 bg-green-100 rounded-sm"
         (focus)="lastValue = prompt.inclusion; log.emit({ session: curLogSessionId, type: 'genexps-prompt-inclusion-focus' })"
-        (blur)="onPromptBlur('genexps-prompt-inclusion-blur', inclusionEl); prompt.inclusion = placeholder(inclusionEl, defInclusion)">
-        {{ prompt.inclusion }}
-        <span *ngIf="!prompt.inclusion" class="text-gray-400 italic">{{ defInclusion }}</span>
+        (blur)="onPromptBlur('genexps-prompt-inclusion-blur', inclusionEl); prompt.inclusion = placeholder(inclusionEl, defInclusion)">{{
+        prompt.inclusion }}<span *ngIf="!prompt.inclusion" class="text-gray-400 italic">{{ defInclusion }}</span>
       </span>
       &nbsp;
-      <span #exclusionEl contenteditable="true" class="px-1 bg-red-100 rounded-sm"
+      <span #exclusionEl contenteditable="true" class="px-0.5 bg-red-100 rounded-sm"
         (focus)="lastValue = prompt.exclusion; log.emit({ session: curLogSessionId, type: 'genexps-prompt-exclusion-focus' })"
-        (blur)="onPromptBlur('genexps-prompt-exclusion-blur', exclusionEl); prompt.exclusion = placeholder(exclusionEl, defExclusion)">
-        {{ prompt.exclusion }}
-        <span *ngIf="!prompt.exclusion" class="text-gray-400 italic">{{ defExclusion }}</span>
+        (blur)="onPromptBlur('genexps-prompt-exclusion-blur', exclusionEl); prompt.exclusion = placeholder(exclusionEl, defExclusion)">{{
+        prompt.exclusion }}<span *ngIf="!prompt.exclusion" class="text-gray-400 italic">{{ defExclusion }}</span>
       </span>
 
       <br />
       <br />
 
-      <span #explanationEl contenteditable="true" class="px-1 bg-gray-200 rounded-sm"
+      <span #explanationEl contenteditable="true" class="bg-gray-200 rounded-sm"
+        [ngClass]="{'px-0.5': prompt.explanation, 'px-1': !prompt.explanation}"
         (focus)="lastValue = prompt.explanation; log.emit({ session: curLogSessionId, type: 'genexps-prompt-explanation-focus' })"
-        (blur)="onPromptBlur('genexps-prompt-explanation-blur', explanationEl); prompt.explanation = explanationEl.textContent?.trim()">
-        {{ prompt.explanation }}
-      </span>
+        (blur)="onPromptBlur('genexps-prompt-explanation-blur', explanationEl); prompt.explanation = explanationEl.textContent?.trim()">{{
+        prompt.explanation }}</span>
 
-      <ng-container *ngIf="params.description">
-        <br />
-        <br />
+      <br />
+      <br />
 
-        <span class="font-bold mr-2">Program Description:</span>
-        <span>{{ params.description }}</span>
-      </ng-container>
+      <span class="font-bold mr-2">Program Description:</span>
+      <span #progDescEl contenteditable="true" class="bg-gray-200 rounded-sm"
+        [ngClass]="{'px-0.5': params.description, 'px-1': !params.description}"
+        (focus)="lastValue = params.description; log.emit({ session: curLogSessionId, type: 'genexps-prog-description-focus' })"
+        (blur)="onPromptBlur('genexps-prog-description-blur', progDescEl); params.description = progDescEl.textContent?.trim()">{{
+        params.description }}</span>
     </div>
 
     <div class="flex items-center justify-end gap-2">
@@ -113,10 +115,10 @@
         <hr class="-ml-2" />
 
         <div class="flex flex-col gap-1 overflow-y-auto">
-          <div *ngFor="let exp of lineExplanations; let i = index" #el class="flex items-center gap-2 mr-2"
+          <div *ngFor="let exp of lineExplanations; let i = index" #expEl class="flex items-center gap-2 mr-2"
             [ngClass]="{'border border-dashed border-gray-400': dragOverIndex == i}"
             (dragstart)="onExplanationDrag($event, i)" (dragover)="onExplanationDragOver($event, i)"
-            (drop)="onExplanationDrop($event, i)" (dragend)="el.removeAttribute('draggable'); dragEnabled = false;">
+            (drop)="onExplanationDrop($event, i)" (dragend)="onExplanationDragEnd(expEl, $event, i)">
             <!-- include/exclude-btn -->
             <i class="pi cursor-pointer hover:bg-gray-200" [ngClass]="{
                 'pi-check text-green-600': !toggles[lineNum+'-'+exp.id], 
@@ -140,7 +142,7 @@
 
             <!-- reorder-bar -->
             <i class="pi pi-sort text-gray-500 reorder-bar" style="font-size: 0.85rem;"
-              (mousedown)="el.setAttribute('draggable', 'true'); dragEnabled = true;"></i>
+              (mousedown)="expEl.setAttribute('draggable', 'true'); dragEnabled = true;"></i>
           </div>
           <div class="flex items-center gap-2 mr-2">
             <hr class="flex-grow" />

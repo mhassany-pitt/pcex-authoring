@@ -78,9 +78,17 @@ export class GptGenallComponent implements OnInit {
     // const messageContribution = editor.getContribution('editor.contrib.messageController');
     // editor.onDidAttemptReadOnlyEdit(() => messageContribution.dispose());
 
+    editor.onDidFocusEditorText((e: any) => {
+      this.lastValue = this.params.source;
+      this.log$('genexps-editor-focus', { content: this.params.source });
+    });
+    editor.onDidBlurEditorText((e: any) => {
+      this.log$('genexps-editor-blur', { prev_content: this.lastValue, content: this.params.source });
+    });
+
     editor.onDidChangeCursorPosition((e: any) => this.ngZone.run(() => {
       if (this.lineNum != e.position.lineNumber) {
-        this.selectLineNum(e.position.lineNumber);
+        this.selectLineNum(e.position.lineNumber, false);
       }
     }));
     editor.onMouseDown(($event: any) => {
@@ -88,16 +96,6 @@ export class GptGenallComponent implements OnInit {
         this.selectLineNum($event.target.position.lineNumber);
       }
     });
-    // editor.defineTheme('myTheme', {
-    //   base: 'vs',
-    //   inherit: true,
-    //   rules: [{ background: 'EDF9FA' }],
-    //   colors: {
-    //     'editor.lineHighlightBackground': '#00000000',
-    //     'editor.lineHighlightBorder': '#00000000'
-    //   }
-    // });
-    // editor.setTheme("myTheme");
 
     if (this.lineNum || this.allExplanations) setTimeout(() => {
       this.selectLineNum(this.lineNum || Math.min(...Object.keys(this.allExplanations).map((ln) => parseInt(ln))));
@@ -105,11 +103,13 @@ export class GptGenallComponent implements OnInit {
   }
 
   reloadHistory(payload?: any) {
+    this.log$('genexps-reload-history');
     this.http.get(
       `${environment.apiUrl}/gpt-genai/${this.sourceId}`,
       { withCredentials: true }
     ).subscribe(
       (resp: any) => {
+        this.log$('genexps-history-reloaded', { value: resp });
         this.history = resp;
         if (payload) {
           payload.explanations = this.transform(payload.explanations);
@@ -155,6 +155,8 @@ export class GptGenallComponent implements OnInit {
     if (this.lineNum || this.allExplanations) setTimeout(() => {
       this.selectLineNum(this.lineNum || Math.min(...Object.keys(this.allExplanations).map((ln) => parseInt(ln))));
     }, 50);
+
+    this.log$('genexps-use-history', { value: payload });
   }
 
   transform(resp: any) {
@@ -169,7 +171,6 @@ export class GptGenallComponent implements OnInit {
 
   generate() {
     this.log$('genexps-generate');
-
     this.generating = true;
     const params = { id: this.sourceId, ...this.params, prompt: this.prompt };
     this.http.post(
@@ -177,8 +178,8 @@ export class GptGenallComponent implements OnInit {
       params, { withCredentials: true }
     ).subscribe(
       (resp: any) => {
-        this.generating = false;
         this.log$('genexps-generated', { value: resp });
+        this.generating = false;
         this.reloadHistory({ params, explanations: resp });
       },
       (err) => {
@@ -188,7 +189,7 @@ export class GptGenallComponent implements OnInit {
     );
   }
 
-  reloadLineMarkers(lineNum?: number) {
+  reloadLineMarkers(lineNum?: number, reveal = true) {
     this.editor.deltaDecorations(this.decorations || [], []);
     this.decorations = [];
 
@@ -212,21 +213,23 @@ export class GptGenallComponent implements OnInit {
 
     this.decorations = this.editor.deltaDecorations([], lines);
 
-    lineNum = lineNum || mlines[0];
-    const line = clines[lineNum - 1];
-    const column = line.indexOf(`${line.trim().charAt(0)}`) + 1;
-    this.editor.revealLinesInCenter(lineNum, column);
-    this.editor.setPosition({ lineNumber: lineNum, column });
-    this.editor.focus();
+    if (reveal) {
+      lineNum = lineNum || mlines[0];
+      const line = clines[lineNum - 1];
+      const column = line.indexOf(`${line.trim().charAt(0)}`) + 1;
+      this.editor.revealLinesInCenter(lineNum, column);
+      this.editor.setPosition({ lineNumber: lineNum, column });
+      this.editor.focus();
+    }
   }
 
-  selectLineNum(lineNum: any) {
+  selectLineNum(lineNum: any, reveal = true) {
     this.lineNum = lineNum;
     this.lineExplanations =
       this.allExplanations && lineNum in this.allExplanations
         ? this.allExplanations[lineNum]
         : null;
-    this.reloadLineMarkers(lineNum);
+    this.reloadLineMarkers(lineNum, reveal);
 
     this.log$('genexps-select-line', { line_num: lineNum });
   }
@@ -237,19 +240,18 @@ export class GptGenallComponent implements OnInit {
       this.toggles[lineNum + '-' + i] = this.toggles[lineNum + '-all'];
     this.reloadLineMarkers(lineNum);
 
-    this.log$(this.toggles[lineNum + '-all'] ? 'genexps-exclude-line' : 'genexps-include-line', {
-      line_num: lineNum,
-      explanations: this.allExplanations[lineNum]
+    this.log$('genexps-exclude-line', {
+      line_num: lineNum, explanations: this.allExplanations[lineNum],
+      value: this.toggles[lineNum + '-all']
     });
   }
 
   toggleExplanationExclusion(lineNum: any, i: any) {
     this.toggles[lineNum + '-' + i] = !this.toggles[lineNum + '-' + i];
 
-    this.log$(this.toggles[lineNum + '-' + i] ? 'genexps-exclude-explanation' : 'genexps-include-explanation', {
-      line_num: lineNum,
-      index: i,
-      explanation: this.allExplanations[lineNum][i],
+    this.log$('genexps-exclude-explanation', {
+      line_num: lineNum, index: i, explanation: this.allExplanations[lineNum][i],
+      value: this.toggles[lineNum + '-' + i]
     });
 
     this.toggles[lineNum + '-all'] = !this.allExplanations[lineNum].some((exp: any) => !this.toggles[lineNum + '-' + exp.id]);
@@ -260,23 +262,20 @@ export class GptGenallComponent implements OnInit {
     this.toggles[lineNum + '-' + i + '-liked'] = !this.toggles[lineNum + '-' + i + '-liked'];
 
     this.log$('genexps-like-explanation', {
-      line_num: lineNum,
+      line_num: lineNum, index: i, explanation: this.allExplanations[lineNum][i],
       value: this.toggles[lineNum + '-' + i + '-liked'],
-      index: i,
-      explanation: this.allExplanations[lineNum][i],
     });
   }
 
   onExplanationDrag($event: any, i: number) {
     if (!this.dragEnabled) return;
     $event.dataTransfer.setData('index', `${i}`);
-    $event.dataTransfer.effectAllowed = 'move';
   }
 
   onExplanationDragOver($event: any, i: number) {
     if (!this.dragEnabled) return;
     $event.preventDefault();
-    $event.dataTransfer.dropEffect = 'move';
+    $event.dataTransfer.dropEffect = $event.altKey ? 'copy' : 'move';
     this.dragOverIndex = i;
   }
 
@@ -284,23 +283,50 @@ export class GptGenallComponent implements OnInit {
     if (!this.dragEnabled) return;
     $event.preventDefault();
     this.dragOverIndex = null;
-    arrayMoveMutable(this.allExplanations[this.lineNum],
-      parseInt($event.dataTransfer.getData('index')),
-      i);
+    const from = parseInt($event.dataTransfer.getData('index'));
+    this.log$($event.altKey ? 'genexps-merge-explanation' : 'genexps-reorder-explanation',
+      { line_num: this.lineNum, explanations: this.lineExplanations, from, to: i });
+    if ($event.altKey) {
+      if (from != i) {
+        this.lineExplanations[i].content += ' ' + this.lineExplanations[from].content;
+        this.lineExplanations[i].gpt += ' ' + this.lineExplanations[from].gpt;
+        this.lineExplanations.splice(from, 1);
+      }
+    } else {
+      arrayMoveMutable(this.lineExplanations, from, i);
+    }
+    this.log$($event.altKey ? 'genexps-explanation-merged' : 'genexps-explanation-reordered',
+      { line_num: this.lineNum, explanations: this.lineExplanations, from, to: i });
+  }
+
+  onExplanationDragEnd(el: any, $event: any, i: number) {
+    el.removeAttribute('draggable');
+    this.dragEnabled = false;
   }
 
   mergeExplanations() {
+    this.log$('genexps-merge-explanations',
+      { line_num: this.lineNum, explanations: this.lineExplanations });
     if (confirm('Are you sure you want to merge all explanations for this line?')) {
       const merged = this.lineExplanations.map((exp: any) => exp.content).join(' ');
+      const gptmerged = this.lineExplanations.map((exp: any) => exp.gpt).join(' ');
       this.lineExplanations[0].content = merged.trim();
+      this.lineExplanations[0].gpt = gptmerged.trim();
       this.lineExplanations.splice(1, this.lineExplanations.length - 1);
+      this.log$('genexps-explanations-merged',
+        { line_num: this.lineNum, explanations: this.lineExplanations });
     }
   }
 
   removeExplanation(i: number) {
     const content = this.lineExplanations[i].content.trim();
-    if (!content || confirm('Are you sure you want to remove this explanation?'))
+    this.log$('genexps-remove-explanation',
+      { line_num: this.lineNum, index: i, explanations: this.lineExplanations });
+    if (!content || confirm('Are you sure you want to remove this explanation?')) {
       this.lineExplanations.splice(i, 1);
+      this.log$('genexps-explanation-removed',
+        { line_num: this.lineNum, index: i, explanations: this.lineExplanations });
+    }
   }
 
   applyAndUse() {

@@ -5,6 +5,7 @@ import { KeyCode, KeyMod, Range } from 'monaco-editor';
 import { SourcesService } from '../sources.service';
 import { ActivitiesService } from '../activities.service';
 import { AppService } from '../app.service';
+import { arrayMoveMutable } from 'array-move';
 
 @Component({
   selector: 'app-editor',
@@ -50,11 +51,6 @@ export class EditorComponent implements OnInit {
   blankLineNums: any[] = [];
   decorations: any[] = [];
 
-  tabHeaders = [
-    'Annotations',
-    /* 'Variations', */ 'Distractors',
-    'Program Input',
-  ];
   currentTab = 'Annotations';
   previewLink: any;
   showPreview = false;
@@ -69,6 +65,9 @@ export class EditorComponent implements OnInit {
 
   gptGenAll = false;
   gptGenExplanation = false;
+
+  dragEnabled = false;
+  dragOverIndex: any;
 
   dtime0 = Date.now();
   lastValue: any = null;
@@ -165,7 +164,7 @@ export class EditorComponent implements OnInit {
 
     editor.onDidChangeCursorPosition((e: any) => this.ngZone.run(() => {
       if (this.selectedLineNum != e.position.lineNumber) {
-        this.selectLineNum(e.position.lineNumber);
+        this.selectLineNum(e.position.lineNumber, false);
       }
     }));
     editor.onMouseDown(($event: any) => {
@@ -218,7 +217,7 @@ export class EditorComponent implements OnInit {
     // <<---------------
   }
 
-  selectLineNum(lineNum: number) {
+  selectLineNum(lineNum: number, reveal = true) {
     this.selectedLineNum = lineNum;
 
     if (lineNum) {
@@ -230,7 +229,7 @@ export class EditorComponent implements OnInit {
       this.selectedLine = {};
     }
 
-    this.reloadLineMarkers(lineNum);
+    this.reloadLineMarkers(lineNum, reveal);
     this.log({ type: 'select-line', line_num: lineNum });
   }
 
@@ -254,7 +253,7 @@ export class EditorComponent implements OnInit {
       .forEach((ln) => delete this.model.lines[ln]);
   }
 
-  reloadLineMarkers(lineNum?: number) {
+  reloadLineMarkers(lineNum?: number, reveal = true) {
     this.editor.deltaDecorations(this.decorations || [], []);
     this.decorations = [];
 
@@ -282,12 +281,14 @@ export class EditorComponent implements OnInit {
     //   });
     this.decorations = this.editor.deltaDecorations([], lines);
 
-    lineNum = lineNum || mlines[0];
-    const line = clines[lineNum - 1];
-    const column = line.indexOf(`${line.trim().charAt(0)}`) + 1;
-    this.editor.revealLinesInCenter(lineNum, column);
-    this.editor.setPosition({ lineNumber: lineNum, column });
-    this.editor.focus();
+    if (reveal) {
+      lineNum = lineNum || mlines[0];
+      const line = clines[lineNum - 1];
+      const column = line.indexOf(`${line.trim().charAt(0)}`) + 1;
+      this.editor.revealLinesInCenter(lineNum, column);
+      this.editor.setPosition({ lineNumber: lineNum, column });
+      this.editor.focus();
+    }
   }
 
   removeLine(ln: any) {
@@ -336,6 +337,47 @@ export class EditorComponent implements OnInit {
       this.selectedLine.comments.splice(i, 1);
       this.reloadLineMarkers(this.selectedLineNum);
     }
+  }
+
+  onExplanationDrag($event: any, i: number) {
+    if (!this.dragEnabled) return;
+    $event.dataTransfer.setData('index', `${i}`);
+  }
+
+  onExplanationDragOver($event: any, i: number) {
+    if (!this.dragEnabled) return;
+    $event.preventDefault();
+    $event.dataTransfer.dropEffect = $event.altKey ? 'copy' : 'move';
+    this.dragOverIndex = i;
+  }
+
+  onExplanationDrop($event: any, i: number) {
+    if (!this.dragEnabled) return;
+    $event.preventDefault();
+    this.dragOverIndex = null;
+    const from = parseInt($event.dataTransfer.getData('index'));
+    this.log({
+      type: $event.altKey ? 'merge-explanation' : 'reorder-explanation',
+      line_num: this.selectedLineNum, explanations: this.selectedLine.comments, from, to: i
+    });
+    if ($event.altKey) {
+      if (from != i) {
+        this.selectedLine.comments[i].content += ' ' + this.selectedLine.comments[from].content;
+        this.selectedLine.comments[i].gpt += ' ' + this.selectedLine.comments[from].gpt;
+        this.selectedLine.comments.splice(from, 1);
+      }
+    } else {
+      arrayMoveMutable(this.selectedLine.comments, from, i);
+    }
+    this.log({
+      type: $event.altKey ? 'explanation-merged' : 'explanation-reordered',
+      line_num: this.selectedLineNum, explanations: this.selectedLine.comments, from, to: i
+    });
+  }
+
+  onExplanationDragEnd(el: any, $event: any, i: number) {
+    el.removeAttribute('draggable');
+    this.dragEnabled = false;
   }
 
   addDistractor() {
