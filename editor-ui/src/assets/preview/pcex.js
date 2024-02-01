@@ -172,6 +172,9 @@ var pcex = {
 		pcex.currentGoal = pcex.jsonData.activityGoals[pcex.currentGoalIndex];
 		pcex.isInLastGoal = pcex.currentGoalIndex == pcex.numberOfGoals - 1;
 
+		if (pcex.currentGoalIndex == 0) {
+			$('#back-button').attr('disabled', true).hide();
+		}
 		if (pcex.isInLastGoal) {
 			$('#shortcut-next-button').attr('disabled', true).hide();
 			$('#next-button').hide();
@@ -609,7 +612,7 @@ var pcex = {
 
 	next: function () {
 		if (pcex.currentGoalIndex + 1 < pcex.numberOfGoals) {
-			$('#back-button').attr('disabled', false).addClass('waves-effect waves-light');
+			$('#back-button').attr('disabled', false).addClass('waves-effect waves-light').show();
 
 			pcex.currentGoalIndex++;
 			pcex.resetFields();

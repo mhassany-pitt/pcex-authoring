@@ -12,6 +12,10 @@ export class SourcesService {
     private http: HttpClient
   ) { }
 
+  samples() {
+    return this.http.get(`${environment.apiUrl}/sources/samples`, { withCredentials: true });
+  }
+
   sources({ archived }: any) {
     return this.http.get(`${environment.apiUrl}/sources${archived ? '?include=archived' : ''}`, { withCredentials: true });
   }

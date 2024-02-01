@@ -12,9 +12,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TabViewModule } from 'primeng/tabview';
-import { GptGenallModule } from '../gpt-genall/gpt-genall.module';
-import { GptGenexplanationsModule } from '../gpt-genexplanations/gpt-genexplanations.module';
-import { GptGenexplanationModule } from '../gpt-genexplanation/gpt-genexplanation.module';
+import { MenuModule } from 'primeng/menu';
 
 @NgModule({
   declarations: [
@@ -27,8 +25,7 @@ import { GptGenexplanationModule } from '../gpt-genexplanation/gpt-genexplanatio
     InputTextareaModule, DialogModule,
     CheckboxModule, ButtonModule,
     TabViewModule, SelectButtonModule,
-    GptGenallModule, GptGenexplanationsModule,
-    GptGenexplanationModule,
+    MenuModule,
   ]
 })
 export class EditorModule { }

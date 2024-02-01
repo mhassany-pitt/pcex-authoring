@@ -14,6 +14,11 @@ export class SourcesController {
     private sources: SourcesService,
   ) { }
 
+  @Get('samples')
+  async samples() {
+    return await this.sources.samples();
+  }
+
   private getUserEmail(req: any) { return req.user.email; }
 
   @Get()
