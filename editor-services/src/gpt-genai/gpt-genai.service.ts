@@ -33,7 +33,7 @@ export class GptGenaiService {
     const resp = readdirSync(ws).filter(f => f.indexOf('-response_') >= 0).sort().reverse()[0];
     return {
       params: existsSync(`${ws}/00-prompt.json`) ? readJsonSync(`${ws}/00-prompt.json`) : null,
-      explanations: readJsonSync(`${ws}/${resp}`)
+      explanations: JSON.parse(this.removeJsonQuotes(readFileSync(`${ws}/${resp}`, 'utf-8'))),
     };
   }
 
@@ -87,6 +87,7 @@ export class GptGenaiService {
         JSON.stringify(messages),
       );
       resp = (await this.submit(messages)).data.choices[0].message.content;
+      resp = this.removeJsonQuotes(resp);
       writeFileSync(`${ws}/02-response_${new Date().toISOString()}.json`, resp);
 
       // 2nd prompt
@@ -98,6 +99,7 @@ export class GptGenaiService {
       );
       prev = resp;
       resp = (await this.submit(messages)).data.choices[0].message.content;
+      resp = this.removeJsonQuotes(resp);
       writeFileSync(`${ws}/04-response_${new Date().toISOString()}.json`, resp);
 
       // // disabled for now
@@ -134,6 +136,15 @@ export class GptGenaiService {
         statusText: exp.response.statusText,
       });
     }
-    return resp;
+    return this.removeJsonQuotes(resp);
+  }
+
+  removeJsonQuotes(resp: string) {
+    for (const char of ['"', "'", '`']) {
+      const quote = char.repeat(3);
+      if (resp.startsWith(quote + 'json')) resp = resp.substring(7);
+      if (resp.endsWith(quote)) resp = resp.substring(0, resp.length - 3);
+    }
+    return resp.trim();
   }
 }

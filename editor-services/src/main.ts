@@ -43,3 +43,5 @@ async function bootstrap() {
 }
 
 bootstrap();
+
+// TODO: recompile activites/sources after saving
