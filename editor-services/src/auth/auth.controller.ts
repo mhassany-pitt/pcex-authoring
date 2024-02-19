@@ -5,7 +5,7 @@ import {
 import { AuthenticatedGuard } from './authenticated.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 import { UsersService } from 'src/users/users.service';
-import { compare } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 
 @Controller('auth')
 export class AuthController {
@@ -17,6 +17,15 @@ export class AuthController {
   @Get('handshake')
   handshake(@Req() req: any) {
     return { user: req.user };
+  }
+
+  @Post('register')
+  async register(@Body() body: any) {
+    const { email, password, fullname } = body;
+    const user = await this.users.findUser(email);
+    if (user) throw new HttpException({ message: 'An account with this email address already exists. Please use your credentials to login.' }, 422);
+    await this.users.create({ fullname, email, password: await hash(password, 10), roles: ['author'] });
+    return {};
   }
 
   @Post('login')

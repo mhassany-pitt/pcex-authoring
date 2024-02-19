@@ -46,6 +46,11 @@ const routes: Routes = [
     canActivate: [PublicGuard]
   },
   {
+    path: 'register',
+    loadChildren: () => import('./register/register.module').then(m => m.RegisterModule),
+    canActivate: [PublicGuard]
+  },
+  {
     path: 'update-password',
     loadChildren: () => import('./update-password/update-password.module').then(m => m.UpdatePasswordModule),
     canActivate: [HandshakeGuard]

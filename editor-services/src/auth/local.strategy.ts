@@ -13,7 +13,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(email: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(email, password);
     if (!user) throw new UnauthorizedException({
-      message: 'Invalid username or password, or the account is deactivated.',
+      message: 'Invalid username/password, or the account is not activated yet by the administrator (contact moh70@pitt.edu).',
       statusCode: 401
     });
     return user;
