@@ -5,6 +5,7 @@ import session from 'express-session';
 import FileStore from 'session-file-store';
 import passport from 'passport';
 import * as bodyParser from 'body-parser';
+import { corsMiddleware } from './cors-middleware';
 
 declare const module: any;
 
@@ -14,7 +15,9 @@ async function bootstrap() {
 
   const config = app.get(ConfigService);
   const production = (process.env.NODE_ENV || 'development').toLowerCase() == 'production';
-  if (!production) {
+  if (production) {
+    app.use(corsMiddleware);
+  } else {
     app.enableCors({ credentials: true, origin: 'http://localhost:4200' });
   }
 
@@ -44,4 +47,10 @@ async function bootstrap() {
 
 bootstrap();
 
+// TODO: break an explanation from the cursor point
 // TODO: recompile activites/sources after saving
+// TODO: in activity, enable "challenge" option only if the source can be used as a challenge
+// TODO: sources can also be shared with other users
+// TODO: complete the ACOS-PCEX integration
+// TODO: packages/bundles instead of activites
+// TODO: prompt tuned for challenges?!

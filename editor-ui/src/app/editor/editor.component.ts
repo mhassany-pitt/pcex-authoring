@@ -114,6 +114,11 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   // --------
 
+  get trackingMessageDismissed() { return localStorage.getItem('pcex-authoring.tracking') === 'dismissed'; }
+  dismissTrackingMessage() { localStorage.setItem('pcex-authoring.tracking', 'dismissed'); }
+
+  // --------
+
   toggles: any = {};
 
   constructor(

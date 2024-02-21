@@ -29,10 +29,15 @@
     </div>
 
     <div class="flex-grow container mx-auto mt-24 mb-16 flex flex-col gap-4 z-0">
+      <span class="text-xs text-gray-400 -mb-2">
+        *Required fields (<i>name, source code, filename.ext</i>) are marked with
+        asterisks.
+      </span>
+
       <!-- name & description -->
       <div class="flex flex-col gap-2 bg-gray-100 p-2 rounded-sm relative shadow-md">
         <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText [(ngModel)]="model.name"
-          (ngModelChange)="updateTitle()" placeholder="Name" class="text-xl border-gray-200" required
+          (ngModelChange)="updateTitle()" placeholder="*Name" class="text-xl border-gray-200" required
           (focus)="onNameFocus($event)" (blur)="onNameBlur($event);" (keyup)="recordKeys($event, 'keyup')"
           (keydown)="recordKeys($event, 'keydown')" />
 
@@ -66,11 +71,11 @@
               class="flex-grow rounded-sm border hover:border-gray-600" style="height: auto; min-height: 250px;">
             </ngx-monaco-editor>
             <span *ngIf="!model.code" class="absolute top-0.5 left-12 text-xs text-gray-400 pointer-events-none">
-              type your source code here...
+              *type your source code here...
             </span>
           </div>
 
-          <input type="text" name="filename" pInputText [(ngModel)]="model.filename" placeholder="filename.ext"
+          <input type="text" name="filename" pInputText [(ngModel)]="model.filename" placeholder="*filename.ext"
             class="p-inputtext-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" required
             (focus)="onFilenameFocus($event)" (blur)="onFilenameBlur($event)" (keyup)="recordKeys($event, 'keyup')"
             (keydown)="recordKeys($event, 'keydown')" />
@@ -448,3 +453,28 @@
     </p-dialog>
   </form>
 </div>
+
+<p-dialog [visible]="!trackingMessageDismissed" header="Dear User" position="top" [closable]="false" [modal]="true"
+  [style]="{'max-width': '30rem', 'margin-top': '5rem'}" appendTo="body">
+  <p>
+    On this page, for the purpose of <i>imporving this tool and our research</i>, we track user interactions. Your
+    privacy is paramount, and all data collected will be used solely for this purpose. By
+    using this tool, you consent
+    to this
+    tracking. If you have any questions, please reach out (<a href="mailto:moh70@pitt.edu"
+      class="underline">moh70@pitt.edu</a>).
+
+    <br />
+    <br />
+
+    Thank you,
+    <br />
+    PAWS Lab
+  </p>
+
+  <div class="mt-4">
+    <button pButton type="button" label="Dismiss" class="p-button-sm p-button-help" style="padding: 0.25rem 0.5rem;"
+      (click)="dismissTrackingMessage()">
+    </button>
+  </div>
+</p-dialog>
