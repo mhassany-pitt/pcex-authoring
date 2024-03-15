@@ -732,21 +732,23 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   gptGenExplanations() {
+    const payload = {
+      id: this.model.id,
+      source: this.model.code,
+      language: this.model.language,
+      description: this.model.description,
+      prompt: this.gptPrompt,
+    };
     this.log({
       type: 'generate',
       line_num: this.selectedLineNum,
       line_content: this.model.code.split('\n')[this.selectedLineNum - 1],
+      payload,
     });
     this.generating = true;
     this.http.post(
       `${environment.apiUrl}/gpt-genai`,
-      {
-        id: this.model.id,
-        source: this.model.code,
-        language: this.model.language,
-        description: this.model.description,
-        prompt: this.gptPrompt,
-      }, { withCredentials: true }
+      payload, { withCredentials: true }
     ).subscribe(
       (resp: any) => {
         resp.forEach((e: any) => {
@@ -887,6 +889,8 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.log({ type: 'updated', value: this.model });
         delete this.toggles['update'];
         this.router.navigate(['/sources']);
+
+        setTimeout(() => this.genPreviewJson(() => { }), 1000);
       },
       (error: any) => {
         delete this.toggles['update'];
@@ -937,27 +941,36 @@ export class EditorComponent implements OnInit, OnDestroy {
     setTimeout(() => (this.langSet = true), 0);
   }
 
-  preview() {
+  genPreviewJson(then: () => void) {
     this.ignoreUntouchedLines();
     const id = this.model.id;
     const items = [{ item$: { ...this.model, id: `${id}_example` }, type: 'example' }];
     const challenge = Object.keys(this.model.lines).filter(ln => this.model.lines[ln].blank);
     if (challenge) items.push({ item$: { ...this.model, id: `${id}_challenge` }, type: 'challenge' });
+
     this.toggles['preview'] = true;
+    this.api.previewJsons[this.model.id] = 'generating';
     this.activities.genPreviewJson(
       { id: this.model.id, name: this.model.name, items },
       'activity'
     ).subscribe(
       (resp: any) => {
-        this.previewLink = this.activities.previewJsonLink(this.model, 'activity');
         delete this.toggles['preview'];
-        this.showPreview = true;
+        delete this.api.previewJsons[this.model.id];
+        then?.();
       },
       (error: any) => {
         delete this.toggles['preview'];
         console.log(error);
       }
     );
+  }
+
+  preview() {
+    this.genPreviewJson(() => {
+      this.previewLink = this.activities.previewJsonLink(this.model, 'activity');
+      this.showPreview = true;
+    });
   }
 
   placeholder(el: any, dflt: string) {

@@ -21,15 +21,17 @@ export class ActivitiesController {
 
   private getUserEmail(req: any) { return req.user.email; }
 
+  private attachStat(activity: any) {
+    activity.stat = this.compiler.getSizeLastModified(activity.id);
+    return activity;
+  }
+
   @Get()
   @UseGuards(AuthenticatedGuard)
   async index(@Req() req: Request, @Query('include') include: string) {
     return (await this.activities.list({ user: this.getUserEmail(req), archived: include == 'archived' })).map(activity => {
       const { _id: id, published, archived, name, items } = activity;
-      return {
-        id, published, archived, name, items,
-        stat: this.compiler.getSizeLastModified(id)
-      };
+      return this.attachStat({ id, published, archived, name, items });
     });
   }
 
@@ -37,7 +39,7 @@ export class ActivitiesController {
   @UseGuards(AuthenticatedGuard)
   async create(@Req() req: Request, @Body() activity: any) {
     activity = toObject(await this.activities.create({ ...activity, user: this.getUserEmail(req) }));
-    return { id: activity._id };
+    return this.attachStat({ id: activity._id });
   }
 
   @Get(':id')
@@ -45,8 +47,7 @@ export class ActivitiesController {
   async read(@Req() req: Request, @Param('id') id: string) {
     const activity = await this.activities.read({ user: this.getUserEmail(req), id });
     if (!activity) throw new NotFoundException();
-
-    return useId(activity);
+    return this.attachStat(useId(activity));
   }
 
   @Patch(':id')

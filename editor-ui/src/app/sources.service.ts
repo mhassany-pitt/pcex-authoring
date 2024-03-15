@@ -8,6 +8,9 @@ import { NGX_LOADING_BAR_IGNORED } from '@ngx-loading-bar/http-client';
 })
 export class SourcesService {
 
+  previewJsons: any = {};
+  isGeneratingPreviewJson(id: string) { return id in this.previewJsons; }
+
   constructor(
     private http: HttpClient
   ) { }

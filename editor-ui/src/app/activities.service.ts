@@ -9,6 +9,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class ActivitiesService {
 
+  previewJsons: any = {};
+  isGeneratingPreviewJson(id: string) { return id in this.previewJsons; }
+
   constructor(
     private http: HttpClient,
     private api: SourcesService,

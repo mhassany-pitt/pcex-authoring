@@ -48,9 +48,8 @@ async function bootstrap() {
 bootstrap();
 
 // TODO: break an explanation from the cursor point
-// TODO: recompile activites/sources after saving
 // TODO: in activity, enable "challenge" option only if the source can be used as a challenge
 // TODO: sources can also be shared with other users
-// TODO: complete the ACOS-PCEX integration
 // TODO: packages/bundles instead of activites
 // TODO: prompt tuned for challenges?!
+// TODO: load examples through ACOS server

@@ -46,7 +46,7 @@
           <hr class="my-4" />
 
           <div class="bg-gray-100 -m-2 p-2">
-            <app-activity (completed)="reload();" [activity]="{ items: [{}] }"></app-activity>
+            <app-activity (completed)="update($event)" [activity]="{ items: [{}] }"></app-activity>
           </div>
         </ng-container>
       </ng-template>
@@ -56,38 +56,41 @@
           <th>Name</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-$activity let-rowIndex="rowIndex">
+      <ng-template pTemplate="body" let-tr_activity let-rowIndex="rowIndex">
         <tr>
           <td>
             <div class="flex flex-col items-center justify-center gap-1">
               <button pButton type="button" icon="pi pi-briefcase"
-                [title]="$activity.archived ? 'Unarchive activity' : 'Archive activity'"
-                class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': $activity.archived }"
-                (click)="toggleArchive($activity)">
+                [title]="tr_activity.archived ? 'Unarchive activity' : 'Archive activity'"
+                class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': tr_activity.archived }"
+                (click)="toggleArchive(tr_activity)">
               </button>
-              <button pButton type="button" icon="pi pi-eye" title="Preview"
-                class="p-button-text p-button-sm p-button-secondary preview-btn" (click)="preview($activity)">
+              <button pButton type="button"
+                icon="pi {{ api.isGeneratingPreviewJson(tr_activity.id) ? 'pi-spin pi-spinner' : 'pi-eye' }}"
+                [title]="api.isGeneratingPreviewJson(tr_activity.id) ? 'Generating Preview' : 'Preview'"
+                class="p-button-text p-button-sm p-button-secondary preview-btn" (click)="preview(tr_activity)"
+                [disabled]="api.isGeneratingPreviewJson(tr_activity.id)">
               </button>
-              <button pButton *ngIf="$activity.stat && false" type="button"
-                [title]="'Download compiled.json (generated on ' + ($activity.stat.lastTimeModified | date:'medium') + ')'"
+              <!-- <button pButton *ngIf="tr_activity.stat" type="button"
+                [title]="'Download compiled.json (generated on ' + (tr_activity.stat.lastTimeModified | date:'medium') + ')'"
                 icon="pi pi-download" class="p-button-text p-button-sm p-button-success download-btn"
-                (click)="download($activity)">
-              </button>
-              <button pButton *ngIf="$activity.stat" type="button"
-                [title]="$activity.published ? 'Unpublish from Hub' : 'Publish on Hub'" icon="pi pi-globe"
+                (click)="download(tr_activity)">
+              </button> -->
+              <button pButton *ngIf="tr_activity.stat" type="button"
+                [title]="tr_activity.published ? 'Unpublish from Hub' : 'Publish on Hub'" icon="pi pi-globe"
                 class="p-button-text p-button-sm toggle-publish-btn"
-                [ngClass]="{ 'p-button-plain': !$activity.published }" (click)="togglePublish($activity)">
+                [ngClass]="{ 'p-button-plain': !tr_activity.published }" (click)="togglePublish(tr_activity)">
               </button>
             </div>
           </td>
           <td>
-            <ng-container *ngIf="activity != $activity; else activityForm">
-              <div class="flex flex-col gap-2" [ngClass]="{ 'line-through': $activity.archived }">
-                <span class="font-bold cursor-pointer text-blue-700" (click)="activity = $activity">
-                  {{ $activity.name || '[name not specified]' }}
+            <ng-container *ngIf="activity != tr_activity; else activityForm">
+              <div class="flex flex-col gap-2" [ngClass]="{ 'line-through': tr_activity.archived }">
+                <span class="font-bold cursor-pointer text-blue-700" (click)="activity = tr_activity">
+                  {{ tr_activity.name || '[name not specified]' }}
                 </span>
 
-                <ng-container *ngFor="let item of $activity.items">
+                <ng-container *ngFor="let item of tr_activity.items">
                   <div class="ml-2 font-bold">
                     <span>{{ item.details.name }}</span>
                   </div>
@@ -99,7 +102,7 @@
               </div>
             </ng-container>
             <ng-template #activityForm>
-              <app-activity [activity]="activity" (completed)="activity = null; reload();"></app-activity>
+              <app-activity [activity]="activity" (completed)="update($event)"></app-activity>
             </ng-template>
           </td>
         </tr>

@@ -23,7 +23,7 @@ export class SourcesComponent implements OnInit {
   showPreview = false;
 
   constructor(
-    private api: SourcesService,
+    public api: SourcesService,
     private activities: ActivitiesService,
     public router: Router,
     public app: AppService,
@@ -61,18 +61,18 @@ export class SourcesComponent implements OnInit {
 
   async preview(source: any) {
     source = await this.api.read(source.id).toPromise();
-    const blankLns = Object.keys(source.lines || {})
-      .filter(ln => source.lines[ln].blank);
-    this.activities.genPreviewJson({
-      "id": source.id,
-      "name": source.name,
-      "items": [{ "item$": source, "type": blankLns.length ? "challenge" : "example" }],
-    }, "source").subscribe(
-      (resp: any) => {
-        this.previewLink = this.activities.previewJsonLink(source, "source");
-        this.showPreview = true;
-      },
-      (error: any) => console.log(error)
-    )
+    this.previewLink = this.activities.previewJsonLink(source, "source");
+    this.showPreview = true;
+    // const blankLns = Object.keys(source.lines || {})
+    //   .filter(ln => source.lines[ln].blank);
+    // this.activities.genPreviewJson({
+    //   "id": source.id,
+    //   "name": source.name,
+    //   "items": [{ "item$": source, "type": blankLns.length ? "challenge" : "example" }],
+    // }, "source").subscribe(
+    //   (resp: any) => {
+    //   },
+    //   (error: any) => console.log(error)
+    // )
   }
 }

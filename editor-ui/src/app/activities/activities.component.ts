@@ -24,7 +24,7 @@ export class ActivitiesComponent implements OnInit {
   showPreview = false;
 
   constructor(
-    private api: ActivitiesService,
+    public api: ActivitiesService,
     public router: Router,
     public app: AppService,
   ) { }
@@ -57,15 +57,32 @@ export class ActivitiesComponent implements OnInit {
     );
   }
 
-  async preview(activity: any) {
+  update(activity: any) {
+    if (activity) setTimeout(() => {
+      this.genPreviewJson(activity, async () => {
+        const updated: any = await this.api.read(activity.id).toPromise();
+        this.activities.find((a: any) => a.id == activity.id).stat = updated.stat;
+      });
+    }, 1000);
+    this.activity = null;
+    this.reload();
+  }
+
+  async genPreviewJson(activity: any, then: () => void) {
+    this.api.previewJsons[activity.id] = 'generating';
     activity = await this.api.read(activity.id).toPromise();
     this.api.genPreviewJson(activity, "activity").subscribe(
       (resp: any) => {
-        this.previewLink = this.api.previewJsonLink(activity, "activity");
-        this.showPreview = true;
+        delete this.api.previewJsons[activity.id];
+        then?.();
       },
       (error: any) => console.log(error)
     )
+  }
+
+  async preview(activity: any) {
+    this.previewLink = this.api.previewJsonLink(activity, "activity");
+    this.showPreview = true;
   }
 
   togglePublish(activity: any) {

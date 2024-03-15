@@ -8,8 +8,8 @@ import { ActivitiesService } from '../../activities.service';
 })
 export class ActivityComponent implements OnInit {
 
+  @Input() activity: any;
   sources: any[] = [];
-  @Input() activity: any = [{}];
 
   model: any;
 
@@ -39,7 +39,6 @@ export class ActivityComponent implements OnInit {
   addItem() {
     if (!this.model.items)
       this.model.items = [];
-
     this.model.items.push({});
   }
 
@@ -47,7 +46,7 @@ export class ActivityComponent implements OnInit {
     this.model.items.splice(this.model.items.indexOf(item), 1);
   }
 
-  async update() {
+  update() {
     for (const item of this.model.items) {
       const details = this.sources.find(source => source.id == item.item);
       if (details) item.details = {
@@ -56,11 +55,12 @@ export class ActivityComponent implements OnInit {
       };
     }
 
-    (this.model.id
-      ? this.api.update(this.model)
-      : this.api.create(this.model)
-    ).subscribe(
-      (activity: any) => this.completed.emit(activity),
+    const editing = this.model.id;
+    (editing ? this.api.update(this.model) : this.api.create(this.model)).subscribe(
+      (resp: any) => {
+        const activity = { ... this.activity, ...resp };
+        this.completed.emit(activity);
+      },
       (error: any) => console.log(error)
     )
   }

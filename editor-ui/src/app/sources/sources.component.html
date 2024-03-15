@@ -58,9 +58,11 @@
                 class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': source.archived }"
                 (click)="toggleArchive(source)">
               </button>
-              <button pButton type="button" icon="pi pi-eye" title="Preview"
-                class="p-button-text p-button-sm p-button-secondary preview-btn" (click)="preview(source)">
-                <!-- [routerLink]="['/viewer', source.id]" -->
+              <button pButton type="button"
+                [title]="api.isGeneratingPreviewJson(source.id) ? 'Generating Preview' : 'Preview'"
+                icon="pi {{ api.isGeneratingPreviewJson(source.id) ? 'pi-spin pi-spinner' : 'pi-eye' }}"
+                class="p-button-text p-button-sm p-button-secondary preview-btn" (click)="preview(source)"
+                [disabled]="api.isGeneratingPreviewJson(source.id)">
               </button>
             </div>
           </td>
