@@ -8,8 +8,9 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
-import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 import { DropdownModule } from 'primeng/dropdown';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { DropdownModule } from 'primeng/dropdown';
     HubRoutingModule,
     DialogModule, ButtonModule,
     InputTextModule, TableModule,
-    UserAuthCtrlModule, DropdownModule,
+    DropdownModule, SelectButtonModule,
+    UserAuthCtrlModule,
   ]
 })
 export class HubModule { }

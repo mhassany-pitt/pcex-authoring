@@ -34,14 +34,26 @@
     <div class="border shadow-md">
       <p-table #table [value]="activities">
         <ng-template pTemplate="body" let-activity let-rowIndex="rowIndex">
-          <tr>
+          <tr #rowEl>
             <td>
               <div class="flex flex-col gap-2 relative">
                 <div class="flex items-center gap-2">
                   <span class="font-bold cursor-pointer text-blue-700" (click)="preview(activity)">
                     {{ activity.name || '[name not specified]' }}
                   </span>
-                  <a [href]="getLink(activity)" target="_blank">
+                  <p-selectButton title="Integrate this activity into your intended tool"
+                    [(ngModel)]="integrationToggles[activity.id]" [options]="integrationOptions"
+                    class="integration-options" (onChange)="selectIntegrationLink(rowEl)">
+                  </p-selectButton>
+                  <i *ngIf="integrationToggles[activity.id]" class="pi pi-times hover:text-black cursor-pointer -ml-1"
+                    style="font-size: 0.65rem;" (click)="integrationToggles[activity.id] = null;"></i>
+                </div>
+
+                <div *ngIf="integrationToggles[activity.id]" class="flex items-center gap-2">
+                  <input *ngIf="integrationToggles[activity.id] == 'html'" type="text" pInputText
+                    [ngModel]="getIntegrationLink(activity, 'html')" class="integration-link" readonly />
+                  <a *ngIf="integrationToggles[activity.id] == 'html'" [href]="getIntegrationLink(activity, 'html')"
+                    target="_blank">
                     <i class="pi pi-external-link text-xs"></i>
                   </a>
                 </div>

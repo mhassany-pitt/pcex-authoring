@@ -18,6 +18,13 @@ export class HubComponent implements OnInit {
   searchTimeout: any;
   activities: any[] = [];
 
+  integrationToggles: any = {};
+  integrationOptions = [{ label: 'View link', value: 'html' }];
+
+  getIntegrationLink(activity: any, protocol: string) {
+    return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${activity.id}__${activity.name.replace(/ /g, '_')}`
+  }
+
   get isLoggedIn() { return !!this.app.user; }
 
   constructor(
@@ -54,5 +61,9 @@ export class HubComponent implements OnInit {
         (error: any) => console.log(error),
       );
     }, 300);
+  }
+
+  selectIntegrationLink(el: any) {
+    setTimeout(() => el.querySelector('input.integration-link')?.select(), 0);
   }
 }

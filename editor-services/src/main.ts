@@ -52,4 +52,3 @@ bootstrap();
 // TODO: sources can also be shared with other users
 // TODO: packages/bundles instead of activites
 // TODO: prompt tuned for challenges?!
-// TODO: load examples through ACOS server
