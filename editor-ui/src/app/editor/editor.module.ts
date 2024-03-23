@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { EditorRoutingModule } from './editor.routing.module';
 import { EditorComponent } from './editor.component';
 import { FormsModule } from '@angular/forms';
-import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DialogModule } from 'primeng/dialog';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -21,7 +21,7 @@ import { MenuModule } from 'primeng/menu';
   imports: [
     CommonModule, FormsModule,
     EditorRoutingModule,
-    MonacoEditorModule, InputTextModule,
+    MonacoEditorModule.forRoot(), InputTextModule,
     InputTextareaModule, DialogModule,
     CheckboxModule, ButtonModule,
     TabViewModule, SelectButtonModule,

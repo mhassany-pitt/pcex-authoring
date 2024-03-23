@@ -273,7 +273,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   private setupAsSingleLineEditor(editor: any) {
     // --------------->>
     // https://github.com/vikyd/vue-monaco-singleline/blob/1de219c2f1ddd89f6b473e43716bbb3dfb662542/src/monaco-singleline.vue#L150
-    editor.addCommand(KeyMod.CtrlCmd | KeyCode.KEY_F, () => { });
+    editor.addCommand(KeyMod.CtrlCmd | KeyCode.KeyF, () => { });
     editor.addCommand(KeyCode.Enter, () => editor.trigger('', 'acceptSelectedSuggestion'));
     editor.onDidPaste((e: any) => {
       if (e.endLineNumber <= 1)

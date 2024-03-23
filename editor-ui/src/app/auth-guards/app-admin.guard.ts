@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { AppService } from '../app.service';
 
 @Injectable({ providedIn: 'root' })
-export class AppAdminGuard implements CanActivate {
+export class AppAdminGuard  {
 
   constructor(
     private app: AppService,

@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { SourcesService } from './sources.service';
-import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -38,7 +37,6 @@ import { AppService } from './app.service';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    MonacoEditorModule.forRoot(),
     LoadingBarRouterModule,
     LoadingBarHttpClientModule,
     CommonModule, HttpClientModule, RouterModule,

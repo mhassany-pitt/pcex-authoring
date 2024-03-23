@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AppService } from '../app.service';
 import { catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class HandshakeGuard implements CanActivate {
+export class HandshakeGuard  {
 
   constructor(private app: AppService) { }
 
