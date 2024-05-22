@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 import { SourcesService } from './sources.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -43,7 +43,8 @@ export class ActivitiesService {
   }
 
   previewJsonLink(activity: any, type: string) {
-    const baseHref = document.querySelector('base')?.href;
+    let baseHref = document.querySelector('base')?.href;
+    if (baseHref?.endsWith('/')) baseHref = baseHref.slice(0, -1);
     return this.sanitizer.bypassSecurityTrustResourceUrl(
       `${baseHref}/assets/preview/index.html` +
       `?load=${environment.apiUrl}/activities/${activity.id}/preview` +

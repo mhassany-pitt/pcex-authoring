@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 RUN apk add --no-cache openjdk11-jre
 RUN apk add --no-cache python3
 WORKDIR /pcex-authoring

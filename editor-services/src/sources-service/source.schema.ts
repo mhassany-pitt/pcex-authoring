@@ -15,6 +15,7 @@ export class Source {
   @Prop({ type: Object }) lines: any;
   // @Prop({ type: [Object] }) variations: any[];
   @Prop({ type: [Object] }) distractors: any[];
+  @Prop() programInput: string;
 }
 
 export const SourceSchema = SchemaFactory.createForClass(Source);

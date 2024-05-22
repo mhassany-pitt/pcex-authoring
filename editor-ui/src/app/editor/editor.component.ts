@@ -7,7 +7,7 @@ import { ActivitiesService } from '../activities.service';
 import { AppService } from '../app.service';
 import { arrayMoveMutable } from 'array-move';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-editor',

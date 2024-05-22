@@ -12,6 +12,7 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HubModule } from './hub/hub.module';
 import { GptGenaiModule } from './gpt-genai/gpt-genai.module';
+import { BulkModule } from './bulk/bulk.module';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { GptGenaiModule } from './gpt-genai/gpt-genai.module';
     SourcesModule,
     ActivitiesModule,
     AuthModule, UsersModule,
-    UserAdminModule, HubModule, GptGenaiModule,
+    UserAdminModule, HubModule, GptGenaiModule, BulkModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],

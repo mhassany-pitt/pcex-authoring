@@ -21,7 +21,8 @@ import { MenuModule } from 'primeng/menu';
   imports: [
     CommonModule, FormsModule,
     EditorRoutingModule,
-    MonacoEditorModule.forRoot(), InputTextModule,
+    MonacoEditorModule.forRoot(), 
+    InputTextModule,
     InputTextareaModule, DialogModule,
     CheckboxModule, ButtonModule,
     TabViewModule, SelectButtonModule,
