@@ -2,19 +2,25 @@ import os
 import json
 import requests
 
-api = 'http://localhost:3000'
+api = 'http://adapt2.sis.pitt.edu/pcex-authoring'
 
 ignore = [
+    'JAVA_full.json',
     'JAVA_loan_tester.json',
     'JAVA_prior_201709052238.json',
-    'JAVA_full.json',
     'JAVA_user_study.json',
+    'JAVA_files.j_work_hours.json',
+    'JAVA_csedpad.06.If.if_1.json',
 ]
 
 filenames = [fn for fn in os.listdir('examples') if fn.endswith('.json')]
 j = len(filenames)
 i = 0
+k = 0
 for filename in filenames:
+    if k > 200:
+        break
+    k += 1
     i += 1
     try:
         if os.path.exists(f'./examples/{filename}.done'):

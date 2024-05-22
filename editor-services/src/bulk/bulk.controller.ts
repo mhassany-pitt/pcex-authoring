@@ -13,27 +13,27 @@ export class BulkController {
         private compiler: CompilerService,
     ) { }
 
-    @Post('sources')
-    async bulkSources(@Body() body: any) {
-        const resp = await this.sources.create(body);
-        const id = toObject(resp)._id;
+    // @Post('sources')
+    // async bulkSources(@Body() body: any) {
+    //     const resp = await this.sources.create(body);
+    //     const id = toObject(resp)._id;
 
-        const items = [{ item$: { ...body, id: `${id}_example` }, type: 'example' }];
-        const challenge = Object.keys(body.lines).filter(ln => body.lines[ln].blank);
-        if (challenge) items.push({ item$: { ...body, id: `${id}_challenge` }, type: 'challenge' });
-        this.compiler.compile({ id, name: body.name, items });
+    //     const items = [{ item$: { ...body, id: `${id}_example` }, type: 'example' }];
+    //     const challenge = Object.keys(body.lines).filter(ln => body.lines[ln].blank);
+    //     if (challenge) items.push({ item$: { ...body, id: `${id}_challenge` }, type: 'challenge' });
+    //     this.compiler.compile({ id, name: body.name, items });
 
-        return { id };
-    }
+    //     return { id };
+    // }
 
-    @Post('activities')
-    async bulkInsert(@Body() body: any) {
-        const resp = await this.activities.create(body);
-        const id = toObject(resp)._id;
-        body.id = id;
+    // @Post('activities')
+    // async bulkInsert(@Body() body: any) {
+    //     const resp = await this.activities.create(body);
+    //     const id = toObject(resp)._id;
+    //     body.id = id;
 
-        await this.compiler.compile(body);
+    //     await this.compiler.compile(body);
 
-        return { id };
-    }
+    //     return { id };
+    // }
 }
