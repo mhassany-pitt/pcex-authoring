@@ -9,6 +9,7 @@ import { Request, Response } from 'express';
 import { toObject, useId } from 'src/utils';
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
 import { SourcesService } from 'src/sources-service/sources.service';
+import { Worker } from 'worker_threads';
 
 @Controller('activities')
 export class ActivitiesController {
@@ -68,25 +69,34 @@ export class ActivitiesController {
     await this.activities.remove({ user: this.getUserEmail(req), id });
   }
 
-  private async authorizePreview(req: Request, id: string, type: string) {
-    // TODO: should we authorize?!
-    // let found = null, payload = { user: this.getUserEmail(req), id };
-    // /**/ if (type === 'source') found = await this.sources.read(payload);
-    // else if (type === 'activity') found = await this.activities.read(payload);
-    // if (!found) throw new NotFoundException();
-  }
+  // private async authorizePreview(req: Request, id: string, type: string) {
+  // TODO: should we authorize?!
+  // let found = null, payload = { user: this.getUserEmail(req), id };
+  // /**/ if (type === 'source') found = await this.sources.read(payload);
+  // else if (type === 'activity') found = await this.activities.read(payload);
+  // if (!found) throw new NotFoundException();
+  // }
 
   @Patch(':id/preview')
   @UseGuards(AuthenticatedGuard)
-  async genPreview(@Req() req: Request, @Param('id') id: string, @Body() activity: any, @Query('type') type: string) {
-    await this.authorizePreview(req, id, type);
-    await this.compiler.compile({ ...activity, id });
+  async genPreview(@Res() res: Response, @Param('id') id: string, @Body() activity: any) {
+    // await this.authorizePreview(req, id, type);
+    // await this.compiler.compile({ ...activity, id });
+    const worker = new Worker(`${__dirname}/compile.js`, { workerData: { ...activity, id } });
+    worker.on('message', (result) => {
+      console.log(result);
+      res.json({});
+    });
+    worker.on('error', (error) => {
+      console.error(error);
+      res.status(500).json({});
+    });
   }
 
   @Get(':id/preview')
   @UseGuards(AuthenticatedGuard)
   async getPreview(@Req() req: Request, @Param('id') id: string, @Res({ passthrough: true }) res: Response, @Query('type') type: string) {
-    await this.authorizePreview(req, id, type);
+    // await this.authorizePreview(req, id, type);
     res.header('Content-Type', 'application/json');
     res.header('Content-Disposition', `attachment; filename="preview.json"`);
     return new StreamableFile(createReadStream(this.compiler.preview(id)));

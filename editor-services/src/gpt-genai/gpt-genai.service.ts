@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Configuration, OpenAIApi } from 'openai';
+import OpenAI from "openai";
 import {
   ensureDirSync, writeJsonSync, writeFileSync,
   readFileSync, readdirSync, existsSync, readJsonSync, exists
@@ -9,14 +9,13 @@ import { preparePrompt1, preparePrompt2 } from './gpt-genai.prompts';
 
 @Injectable()
 export class GptGenaiService {
-  private openai: OpenAIApi;
+  private openai: OpenAI;
 
   constructor(private config: ConfigService) {
-    const configuration = new Configuration({
+    this.openai = new OpenAI({
       apiKey: this.config.get('OPENAI_API_KEY'),
       organization: this.config.get('OPENAI_ORG_ID'),
     });
-    this.openai = new OpenAIApi(configuration);
   }
 
   get root() {
@@ -38,7 +37,7 @@ export class GptGenaiService {
   }
 
   async submit(messages: any[]) {
-    return await this.openai.createChatCompletion({
+    return await this.openai.chat.completions.create({
       model:
         JSON.stringify(messages).length > 10000
           ? 'gpt-3.5-turbo-16k'
@@ -86,7 +85,7 @@ export class GptGenaiService {
         `${ws}/01-prompt_${new Date().toISOString()}.json`,
         JSON.stringify(messages),
       );
-      resp = (await this.submit(messages)).data.choices[0].message.content;
+      resp = (await this.submit(messages)).choices[0].message.content;
       resp = this.removeJsonQuotes(resp);
       writeFileSync(`${ws}/02-response_${new Date().toISOString()}.json`, resp);
 
@@ -98,7 +97,7 @@ export class GptGenaiService {
         JSON.stringify(messages),
       );
       prev = resp;
-      resp = (await this.submit(messages)).data.choices[0].message.content;
+      resp = (await this.submit(messages)).choices[0].message.content;
       resp = this.removeJsonQuotes(resp);
       writeFileSync(`${ws}/04-response_${new Date().toISOString()}.json`, resp);
 
@@ -114,7 +113,7 @@ export class GptGenaiService {
       //     JSON.stringify(messages),
       //   );
       //   prev = resp;
-      //   resp = (await this.submit(messages)).data.choices[0].message.content;
+      //   resp = (await this.submit(messages)).choices[0].message.content;
       //   writeFileSync(
       //     `${ws}/${(seq++)
       //       .toString()
@@ -136,7 +135,9 @@ export class GptGenaiService {
         statusText: exp.response.statusText,
       });
     }
-    return this.removeJsonQuotes(resp);
+    resp = this.removeJsonQuotes(resp);
+    resp = JSON.parse(resp);
+    return resp;
   }
 
   removeJsonQuotes(resp: string) {
