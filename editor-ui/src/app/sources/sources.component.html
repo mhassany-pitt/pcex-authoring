@@ -1,0 +1,96 @@
+<div class="flex flex-col">
+  <div class="px-10 py-4 bg-gray-100 shadow-md fixed left-0 top-0 right-0 z-10">
+    <div class="container mx-auto flex items-center gap-2 px-2 md:px-0">
+      <img src="assets/logo.png" class="h-8 w-8" />
+      <span class="text-xl font-bold hidden md:inline-block text-nowrap">PCEX Authoring</span>
+      <span class="hidden md:inline-block"><i class="pi pi-chevron-right"></i></span>
+
+      <p-dropdown #navEl [options]="[
+          {label: 'Hub', value: '/hub'},
+          {label: 'Sources', value: '/sources'},
+          {label: 'Activities', value: '/activities'}, 
+        ]" [ngModel]="'/sources'" class="-my-2 pcex-nav-dropdown"
+        (onChange)="router.navigate([$event.value]);"></p-dropdown>
+
+      <span class="flex-grow"></span>
+
+      <ng-container *ngIf="app.user?.roles?.includes('app-admin')">
+        <button pButton type="button" label="Users" icon="pi pi-users" class="p-button-sm p-button-text"
+          style="padding: 0.25rem 0.5rem;" routerLink="/user-admin">
+        </button>
+        <span class="border-r w-1 h-6"></span>
+      </ng-container>
+
+      <app-user-auth-ctrl logoutRedirect="/hub"></app-user-auth-ctrl>
+    </div>
+  </div>
+
+  <div class="container mx-auto mt-24 mb-16 border shadow-md z-0">
+    <p-table #table [value]="sources" [globalFilterFields]="['name','description']">
+      <ng-template pTemplate="caption">
+        <div class="flex items-center gap-2">
+          <p-checkbox name="archived" label="Include Archives" [binary]="true" [(ngModel)]="archived"
+            (ngModelChange)="reload()"></p-checkbox>
+
+          <span class="flex-grow"></span>
+
+          <button pButton type="button" label="New Source" icon="pi pi-plus" class="p-button-sm"
+            (click)="create()"></button>
+
+          <span class="p-input-icon-right">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="filter(table, $event)" placeholder="Filter" class="p-inputtext-sm" />
+          </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-16" style="text-align: center;">Actions</th>
+          <th>Name & Description</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-source>
+        <tr>
+          <td>
+            <div class="flex flex-col items-center justify-center gap-1">
+              <button pButton type="button" icon="pi pi-briefcase"
+                [title]="source.archived ? 'Unarchive source' : 'Archive source'"
+                class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': source.archived }"
+                (click)="toggleArchive(source)">
+              </button>
+              <button pButton type="button"
+                [title]="api.isGeneratingPreviewJson(source.id) ? 'Generating Preview' : 'Preview'"
+                icon="pi {{ api.isGeneratingPreviewJson(source.id) ? 'pi-spin pi-spinner' : 'pi-eye' }}"
+                class="p-button-text p-button-sm p-button-secondary preview-btn" (click)="preview(source)"
+                [disabled]="api.isGeneratingPreviewJson(source.id)">
+              </button>
+            </div>
+          </td>
+          <td>
+            <div class="flex flex-col gap-2" [ngClass]="{ 'line-through': source.archived }">
+              <span [routerLink]="['/editor', source.id]" class="font-bold cursor-pointer text-blue-700">
+                {{source.name || '[name not specified]'}}
+              </span>
+              <span class="text-xs ml-2">{{source.description}}</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="2">
+            <div class="text-xs text-center text-gray-400 w-full">
+              no record matched, revise your filter keyword
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+
+<p-dialog [(visible)]="showPreview" [modal]="true" class="preview-dialog" [style]="{width: '85vw', height: '85vh'}"
+  (onHide)="previewLink = null">
+  <iframe *ngIf="previewLink" [src]="previewLink" class="border-none" style="width: 100%; height: 100%"></iframe>
+</p-dialog>

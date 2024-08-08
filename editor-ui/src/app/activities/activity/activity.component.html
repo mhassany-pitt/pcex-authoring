@@ -1,0 +1,38 @@
+<form *ngIf="model" #form="ngForm" (ngSubmit)="update()" class="flex flex-col gap-2 activity-form">
+  <input type="text" name="name" pInputText [(ngModel)]="model.name" placeholder="Name" required
+    class="p-button-sm flex-grow" style="padding: 0.35rem 0.5rem;" />
+
+  <div *ngFor="let item of model.items; let i = index;" class="flex items-center gap-2 ml-4">
+    <span>{{ i + 1 }}.</span>
+
+    <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger"
+      (click)="removeItem(item)">
+    </button>
+
+    <div class="flex-grow">
+      <p-dropdown [name]="'activity-item-' + i" [options]="sources" [(ngModel)]="item.item"
+        placeholder="Select a Source" [filter]="true" filterBy="label" [showClear]="true" [required]="true"
+        optionLabel="name" optionValue="id" styleClass="w-full">
+      </p-dropdown>
+    </div>
+
+    <p-selectButton [name]="'activity-type-' + i" [ngModel]="item.type" [options]="[
+        { label: 'Example', value: 'example' },
+        { label: 'Challenge', value: 'challenge' },
+      ]" [(ngModel)]="item.type" required class="pi-button-sm">
+    </p-selectButton>
+  </div>
+
+  <div class="flex items-center gap-2 ml-20">
+    <button pButton type="button" label="Add Source" icon="pi pi-plus" class="p-button-sm p-button-outlined"
+      (click)="addItem()"></button>
+
+    <div class="flex-grow"></div>
+
+    <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
+      class="p-button-sm p-button-secondary p-button-text" (click)="completed.emit()">
+    </button>
+    <button pButton type="submit" label="Save" icon="pi pi-check" class="p-button-sm" [disabled]="form.invalid">
+    </button>
+  </div>
+</form>

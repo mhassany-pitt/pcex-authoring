@@ -1,0 +1,127 @@
+<div class="flex flex-col">
+  <div class="px-10 py-4 bg-gray-100 shadow-md fixed left-0 top-0 right-0 z-10">
+    <div class="container mx-auto flex items-center gap-2 px-2 md:px-0">
+      <img src="assets/logo.png" class="h-8 w-8" />
+      <span class="text-xl font-bold hidden md:inline-block text-nowrap">PCEX Authoring</span>
+      <span class="hidden md:inline-block"><i class="pi pi-chevron-right"></i></span>
+
+      <p-dropdown #navEl [options]="[
+          {label: 'Hub', value: '/hub'},
+          {label: 'Sources', value: '/sources'},
+          {label: 'Activities', value: '/activities'}, 
+        ]" [ngModel]="'/activities'" class="-my-2 text-xl pcex-nav-dropdown"
+        (onChange)="router.navigate([$event.value]);"></p-dropdown>
+
+      <span class="flex-grow"></span>
+
+      <ng-container *ngIf="app.user?.roles?.includes('app-admin')">
+        <button pButton type="button" label="Users" icon="pi pi-users" class="p-button-sm p-button-text"
+          style="padding: 0.25rem 0.5rem;" routerLink="/user-admin">
+        </button>
+        <span class="border-r w-1 h-6"></span>
+      </ng-container>
+
+      <app-user-auth-ctrl logoutRedirect="/hub"></app-user-auth-ctrl>
+    </div>
+  </div>
+
+  <div class="container mx-auto mt-24 mb-16 border shadow-md z-0">
+    <p-table #table [value]="activities" [globalFilterFields]="['name']">
+      <ng-template pTemplate="caption">
+        <div class="flex items-center gap-2">
+          <p-checkbox name="archived" label="Include Archives" [binary]="true" [(ngModel)]="archived"
+            (ngModelChange)="reload()"></p-checkbox>
+
+          <span class="flex-grow"></span>
+
+          <button pButton type="button" label="New Activity" icon="pi pi-plus" class="p-button-sm"
+            (click)="create = true"></button>
+
+          <span class="p-input-icon-right">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="filter(table, $event)" placeholder="Filter" class="p-inputtext-sm" />
+          </span>
+        </div>
+        <ng-container *ngIf="create">
+          <hr class="my-4" />
+
+          <div class="bg-gray-100 -m-2 p-2">
+            <app-activity (completed)="update($event)" [activity]="{ items: [{}] }"></app-activity>
+          </div>
+        </ng-container>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="w-16" style="text-align: center;">Actions</th>
+          <th>Name</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-tr_activity let-rowIndex="rowIndex">
+        <tr>
+          <td>
+            <div class="flex flex-col items-center justify-center gap-1">
+              <button pButton type="button" icon="pi pi-briefcase"
+                [title]="tr_activity.archived ? 'Unarchive activity' : 'Archive activity'"
+                class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': tr_activity.archived }"
+                (click)="toggleArchive(tr_activity)">
+              </button>
+              <button pButton type="button"
+                icon="pi {{ api.isGeneratingPreviewJson(tr_activity.id) ? 'pi-spin pi-spinner' : 'pi-eye' }}"
+                [title]="api.isGeneratingPreviewJson(tr_activity.id) ? 'Generating Preview' : 'Preview'"
+                class="p-button-text p-button-sm p-button-secondary preview-btn" (click)="preview(tr_activity)"
+                [disabled]="api.isGeneratingPreviewJson(tr_activity.id)">
+              </button>
+              <!-- <button pButton *ngIf="tr_activity.stat" type="button"
+                [title]="'Download compiled.json (generated on ' + (tr_activity.stat.lastTimeModified | date:'medium') + ')'"
+                icon="pi pi-download" class="p-button-text p-button-sm p-button-success download-btn"
+                (click)="download(tr_activity)">
+              </button> -->
+              <button pButton *ngIf="tr_activity.stat" type="button"
+                [title]="tr_activity.published ? 'Unpublish from Hub' : 'Publish on Hub'" icon="pi pi-globe"
+                class="p-button-text p-button-sm toggle-publish-btn"
+                [ngClass]="{ 'p-button-plain': !tr_activity.published }" (click)="togglePublish(tr_activity)">
+              </button>
+            </div>
+          </td>
+          <td>
+            <ng-container *ngIf="activity != tr_activity; else activityForm">
+              <div class="flex flex-col gap-2" [ngClass]="{ 'line-through': tr_activity.archived }">
+                <span class="font-bold cursor-pointer text-blue-700" (click)="activity = tr_activity">
+                  {{ tr_activity.name || '[name not specified]' }}
+                </span>
+
+                <ng-container *ngFor="let item of tr_activity.items">
+                  <div class="ml-2 font-bold">
+                    <span>{{ item.details.name }}</span>
+                  </div>
+                  <div class="ml-4 text-xs -mt-2 text-gray-600">
+                    {{ item.details.description?.substring(0, 512) }}
+                    {{ item.details.description?.length > 512 ? '...' : '' }}
+                  </div>
+                </ng-container>
+              </div>
+            </ng-container>
+            <ng-template #activityForm>
+              <app-activity [activity]="activity" (completed)="update($event)"></app-activity>
+            </ng-template>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="2">
+            <div class="text-xs text-center text-gray-400 w-full">
+              no record matched, revise your filter keyword
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+
+<p-dialog [(visible)]="showPreview" [modal]="true" class="preview-dialog" [style]="{width: '85vw', height: '85vh'}"
+  (onHide)="previewLink = null">
+  <iframe *ngIf="previewLink" [src]="previewLink" class="border-none" style="width: 100%; height: 100%"></iframe>
+</p-dialog>

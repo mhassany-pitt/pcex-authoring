@@ -1,0 +1,144 @@
+<div class="flex flex-col user-admin">
+  <div class="px-10 py-4 bg-gray-100 shadow-md fixed left-0 top-0 right-0 z-10">
+    <div class="container mx-auto flex items-center gap-2 px-2 md:px-0">
+      <img src="assets/logo.png" class="h-8 w-8" />
+        <span class="text-xl font-bold">User Administration</span>
+
+      <span class="flex-grow"></span>
+
+      <app-user-auth-ctrl></app-user-auth-ctrl>
+    </div>
+  </div>
+
+  <div class="flex-grow container mx-auto mt-24 mb-16 border shadow-md flex flex-col gap-4 z-0">
+    <!-- <div class="container mx-auto mt-24 mb-16  z-0"> -->
+    <p-table #table [value]="users" [(selection)]="selected" [globalFilterFields]="['fullname', 'email', 'tags']"
+      styleClass="p-datatable-striped">
+      <ng-template pTemplate="caption">
+        <div class="table-header flex items-center">
+          <span class="text-2xl">
+            Users
+          </span>
+
+          <span class="flex-grow"></span>
+
+          <p-splitButton label="New User" icon="pi pi-plus" class="p-button-sm" (onClick)="dialog = 'create'"
+            [model]="actions">
+          </p-splitButton>
+
+          <span class="mx-1"></span>
+
+          <span class="p-input-icon-right">
+            <input pInputText type="text" (input)="filter(table, $event)" placeholder="Search" class="p-inputtext-sm" />
+            <i class="pi pi-search"></i>
+          </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 2.5rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th pSortableColumn="email" class="text-center">
+            <span>Email</span>
+            <p-sortIcon field="email"></p-sortIcon>
+          </th>
+          <th pSortableColumn="fullname" class="text-center w-48">
+            <span>Full Name</span>
+            <p-sortIcon field="fullname"></p-sortIcon>
+          </th>
+          <th pSortableColumn="roles" class="text-center w-48">
+            <span>Roles</span>
+            <p-sortIcon field="roles"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">
+            <div class="flex items-center justify-center">
+              <span class="text-gray-500">empty list</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-user>
+        <tr [ngClass]="{ 'line-through': !user.active }">
+          <td><p-tableCheckbox *ngIf="!user.itIsMe" [value]="user"></p-tableCheckbox></td>
+          <td class="group" [ngClass]="{ 'italic': !user.fullname }">
+            <div class="flex items-center">
+              <span>{{ user.fullname || 'empty' }}</span>
+              <i class="pi pi-pencil cursor-pointer ml-1 opacity-0 group-hover:opacity-100" style="font-size: 0.75rem;"
+                (click)="updateFullname(user)"></i>
+
+              <span class="flex-grow"></span>
+
+              <div>
+                <span *ngFor="let tag of user.tags" class="bg-gray-100 rounded-md mr-1 px-1 text-xs">
+                  {{ tag }}
+                </span>
+              </div>
+            </div>
+          </td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.roles?.join(', ') }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog *ngIf="model" header="New Users" [visible]="dialog == 'create'" (visibleChange)="dialog = $event"
+  [modal]="true" [style]="{width: '480px'}" class="user-admin-dialog">
+  <form #form="ngForm" class="flex flex-col gap-2" (submit)="createUsers()">
+    <div class="flex items-center">
+      <span class="mr-2">Role: </span>
+      <p-multiSelect name="roles"
+        [options]="[{value: 'author', label: 'Author'},{value: 'app-admin', label: 'App Admin'}]"
+        [(ngModel)]="model.roles" optionLabel="label" optionValue="value" placeholder="click to select" [filter]="false"
+        [showToggleAll]="false" appendTo="body">
+        <ng-template pTemplate="header">&nbsp;</ng-template>
+      </p-multiSelect>
+    </div>
+
+    <p-chips name="tags" [(ngModel)]="model.tags" separator="," placeholder="Tags (comma separated)"
+      class="p-chips-sm"></p-chips>
+
+    <textarea name="emails" rows="5" pInputTextarea [(ngModel)]="model.emails"
+      placeholder="fullname:email@company.com, ..." class="w-full p-inputtext-sm" required>
+    </textarea>
+
+    <div class="flex items-center justify-end gap-2 mt-2">
+      <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
+        class="p-button-sm p-button-secondary p-button-outlined" (click)="dialog = false">
+      </button>
+      <button pButton type="submit" label="Create" icon="pi pi-check" class="p-button-sm" [disabled]="!form.valid">
+      </button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-dialog *ngIf="model" header="Update Roles" [visible]="dialog == 'update-role'" (visibleChange)="dialog = $event"
+  [modal]="true" [style]="{width: '480px'}" class="user-admin-dialog">
+  <form #form="ngForm" class="flex flex-col gap-2" (submit)="updateRoles()">
+    <div class="flex items-center">
+      <span class="mr-2">Role: </span>
+      <p-multiSelect name="roles"
+        [options]="[{value: 'author', label: 'Author'},{value: 'app-admin', label: 'App Admin'}]"
+        [(ngModel)]="model.roles" optionLabel="label" optionValue="value" placeholder="click to select" [filter]="false"
+        [showToggleAll]="false" appendTo="body" required>
+        <ng-template pTemplate="header">&nbsp;</ng-template>
+      </p-multiSelect>
+    </div>
+
+    <div class="flex items-center justify-end gap-2 mt-2">
+      <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
+        class="p-button-sm p-button-secondary p-button-outlined" (click)="dialog = false">
+      </button>
+      <button pButton type="submit" label="Update" icon="pi pi-check" class="p-button-sm" [disabled]="!form.valid">
+      </button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '480px'}"></p-confirmDialog>

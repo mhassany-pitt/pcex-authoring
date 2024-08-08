@@ -1,0 +1,97 @@
+<div class="flex flex-col">
+  <div class="px-10 py-4 bg-gray-100 shadow-md fixed left-0 top-0 right-0 z-10">
+    <div class="container mx-auto flex items-center gap-2 max-w-4xl">
+      <img src="assets/logo.png" class="h-8 w-8" />
+      <span class="text-xl font-bold hidden md:inline-block text-nowrap">PCEX Authoring</span>
+      <span *ngIf="isLoggedIn" class="hidden md:inline-block"><i class="pi pi-chevron-right"></i></span>
+
+      <p-dropdown *ngIf="isLoggedIn" [options]="[
+          {label: 'Hub', value: '/hub'},
+          {label: 'Sources', value: '/sources'},
+          {label: 'Activities', value: '/activities'}, 
+        ]" [ngModel]="'/hub'" class="-my-2 pcex-nav-dropdown"
+        (onChange)="router.navigate([$event.value]);"></p-dropdown>
+
+      <span class="flex-grow"></span>
+
+      <ng-container *ngIf="app.user?.roles?.includes('app-admin')">
+        <button pButton type="button" label="Users" icon="pi pi-users" class="p-button-sm p-button-text"
+          style="padding: 0.25rem 0.5rem;" routerLink="/user-admin">
+        </button>
+        <span class="border-r w-1 h-6"></span>
+      </ng-container>
+
+      <app-user-auth-ctrl loginRedirect="/hub" logoutRedirect="/hub"></app-user-auth-ctrl>
+    </div>
+  </div>
+
+  <div class="container mx-auto mt-24 mb-16 flex flex-col gap-4 max-w-4xl z-0">
+    <div class="bg-gray-100 shadow-md">
+      <input #searchInputEl type="text" name="name" pInputText placeholder="Search ..."
+        class="text-xl border-gray-200 w-full" (keyup)="search(searchInputEl.value)" />
+    </div>
+
+    <div class="border shadow-md">
+      <p-table #table [value]="activities">
+        <ng-template pTemplate="body" let-activity let-rowIndex="rowIndex">
+          <tr #rowEl>
+            <td>
+              <div class="flex flex-col gap-2 relative">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold cursor-pointer text-blue-700" (click)="preview(activity)">
+                    <i class="pi pi-eye text-orange-600 text-sm mr-1"></i>
+                    <span>{{ activity.name || '[name not specified]' }}</span>
+                  </span>
+                  <p-selectButton title="Integrate this activity into your intended tool"
+                    [(ngModel)]="integrationToggles[activity.id]" [options]="integrationOptions"
+                    class="integration-options" (onChange)="selectIntegrationLink(rowEl)">
+                  </p-selectButton>
+                  <i *ngIf="integrationToggles[activity.id]" class="pi pi-times hover:text-black cursor-pointer -ml-1"
+                    style="font-size: 0.65rem;" (click)="integrationToggles[activity.id] = null;"></i>
+                </div>
+
+                <div *ngIf="integrationToggles[activity.id]" class="flex items-center gap-2">
+                  <input *ngIf="integrationToggles[activity.id] == 'html'" type="text" pInputText
+                    [ngModel]="getIntegrationLink(activity, 'html')" class="integration-link" readonly />
+                  <a *ngIf="integrationToggles[activity.id] == 'html'" [href]="getIntegrationLink(activity, 'html')"
+                    target="_blank">
+                    <i class="pi pi-external-link text-xs"></i>
+                  </a>
+                </div>
+
+                <ng-container *ngFor="let item of activity.items">
+                  <div class="ml-2 font-bold">
+                    <span>{{ item.details.name }}</span>
+                  </div>
+                  <div class="ml-4 text-xs -mt-2 text-gray-600">
+                    {{ item.details.description?.substring(0, 512) }}
+                    {{ item.details.description?.length > 512 ? '...' : '' }}
+                  </div>
+                </ng-container>
+
+                <span class="absolute right-0 top-0 text-gray-500 text-xs">
+                  author: {{ activity.author.fullname }} ({{ activity.author.email }})
+                </span>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="2">
+              <div class="text-xs text-center text-gray-400 w-full">
+                no activities matched, revise your search keyword
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog [(visible)]="showPreview" [modal]="true" class="preview-dialog" [style]="{width: '85vw', height: '85vh'}"
+  (onHide)="previewLink = null">
+  <iframe *ngIf="previewLink" [src]="previewLink" class="border-none" style="width: 100%; height: 100%"></iframe>
+</p-dialog>
