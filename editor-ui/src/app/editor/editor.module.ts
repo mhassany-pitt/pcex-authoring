@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TabViewModule } from 'primeng/tabview';
 import { MenuModule } from 'primeng/menu';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -21,12 +22,12 @@ import { MenuModule } from 'primeng/menu';
   imports: [
     CommonModule, FormsModule,
     EditorRoutingModule,
-    MonacoEditorModule.forRoot(), 
+    MonacoEditorModule.forRoot(),
     InputTextModule,
     InputTextareaModule, DialogModule,
     CheckboxModule, ButtonModule,
     TabViewModule, SelectButtonModule,
-    MenuModule,
+    MenuModule, DropdownModule,
   ]
 })
 export class EditorModule { }

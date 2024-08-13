@@ -5,7 +5,10 @@
         <img src="assets/logo.png" class="h-8 w-8" />
         <span class="text-xl font-bold hidden md:inline-block text-nowrap">PCEX Authoring</span>
         <span class="hidden md:inline-block"><i class="pi pi-chevron-right"></i></span>
-        <span *ngIf="model?.name" class="text-xl truncate font-bold">{{ model.name }}</span>
+
+        <p-dropdown #navEl [options]="getNavMenuBar()" name="nav-bar" [ngModel]="'/sources'"
+          class="-my-2 pcex-nav-dropdown" (onChange)="router.navigate([$event.value]);">
+        </p-dropdown>
 
         <span class="flex-grow"></span>
 
@@ -138,7 +141,7 @@
                   <!-- explanation -->
                   <textarea pInputTextarea [autoResize]="true" [name]="'explanation-' + i" [(ngModel)]="comment.content"
                     [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
-                    class="flex-grow px-2 py-1 border-gray-200 p-button-secondary" [ngClass]="{ 
+                    class="flex-grow px-2 py-1 border-gray-200 p-button-secondary" [ngClass]="{
                       'gpt-generated': gptGeneratedExps.indexOf(comment) > -1,
                       'text-gray-400': cptAction == 'cut' && cptSelection.indexOf(comment) > -1
                     }" style="font-size: 0.75rem;" (ngModelChange)="reloadLineMarkers()"

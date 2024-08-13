@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SourcesService } from '../sources.service';
 import { ActivitiesService } from '../activities.service';
 import { AppService } from '../app.service';
+import { getNavMenuBar } from '../utilities';
 
 @Component({
   selector: 'app-sources',
@@ -10,6 +11,8 @@ import { AppService } from '../app.service';
   styleUrls: ['./sources.component.less']
 })
 export class SourcesComponent implements OnInit {
+
+  getNavMenuBar = getNavMenuBar;
 
   _archived: boolean = localStorage.getItem('pcex-sources-archived') == 'true';
   get archived() { return this._archived; }

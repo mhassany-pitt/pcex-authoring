@@ -5,21 +5,10 @@
       <span class="text-xl font-bold hidden md:inline-block text-nowrap">PCEX Authoring</span>
       <span *ngIf="isLoggedIn" class="hidden md:inline-block"><i class="pi pi-chevron-right"></i></span>
 
-      <p-dropdown *ngIf="isLoggedIn" [options]="[
-          {label: 'Hub', value: '/hub'},
-          {label: 'Sources', value: '/sources'},
-          {label: 'Activities', value: '/activities'}, 
-        ]" [ngModel]="'/hub'" class="-my-2 pcex-nav-dropdown"
+      <p-dropdown *ngIf="isLoggedIn" [options]="getNavMenuBar()" [ngModel]="'/hub'" class="-my-2 pcex-nav-dropdown"
         (onChange)="router.navigate([$event.value]);"></p-dropdown>
 
       <span class="flex-grow"></span>
-
-      <ng-container *ngIf="app.user?.roles?.includes('app-admin')">
-        <button pButton type="button" label="Users" icon="pi pi-users" class="p-button-sm p-button-text"
-          style="padding: 0.25rem 0.5rem;" routerLink="/user-admin">
-        </button>
-        <span class="border-r w-1 h-6"></span>
-      </ng-container>
 
       <app-user-auth-ctrl loginRedirect="/hub" logoutRedirect="/hub"></app-user-auth-ctrl>
     </div>

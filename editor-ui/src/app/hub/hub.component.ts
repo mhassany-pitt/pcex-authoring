@@ -4,6 +4,7 @@ import { DomSanitizer, Title } from '@angular/platform-browser';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { AppService } from '../app.service';
+import { getNavMenuBar } from '../utilities';
 
 @Component({
   selector: 'app-hub',
@@ -11,6 +12,8 @@ import { AppService } from '../app.service';
   styleUrls: ['./hub.component.less']
 })
 export class HubComponent implements OnInit {
+
+  getNavMenuBar = getNavMenuBar;
 
   previewLink: any;
   showPreview = false;

@@ -8,6 +8,7 @@ import { AppService } from '../app.service';
 import { arrayMoveMutable } from 'array-move';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { getNavMenuBar } from '../utilities';
 
 @Component({
   selector: 'app-editor',
@@ -15,6 +16,9 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./editor.component.less'],
 })
 export class EditorComponent implements OnInit, OnDestroy {
+
+  getNavMenuBar = getNavMenuBar;
+
   @Input() language = 'java';
 
   srcEditorOptions = {
@@ -125,7 +129,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     private ngZone: NgZone,
     private activities: ActivitiesService,
     private api: SourcesService,
-    private router: Router,
+    public router: Router,
     private route: ActivatedRoute,
     private title: Title,
     private http: HttpClient,

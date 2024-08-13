@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { UserAdminService } from './user-admin.service';
 import { Router } from '@angular/router';
+import { getNavMenuBar } from '../utilities';
 
 @Component({
   selector: 'app-user-admin',
@@ -8,6 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-admin.component.less']
 })
 export class UserAdminComponent {
+
+  getNavMenuBar = getNavMenuBar;
 
   private __areyousure = 'Are you sure that you want to proceed?';
   actions = [
@@ -38,7 +41,7 @@ export class UserAdminComponent {
   selected: any[] = [];
 
   constructor(
-    private router: Router,
+    public router: Router,
     private service: UserAdminService,
   ) { }
 

@@ -18,6 +18,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ChipsModule } from 'primeng/chips';
 import { RouterModule } from '@angular/router';
 import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
     InputTextareaModule, SelectButtonModule,
     SplitButtonModule, MultiSelectModule,
     ConfirmDialogModule, ChipsModule,
+    DropdownModule,
   ],
   providers: [UserAdminService, ConfirmationService]
 })

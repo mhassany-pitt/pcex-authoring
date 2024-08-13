@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivitiesService } from '../activities.service';
 import { Router } from '@angular/router';
 import { AppService } from '../app.service';
+import { getNavMenuBar } from '../utilities';
 
 @Component({
   selector: 'app-activities',
@@ -9,6 +10,8 @@ import { AppService } from '../app.service';
   styleUrls: ['./activities.component.less']
 })
 export class ActivitiesComponent implements OnInit {
+
+  getNavMenuBar = getNavMenuBar;
 
   _archived: boolean = localStorage.getItem('pcex-activities-archived') == 'true';
   get archived() { return this._archived; }
