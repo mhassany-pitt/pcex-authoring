@@ -30,8 +30,7 @@ export class ActivitiesService {
   async update({ user, _id, ...model }) {
     return await this.activities.updateOne({ user, _id }, model);
   }
-
-  async remove({ user, id: _id }) {
+  async remove({ user, id: _id }): Promise<any> {
     return await this.activities.deleteOne({ user, _id });
   }
 }

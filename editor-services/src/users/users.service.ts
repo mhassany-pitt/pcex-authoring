@@ -44,7 +44,7 @@ export class UsersService {
     return await this.users.updateOne({ email }, model);
   }
 
-  async remove(emails) {
+  async remove(emails): Promise<any> {
     return await this.users.deleteMany({ email: { $in: emails } });
   }
 

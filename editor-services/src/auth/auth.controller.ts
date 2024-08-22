@@ -21,7 +21,8 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() body: any) {
-    const { email, password, fullname } = body;
+    let { email, password, fullname } = body;
+    email = email.toLowerCase();
     const user = await this.users.findUser(email);
     if (user) throw new HttpException({ message: 'An account with this email address already exists. Please use your credentials to login.' }, 422);
     await this.users.create({ fullname, email, password: await hash(password, 10), roles: ['author'] });

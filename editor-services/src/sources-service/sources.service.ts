@@ -43,7 +43,7 @@ export class SourcesService {
     return await this.sources.updateOne({ user, _id }, model);
   }
 
-  async remove({ user, id: _id }) {
+  async remove({ user, id: _id }): Promise<any> {
     return await this.sources.deleteOne({ user, _id });
   }
 
