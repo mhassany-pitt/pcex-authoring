@@ -14,10 +14,13 @@ export const explanationTemplate = `
 A program construction example (PCEX) includes a problem statement and solution. 
 
 In a PCEX, only essential lines are explained. These explanations:
+
     a) Clarify the purpose of the line within the program and how it contributes to the intended outcome, 
     b) Break down the syntax and semantics of the code to address any complexities, 
     c) Highlight potential errors and common misconceptions to provide insight into what learners might misunderstand, and 
     d) Suggest best practices for effective usage to encourage sound coding habits. 
+
+These explanations should directly address the reader using 'you' to make the guidance personal and engaging.
 
 An essential line implement the core logic of the solution, excluding common <<problem_language>> elements like main class and method definitions.
 
@@ -61,7 +64,7 @@ Format your output strictly in the following JSON structure, without including a
         {
             "distractor": "The distractor line",
             "misconceptions": [ "Targeted misconception A", ... ],
-            "explanation": "A step-by-step explanation, explaining the targeted misconceptions, detailing why a student might select it due to the misconceptions. Describe how using the distractor instead of the correct line would impact the program, noting any errors or unintended behaviors. Contrast the distractor with the correct line by highlighting what key aspects are missing or misimplemented, and clarify why the distractor is invalid. Ensure the explanation is clear and provides enough context to understand why the distractor is a plausible but incorrect choice."
+            "explanation": "A step-by-step explanation, explaining the targeted misconceptions, detailing why a student might select it due to the misconceptions. Describe how using the distractor instead of the correct line would impact the program, noting any errors or unintended behaviors. Contrast the distractor with the correct line by highlighting what key aspects are missing or misimplemented, and clarify why the distractor is invalid. Do not reveal or mention the correct answer in the explanation. These explanations should directly address the reader using 'you' to make the guidance personal and engaging. Ensure the explanation is clear and provides enough context to understand why the distractor is a plausible but incorrect choice."
         }, ...
     ]
 }

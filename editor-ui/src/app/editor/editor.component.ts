@@ -211,8 +211,8 @@ export class EditorComponent implements OnInit, OnDestroy {
   //   // <<---------------
   // }
 
-  selectLine(lineNum: number, reveal = true) {
-    if (this.selectedLineNum != lineNum) {
+  selectLine(lineNum: number, reveal = true, force = false) {
+    if (this.selectedLineNum != lineNum || force) {
       this.selectedLineNum = lineNum;
       if (lineNum) {
         if (lineNum in this.model.lines == false)
@@ -425,6 +425,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         this._v[`${type}-selection`] = [];
         delete this._v[`all-${type}-selection`];
         delete this._v['move-selection'];
+
         this.selectLine(targetLn);
       }
     });
@@ -455,7 +456,8 @@ export class EditorComponent implements OnInit, OnDestroy {
 
         this._v[`${type}-selection`] = [];
         delete this._v[`all-${type}-selection`];
-        this.reloadLineMarkers();
+
+        this.selectLine(this.selectedLineNum, true, true);
       }
     });
   }
@@ -736,11 +738,9 @@ export class EditorComponent implements OnInit, OnDestroy {
           explanations.forEach((e: any) => this._v['generated-explanations'].push(e));
         });
 
-        // force line-select
-        this.selectedLineNum = null;
-        this.selectLine(Math.min(...Object.keys(resp).map((e: any) => parseInt(e))));
-
         delete this._v[type];
+
+        this.selectLine(this.selectedLineNum, true, true);
       },
       error: (error) => {
         this.log({ type, payload, error: error.error });
@@ -783,11 +783,9 @@ export class EditorComponent implements OnInit, OnDestroy {
           });
         });
 
-        // force line-select
-        this.selectedLineNum = null;
-        this.selectLine(Math.min(...Object.keys(resp).map((e: any) => parseInt(e))));
-
         delete this._v['generate:distractors'];
+
+        this.selectLine(this.selectedLineNum, true, true);
       },
       error: (error) => {
         this.log({ type: 'generate:distractors', payload, error: error.error });
