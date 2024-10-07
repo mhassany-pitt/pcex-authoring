@@ -14,6 +14,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TabViewModule } from 'primeng/tabview';
 import { MenuModule } from 'primeng/menu';
 import { DropdownModule } from 'primeng/dropdown';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -28,6 +31,10 @@ import { DropdownModule } from 'primeng/dropdown';
     CheckboxModule, ButtonModule,
     TabViewModule, SelectButtonModule,
     MenuModule, DropdownModule,
+    ConfirmDialogModule, ToastModule,
+  ],
+  providers: [
+    ConfirmationService, MessageService,
   ]
 })
 export class EditorModule { }

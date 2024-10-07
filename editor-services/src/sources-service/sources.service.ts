@@ -18,12 +18,12 @@ export class SourcesService {
     ensureDirSync(`${this.STORAGE_PATH}/logs`);
   }
 
-  async samples() {
-    return {
-      example: this.config.get('SAMPLE_EXAMPLE_URL'),
-      challenge: this.config.get('SAMPLE_CHALLENGE_URL'),
-    }
-  }
+  // async samples() {
+  //   return {
+  //     example: this.config.get('SAMPLE_EXAMPLE_URL'),
+  //     challenge: this.config.get('SAMPLE_CHALLENGE_URL'),
+  //   }
+  // }
 
   async list({ user, archived }) {
     const filter = { user };

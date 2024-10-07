@@ -14,14 +14,14 @@
 
         <div class="flex items-center gap-2">
           <button pButton type="button" label="Preview" icon="pi pi-eye"
-            class="p-button-sm p-button-help p-button-text -my-2" (click)="preview()" [loading]="toggles['preview']"
-            [disabled]="toggles['preview']">
+            class="p-button-sm p-button-help p-button-text -my-2" (click)="preview()" [loading]="_v['preview']"
+            [disabled]="_v['preview']">
           </button>
           <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
             class="p-button-sm p-button-secondary p-button-text -my-2" (click)="back()">
           </button>
           <button pButton type="submit" label="Save" icon="pi pi-check" class="p-button-sm -my-2"
-            [disabled]="form.invalid || toggles['update']" [loading]="toggles['update']">
+            [disabled]="form.invalid || _v['update']" [loading]="_v['update']">
           </button>
         </div>
       </div>
@@ -29,376 +29,182 @@
 
     <div class="flex-grow container mx-auto mt-24 mb-16 flex flex-col gap-4 z-0">
       <span class="text-xs text-gray-400 -mb-2">
-        *Required fields (<i>name, source code, filename.ext</i>) are marked with
+        *Required fields (<i>name, source code</i>) are marked with
         asterisks.
       </span>
 
       <!-- name & description -->
-      <div class="flex flex-col gap-2 bg-gray-100 p-2 rounded-sm relative shadow-md">
+      <div class="w-full flex flex-col gap-2 bg-gray-100 p-2 rounded-sm shadow-md">
         <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText [(ngModel)]="model.name"
           (ngModelChange)="updateTitle()" placeholder="*Name" class="text-xl border-gray-200" required
-          (focus)="onNameFocus($event)" (blur)="onNameBlur($event);" (keyup)="recordKeys($event, 'keyup')"
-          (keydown)="recordKeys($event, 'keydown')" />
+          (focus)="onNameFocus($event)" (blur)="onNameBlur($event);" />
 
         <textarea *ngIf="!titleDescCollapsed" pInputTextarea name="description" [autoResize]="true"
           placeholder="Description" rows="1" [(ngModel)]="model.description"
           class="p-inputtext-sm w-full border-gray-200" (focus)="onDescriptionFocus($event)"
-          (blur)="onDescriptionBlur($event)" (keyup)="recordKeys($event, 'keyup')"
-          (keydown)="recordKeys($event, 'keydown')"></textarea>
+          (blur)="onDescriptionBlur($event)"></textarea>
 
-        <div class="flex flex-col gap-1 cursor-pointer text-gray-400"
+        <!-- expand/collapse (name & description) -->
+        <div class="flex items-center gap-2 cursor-pointer text-gray-400"
           (click)="titleDescCollapsed = !titleDescCollapsed">
-          <ng-container *ngIf="titleDescCollapsed">
-            <span class="flex-grow text-xs">{{ model.description }}</span>
-          </ng-container>
-          <i class="pi text-xs" [ngClass]="{
-            'pi-chevron-up' : !titleDescCollapsed,
-            'pi-chevron-down': titleDescCollapsed
-           }"></i>
+          <span *ngIf="titleDescCollapsed" class="text-xs">{{ model.description }}</span>
+          <i class="pi text-xs"
+            [ngClass]="{ 'pi-chevron-up' : !titleDescCollapsed, 'pi-chevron-down': titleDescCollapsed }"></i>
         </div>
       </div>
 
-      <!-- source code & annotations -->
       <div class="flex-grow flex flex-col md:flex-row items-stretch gap-4">
-        <!-- source code -->
         <div class="w-full md:w-1/2 flex flex-col gap-2 bg-gray-100 p-2 rounded-sm shadow-md">
-          <span class="font-bold">Source Code</span>
+          <div class="flex items-center gap-2">
+            <span class="font-bold">Source Code</span>
 
+            <span class="flex-grow"></span>
+
+            <!-- identify and explain lines -->
+            <button pButton type="button" title="GPT Configuration" icon="pi pi-cog"
+              class="p-button-sm p-button-help p-button-outlined" (click)="loadGptConfig()">
+            </button>
+            <button pButton type="button" label="Identify and Explain Lines" icon="genai-icon"
+              class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:identify-and-explain']"
+              [disabled]="!model.code" (click)="onIdentifyAndExplainLines()"></button>
+          </div>
+
+          <!-- source code editor -->
           <div class="flex-grow flex flex-col relative">
-            <ngx-monaco-editor id="src-editor" *ngIf="langSet" name="code" [(ngModel)]="model.code"
-              [options]="srcEditorOptions" (onInit)="setupSourceEditor($event)" required
-              class="flex-grow rounded-sm border hover:border-gray-600" style="height: auto; min-height: 250px;">
+            <ngx-monaco-editor id="src-editor" name="code" [(ngModel)]="model.code" [options]="srcEditorOptions"
+              (onInit)="setupSourceEditor($event)" required class="flex-grow rounded-sm border hover:border-gray-600"
+              style="height: auto; min-height: 250px;">
             </ngx-monaco-editor>
             <span *ngIf="!model.code" class="absolute top-0.5 left-12 text-xs text-gray-400 pointer-events-none">
               *type your source code here...
             </span>
           </div>
 
-          <input type="text" name="filename" pInputText [(ngModel)]="model.filename" placeholder="*filename.ext"
-            class="p-inputtext-sm" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" required
-            (focus)="onFilenameFocus($event)" (blur)="onFilenameBlur($event)" (keyup)="recordKeys($event, 'keyup')"
-            (keydown)="recordKeys($event, 'keydown')" />
-
-          <div class="flex items-center gap-1 -mt-1">
-            <i class="pi pi-info-circle text-xs text-gray-500"></i>
-            <span class="text-xs text-gray-500">
-              set filename.ext; note that it must follow the language's naming convention.
-            </span>
+          <!-- program input -->
+          <div class="flex flex-col">
+            <span class="font-bold">Program Input</span>
+            <span class="text-gray-600 text-xs">Inputs available through System.in (Java) and input (Python).</span>
+            <textarea pInputTextarea name="program-input" [autoResize]="true" [(ngModel)]="model.programInput"
+              placeholder="e.g.: 5 10 15 20" class="mt-2 text-xs rounded-sm border-gray-200" [rows]="1"
+              (focus)="onProgInputFocus($event)" (blur)="onProgInputBlur($event)"></textarea>
           </div>
         </div>
 
-        <!-- annotations -->
-        <div class="w-full md:w-1/2 flex flex-col gap-4">
-          <div class="bg-gray-100 p-2 rounded-sm shadow-md flex-grow flex flex-col gap-2">
-            <span class="font-bold">
-              <span *ngIf="selectedLineNum">Line {{ selectedLineNum }}'s</span>
-              Annotations
-            </span>
+        <div *ngIf="selectedLineNum" class="w-full md:w-1/2 flex flex-col gap-4">
+          <!-- explanations -->
+          <div class="bg-gray-100 p-2 rounded-sm shadow-md flex flex-col gap-2">
+            <span class="font-bold">Explanations</span>
             <ng-container *ngIf="selectedLineNum">
-              <div class="flex items-center gap-2">
-                <span class="flex items-center gap-2 cursor-pointer" title="Mark this line as a blank line"
-                  (click)="toggleBlankLine()">
-                  <i class="w-4 h-4 rounded-sm border-2 border-blue-400"
-                    [ngClass]="{'bg-blue-400': selectedLine.blank, 'bg-white': !selectedLine.blank}"></i>
-                  <span>Mark as blank line</span>
-                </span>
+              <!-- select-all/delete/merge/move explanations -->
+              <div *ngIf="selectedLine.comments?.length" class="flex items-center gap-2">
+                <p-checkbox name="toggle-selection" label="Select all" [(ngModel)]="_v['all-explanation-selection']"
+                  [binary]="true" class="p-checkbox-sm" (ngModelChange)="onSelectAll('explanation')"></p-checkbox>
 
                 <span class="flex-grow"></span>
-                <p-menu #menu [model]="getExplanationActionMenuItems()" [popup]="true"></p-menu>
 
-                <button #addExpPlaceholderEl pButton type="button" label="New Explanation" icon="pi pi-plus"
-                  class="p-button-outlined p-button-sm p-button-plain rounded-tr-none rounded-br-none"
-                  style="padding: 0.25rem 0.5rem;" (click)="addExplanation()">
-                </button>
+                <button pButton type="button" label="Delete" icon="fa fa-trash" class="px-2 py-1 annot-action-btn"
+                  severity="danger" size="small" outlined="true" (click)="onDelete('explanation')"
+                  [disabled]="_v['explanation-selection'].length == 0"></button>
 
-                <button pButton type="button" title="Click to see more actions" icon="pi pi-ellipsis-h"
-                  class="p-button-outlined p-button-sm p-button-plain -ml-2 rounded-tl-none rounded-bl-none"
-                  style="padding: 0.25rem 0.5rem; border-left: none;" (click)="menu.toggle($event)">
+                <button pButton type="button" label="Merge" icon="fa fa-link" class="px-2 py-1 annot-action-btn"
+                  size="small" outlined="true" plain="true" (click)="onMerge()"
+                  [disabled]="_v['explanation-selection'].length < 2"></button>
+
+                <button pButton type="button" label="Move" icon="fa fa-share-square-o"
+                  class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true"
+                  [disabled]="_v['explanation-selection'].length == 0"
+                  (click)="_v['move-selection-header'] = 'Explanations'; _v['move-selection'] = 'explanation';">
                 </button>
               </div>
 
-              <div class="flex flex-col flex-grow gap-1 md:max-h-80 md:overflow-y-auto overflow-x-hidden relative">
-                <div *ngIf="selectedLine.comments?.length < 1" class="flex items-center justify-center border p-2">
-                  <span class="mx-auto text-xs">
-                    Use the <i class="pi pi-plus text-xs text-blue-500 mx-1 cursor-pointer"
-                      (click)="addExpPlaceholderEl.click()"></i>
-                    button to add an explanation.
-                  </span>
-                </div>
+              <!-- explanations -->
+              <div class="flex flex-col flex-grow gap-2 md:max-h-80 md:overflow-y-auto overflow-x-hidden relative">
                 <div *ngFor="let comment of selectedLine.comments; let i = index" #expEl
                   class="flex items-center gap-2 relative"
                   [ngClass]="{ 'border border-dashed border-gray-400': dragOverExpIdx == i }"
                   (dragstart)="onExplanationDragStart($event, i)" (dragover)="onExplanationDragOver($event, i)"
                   (drop)="onExplanationDragDrop($event, i)" (dragend)="onExplanationDragEnd(expEl, $event, i)">
-                  <!-- reorder-bar -->
-                  <span class="text-gray-400 hover:text-gray-600 grap"
-                    (mousedown)="expEl.setAttribute('draggable', 'true'); expDragEnabled = true;">＝</span>
-
-                  <p-checkbox *ngIf="toggles['explanations-select']" [ngModel]="selection.indexOf(comment) > -1"
-                    [binary]="true" [name]="'explanations-select-' + i" class="p-checkbox-sm"
-                    (click)="toggleSelection(comment)"></p-checkbox>
+                  <!-- selection chkbx -->
+                  <p-checkbox [ngModel]="_v['explanation-selection']?.includes(comment)" [binary]="true"
+                    [name]="'explanation-select-' + i" class="p-checkbox-sm"
+                    (click)="toggleSelection('explanation', comment)"></p-checkbox>
 
                   <!-- explanation -->
-                  <textarea pInputTextarea [autoResize]="true" [name]="'explanation-' + i" [(ngModel)]="comment.content"
-                    [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
-                    class="flex-grow px-2 py-1 border-gray-200 p-button-secondary" [ngClass]="{
-                      'gpt-generated': gptGeneratedExps.indexOf(comment) > -1,
-                      'text-gray-400': cptAction == 'cut' && cptSelection.indexOf(comment) > -1
-                    }" style="font-size: 0.75rem;" (ngModelChange)="reloadLineMarkers()"
-                    (focus)="onExplanationFocus($event, comment, i)" (blur)="onExplanationBlur($event, comment, i)"
-                    (keyup)="recordKeys($event, 'keyup')" (keydown)="recordKeys($event, 'keydown')"></textarea>
+                  <textarea pInputTextarea [autoResize]="true" [name]="_v['t'] + '-explanation-' + i"
+                    [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
+                    class="flex-grow border-gray-200 px-1.5 py-1 text-sm"
+                    [ngClass]="{ 'gpt-generated': _v['generated-explanations']?.includes(comment) }"
+                    (ngModelChange)="reloadLineMarkers()" (focus)="onExplanationFocus($event, comment, i)"
+                    (blur)="onExplanationBlur($event, comment, i)"></textarea>
+
+                  <!-- reorder-bar -->
+                  <span class="text-gray-400 hover:text-gray-600 grap mr-2"
+                    (mousedown)="expEl.setAttribute('draggable', 'true'); expDragEnabled = true;">＝</span>
                 </div>
-                <span *ngIf="draggedGenHistory" id="gen-history-dropzone"
-                  class="text-gray-600 text-sm w-full flex-grow border-2 border-gray-400 border-dashed rounded-md flex items-center justify-center py-4"
-                  (dragover)="onGenHistoryDragOver($event)" (drop)="onGenHistoryDragComplete($event)">
-                  Drop explanations here to add them to this line.
-                </span>
               </div>
-              <span *ngIf="expDragEnabled"
-                class="text-red-600 text-sm w-full flex-grow border-2 border-red-400 border-dashed rounded-md flex items-center justify-center gap-2 py-4"
-                (dragover)="onDeleteExpDragOver($event)" (drop)="onDeleteExpDragComplete($event)">
-                <i class="pi pi-trash"></i>
-                Drop here to remove the explanation.
-              </span>
             </ng-container>
+            <!-- howto: put cursor in a line -->
             <ng-container *ngIf="!selectedLineNum">
               <span class="text-gray-600 text-sm">
                 ← Place the cursor in a line to add <span class="italic">explanations</span>,
                 or mark it as a <span class="italic">blank line</span>.
               </span>
-
-              <div *ngIf="draggedGenHistory"
-                class="text-gray-600 text-sm w-full flex-grow border-2 border-gray-400 border-dashed rounded-md flex items-center justify-center py-4">
-                <span>
-                  <span class="font-bold">You need to select a line first.</span><br />
-                  To select a line, place the cursor in one. <br />
-                  Then drag and drop explanations here.
-                </span>
-              </div>
             </ng-container>
 
-            <div class="flex items-center gap-2">
-              <hr class="flex-grow" />
-              <span class="text-xs text-gray-400 hover:text-gray-600 cursor-pointer flex items-center gap-1"
-                (click)="toggleAnnotTips($event)">
-                {{ annotTipsCollapsed ? 'expand' : 'collapse' }}
-                <i class="pi text-xs" [ngClass]="{
-                  'pi-chevron-down': !annotTipsCollapsed,
-                  'pi-chevron-up': annotTipsCollapsed
-                }"></i>
-              </span>
+            <!-- add or generate explanations -->
+            <div class="flex items-center justify-end gap-2">
+              <button pButton type="button" label="Add" icon="pi pi-plus"
+                class="p-button-sm p-button-help p-button-outlined" (click)="addExplanation()">
+              </button>
+              <span>or</span>
+              <button pButton type="button" label="Generate Explanations" icon="genai-icon"
+                class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:explain-line']"
+                [disabled]="!model.code" (click)="onExplainLine()"></button>
             </div>
-
-            <span *ngIf="!annotTipsCollapsed" class="text-gray-600 text-xs flex flex-col relative">
-              <span *ngIf="this.toggles['explanations-select']; else defAnnotTips" class="flex gap-1">
-                <span>1.</span>
-                <span>
-                  Select one or more explanations by checking the
-                  <i class="pi pi-stop text-xs" style="vertical-align: middle;"></i> box,
-                  then you can merge, move, copy, or delete them.
-                </span>
-              </span>
-              <ng-template #defAnnotTips>
-                <span class="flex gap-1">
-                  <span>1.</span>
-                  <span>
-                    By default, any source can be used as an <a [href]="samples?.example || '#'" class="underline"
-                      target="_blank" title="Click to see an example">example</a>,
-                    but only ones with blank lines and distractors can be used as a <a
-                      [href]="samples?.challenge || '#'" class="underline" target="_blank"
-                      title="Click to see a challenge">challenge</a>.
-                  </span>
-                </span>
-                <span class="flex gap-1">
-                  <span>2.</span>
-                  <span>
-                    Drag an explanation to re-order,
-                    merge (drop on another explanation while holding the
-                    <span class="italic bg-gray-200 rounded-sm px-0.5">alt</span> key),
-                    or remove (drop on trash can) it.
-                  </span>
-                </span>
-              </ng-template>
-            </span>
           </div>
 
-          <div class="p-2 flex flex-col gap-2 shadow-md rounded-sm bg-gray-100">
-            <ng-container *ngIf="toggles['show-gpt-history'] || toggles['show-gpt-prompt']">
-              <!-- chatgpt history -->
-              <div *ngIf="toggles['show-gpt-history']" class="flex flex-col gap-2">
-                <div class="flex items-center gap-2">
-                  <span class="font-bold">ChatGPT Generated-Explanations</span>
+          <!-- distractors -->
+          <div *ngIf="selectedLineNum" class="bg-gray-100 p-2 rounded-sm shadow-md flex flex-col gap-2">
+            <span class="font-bold">Distractors</span>
 
-                  <span class="flex-grow"></span>
+            <!-- mark line as blank -->
+            <span class="flex items-center gap-2 cursor-pointer" title="Mark this line as a blank line"
+              (click)="toggleBlankLine()">
+              <i class="w-4 h-4 rounded-sm border-2 border-blue-400"
+                [ngClass]="{'bg-blue-400': selectedLine.blank, 'bg-white': !selectedLine.blank}"></i>
+              <span>Mask this line (in a challenge)</span>
+            </span>
 
-                  <p-checkbox *ngIf="gptHistoryTzExps" label="show all lines"
-                    [(ngModel)]="toggles['show-all-lines-' + selectedLineNum]" [binary]="true"
-                    [name]="'show-all-lines-' + selectedLineNum" class="p-checkbox-sm"
-                    (ngModelChange)="onHistoryShowAll($event)"></p-checkbox>
-                </div>
-
-                <span class="text-xs text-gray-600 -mt-2">
-                  Click on a timestamp to view the generated explanations.
-                </span>
-                <div class="flex flex-wrap items-center gap-1 ml-2">
-                  <button *ngFor="let timestamp of gptHistoryTzs" pButton type="button"
-                    label="{{ timestamp | date:'medium' }}" iconPos="right" class="p-button-sm p-button-plain"
-                    [ngClass]="{'p-button-outlined': gptCurrentTz != timestamp}"
-                    style="font-size: 0.75rem; padding: 0 0.25rem;" [loading]="toggles[timestamp]"
-                    (click)="loadHistory(timestamp)">
-                  </button>
-                </div>
-
-                <ng-container *ngIf="gptHistoryTzs?.length; else noGptHistoryTzExps;">
-                  <div *ngIf="gptHistoryTzExps" class="flex flex-col items-start bg-white p-2 rounded-sm">
-                    <div *ngFor="let line of filteredGptHistoryTzExps; let i = index;" #gptHistoryExpLineEl
-                      class="flex flex-col items-start"
-                      (dragstart)="onHistoryExpDragStart(gptHistoryExpLineEl, $event, line)"
-                      (dragend)="onHistoryExpDragEnd(gptHistoryExpLineEl, $event, line)">
-                      <span class="flex items-center gap-2 text-sm">
-                        <span class="text-gray-400 hover:text-gray-600 grap"
-                          (mousedown)="gptHistoryExpLineEl.setAttribute('draggable', 'true'); historyExpDragEnabled = true;">＝</span>
-                        <span class="font-bold">Line {{ line.line_num }}:</span>
-                        <code *ngIf="gptHistorySrcLines"
-                          class="px-1 shadow-inner bg-gray-200 rounded-sm flex-grow">{{ gptHistorySrcLines[line.line_num - 1] }}</code>
-                      </span>
-                      <span *ngFor="let explanation of line.explanations" #gptHistoryExpEl
-                        class="ml-4 text-xs flex items-center gap-2" draggable="true"
-                        (dragstart)="onHistoryExpDragStart(gptHistoryExpEl, $event, explanation, line.line_num)"
-                        (dragend)="onHistoryExpDragEnd(gptHistoryExpEl, $event, explanation)">
-                        <span class="text-gray-400 hover:text-gray-600 grap"
-                          (mousedown)="gptHistoryExpEl.setAttribute('draggable', 'true'); historyExpDragEnabled = true;">＝</span>
-                        <span>{{ explanation }}</span>
-                      </span>
-                    </div>
-                    <span *ngIf="filteredGptHistoryTzExps.length < 1" class="w-full text-center text-xs">
-                      There is no previously generated explanations for this line.
-                    </span>
-                  </div>
-
-                  <span class="text-xs text-gray-600">
-                    <span class="italic">Grab</span> a line or an explanation (by the bars
-                    <span class="text-gray-600 grap">"＝"</span>) and <span class="italic">drag</span> it into the
-                    <span class="italic">Annotations</span> panel.
-                  </span>
-                </ng-container>
-                <ng-template #noGptHistoryTzExps>
-                  <div class="flex items-center justify-center border p-2">
-                    <span class="text-xs text-gray-600">
-                      There is no previously generated explanations for this source.
-                    </span>
-                  </div>
-                </ng-template>
-              </div>
-
-              <hr *ngIf="toggles['show-gpt-history'] && toggles['show-gpt-prompt']" />
-
-              <!-- chatgpt prompt -->
-              <div *ngIf="toggles['show-gpt-prompt']" class="flex flex-col gap-2">
-                <span class="font-bold">ChatGPT Prompt</span>
-
-                <div *ngIf="gptPrompt" class="leading-5 ml-4">
-                  <span>
-                    Given the following program description and accompanying source code, identify and explain lines of
-                    the
-                    code
-                    that contributes directly to the program objectives and goals.
-                  </span>
-
-                  <span #inclusionEl contenteditable="true" class="px-0.5 bg-green-100 rounded-sm"
-                    (focus)="onGptInclusionFocus($event)" (blur)="onGptInclusionBlur($event, inclusionEl)"
-                    (keyup)="recordKeys($event, 'keyup')" (keydown)="recordKeys($event, 'keydown')">{{
-                    gptPrompt.inclusion }}<span *ngIf="!gptPrompt.inclusion" class="text-gray-600">{{ gptDefInclusion
-                      }}</span>
-                  </span>
-                  &nbsp;
-                  <span #exclusionEl contenteditable="true" class="px-0.5 bg-red-100 rounded-sm"
-                    (focus)="onGptExclusionFocus($event)" (blur)="onGptExclusionBlur($event, exclusionEl)"
-                    (keyup)="recordKeys($event, 'keyup')" (keydown)="recordKeys($event, 'keydown')">{{
-                    gptPrompt.exclusion }}<span *ngIf="!gptPrompt.exclusion" class="text-gray-600">{{ gptDefExclusion
-                      }}</span>
-                  </span>
-
-                  <br />
-                  <br />
-
-                  <span #explanationEl contenteditable="true" class="bg-gray-200 rounded-sm"
-                    [ngClass]="{'px-0.5': gptPrompt.explanation, 'px-1': !gptPrompt.explanation}"
-                    (focus)="onGptExplanationFocus($event)" (blur)="onGptExplanationBlur($event, explanationEl)"
-                    (keyup)="recordKeys($event, 'keyup')" (keydown)="recordKeys($event, 'keydown')">{{
-                    gptPrompt.explanation }}</span>
-                </div>
-
-                <div class="text-xs text-gray-600">
-                  Optional: You can provide <span class="bg-green-100 rounded-md px-1">Inclusion</span> and
-                  <span class="bg-red-100 rounded-md px-1">Exclusion</span> criteria for selecting the lines of code
-                  to explain or <span class="bg-gray-200 rounded-md px-1">define how the explanations should be
-                    generated</span>.
-                </div>
-              </div>
-            </ng-container>
-
-            <div class="flex items-center gap-2">
-              <span *ngIf="generating" class="text-xs text-gray-600">
-                Based on how big the source is, <br /> this may take up to a minute!
-              </span>
+            <!-- select-all/delete/move distractor -->
+            <div *ngIf="distractors?.length" class="flex items-center gap-2">
+              <p-checkbox name="toggle-selection" label="Select all" [(ngModel)]="_v['all-distractor-selection']"
+                [binary]="true" class="p-checkbox-sm" (ngModelChange)="onSelectAll('distractor')"></p-checkbox>
 
               <span class="flex-grow"></span>
 
-              <button pButton type="button" icon="pi pi-history" title="Previously Generated Explanations"
-                class="p-button-sm rounded-sm p-button-tight"
-                [ngClass]="{ 'p-button-plain p-button-outlined': !toggles['show-gpt-history'], 'p-button-secondary': toggles['show-gpt-history'] }"
-                (click)="toggleGptHistory($event)">
-              </button>
-              <button pButton type="button" icon="pi pi-file-edit" title="Customize the ChatGPT Prompt"
-                class="p-button-sm rounded-sm p-button-tight"
-                [ngClass]="{ 'p-button-plain p-button-outlined': !toggles['show-gpt-prompt'], 'p-button-secondary': toggles['show-gpt-prompt'] }"
-                (click)="toggleCustomGptPrompt($event)">
-              </button>
-              <button pButton type="button"
-                class="p-button-sm p-button-secondary p-button-outlined rounded-sm p-button-nolabel p-button-tight"
-                [loading]="generating" (click)="gptGenExplanations()" [disabled]="!model.code">
-                <span class="flex items-center justify-center gap-1 w-full px-1">
-                  <span>Generate Explanations</span>
-                  <i class="genai-icon"></i>
-                </span>
+              <button pButton type="button" label="Delete" icon="fa fa-trash" class="px-2 py-1 annot-action-btn"
+                severity="danger" size="small" outlined="true" (click)="onDelete('distractor')"
+                [disabled]="_v['distractor-selection'].length == 0"></button>
+
+              <button pButton type="button" label="Move" icon="fa fa-share-square-o" class="px-2 py-1 annot-action-btn"
+                size="small" outlined="true" plain="true" [disabled]="_v['distractor-selection'].length == 0"
+                (click)="_v['move-selection-header'] = 'Distractors'; _v['move-selection'] = 'distractor';">
               </button>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- distractors -->
-      <div class="flex flex-col relative bg-gray-100 p-2 shadow-md">
-        <span class="font-bold">Distractors</span>
-        <div class="flex items-center gap-4">
-          <span class="text-gray-600 text-xs flex-grow">
-            In a <a [href]="samples?.challenge || '#'" class="underline" target="_blank"
-              title="Click to see a challenge">challenge</a>,
-            distractors are used to fill the blank lines.
-          </span>
+            <!-- distractors -->
+            <div *ngIf="selectedLineNum && selectedLine.blank && model.distractors?.length"
+              class="flex flex-col flex-grow gap-2 md:max-h-80 md:overflow-y-auto overflow-x-hidden relative">
+              <div *ngFor="let distractor of distractors; let i = index"
+                class="flex items-center gap-2 rounded-sm relative">
+                <!-- toggle selection -->
+                <p-checkbox [ngModel]="_v['distractor-selection']?.includes(distractor)" [binary]="true"
+                  [name]="'distractor-select-' + i" class="p-checkbox-sm"
+                  (click)="toggleSelection('distractor', distractor)"></p-checkbox>
 
-          <button #addDistractorEl pButton type="button" icon="pi pi-plus"
-            class="p-button-outlined p-button-sm p-button-help" [ngClass]="{ hidden: !hasBlankLine() }"
-            style="padding: 0.25rem 0.5rem;" (click)="addDistractor()">
-          </button>
-        </div>
-        <div class="flex flex-col gap-1 mt-2">
-          <ng-container *ngIf="hasBlankLine(); else noBlankLine;">
-            <div *ngIf="model.distractors?.length < 1" class="flex items-center justify-center border p-2">
-              <span class="mx-auto text-xs">
-                Use the <i class="pi pi-plus text-xs text-blue-500 mx-1 cursor-pointer"
-                  (click)="addDistractorEl.click()"></i>
-                button to add a distractor.
-              </span>
-            </div>
-
-            <div *ngIf="model.distractors?.length" class="flex flex-col flex-grow gap-2">
-              <div *ngFor="let distractor of model.distractors; let i = index"
-                class="flex items-center gap-2 border border-gray-200 hover:border-gray-600 px-2 rounded-sm relative shadow-sm hover:shadow-md">
-                <span class="text-center text-sm">{{ i + 1 }}.</span>
-                <div class="flex flex-col flex-grow relative">
-                  <ngx-monaco-editor *ngIf="langSet" [name]="'distractor-' + i" [(ngModel)]="distractor.code"
+                <!-- distractor editor & description -->
+                <div class="flex flex-col flex-grow relative border border-solid border-gray-200">
+                  <ngx-monaco-editor [name]="'distractor-' + i" [(ngModel)]="distractor.code"
                     [options]="distEditorOptions" (onInit)="setupDistractorEditor($event, distractor, i)"
                     class="px-1 bg-white" style="height: 1.15rem; border: none;">
                   </ngx-monaco-editor>
@@ -406,74 +212,104 @@
                     style="top: 0.125rem; left: 0.25rem;">
                     Type the distractor line here...
                   </span>
-                  <span class="border-t border-gray-200"></span>
                   <textarea pInputTextarea [autoResize]="true" [name]="'distractor-description-' + i"
                     [(ngModel)]="distractor.description" placeholder="Explanation" rows="1"
-                    class="text-xs border-0 rounded-none" style="padding: 0.125rem 0.25rem;"
-                    (focus)="onDistractorDescFocus($event, distractor)"
-                    (blur)="onDistractorDescBlur($event, distractor)" (keyup)="recordKeys($event, 'keyup')"
-                    (keydown)="recordKeys($event, 'keydown')"></textarea>
+                    class="text-xs border-0 rounded-none bg-gray-50" style="padding: 0.25rem;"
+                    (focus)="onDistractorExpFocus($event, distractor, i)"
+                    (blur)="onDistractorExpBlur($event, distractor, i)"></textarea>
                 </div>
-                <i class="pi pi-trash cursor-pointer text-xs text-red-300 hover:text-red-600"
-                  (click)="removeDistractor(distractor)">
-                </i>
               </div>
             </div>
-          </ng-container>
-          <ng-template #noBlankLine>
-            <div class="flex items-center justify-center border p-2">
-              <span class="text-xs text-gray-600">
-                There is no blank line in this source, mark at least one blank line to add distractors.
-              </span>
-            </div>
-          </ng-template>
-        </div>
-      </div>
 
-      <!-- program input -->
-      <div class="flex flex-col relative bg-gray-100 p-2 shadow-md">
-        <span class="font-bold">Program Input</span>
-        <div class="flex items-center mt-2">
-          <span class="text-gray-600 text-xs">
-            Inputs available through System.in (Java), stdin (C, C++), ...
-          </span>
+            <!-- add or generate distractors -->
+            <div *ngIf="selectedLineNum && selectedLine.blank" class="flex items-center justify-end gap-2">
+              <button pButton type="button" label="Add" icon="pi pi-plus"
+                class="p-button-outlined p-button-sm p-button-help" (click)="addDistractor()">
+              </button>
+              <span>or</span>
+              <button pButton type="button" label="Generate Distractors" icon="genai-icon"
+                class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:distractors']"
+                [disabled]="!model.code" (click)="onGenDistractors()">
+              </button>
+            </div>
+          </div>
         </div>
-        <textarea pInputTextarea name="program-input" [autoResize]="true" [(ngModel)]="model.programInput"
-          placeholder="e.g.: 5 10 15 20" class="mt-2 text-xs rounded-sm border-gray-200" [rows]="1"
-          (focus)="onProgInputFocus($event)" (blur)="onProgInputBlur($event)" (keyup)="recordKeys($event, 'keyup')"
-          (keydown)="recordKeys($event, 'keydown')"></textarea>
       </div>
     </div>
-
-    <p-dialog [(visible)]="showPreview" [modal]="true" [style]="{width: '85vw', height: '85vh'}"
-      (onShow)="log({ type: 'open-preview-dialog' })"
-      (onHide)="previewLink = null; log({ type: 'close-preview-dialog' });">
-      <iframe *ngIf="previewLink" [src]="previewLink" class="border-none" style="width: 100%; height: 100%"></iframe>
-    </p-dialog>
   </form>
 </div>
 
+<p-toast />
+<p-confirmDialog />
+
+<!-- preview -->
+<p-dialog [(visible)]="_v['show-preview']" [modal]="true" [style]="{width: '85vw', height: '85vh'}"
+  (onShow)="log({ type: 'open-preview' })" (onHide)="_v['preview-link'] = null; log({ type: 'close-preview' });">
+  <iframe *ngIf="_v['preview-link']" [src]="_v['preview-link']" class="border-none"
+    style="width: 100%; height: 100%"></iframe>
+</p-dialog>
+
+<!-- gpt-config -->
+<p-dialog *ngIf="_v['show-gpt-config']" [(visible)]="_v['show-gpt-config']" header="GPT Configuration" [modal]="true"
+  [style]="{'width': '30rem'}" (onShow)="log({ type: 'open-gpt-config' })"
+  (onHide)="log({ type: 'close-gpt-config' });">
+  <form #form="ngForm" (ngSubmit)="saveGptConfig()" class="flex flex-col gap-2">
+    <span class="text-xs text-gray-600">
+      Important: You must provide an API key (and organization) if you use any OpenAI model other than gpt-4o-mini.
+    </span>
+    <textarea pInputTextarea name="gpt-config" [placeholder]="GPT_CONF_PLACEHOLDER" rows="10"
+      [(ngModel)]="_v['gpt-config']" [required]="true" class="p-inputtext-sm w-full border-gray-200"></textarea>
+    <div class="flex items-center gap-2">
+      <button pButton type="button" label="Reset" class="p-button-sm p-button-secondary" (click)="resetGptConfig()">
+      </button>
+      <button pButton type="submit" label="Save" class="p-button-sm p-button-help" [disabled]="form.invalid">
+      </button>
+    </div>
+  </form>
+</p-dialog>
+
+<!-- move selected (explanation/distractor) to another line -->
+<p-dialog *ngIf="_v['move-selection']" [(visible)]="_v['move-selection']"
+  [header]="'Move ' + _v['move-selection-header']" position="top" [modal]="true" [style]="{'min-width': '25rem'}"
+  appendTo="body">
+  <div class="flex items-center gap-2">
+    <span>Move to:</span>
+    <p-dropdown #targetLineEl [options]="targetLns" placeholder="Select the line" appendTo="body"
+      class="flex-grow"></p-dropdown>
+    <button pButton type="button" label="Move" (click)="onMove(_v['move-selection'], targetLineEl.value)"
+      [disabled]="!targetLineEl.value"></button>
+  </div>
+</p-dialog>
+
+<!-- data collection consent -->
 <p-dialog [visible]="!trackingMessageDismissed" header="Dear User" position="top" [closable]="false" [modal]="true"
-  [style]="{'max-width': '30rem', 'margin-top': '5rem'}" appendTo="body">
-  <p>
-    On this page, for the purpose of <i>imporving this tool and our research</i>, we track user interactions. Your
-    privacy is paramount, and all data collected will be used solely for this purpose. By
-    using this tool, you consent
-    to this
-    tracking. If you have any questions, please reach out (<a href="mailto:moh70@pitt.edu"
-      class="underline">moh70&#64;pitt.edu</a>).
+  [style]="{'max-width': '30rem'}" appendTo="body">
+  <p class="m-0">
+    On this page, we collect data to <i>enhance this tool and support our research</i>.
+    By using the tool, you consent to this collection.
+    Your privacy is our top priority, and all data will be used exclusively for these purposes.
 
-    <br />
-    <br />
+    <br /><br />
 
-    Thank you,
-    <br />
-    PAWS Lab
+    Please check this box if you do not consent to the data collection.<br />
+    <p-checkbox label="Don't collect data on this page." [(ngModel)]="_v['dont-collect-data']" [binary]="true"
+      class="p-checkbox-sm mt-2 ml-2"></p-checkbox>
+
+    <br /><br />
+
+    Feel free to to reach out
+    (<a href="mailto:moh70@pitt.edu" class="underline">moh70&#64;pitt.edu</a>)
+    if you have any questions or concerns.
+
+    <br /><br />
+
+    Thank you, <br />
+    PAWS Lab Team<br />
+    University of Pittsburgh
   </p>
 
   <div class="mt-4">
-    <button pButton type="button" label="Dismiss" class="p-button-sm p-button-help" style="padding: 0.25rem 0.5rem;"
-      (click)="dismissTrackingMessage()">
+    <button pButton type="button" label="Dismiss" class="p-button-sm p-button-help" (click)="dismissTrackingMessage()">
     </button>
   </div>
 </p-dialog>
