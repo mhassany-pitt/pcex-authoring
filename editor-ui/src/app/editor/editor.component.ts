@@ -136,10 +136,8 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.model = source;
 
         this.updateTitle();
-        if (this.srcEditor) {
-          this.setEditorsLang();
-          setTimeout(() => this.reloadLineMarkers(), 100);
-        }
+        this.setEditorsLang();
+        setTimeout(() => this.reloadLineMarkers(), 100);
 
         this.log({ type: 'model-loaded', value: this.model });
       },
@@ -179,6 +177,7 @@ export class EditorComponent implements OnInit, OnDestroy {
       }
     }));
 
+    this.setEditorsLang();
     setTimeout(() => this.ngZone.run(() => this.selectLine(1, false)), 0);
   }
 
@@ -241,6 +240,8 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   reloadLineMarkers() {
+    if (!this.srcEditor)
+      return;
     this.srcEditor.deltaDecorations(this.decorations || [], []);
     this.decorations = [];
 
@@ -483,8 +484,8 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  detectFnameLang() {
-    const extension = this.detectLanguageExt(this.model.code);
+  detectEditorLang() {
+    const extension = this.detectLangExt(this.model.code);
     const filename = extension == '.java' ? (this.findJavaMainClassName(this.model.code) || 'Main') : 'main';
     this.model.filename = `${filename}${extension}`;
     const map: any = { '.java': 'JAVA', '.py': 'PYTHON' };
@@ -492,9 +493,16 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   setEditorsLang() {
-    const language = this.model.language.toLowerCase();
-    for (let editor of [this.srcEditor, ...this.distEditors])
-      (window as any).monaco.editor.setModelLanguage(editor.getModel(), language);
+    const language = this.model.language?.toLowerCase();
+    const monaco = (window as any).monaco;
+    if (!language || !monaco) return;
+
+    const editors = [];
+    if (this.srcEditor) editors.push(this.srcEditor);
+    if (this.distEditors) editors.push(...this.distEditors);
+
+    for (let editor of editors)
+      monaco.editor.setModelLanguage(editor.getModel(), language);
   }
 
   onNameFocus($event: any) {
@@ -522,9 +530,10 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   onEditorBlur($event: any) {
     const prev = this.model.language;
-    this.detectFnameLang();
+    this.detectEditorLang();
     if (this.model.language != prev)
       this.setEditorsLang();
+
     this.log({ type: 'editor-blur', value: this.model.code, prev_value: this.lastValue, });
 
     this.targetLns = this.model?.code
@@ -532,7 +541,7 @@ export class EditorComponent implements OnInit, OnDestroy {
       : [];
   }
 
-  private detectLanguageExt(snippet: string) {
+  private detectLangExt(snippet: string) {
     let pscore = 'and,as,async,await,class,def,elif,else,except,False,for,if,import,in,is,lambda,None,not,or,print,self,True,try,while,with'.split(',')
       .filter(k => snippet.includes(k)).length;
     let jscore = 'boolean,catch,char,class,double,extends,float,implements,import,int,interface,new,package,private,protected,public,static,String,throws,try,void'.split(',')
