@@ -167,13 +167,20 @@
           <div *ngIf="selectedLineNum" class="bg-gray-100 p-2 rounded-sm shadow-md flex flex-col gap-2">
             <span class="font-bold">Distractors</span>
 
-            <!-- mark line as blank -->
-            <span class="flex items-center gap-2 cursor-pointer" title="Mark this line as a blank line"
-              (click)="toggleBlankLine()">
-              <i class="w-4 h-4 rounded-sm border-2 border-blue-400"
-                [ngClass]="{'bg-blue-400': selectedLine.blank, 'bg-white': !selectedLine.blank}"></i>
-              <span>Mask this line (in a challenge)</span>
-            </span>
+            <div class="flex items-center">
+              <!-- mark line as blank -->
+              <span class="flex items-center gap-2 cursor-pointer" title="Mark this line as a blank line"
+                (click)="toggleBlankLine()">
+                <i class="w-4 h-4 rounded-sm border-2 border-blue-400"
+                  [ngClass]="{'bg-blue-400': selectedLine.blank, 'bg-white': !selectedLine.blank}"></i>
+                <span>Mask this line (in a challenge)</span>
+              </span>
+
+              <span class="flex-grow"></span>
+
+              <p-checkbox name="show-all-distractors" label="Show all" [(ngModel)]="_v['show-all-distractors']"
+                [binary]="true" class="p-checkbox-sm" dir="rtl" (click)="reloadDistractors()"></p-checkbox>
+            </div>
 
             <!-- select-all/delete/move distractor -->
             <div *ngIf="distractors?.length" class="flex items-center gap-2">

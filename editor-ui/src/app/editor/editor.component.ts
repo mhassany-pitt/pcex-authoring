@@ -234,9 +234,13 @@ export class EditorComponent implements OnInit, OnDestroy {
 
     this.reloadLineMarkers();
 
-    this.distractors = this.model.distractors.filter((d: any) => d.line_number == this.selectedLineNum);
+    this.reloadDistractors();
 
     this.log({ type: 'select-line', line_num: lineNum, line: this.selectedLine });
+  }
+
+  reloadDistractors() {
+    this.distractors = this.model.distractors.filter((d: any) => d.line_number == this.selectedLineNum || this._v['show-all-distractors']);
   }
 
   reloadLineMarkers() {
@@ -477,6 +481,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   addDistractor() {
     this.model.distractors.push({ code: '', description: '', line_number: this.selectedLineNum });
+    this.reloadDistractors();
     this.log({
       type: 'add-distractor',
       line_num: this.selectedLineNum,
