@@ -25,7 +25,7 @@ export class HubComponent implements OnInit {
   integrationOptions = [{ label: 'View link', value: 'html' }];
 
   getIntegrationLink(activity: any, protocol: string) {
-    return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${activity.id}__${activity.name.replace(/ /g, '_').replace(/\./g, '_')}`
+    return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${activity.name.replace(/ /g, '_').replace(/\./g, '_')}__${activity.id}`
   }
 
   get isLoggedIn() { return !!this.app.user; }
