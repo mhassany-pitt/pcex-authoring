@@ -11,6 +11,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,10 @@ import { CheckboxModule } from 'primeng/checkbox';
     TableModule, DialogModule,
     InputTextModule, ButtonModule,
     CheckboxModule, DropdownModule,
+    ConfirmDialogModule,
+  ],
+  providers: [
+    ConfirmationService
   ]
 })
 export class SourcesModule { }

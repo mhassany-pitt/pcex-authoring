@@ -65,4 +65,8 @@ export class ActivitiesService {
       URL.revokeObjectURL(url);
     }, err => console.error('Error during file download:', err));
   }
+
+  clone(activity: any) {
+    return this.http.post(`${environment.apiUrl}/activities/${activity.id}/clone`, {}, { withCredentials: true });
+  }
 }

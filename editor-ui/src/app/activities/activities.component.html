@@ -15,7 +15,7 @@
   </div>
 
   <div class="container mx-auto mt-24 mb-16 border shadow-md z-0">
-    <p-table #table [value]="activities" [globalFilterFields]="['name']">
+    <p-table #table [value]="activities" [globalFilterFields]="['name', '_filter_idnamedescription']">
       <ng-template pTemplate="caption">
         <div class="flex items-center gap-2">
           <p-checkbox name="archived" label="Include Archives" [binary]="true" [(ngModel)]="archived"
@@ -70,6 +70,9 @@
                 class="p-button-text p-button-sm toggle-publish-btn"
                 [ngClass]="{ 'p-button-plain': !tr_activity.published }" (click)="togglePublish(tr_activity)">
               </button>
+              <button pButton type="button" icon="pi pi-clone" title="Clone Source"
+                class="p-button-text p-button-sm p-button-plain clone-btn" (click)="clone(tr_activity)">
+              </button>
             </div>
           </td>
           <td>
@@ -91,7 +94,7 @@
               </div>
             </ng-container>
             <ng-template #activityForm>
-              <app-activity [activity]="activity" (completed)="update($event)"></app-activity>
+              <app-activity [id]="activity.id" [activity]="activity" (completed)="update($event)"></app-activity>
             </ng-template>
           </td>
         </tr>
@@ -109,8 +112,9 @@
   </div>
 </div>
 
-
 <p-dialog [(visible)]="showPreview" [modal]="true" class="preview-dialog" [style]="{width: '85vw', height: '85vh'}"
   (onHide)="previewLink = null">
   <iframe *ngIf="previewLink" [src]="previewLink" class="border-none" style="width: 100%; height: 100%"></iframe>
 </p-dialog>
+
+<p-confirmDialog />

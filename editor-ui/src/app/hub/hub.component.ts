@@ -58,12 +58,22 @@ export class HubComponent implements OnInit {
 
     this.searchTimeout = setTimeout(() => {
       this.http.get(`${environment.apiUrl}/hub?key=${value}`).subscribe(
-        (resp: any) => {
-          this.activities = resp;
+        (activities: any) => {
+          this.activities = activities.map((activity: any) => {
+            // activity.id + activity.items.*.id/name/description
+            activity._filter_idnamedescription = `${activity.id} ` + activity.items.map((item: any) => {
+              return `${item.item} ${item.details.name} ${item.details.description} `;
+            }).join(' ');
+            return activity;
+          });
         },
         (error: any) => console.log(error),
       );
     }, 300);
+  }
+
+  filter(table: any, $event: any) {
+    table.filterGlobal($event.target.value, 'contains');
   }
 
   selectIntegrationLink(el: any) {

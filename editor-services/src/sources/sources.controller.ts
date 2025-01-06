@@ -31,6 +31,7 @@ export class SourcesController {
   }
 
   @Post()
+  @UseGuards(AuthenticatedGuard)
   async create(@Req() req: Request) {
     const user = this.getUserEmail(req);
     const source = toObject(await this.sources.create({ user }));
@@ -39,6 +40,7 @@ export class SourcesController {
   }
 
   @Get(':id')
+  @UseGuards(AuthenticatedGuard)
   async read(@Req() req: Request, @Param('id') id: string) {
     const source = await this.sources.read({ user: this.getUserEmail(req), id });
     if (!source) throw new NotFoundException();
@@ -47,6 +49,7 @@ export class SourcesController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthenticatedGuard)
   async patch(@Req() req: Request, @Param('id') id: string, @Body() updates: any) {
     const source = await this.sources.read({ user: this.getUserEmail(req), id });
     if (!source) throw new NotFoundException();
@@ -55,6 +58,7 @@ export class SourcesController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthenticatedGuard)
   async remove(@Req() req: Request, @Param('id') id: string) {
     const source = await this.sources.read({ user: this.getUserEmail(req), id });
     if (!source) throw new NotFoundException();
@@ -63,7 +67,20 @@ export class SourcesController {
   }
 
   @Post(':id/log')
+  @UseGuards(AuthenticatedGuard)
   async log(@Req() req: Request, @Param('id') id: string, @Body() log: any) {
     await this.sources.log({ id, log });
+  }
+
+  @Post(':id/clone')
+  @UseGuards(AuthenticatedGuard)
+  async clone(@Req() req: Request, @Param('id') id: string) {
+    const source = await this.sources.read({ user: this.getUserEmail(req), id });
+    if (!source) throw new NotFoundException();
+
+    const { _id, ...attrs } = source;
+    attrs.name += ' (clone)';
+    const clone = toObject(await this.sources.create({ ...attrs }));
+    return { id: clone._id };
   }
 }

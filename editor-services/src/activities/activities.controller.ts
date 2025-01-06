@@ -152,4 +152,16 @@ export class ActivitiesController {
 
     return new StreamableFile(createReadStream(await this.compiler.archive(id)));
   }
+
+  @Post(':id/clone')
+  @UseGuards(AuthenticatedGuard)
+  async clone(@Req() req: Request, @Param('id') id: string) {
+    const activity = await this.activities.read({ user: this.getUserEmail(req), id });
+    if (!activity) throw new NotFoundException();
+
+    const { _id, ...attrs } = activity;
+    attrs.name += ' (clone)';
+    const clone = toObject(await this.activities.create({ ...attrs }));
+    return { id: clone._id };
+  }
 }

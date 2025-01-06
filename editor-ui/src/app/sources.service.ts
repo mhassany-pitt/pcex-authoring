@@ -47,4 +47,8 @@ export class SourcesService {
   setGptConfig(config: any) {
     return this.http.put(`${environment.apiUrl}/keyvalues/gpt-config`, { value: config }, { withCredentials: true });
   }
+
+  clone(id: string) {
+    return this.http.post(`${environment.apiUrl}/sources/${id}/clone`, {}, { withCredentials: true });
+  }
 }

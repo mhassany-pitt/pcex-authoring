@@ -46,9 +46,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-
-// TODO: break an explanation from the cursor point
-// TODO: in activity, enable "challenge" option only if the source can be used as a challenge
-// TODO: sources can also be shared with other users
-// TODO: packages/bundles instead of activites
-// TODO: prompt tuned for challenges?!

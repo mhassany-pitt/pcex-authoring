@@ -4,6 +4,7 @@ import { SourcesService } from '../sources.service';
 import { ActivitiesService } from '../activities.service';
 import { AppService } from '../app.service';
 import { getNavMenuBar } from '../utilities';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-sources',
@@ -30,6 +31,7 @@ export class SourcesComponent implements OnInit {
     private activities: ActivitiesService,
     public router: Router,
     public app: AppService,
+    private confirm: ConfirmationService,
   ) { }
 
   ngOnInit(): void {
@@ -77,5 +79,20 @@ export class SourcesComponent implements OnInit {
     //   },
     //   (error: any) => console.log(error)
     // )
+  }
+
+  clone(source: any) {
+    this.confirm.confirm({
+      header: 'Confirm',
+      message: 'Are you sure you want to clone this source?',
+      acceptButtonStyleClass: 'p-button-warning',
+      rejectButtonStyleClass: 'p-button-plain',
+      accept: () => {
+        this.api.clone(source.id).subscribe(
+          (source: any) => this.router.navigate(['/editor', source.id]),
+          (error: any) => console.log(error)
+        );
+      }
+    });
   }
 }

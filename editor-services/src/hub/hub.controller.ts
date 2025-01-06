@@ -43,5 +43,3 @@ export class HubController {
     return new StreamableFile(createReadStream(this.compiler.preview(id)));
   }
 }
-
-// TODO: preview caching doesn't work properly: it still loads an old version of the preview.

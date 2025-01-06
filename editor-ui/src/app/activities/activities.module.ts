@@ -13,6 +13,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,10 @@ import { CheckboxModule } from 'primeng/checkbox';
     DialogModule, DropdownModule,
     SelectButtonModule, UserAuthCtrlModule,
     InputTextModule, CheckboxModule,
+    ConfirmDialogModule,
+  ],
+  providers: [
+    ConfirmationService
   ]
 })
 export class ActivitiesModule { }

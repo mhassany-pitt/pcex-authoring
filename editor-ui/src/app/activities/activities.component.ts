@@ -3,6 +3,7 @@ import { ActivitiesService } from '../activities.service';
 import { Router } from '@angular/router';
 import { AppService } from '../app.service';
 import { getNavMenuBar } from '../utilities';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-activities',
@@ -30,6 +31,7 @@ export class ActivitiesComponent implements OnInit {
     public api: ActivitiesService,
     public router: Router,
     public app: AppService,
+    private confirm: ConfirmationService,
   ) { }
 
   ngOnInit(): void {
@@ -40,10 +42,19 @@ export class ActivitiesComponent implements OnInit {
     table.filterGlobal($event.target.value, 'contains');
   }
 
-  reload() {
+  reload(then?: () => void) {
     this.create = false;
     this.api.activities({ archived: this.archived }).subscribe(
-      (activities: any) => this.activities = activities,
+      (activities: any) => {
+        this.activities = activities.map((activity: any) => {
+          // activity.id + activity.items.*.id/name/description
+          activity._filter_idnamedescription = `${activity.id} ` + activity.items.map((item: any) => {
+            return `${item.item} ${item.details.name} ${item.details.description} `;
+          }).join(' ');
+          return activity;
+        });
+        then?.();
+      },
       (error: any) => console.log(error)
     );
   }
@@ -95,7 +106,23 @@ export class ActivitiesComponent implements OnInit {
       (error: any) => console.log(error)
     )
   }
+
+  clone(activity: any) {
+    this.confirm.confirm({
+      header: 'Confirm',
+      message: 'Are you sure you want to clone this activity?',
+      acceptButtonStyleClass: 'p-button-warning',
+      rejectButtonStyleClass: 'p-button-plain',
+      accept: () => {
+        this.api.clone(activity).subscribe(
+          (clone: any) => this.reload(() => {
+            this.activity = this.activities.find((a: any) => a.id == clone.id);
+            setTimeout(() => document.getElementById(clone.id)?.scrollIntoView({ behavior: 'smooth' }), 300);
+          }),
+          (error: any) => console.log(error)
+        );
+      }
+    });
+  }
 }
 
-// TODO: the id used for inserting the queries (should be check - avoid overwrite)
-// TODO: execute all queries in a transaction
