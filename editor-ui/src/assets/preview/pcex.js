@@ -136,7 +136,7 @@ var pcex = {
 				pcex.numberOfGoals = pcex.jsonData.activityGoals.length;
 				pcex.goalSolvedStates = new Array(pcex.numberOfGoals);
 				pcex.goalShowResultStates = new Array(pcex.numberOfGoals);
-				pcex.setLanguageSettings(language);
+				pcex.setLanguageSettings(pcex.jsonData.language);
 				pcex.setUserCredentials(usr, grp, sid, svc);
 				pcex.init();
 			}
@@ -152,7 +152,6 @@ var pcex = {
 				svc: svc
 			};
 		}
-
 	},
 
 	setLanguageSettings: function (language) {
