@@ -111,7 +111,7 @@ export class CompilerService {
           name: source.name,
           goalDescription: source.description || '',
           language: source.language.toUpperCase(),
-          userInput: source.userInput || '',
+          userInput: source.programInput || '',
           filename: source.filename,
           lineList,
           distractorList: (source.distractors || [])
