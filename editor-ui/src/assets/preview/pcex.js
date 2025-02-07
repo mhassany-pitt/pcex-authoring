@@ -288,13 +288,21 @@ var pcex = {
 			$(lineContent).addClass('stepline');
 		}
 
+    const lineNumber = isTileDrop
+      ? String("  " + pcex.blankLineNumbers[blankLineIndex]).slice(-2)
+      : String("  " + line.number).slice(-2);
+		var lineNumberSpan = document.createElement('span');
+    // To have a fixed length line number, which is 2 in all cases.
+		$(lineNumberSpan).addClass('linenumber').html(lineNumber);
+		$(lineContent).prepend(lineNumberSpan);
+
+    var helpButton = null;
 		if (includeIndentButtons || line.commentList.length > 0) {
 			lineContent.appendChild(document.createTextNode(indentedCode));
 
 			if (line.commentList.length > 0) {
-				var helpButton = document.createElement('a');
-				$(helpButton).addClass('btn-floating btn-small waves-effect waves-light red')
-					.attr('id', 'help_' + line.id);
+				helpButton = document.createElement('a');
+				$(helpButton).addClass('btn-floating btn-small waves-effect waves-light red').attr('id', 'help_' + line.id);
 
 				var helpIcon = document.createElement('i');
 				helpIcon.setAttribute("class", 'material-icons');
@@ -305,11 +313,11 @@ var pcex = {
 				});
 
 				helpButton.appendChild(helpIcon);
-
-				lineContent.appendChild(helpButton);
+				lineContent.prepend(helpButton);
 
 				if (pcex.currentGoal.fullyWorkedOut == false) {
 					$(helpButton).hide();
+          lineNumberSpan.style.marginLeft = '21px';
 				}
 			}
 
@@ -328,24 +336,14 @@ var pcex = {
 				}
 			}
 		} else {
-			lineContent.innerHTML = indentedCode;
+			lineContent.append(indentedCode);
+      if (!helpButton) lineNumberSpan.style.marginLeft = '21px';
 		}
-		// if absent, the post-comment line will be highlighted as comment as well
-		// -->
+
+		// patch: post-comment line will be highlighted as comment as well
 		lineContent.innerHTML += '\n';
-		// <--
-		var lineNumberSpan = document.createElement('span');
-		var lineNumber;
-		if (isTileDrop) {
-			lineNumber = String("  " + pcex.blankLineNumbers[blankLineIndex]).slice(-2)
-		} else {
-			lineNumber = String("  " + line.number).slice(-2);
-		}
 
-		$(lineNumberSpan).addClass('linenumber').html(lineNumber); //To have a fixed length line number, which is 2 in all cases.
-		$(lineContent).prepend(lineNumberSpan);
-
-		return lineContent;
+    return lineContent;
 	},
 
 	getIndentedCode: function (line, isTileDrop, blankLineIndex) {
@@ -932,7 +930,6 @@ var pcex = {
 			if (pcex.numberOfTrials >= pcex.numberOfTrialsForHint) {
 				$('#show-hint-button').show();
 			}
-
 		}
 	},
 
@@ -1118,8 +1115,9 @@ var pcex = {
 
 
 		$.each(pcex.currentGoal.lineList, function (i, line) {
-			$("#help_" + line.id).unbind('click').click(pcex.handleHelpButtonClicked).show();
-
+      const helpBtn = $("#help_" + line.id);
+			helpBtn.unbind('click').click(pcex.handleHelpButtonClicked).show();
+      helpBtn.next().css('margin-left', '0px');
 		});
 
 		pcex.higlightCorrectBlankLines(pcex.blankLineIDs);
