@@ -1,5 +1,5 @@
 # Worked Example Authoring Tool -- WEAT
-Please open the WEAT authoring tool and log in using one of the demo accounts below. 
+Please open the [WEAT authoring tool](http://adapt2.sis.pitt.edu/pcex-authoring/#/hub) and log in using one of the demo accounts below. 
 
 You can choose any of the following examples to explore the features of the WEAT. You're welcome to use any other example of your choice. 
 
