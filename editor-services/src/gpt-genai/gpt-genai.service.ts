@@ -37,7 +37,7 @@ export class GptGenaiService {
     await ensureDir(path);
 
     const prompt = explanationTemplate
-      .replace(/<<task>>/g, expTaskIdentifyAndExplain)
+      .replace(/<<task>>/g, expTaskIdentifyAndExplain.replace(/<<target_language>>/g, config.target_language ? ` in ${config.target_language}` : ''))
       .replace(/<<problem_language>>/g, language)
       .replace(/<<problem_statement>>/g, statement)
       .replace(/<<problem_solution>>/g, prepLn2Solution(solution));
@@ -61,7 +61,8 @@ export class GptGenaiService {
     await ensureDir(path);
 
     const prompt = explanationTemplate
-      .replace(/<<task>>/g, expTaskExplainLn.replace(/<<line_number>>/g, line_number))
+      .replace(/<<task>>/g, expTaskExplainLn.replace(/<<line_number>>/g, line_number)
+        .replace(/<<target_language>>/g, config.target_language ? ` in ${config.target_language}` : ''))
       .replace(/<<problem_language>>/g, language)
       .replace(/<<problem_statement>>/g, statement)
       .replace(/<<problem_solution>>/g, prepLn2Solution(solution));
@@ -86,7 +87,8 @@ export class GptGenaiService {
     const prompt = distractorTemplate
       .replace(/<<task>>/g, distTaskGenerate
         .replace(/<<line_number>>/g, line_number)
-        .replace(/<<n_distractors>>/g, n_distractors))
+        .replace(/<<n_distractors>>/g, n_distractors)
+        .replace(/<<target_language_instruction>>/g, config.target_language ? ` Ensure the explanations are in ${config.target_language} language.` : ''))
       .replace(/<<line_number>>/g, line_number)
       .replace(/<<problem_language>>/g, language)
       .replace(/<<problem_statement>>/g, statement)

@@ -8,8 +8,8 @@ export const distJsonSchema = `{${$schema},"type":"object","properties": {},"pat
 
 export const assistantTemplate = `You are  a learning support bot focused on introductory programming.`;
 
-export const expTaskIdentifyAndExplain = `Given the following PCEX, explain the essential lines.`;
-export const expTaskExplainLn = `Given the following PCEX, explain Line <<line_number>>.`;
+export const expTaskIdentifyAndExplain = `Given the following PCEX, explain the essential lines<<target_language>>.`;
+export const expTaskExplainLn = `Given the following PCEX, explain Line <<line_number>><<target_language>>.`;
 export const explanationTemplate = `
 A program construction example (PCEX) includes a problem statement and solution. 
 
@@ -42,7 +42,7 @@ Format your output strictly in the following JSON structure, without including a
     ... 
 }`.trim();
 
-export const distTaskGenerate = `Given the following problem statement and solution, generate <<n_distractors>>plausible distractors solely for Line <<line_number>>. The generated distractors must target common misconceptions that students may have and are valid for this program and specifically for Line <<line_number>>.`;
+export const distTaskGenerate = `Given the following problem statement and solution, generate <<n_distractors>>plausible distractors solely for Line <<line_number>>. The generated distractors must target common misconceptions that students may have and are valid for this program and specifically for Line <<line_number>>.<<target_language_instruction>>`;
 export const distractorTemplate = `
 The following problem statement and solution will serve as a program construction challenge question, with Line <<line_number>> masked. In an introductory programming course, e.g.: CS1, students will be asked to choose the correct answer from several options, including one correct answer and multiple incorrect alternatives.		
 
