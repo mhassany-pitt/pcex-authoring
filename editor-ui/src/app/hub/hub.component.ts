@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { AppService } from '../app.service';
 import { getNavMenuBar } from '../utilities';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-hub',
@@ -24,6 +25,9 @@ export class HubComponent implements OnInit {
   integrationToggles: any = {};
   integrationOptions = [{ label: 'View link', value: 'html' }];
 
+  cloningActivity: any = null;
+  cloning: boolean = false;
+
   getIntegrationLink(activity: any, protocol: string) {
     return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${activity.name.replace(/ /g, '_').replace(/\./g, '_')}__${activity.id}`
   }
@@ -36,6 +40,7 @@ export class HubComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private title: Title,
     public app: AppService,
+    private messages: MessageService,
   ) { }
 
   ngOnInit(): void {
@@ -78,5 +83,23 @@ export class HubComponent implements OnInit {
 
   selectIntegrationLink(el: any) {
     setTimeout(() => el.querySelector('input.integration-link')?.select(), 0);
+  }
+
+  selectActivity2Clone(activity: any) {
+    this.cloningActivity = JSON.parse(JSON.stringify(activity));
+    delete this.cloningActivity._filter_idnamedescription;
+    this.cloningActivity.items.forEach((i: any) => i.cloneItem = true);
+  }
+
+  submitClone() {
+    this.cloning = true;
+    this.http.post(`${environment.apiUrl}/hub/clone`, this.cloningActivity, { withCredentials: true }).subscribe({
+      next: (response: any) => {
+        this.cloningActivity = null;
+        this.messages.add({ severity: 'success', summary: 'Success', detail: 'Activity cloned successfully!' });
+      },
+      error: (error: any) => console.error(error),
+      complete: () => this.cloning = false,
+    });
   }
 }

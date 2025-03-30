@@ -26,17 +26,22 @@
           <tr #rowEl>
             <td>
               <div class="flex flex-col gap-2 relative">
-                <div class="flex items-center gap-2">
-                  <span class="font-bold cursor-pointer text-blue-700" (click)="preview(activity)">
-                    <i class="pi pi-eye text-orange-600 text-sm mr-1"></i>
-                    <span>{{ activity.name || '[name not specified]' }}</span>
+                <div class="flex items-center gap-1">
+                  <i class="pi pi-eye text-orange-600 text-sm mr-1 cursor-pointer" (click)="preview(activity)"></i>
+                  <span class="font-bold text-blue-700 cursor-pointer" (click)="preview(activity)">
+                    {{ activity.name || '[name not specified]' }}
                   </span>
+                  <span></span>
                   <p-selectButton title="Integrate this activity into your intended tool"
                     [(ngModel)]="integrationToggles[activity.id]" [options]="integrationOptions"
                     class="integration-options" (onChange)="selectIntegrationLink(rowEl)">
                   </p-selectButton>
-                  <i *ngIf="integrationToggles[activity.id]" class="pi pi-times hover:text-black cursor-pointer -ml-1"
-                    style="font-size: 0.65rem;" (click)="integrationToggles[activity.id] = null;"></i>
+                  <!-- <i *ngIf="integrationToggles[activity.id]" class="pi pi-times hover:text-black cursor-pointer -ml-1"
+                    style="font-size: 0.65rem;" (click)="integrationToggles[activity.id] = null;"></i> -->
+                  <button *ngIf="isLoggedIn" pButton type="button" icon="pi pi-clone" label="Clone"
+                    class="p-button-outlined p-button-sm p-button-plain p-0 text-xs" style="padding: 0.0625rem 0.25rem;"
+                    (click)="selectActivity2Clone(activity)">
+                  </button>
                 </div>
 
                 <div *ngIf="integrationToggles[activity.id]" class="flex items-center gap-2">
@@ -84,3 +89,41 @@
   (onHide)="previewLink = null">
   <iframe *ngIf="previewLink" [src]="previewLink" class="border-none" style="width: 100%; height: 100%"></iframe>
 </p-dialog>
+
+<p-dialog *ngIf="cloningActivity" [(visible)]="cloningActivity" [modal]="true"
+  [header]="'Clone: ' + cloningActivity.name" [style]="{'max-width': '60vw'}" (onHide)="cloningActivity = null"
+  [closable]="!cloning" [closeOnEscape]="false">
+  <form #form="ngForm" class="flex flex-col gap-2" (ngSubmit)="submitClone()">
+    <input type="text" name="activity-name" pInputText [(ngModel)]="cloningActivity.name" placeholder="*Activity Name"
+      class="text-xl" required />
+    <span>{{ cloningActivity.author.fullname }} ({{ cloningActivity.author.email }})</span>
+    <span class="text-gray-600 text-xs">Select the sources that you want to be cloned!</span>
+    <ul class="mt-0">
+      <li *ngFor="let item of cloningActivity.items" class="mt-2">
+        <div>
+          <p-checkbox [(ngModel)]="item.cloneItem" [binary]="true" [name]="'clone-source-' + item.id"
+            class="align-middle" />
+          <input type="text" [name]="'source-name' + item.id" pInputText [(ngModel)]="item.details.name"
+            placeholder="*Source Name" class="mx-1" required size="40" />
+          <span class="align-middle">({{ item.type }})</span>
+        </div>
+        <div class="text-xs mt-1">{{ item.details.description }}</div>
+      </li>
+    </ul>
+    <div>
+      <p-checkbox [(ngModel)]="cloningActivity.sourcesOnly" [binary]="true" name="clone-activity"
+        label="Only clone the sources (the activity itself will not be cloned)." />
+    </div>
+
+    <div class="flex items-center justify-end mt-2">
+      <button pButton label="Cancel" icon="pi pi-chevron-left" class="p-button-sm p-button-secondary p-button-text"
+        (click)="cloningActivity = null;" [disabled]="cloning">
+      </button>
+      <button pButton type="submit" [label]="cloning ? 'Cloning' : 'Clone'" icon="pi pi-clone" class="p-button-sm"
+        [loading]="cloning">
+      </button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-toast />

@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Activity } from 'src/activities-service/activity.schema';
+import { Source } from 'src/sources-service/source.schema';
 import { toObject } from 'src/utils';
 
 @Injectable()
@@ -10,7 +11,8 @@ export class HubService {
 
   constructor(
     private config: ConfigService,
-    @InjectModel('activities') private activities: Model<Activity>
+    @InjectModel('activities') private activities: Model<Activity>,
+    @InjectModel('sources') private sources: Model<Source>,
   ) { }
 
   async list({ key }) {
@@ -19,7 +21,19 @@ export class HubService {
     return (await this.activities.find(filter)).map(toObject);
   }
 
-  async get(id: string) {
+  async getActivity(id: string) {
     return await this.activities.findOne({ _id: id });
+  }
+
+  async createActivity(model: any) {
+    return await this.activities.create(model);
+  }
+
+  async getSource(id: string) {
+    return await this.sources.findOne({ _id: id });
+  }
+
+  async createSource(model: any) {
+    return await this.sources.create(model);
   }
 }
