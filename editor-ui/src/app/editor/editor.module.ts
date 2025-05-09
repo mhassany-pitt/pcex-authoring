@@ -17,6 +17,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     InputTextareaModule, DialogModule,
     CheckboxModule, ButtonModule,
     TabViewModule, SelectButtonModule,
-    MenuModule, DropdownModule,
+    MenuModule, DropdownModule, OverlayPanelModule,
     ConfirmDialogModule, ToastModule,
   ],
   providers: [

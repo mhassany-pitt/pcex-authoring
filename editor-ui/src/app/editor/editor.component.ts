@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitiesService } from '../activities.service';
 import { arrayMoveMutable } from 'array-move';
-import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { environment } from '../../environments/environment';
 import { getNavMenuBar } from '../utilities';
@@ -21,6 +21,8 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   @Input() language = 'java';
 
+  // @ViewChild('feedbackOverlay') feedbackOverlayRef: any;
+
   srcEditorOptions = {
     language: this.language,
     theme: 'vs',
@@ -33,6 +35,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     tabSize: 4,
     scrollBeyondLastLine: false,
     automaticLayout: true,
+    fixedOverflowWidgets: true,
   };
 
   distEditorOptions = {
@@ -84,6 +87,8 @@ export class EditorComponent implements OnInit, OnDestroy {
     presence_penalty: 0
   }, null, 2);
 
+  translation: any = {};
+
   _v: any = {
     'explanation-selection': [],
     'distractor-selection': [],
@@ -127,7 +132,6 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const params: any = this.route.snapshot.params;
-
     this.api.read(params.id).subscribe({
       next: (source: any) => {
         source.code = source.code || '';
@@ -148,6 +152,8 @@ export class EditorComponent implements OnInit, OnDestroy {
         });
       },
     });
+
+    // setTimeout(() => this.onSelectionChange(), 300);
   }
 
   ngOnDestroy(): void {
@@ -583,6 +589,9 @@ export class EditorComponent implements OnInit, OnDestroy {
       }
     }
 
+    // TODO: finding class name, what if there is no main method?!
+    // TODO: add sql for interaction tracking for um2 -- (this should be only available to ourself)
+
     return classWithMain;
   }
 
@@ -871,4 +880,55 @@ export class EditorComponent implements OnInit, OnDestroy {
       complete: () => delete this._v['show-gpt-config']
     });
   }
+
+  translate() {
+    this._v['translate'] = 'loading';
+    const payload = {
+      action: 'translate-model',
+      id: this.model.id, model: this.model,
+      translation: this.translation,
+    };
+
+    this.log({ type: 'generate:translate-model', payload });
+    this.http.post(`${environment.apiUrl}/gpt-genai`, payload, { withCredentials: true }).subscribe({
+      next: (resp: any) => {
+        this.log({ type: 'generate:translate-model', payload: { ...payload, translated: resp } });
+        this.model = resp;
+
+        this.reloadLineMarkers();
+      },
+      error: (error) => {
+        this.log({ type: 'generate:translate-model', payload, error: error.error });
+
+        if (error.status == 422) this.messages.add({
+          severity: 'error', summary: 'Error',
+          detail: error.error.message
+        });
+      },
+      complete: () => delete this._v['translate']
+    });
+  }
+
+  // onSelectionChange() {
+  //   let timeout: any = null;
+  //   window.addEventListener('selectionchange', ($event) => {
+  //     if (timeout) clearTimeout(timeout);
+  //     // timeout = setTimeout(() => this.showOverlayOnSelection(
+  //     //   this.feedbackOverlayRef, $event), 300);
+  //   });
+  // }
+
+  // showOverlayOnSelection(overlay: any, $event: any) {
+  //   const selection = window.getSelection();
+  //   if (!selection
+  //     || selection.rangeCount == 0
+  //     || selection.toString().length == 0
+  //   ) { return; }
+
+  //   const selected = selection.toString();
+  //   console.log('-------------------');
+  //   console.log(selected);
+  //   console.log($event.target);
+  //   overlay.show($event);
+  // }
 }

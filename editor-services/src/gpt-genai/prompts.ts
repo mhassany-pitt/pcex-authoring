@@ -6,7 +6,7 @@ export const $schema = `"$schema":"http://json-schema.org/draft-07/schema#"`;
 export const expJsonSchema = `{${$schema},"type":"object","properties": {},"patternProperties":{"^[0-9]+$":{"type":"array","items":{"type":"string"}}},"required":[],"additionalProperties":false}`;
 export const distJsonSchema = `{${$schema},"type":"object","properties": {},"patternProperties":{"^[0-9]+$":{"type":"array","items":{"type":"object","properties":{"distractor":{"type":"string"},"misconceptions":{"type":"array","items":{"type":"string"}},"explanation":{"type":"string"}},"required":["distractor","misconceptions","explanation"]}}},"required":[],"additionalProperties":false}`;
 
-export const assistantTemplate = `You are  a learning support bot focused on introductory programming.`;
+export const assistantTemplate = `You are a learning support bot focused on introductory programming.`;
 
 export const expTaskIdentifyAndExplain = `Given the following PCEX, explain the essential lines<<target_language>>.`;
 export const expTaskExplainLn = `Given the following PCEX, explain Line <<line_number>><<target_language>>.`;
@@ -69,3 +69,35 @@ Format your output strictly in the following JSON structure, without including a
     ]
 }
 `.trim();
+
+export const translateAssistantTemplate = `You are a helpful assistant that translates programming worked examples into other natural languages, maintaining both technical accuracy and the original code formatting.`;
+
+export const translateModelTemplate = `
+[[TASK-DEFINITION]]
+You will be given a worked example. Your job is to translate the [[WORKED-EXAMPLE]] according to the [[TASK-INSTRUCTIONS]].
+
+[[WORKED-EXAMPLE]]
+[[PROGRAM-NAME]]
+<<program-name>>
+
+[[PROGRAM-DESCRIPTION]]
+<<program-description>>
+
+[[SOURCE-CODE]]
+<<source-code>>
+
+[[LINE-EXPLANATIONS]]
+<<line-explanations>>
+
+[[LINE-DISTRACTORS]]
+<<line-distractors>>
+
+[[TASK-INSTRUCTIONS]]
+Translate the given worked example into <<target-language>>. Be sure to specifically translate the sections labeled [[PROGRAM-NAME]], [[PROGRAM-DESCRIPTION]], [[SOURCE-CODE]], [[LINE-EXPLANATIONS]], and [[LINE-DISTRACTORS]]. <<source-code-elements-translation-instruction>>Do not translate keywords, standard functions, or library names. Preserve the original format and Do NOT add, remove, or change any content beyond translation.
+`.trim();
+
+export const translateModelSrcLine = "[[LINE<<line-number>>]] <<line-content>>";
+export const translateModelLnExplanation = "[[LINE<<line-number>>.EXPL<<explanation-number>>]] <<explanation-content>>";
+export const translateModelDistractorLn = "[[DIST<<distractor-number>>.LC]] <<line-content>>";
+export const translateModelDistractorLnExplanation = "[[DIST<<distractor-number>>.EXPL]] <<line-explanation>>";
+export const translateSrcCodeElmsInstruction = `Translate all user-defined <<elements>> names and make sure they are ASCII-folded. `;

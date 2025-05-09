@@ -11,10 +11,14 @@ export const useId = (object): any => {
     const { __v, _id: id, ...attrs } = object;
     return ({ id: id.toString(), ...attrs })
   } else return null;
-};
+}
 export const use_Id = (object): any => {
   if (object) {
     const { id: _id, ...attrs } = object;
     return ({ _id: new mongoose.Types.ObjectId(_id), ...attrs });
   } else return null;
+}
+
+export const zfill = (num: number, size: number) => {
+  return '0'.repeat(size - num.toString().length) + num;
 }

@@ -56,17 +56,21 @@
       <div class="flex-grow flex flex-col md:flex-row items-stretch gap-4">
         <div class="w-full md:w-1/2 flex flex-col gap-2 bg-gray-100 p-2 rounded-sm shadow-md">
           <div class="flex items-center gap-2">
-            <span class="font-bold">Source Code</span>
-
-            <span class="flex-grow"></span>
+            <span class="w-48 font-bold flex-grow">Source Code</span>
 
             <!-- identify and explain lines -->
             <button pButton type="button" title="GPT Configuration" icon="pi pi-cog"
               class="p-button-sm p-button-help p-button-outlined" (click)="loadGptConfig()">
             </button>
-            <button pButton type="button" label="Identify and Explain Lines" icon="genai-icon"
-              class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:identify-and-explain']"
-              [disabled]="!model.code" (click)="onIdentifyAndExplainLines()"></button>
+            <button pButton type="button" label="Identify and Explain Lines" title="Identify and Explain Lines"
+              icon="genai-icon" class="p-button-sm p-button-secondary p-button-outlined"
+              [loading]="_v['generate:identify-and-explain']" [disabled]="!model.code"
+              (click)="onIdentifyAndExplainLines()">
+            </button>
+            <button pButton type="button" title="Translate" icon="pi pi-language"
+              class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:translate']"
+              (click)="_v['translate'] = true">
+            </button>
           </div>
 
           <!-- source code editor -->
@@ -98,19 +102,21 @@
               <!-- select-all/delete/merge/move explanations -->
               <div *ngIf="selectedLine.comments?.length" class="flex items-center gap-2">
                 <p-checkbox name="toggle-selection" label="Select all" [(ngModel)]="_v['all-explanation-selection']"
-                  [binary]="true" class="p-checkbox-sm" (ngModelChange)="onSelectAll('explanation')"></p-checkbox>
+                  [binary]="true" class="p-checkbox-sm w-48" (ngModelChange)="onSelectAll('explanation')"></p-checkbox>
 
                 <span class="flex-grow"></span>
 
-                <button pButton type="button" label="Delete" icon="fa fa-trash" class="px-2 py-1 annot-action-btn"
-                  severity="danger" size="small" outlined="true" (click)="onDelete('explanation')"
-                  [disabled]="_v['explanation-selection'].length == 0"></button>
+                <button pButton type="button" label="Delete" title="Delete" icon="fa fa-trash"
+                  class="px-2 py-1 annot-action-btn" severity="danger" size="small" outlined="true"
+                  (click)="onDelete('explanation')" [disabled]="_v['explanation-selection'].length == 0">
+                </button>
 
-                <button pButton type="button" label="Merge" icon="fa fa-link" class="px-2 py-1 annot-action-btn"
-                  size="small" outlined="true" plain="true" (click)="onMerge()"
-                  [disabled]="_v['explanation-selection'].length < 2"></button>
+                <button pButton type="button" label="Merge" title="Merge" icon="fa fa-link"
+                  class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true" (click)="onMerge()"
+                  [disabled]="_v['explanation-selection'].length < 2">
+                </button>
 
-                <button pButton type="button" label="Move" icon="fa fa-share-square-o"
+                <button pButton type="button" label="Move" title="Move" icon="fa fa-share-square-o"
                   class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true"
                   [disabled]="_v['explanation-selection'].length == 0"
                   (click)="_v['move-selection-header'] = 'Explanations'; _v['move-selection'] = 'explanation';">
@@ -135,7 +141,7 @@
                     class="flex-grow border-gray-200 px-1.5 py-1 text-sm"
                     [ngClass]="{ 'gpt-generated': _v['generated-explanations']?.includes(comment) }"
                     (ngModelChange)="reloadLineMarkers()" (focus)="onExplanationFocus($event, comment, i)"
-                    (blur)="onExplanationBlur($event, comment, i)"></textarea>
+                    (blur)="onExplanationBlur($event, comment, i)" autofocus="false"></textarea>
 
                   <!-- reorder-bar -->
                   <span class="text-gray-400 hover:text-gray-600 grap mr-2"
@@ -157,9 +163,10 @@
                 class="p-button-sm p-button-help p-button-outlined" (click)="addExplanation()">
               </button>
               <span>or</span>
-              <button pButton type="button" label="Generate Explanations" icon="genai-icon"
-                class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:explain-line']"
-                [disabled]="!model.code" (click)="onExplainLine()"></button>
+              <button pButton type="button" label="Generate Explanations" title="Generate Explanations"
+                icon="genai-icon" class="p-button-sm p-button-secondary p-button-outlined"
+                [loading]="_v['generate:explain-line']" [disabled]="!model.code" (click)="onExplainLine()">
+              </button>
             </div>
           </div>
 
@@ -191,7 +198,8 @@
 
               <button pButton type="button" label="Delete" icon="fa fa-trash" class="px-2 py-1 annot-action-btn"
                 severity="danger" size="small" outlined="true" (click)="onDelete('distractor')"
-                [disabled]="_v['distractor-selection'].length == 0"></button>
+                [disabled]="_v['distractor-selection'].length == 0">
+              </button>
 
               <button pButton type="button" label="Move" icon="fa fa-share-square-o" class="px-2 py-1 annot-action-btn"
                 size="small" outlined="true" plain="true" [disabled]="_v['distractor-selection'].length == 0"
@@ -234,7 +242,7 @@
                 class="p-button-outlined p-button-sm p-button-help" (click)="addDistractor()">
               </button>
               <span>or</span>
-              <button pButton type="button" label="Generate Distractors" icon="genai-icon"
+              <button pButton type="button" label="Generate Distractors" title="Generate Distractors" icon="genai-icon"
                 class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:distractors']"
                 [disabled]="!model.code" (click)="onGenDistractors()">
               </button>
@@ -266,6 +274,10 @@
     </span>
     <textarea pInputTextarea name="gpt-config" [placeholder]="GPT_CONF_PLACEHOLDER" rows="10"
       [(ngModel)]="_v['gpt-config']" [required]="true" class="p-inputtext-sm w-full border-gray-200"></textarea>
+    <span class="text-gray-400 text-xs">
+      To generate explanations in a language other than English, add "target_language": "e.g., Spanish" to the GPT
+      configuration above.
+    </span>
     <div class="flex items-center gap-2">
       <button pButton type="button" label="Reset" class="p-button-sm p-button-secondary" (click)="resetGptConfig()">
       </button>
@@ -284,9 +296,99 @@
     <p-dropdown #targetLineEl [options]="targetLns" placeholder="Select the line" appendTo="body"
       class="flex-grow"></p-dropdown>
     <button pButton type="button" label="Move" (click)="onMove(_v['move-selection'], targetLineEl.value)"
-      [disabled]="!targetLineEl.value"></button>
+      [disabled]="!targetLineEl.value">
+    </button>
   </div>
 </p-dialog>
+
+<!-- translation -->
+<p-dialog *ngIf="_v['translate']" [(visible)]="_v['translate']" header="Translate Source" [closable]="false"
+  [modal]="true" [style]="{'width': '25rem'}" appendTo="body">
+  <form #form="ngForm" class="flex flex-col gap-2" (submit)="translate()">
+    <input type="text" pInputText name="translate-tolanguage" [(ngModel)]="translation.target_language"
+      placeholder="Enter target language (e.g., Spanish)" class="flex-grow" [required]="true" />
+    <span class="text-xs text-gray-600 -mt-1">
+      This determines the language your source name, description, and code elements will be translated into.
+    </span>
+
+    <span>Also, translate code elements:</span>
+    <p-checkbox label="Classes" name="translate-classes" [(ngModel)]="translation.translate_classes" [binary]="true"
+      class="my-1 ml-2"></p-checkbox>
+    <p-checkbox label="Functions" name="translate-functions" [(ngModel)]="translation.translate_functions"
+      [binary]="true" class="-my-1 ml-2"></p-checkbox>
+    <p-checkbox label="Variables" name="translate-variables" [(ngModel)]="translation.translate_variables"
+      [binary]="true" class="my-1 ml-2"></p-checkbox>
+
+    <span class="text-xs text-gray-600">
+      Note: Make sure to "Save" for keeping the changes or refresh the page to undo.
+    </span>
+
+    <div class="flex items-center justify-end gap-2 mt-2">
+      <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
+        class="p-button-sm p-button-secondary p-button-text" (click)="_v['translate'] = false">
+      </button>
+      <button pButton type="submit" label="Translate" title="Translate" icon="pi pi-language" class="p-button-sm"
+        [disabled]="form.invalid" [loading]="_v['translate'] == 'loading'">
+      </button>
+    </div>
+  </form>
+</p-dialog>
+
+<!--
+<p-overlayPanel *ngIf="false" #feedbackOverlay>
+  <div class="flex flex-col gap-2">
+    <div class="flex items-center justify-end">
+      <button pButton type="button" label="This text was generated by AI!" title="This text was generated by AI!"
+        icon="genai-icon" class="p-button-sm p-button-secondary p-button-text annot-action-btn" disabled="disabled">
+      </button>
+      <button pButton type="button" title="I liked it!" icon="pi pi-thumbs-up-fill"
+        class="p-button-sm p-button-plain p-button-text annot-action-btn"
+        (click)="_v['--replace'] = false; _v['--why'] = true; _v['--action'] = 'like';">
+      </button>
+      <button pButton type="button" title="I disliked it!" icon="pi pi-thumbs-down-fill"
+        class="p-button-sm p-button-plain p-button-text annot-action-btn"
+        (click)="_v['--replace'] = false; _v['--why'] = true; _v['--action'] = 'dislike';">
+      </button>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button pButton type="button" label="Extract to New Explanation" title="Extract to New Explanation"
+        icon="pi pi-file-edit" class="p-button-sm p-button-plain p-button-outlined"
+        (click)="_v['--replace'] = false; _v['--why'] = true; _v['--action'] = 'extract';">
+      </button>
+      <button pButton type="button" label="Replace" title="Replace" icon="pi pi-hammer"
+        class="p-button-sm p-button-plain p-button-outlined"
+        (click)="_v['--replace'] = _v['--why'] = true; _v['--action'] = 'replace';">
+      </button>
+      <button pButton type="button" label="Remove" title="Remove" icon="pi pi-eraser"
+        class="p-button-sm p-button-danger p-button-outlined"
+        (click)="_v['--replace'] = false; _v['--why'] = true; _v['--action'] = 'remove';">
+      </button>
+    </div>
+
+    <hr *ngIf="_v['--replace'] || _v['--why']" class="w-full my-0" />
+
+    <textarea *ngIf="_v['--replace']" pInputTextarea [autoResize]="true"
+      placeholder="Type your replacement text here ..." rows="1" class="p-inputtext-sm"
+      style="min-height: 2.1rem;"></textarea>
+    <textarea *ngIf="_v['--why']" pInputTextarea [autoResize]="true" [placeholder]="
+      _v['--action'] == 'like' ? 'What made you like this?' :
+      (_v['--action'] == 'dislike' ? 'What made you dislike this?' :
+      (_v['--action'] == 'extract' || _v['--action'] == 'replace' ||
+       _v['--action'] == 'remove' ? 'How would this make it better?' : '')
+      )" rows="1" class="p-inputtext-sm" style="min-height: 2.1rem;"></textarea>
+    <div *ngIf="_v['--replace'] || _v['--why']" class="flex items-center justify-end gap-2">
+      <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
+        class="p-button-sm p-button-secondary p-button-text"
+        (click)="_v['--replace'] = _v['--why'] = _v['--action'] = false; feedbackOverlay.hide();">
+      </button>
+      <button pButton type="button" label="Submit" title="Submit" icon="pi pi-check"
+        class="p-button-sm p-button-outlined"
+        (click)="_v['--replace'] = _v['--why'] = _v['--action'] = false; feedbackOverlay.hide();">
+      </button>
+    </div>
+  </div>
+</p-overlayPanel> -->
 
 <!-- data collection consent -->
 <p-dialog [visible]="!trackingMessageDismissed" header="Dear User" position="top" [closable]="false" [modal]="true"

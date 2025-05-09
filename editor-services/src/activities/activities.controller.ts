@@ -120,7 +120,9 @@ export class ActivitiesController {
   async genPreview(@Res() res: Response, @Param('id') id: string, @Body() activity: any) {
     // await this.authorizePreview(req, id, type);
     // await this.compiler.compile({ ...activity, id });
-    const worker = new Worker(`${__dirname}/compile.js`, { workerData: { ...activity, id } });
+    const worker = new Worker(`${__dirname}/compile.js`, {
+      workerData: { ...activity, id },
+    });
     worker.on('message', (result) => {
       console.log(result);
       res.json({});

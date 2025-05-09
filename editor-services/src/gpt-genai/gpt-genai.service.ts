@@ -7,8 +7,16 @@ import {
   distTaskGenerate, distractorTemplate,
   expJsonSchema, expTaskExplainLn,
   expTaskIdentifyAndExplain, explanationTemplate,
-  prepLn2Solution
+  prepLn2Solution,
+  translateAssistantTemplate,
+  translateModelDistractorLn,
+  translateModelDistractorLnExplanation,
+  translateModelLnExplanation,
+  translateModelSrcLine,
+  translateModelTemplate,
+  translateSrcCodeElmsInstruction
 } from './prompts';
+import { zfill } from 'src/utils';
 
 @Injectable()
 export class GptGenaiService {
@@ -19,13 +27,15 @@ export class GptGenaiService {
     return `${this.config.get('STORAGE_PATH')}/gpt-genai`;
   }
 
-  async generate({ config, user, action, id, language, statement, solution, line_number, n_distractors }) {
+  async generate({ config, user, action, id, language, statement, solution, line_number, n_distractors, translation, model }) {
     if (action == 'identify-and-explain') {
       return await this.identifyAndExplainLines({ config, user, id, language, statement, solution });
     } else if (action == 'explain-line') {
       return await this.explainTheLine({ config, user, id, language, statement, solution, line_number });
     } else if (action == 'generate-distractors') {
       return await this.generateDistractors({ config, user, id, language, statement, solution, line_number, n_distractors });
+    } else if (action == 'translate-model') {
+      return await this.translateModel({ config, user, id, model, translation });
     } else {
       throw new Error(`Invalid action: ${action}`);
     }
@@ -49,7 +59,12 @@ export class GptGenaiService {
 
     await writeFile(file, JSON.stringify({ request: messages }));
 
-    const response = await this.promptGPT({ config, messages, response_json_schema: expJsonSchema });
+    const response = await this.promptGPT({
+      config, messages, response_format: {
+        type: "json_schema",
+        json_schema: { 'name': 'response', schema: JSON.parse(expJsonSchema) }
+      } as any
+    });
     await writeFile(file, JSON.stringify({ request: messages, response }));
 
     return JSON.parse(response.choices[0].message.content);
@@ -73,7 +88,12 @@ export class GptGenaiService {
     ];
     await writeFile(file, JSON.stringify({ request: messages }));
 
-    const response = await this.promptGPT({ config, messages, response_json_schema: expJsonSchema });
+    const response = await this.promptGPT({
+      config, messages, response_format: {
+        type: "json_schema",
+        json_schema: { 'name': 'response', schema: JSON.parse(expJsonSchema) }
+      } as any
+    });
     await writeFile(file, JSON.stringify({ request: messages, response }));
 
     return JSON.parse(response.choices[0].message.content);
@@ -100,10 +120,118 @@ export class GptGenaiService {
     ];
     await writeFile(file, JSON.stringify({ request: messages }));
 
-    const response = await this.promptGPT({ config, messages, response_json_schema: distJsonSchema });
+    const response = await this.promptGPT({
+      config, messages, response_format: {
+        type: "json_schema",
+        json_schema: { 'name': 'response', schema: JSON.parse(distJsonSchema) }
+      } as any
+    });
     await writeFile(file, JSON.stringify({ request: messages, response }));
 
     return JSON.parse(response.choices[0].message.content);
+  }
+
+  async translateModel({ config, user, id, model, translation }) {
+    const path = `${this.root}/${user}/${id}/`;
+    const file = `${path}/${new Date().toISOString()}-translation.json`;
+    await ensureDir(path);
+
+    const lineExplanations = [];
+    Object.keys(model.lines).sort((a, b) => parseInt(a) - parseInt(b)).forEach(ln => {
+      model.lines[`${ln}`].comments.forEach((comment: any, i: number) => {
+        if (comment.content)
+          lineExplanations.push(translateModelLnExplanation
+            .replace('<<line-number>>', zfill(parseInt(ln), 2))
+            .replace('<<explanation-number>>', `${i + 1}`)
+            .replace('<<explanation-content>>', comment.content));
+      })
+    });
+
+    const distsContentExp = [];
+    model.distractors.forEach((distractor: any, i: number) => {
+      if (distractor.code)
+        distsContentExp.push(translateModelDistractorLn
+          .replace('<<distractor-number>>', `${i + 1}`)
+          .replace('<<line-content>>', distractor.code));
+      if (distractor.description)
+        distsContentExp.push(translateModelDistractorLnExplanation
+          .replace('<<distractor-number>>', `${i + 1}`)
+          .replace('<<line-explanation>>', distractor.description));
+    });
+
+    const sourceCode = model.code.split('\n').map((line: string, lidx: number) => translateModelSrcLine
+      .replace('<<line-number>>', zfill(lidx + 1, 2))
+      .replace('<<line-content>>', line)).join('\n');
+
+    const scElms = [];
+    if (translation.translate_classes) scElms.push('class');
+    if (translation.translate_functions) scElms.push('function');
+    if (translation.translate_variables) scElms.push('variable');
+    const srcCodeElmsInstruction = scElms.length ?
+      translateSrcCodeElmsInstruction.replace('<<elements>>',
+        scElms.length == 1 ? scElms[0] : (
+          scElms.length == 2 ? `${scElms[0]} and ${scElms[1]}` :
+            `${scElms[0]}, ${scElms[1]}, and ${scElms[2]}`)) : '';
+
+    const prompt = translateModelTemplate
+      .replace(/<<program-name>>/g, model.name)
+      .replace(/<<program-description>>/g, model.description)
+      .replace(/<<source-code>>/g, sourceCode)
+      .replace(/<<line-explanations>>/g, lineExplanations.join('\n'))
+      .replace(/<<line-distractors>>/g, distsContentExp.join('\n'))
+      .replace(/<<target-language>>/g, translation.target_language)
+      .replace(/<<source-code-elements-translation-instruction>>/g, srcCodeElmsInstruction);
+
+    const messages = [
+      { role: 'system', content: translateAssistantTemplate },
+      { role: 'user', content: prompt },
+    ];
+    await writeFile(file, JSON.stringify({ request: messages }));
+
+    const response = await this.promptGPT({ config, messages, response_format: { type: 'text' } });
+    await writeFile(file, JSON.stringify({ request: messages, response }));
+
+    const translated = response.choices[0].message.content;
+
+    model.name = translated.substring(
+      translated.indexOf('[[PROGRAM-NAME]]') + '[[PROGRAM-NAME]]'.length,
+      translated.indexOf('[[PROGRAM-DESCRIPTION]]')
+    ).trim();
+
+    model.description = translated.substring(
+      translated.indexOf('[[PROGRAM-DESCRIPTION]]') + '[[PROGRAM-DESCRIPTION]]'.length,
+      translated.indexOf('[[SOURCE-CODE]]')
+    ).trim();
+
+    model.code = translated.substring(
+      translated.indexOf('[[SOURCE-CODE]]') + '[[SOURCE-CODE]]'.length,
+      translated.indexOf('[[LINE-EXPLANATIONS]]')
+    ).split('\n[[LINE').map(l => l.substring(l.indexOf(']]') + ']]'.length + 1)).join('\n').trim();
+
+    for (const l of translated.substring(
+      translated.indexOf('[[LINE-EXPLANATIONS]]') + '[[LINE-EXPLANATIONS]]'.length,
+      translated.indexOf('[[LINE-DISTRACTORS]]')
+    ).split('\n[[LINE')) {
+      if (l.trim().length < 1)
+        continue;
+      const ps = l.split(']] ');
+      const idxs = ps[0].replace('EXPL', '').split('.');
+      model.lines[`${parseInt(idxs[0])}`].comments[`${parseInt(idxs[1]) - 1}`].content = ps[1];
+    }
+
+    for (const d of translated.substring(
+      translated.indexOf('[[LINE-DISTRACTORS]]') + '[[LINE-DISTRACTORS]]'.length
+    ).split('\n[[DIST')) {
+      if (d.trim().length < 1)
+        continue;
+      const ps = d.split(']] ');
+      const idxs = ps[0].split('.');
+      const dist = model.distractors[parseInt(idxs[0]) - 1];
+      if (idxs[1] == 'LC') /*  */ dist.code = ps[1]
+      else if (idxs[1] == 'EXPL') dist.description = ps[1]
+    }
+
+    return model;
   }
 
   async validate(config: any) {
@@ -120,17 +248,13 @@ export class GptGenaiService {
     return config;
   }
 
-  private async promptGPT({ messages, config, response_json_schema }) {
+  private async promptGPT({ messages, config, response_format }) {
     const api = new OpenAI({ apiKey: config.api_key, organization: config.organization });
     const { model, temperature, max_tokens,
       top_p, frequency_penalty, presence_penalty } = config;
     return await api.chat.completions.create({
       messages, model, temperature, max_tokens,
-      top_p, frequency_penalty, presence_penalty,
-      response_format: {
-        type: "json_schema",
-        json_schema: { 'name': 'response', schema: JSON.parse(response_json_schema) }
-      } as any
+      top_p, frequency_penalty, presence_penalty
     });
   }
 

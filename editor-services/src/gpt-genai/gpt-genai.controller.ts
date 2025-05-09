@@ -37,7 +37,7 @@ export class GptGenaiController {
         workerData: {
           config: await this.service.validate(config?.value || {}),
           user: req.user.email, ...body
-        }
+        },
       });
       worker.on('message', (result) => res.json(result));
       worker.on('error', (error) => res.status(500).json({ message: error.message }));
