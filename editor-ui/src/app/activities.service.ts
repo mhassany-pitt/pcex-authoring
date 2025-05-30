@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { SourcesService } from './sources.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { getPreviewLink } from './utilities';
 
 @Injectable({
   providedIn: 'root'
@@ -43,17 +44,13 @@ export class ActivitiesService {
   }
 
   previewJsonLink(activity: any, type: string) {
-    let baseHref = document.querySelector('base')?.href;
-    if (baseHref?.endsWith('/')) baseHref = baseHref.slice(0, -1);
-    return this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseHref}/assets/preview/index.html` +
-      `?load=${environment.apiUrl}/activities/${activity.id}/preview` +
-      /**/ `?type=${type}&_t=${new Date().getTime()}`
-    );
+    return this.sanitizer.bypassSecurityTrustResourceUrl(getPreviewLink(
+      `${environment.apiUrl}/activities/${activity.id}/preview?type=${type}&_t=${new Date().getTime()}`
+    ));
   }
 
   download(activity: any) {
-    this.http.get(`${environment.apiUrl}/activities/${activity.id}/download`, {
+    this.http.get(`${environment.apiUrl} / activities / ${activity.id} / download`, {
       responseType: 'blob',
       withCredentials: true
     }).subscribe((blob: Blob) => {
@@ -67,6 +64,6 @@ export class ActivitiesService {
   }
 
   clone(activity: any) {
-    return this.http.post(`${environment.apiUrl}/activities/${activity.id}/clone`, {}, { withCredentials: true });
+    return this.http.post(`${environment.apiUrl} / activities / ${activity.id} / clone`, {}, { withCredentials: true });
   }
 }

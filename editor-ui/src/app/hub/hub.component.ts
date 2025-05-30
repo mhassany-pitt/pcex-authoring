@@ -4,7 +4,7 @@ import { DomSanitizer, Title } from '@angular/platform-browser';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { AppService } from '../app.service';
-import { getNavMenuBar } from '../utilities';
+import { getNavMenuBar, getPreviewLink } from '../utilities';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -48,12 +48,10 @@ export class HubComponent implements OnInit {
     this.search('');
   }
 
-  getLink(activity: any) {
-    return `${document.querySelector('base')?.href}assets/preview/index.html?load=${environment.apiUrl}/hub/${activity.id}`;
-  }
-
   async preview(activity: any) {
-    this.previewLink = this.sanitizer.bypassSecurityTrustResourceUrl(`${this.getLink(activity)}?_t=${new Date().getTime()}`);
+    this.previewLink = this.sanitizer.bypassSecurityTrustResourceUrl(
+      getPreviewLink(`${environment.apiUrl}/hub/${activity.id}?_t=${new Date().getTime()}`)
+    );
     this.showPreview = true;
   }
 

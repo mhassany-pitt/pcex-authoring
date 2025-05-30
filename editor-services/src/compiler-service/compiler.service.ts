@@ -106,9 +106,9 @@ export class CompilerService {
 
         const newJson = {
           id: source.id,
-          activityName: activity.name,
           order: 0,
-          name: source.name,
+          activityName: `${activity.name}__${activity.id}`,
+          name: `${source.name}__${source.id}`,
           goalDescription: source.description || '',
           language: source.language.toUpperCase(),
           userInput: source.programInput || '',

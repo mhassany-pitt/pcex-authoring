@@ -10,6 +10,7 @@ export class Activity {
   @Prop() archived: boolean;
   @Prop() name: string;
   @Prop({ type: [Object] }) items: any[];
+  @Prop({ type: Object }) linkings: any;
 }
 
 export const ActivitySchema = SchemaFactory.createForClass(Activity);

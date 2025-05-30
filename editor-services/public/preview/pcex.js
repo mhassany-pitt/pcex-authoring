@@ -200,15 +200,18 @@ var pcex = {
 
 		pcex.currentGoal.goalDescription = pcex.currentGoal.goalDescription.replace(/\\n/g, '<br>');
 
+		// remove the unique-id from end of goal name
+		// this unique-id is used to make sure goal name is globally unique
+		const goalName = pcex.currentGoal.name.replace(/__([a-f0-9]{24})$/, '');
 		if (pcex.currentGoal.fullyWorkedOut) {
 			pcex.activityType = 'ex';
 			pcex.umApplicationId = 46;
 			pcex.changeStyleToFullyWorkedOut();
-			$('#goal_title').html("<img src='img/reader-24_white.png'>Example: " + pcex.currentGoal.name + "</img>");
+			$('#goal_title').html("<img src='img/reader-24_white.png' />Example: " + goalName);
 		} else {
 			pcex.activityType = 'ch';
 			pcex.umApplicationId = 47;
-			$('#goal_title').html("<img src='img/examination-24_white.png'>Challenge: " + pcex.currentGoal.name);
+			$('#goal_title').html("<img src='img/examination-24_white.png' />Challenge: " + goalName);
 
 			$.each(pcex.currentGoal.blankLineList, function (i, blankLine) {
 				pcex.blankLines.push(blankLine);
@@ -288,15 +291,15 @@ var pcex = {
 			$(lineContent).addClass('stepline');
 		}
 
-    const lineNumber = isTileDrop
-      ? String("  " + pcex.blankLineNumbers[blankLineIndex]).slice(-2)
-      : String("  " + line.number).slice(-2);
+		const lineNumber = isTileDrop
+			? String("  " + pcex.blankLineNumbers[blankLineIndex]).slice(-2)
+			: String("  " + line.number).slice(-2);
 		var lineNumberSpan = document.createElement('span');
-    // To have a fixed length line number, which is 2 in all cases.
+		// To have a fixed length line number, which is 2 in all cases.
 		$(lineNumberSpan).addClass('linenumber').html(lineNumber);
 		$(lineContent).prepend(lineNumberSpan);
 
-    var helpButton = null;
+		var helpButton = null;
 		if (includeIndentButtons || line.commentList.length > 0) {
 			lineContent.appendChild(document.createTextNode(indentedCode));
 
@@ -317,7 +320,7 @@ var pcex = {
 
 				if (pcex.currentGoal.fullyWorkedOut == false) {
 					$(helpButton).hide();
-          lineNumberSpan.style.marginLeft = '21px';
+					lineNumberSpan.style.marginLeft = '21px';
 				}
 			}
 
@@ -337,13 +340,13 @@ var pcex = {
 			}
 		} else {
 			lineContent.append(indentedCode);
-      if (!helpButton) lineNumberSpan.style.marginLeft = '21px';
+			if (!helpButton) lineNumberSpan.style.marginLeft = '21px';
 		}
 
 		// patch: post-comment line will be highlighted as comment as well
 		lineContent.innerHTML += '\n';
 
-    return lineContent;
+		return lineContent;
 	},
 
 	getIndentedCode: function (line, isTileDrop, blankLineIndex) {
@@ -1115,9 +1118,9 @@ var pcex = {
 
 
 		$.each(pcex.currentGoal.lineList, function (i, line) {
-      const helpBtn = $("#help_" + line.id);
+			const helpBtn = $("#help_" + line.id);
 			helpBtn.unbind('click').click(pcex.handleHelpButtonClicked).show();
-      helpBtn.next().css('margin-left', '0px');
+			helpBtn.next().css('margin-left', '0px');
 		});
 
 		pcex.higlightCorrectBlankLines(pcex.blankLineIDs);
@@ -1509,7 +1512,6 @@ var pcex = {
 
 	trackUserActivity: function () {
 		if (pcex.userCredentials) {
-
 			var trackingData = {
 				user_id: pcex.userCredentials.user,
 				group_id: pcex.userCredentials.group,
@@ -1527,15 +1529,12 @@ var pcex = {
 					} else {
 						pcex.pcexTrackingID = null;
 					}
-
 				},
-
 				function (error) {
 					pcex.pcexTrackingID = null;
 				}
 			);
 		}
-
 	},
 
 	trackCheckResult: function (resultType, result, numberOfTrials, correctLineNumbers, incorrectLineNumbers, wrongAnswers) {
@@ -1604,11 +1603,11 @@ var pcex = {
 			result = 0;
 		}
 
-		var sub = pcex.getCurrentGoalFileNameWithoutExtensions();
+		// var sub = pcex.getCurrentGoalFileNameWithoutExtensions();
 
 		var umParams = "app=" + pcex.umApplicationId +
 			"&act=PCEX_Challenge" +
-			"&sub=" + sub +
+			"&sub=" + pcex.currentGoal.name + // sub +
 			"&res=" + result;
 
 		pcex.reportToUM(umParams);
@@ -1616,16 +1615,15 @@ var pcex = {
 
 	reportLineClicksToUm: function (lineNumber) {
 		if (pcex.currentGoal.fullyWorkedOut) {
-			var exampleFileName = pcex.getCurrentGoalFileNameWithoutExtensions();
+			// var exampleFileName = pcex.getCurrentGoalFileNameWithoutExtensions();
 
 			var umParams = "app=" + pcex.umApplicationId +
-				"&act=" + exampleFileName +
+				"&act=" + pcex.currentGoal.name + // exampleFileName +
 				"&sub=" + lineNumber +
 				"&res=-1";
 
 			pcex.reportToUM(umParams);
 		}
-
 	},
 
 	reportToUM: function (umParams) {
@@ -1676,5 +1674,4 @@ var pcex = {
 			},
 		});
 	},
-
 }

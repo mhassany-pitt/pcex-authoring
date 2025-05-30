@@ -12,6 +12,8 @@ import { SourcesService } from 'src/sources-service/sources.service';
 import { Worker } from 'worker_threads';
 import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { syncToPAWS } from './paws-sync';
 
 @Controller('activities')
 export class ActivitiesController {
@@ -21,7 +23,8 @@ export class ActivitiesController {
     private sources: SourcesService,
     private activities: ActivitiesService,
     private compiler: CompilerService,
-    private ds: DataSource,
+    @InjectDataSource('aggregate') private ds_agg: DataSource,
+    @InjectDataSource('um2') private ds_um2: DataSource,
   ) { }
 
   private getUserEmail(req: any) { return req.user.email; }
@@ -62,40 +65,16 @@ export class ActivitiesController {
     const activity = await this.activities.read({ user: this.getUserEmail(req), id });
     if (!activity) throw new NotFoundException();
 
-    await this.syncToAggregate(req, updates);
-    await this.activities.update({ ...updates, user: this.getUserEmail(req), _id: id });
-  }
-
-  private async syncToAggregate(req: any, activity: any) {
-    this.ds.transaction(async (manager) => {
-      const MAPPING_ID = `[AUTO-GENERATED:DONT-CHANGE-THIS:PCEX_AUTHORING_MAPPED_ID=${activity.id}]`;
-
-      const [prevMapping] = await manager.query(
-        'SELECT content_id FROM ent_content WHERE provider_id = ? AND comment = ?',
-        ['pcex_activity', MAPPING_ID]
-      );
-
-      if (prevMapping)
-        await manager.query("DELETE FROM ent_content WHERE content_id = ?", [prevMapping.content_id]);
-
-      let language = (activity.items?.length
-        ? (await this.sources.read({ user: this.getUserEmail(req), id: activity.items[0].item })).language
-        : 'undefined').toLowerCase();
-      if (language == 'python') language = 'py';
-
-      if (activity.published) {
-        manager.query("INSERT INTO ent_content " +
-          "(content_id, content_name, content_type, display_name, `desc`, url, `domain`, " +
-          " provider_id, comment, visible, creation_date, creator_id, privacy, author_name) " +
-          "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-          [
-            prevMapping?.content_id, `${activity.name}_${Date.now()}`, 'pcex_activity', activity.name, activity.description,
-            `${this.config.get('PREVIEW_ACTIVITY_URL')}/${activity.id}?_t=${Date.now()}`,
-            language, 'pcex_activity', MAPPING_ID, 1, new Date(), req.user.email, 'public',
-            req.user.fullname
-          ])
-      }
+    await syncToPAWS({
+      ds_agg: this.ds_agg,
+      ds_um2: this.ds_um2,
+      config: this.config,
+      activities: this.activities,
+      sources: this.sources,
+      request: req,
+      activity: updates
     });
+    await this.activities.update({ ...updates, user: this.getUserEmail(req), _id: id });
   }
 
   @Delete(':id')

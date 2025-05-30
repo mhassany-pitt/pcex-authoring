@@ -13,9 +13,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   ],
   imports: [
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({ type: 'mysql', url: config.get('MYSQL_URI') }),
+      name: 'aggregate', imports: [ConfigModule], inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({ type: 'mysql', url: config.get('MYSQL_URI_AGGREGATE') }),
+    }),
+    TypeOrmModule.forRootAsync({
+      name: 'um2', imports: [ConfigModule], inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({ type: 'mysql', url: config.get('MYSQL_URI_UM2') }),
     }),
     ActivitiesServiceModule,
     SourcesServiceModule,
