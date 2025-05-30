@@ -50,7 +50,7 @@ export class HubComponent implements OnInit {
 
   async preview(activity: any) {
     this.previewLink = this.sanitizer.bypassSecurityTrustResourceUrl(
-      getPreviewLink(`${environment.apiUrl}/hub/${activity.id}?_t=${new Date().getTime()}`)
+      getPreviewLink('?load=' + encodeURIComponent(`${environment.apiUrl}/hub/${activity.id}?_t=${new Date().getTime()}`))
     );
     this.showPreview = true;
   }
