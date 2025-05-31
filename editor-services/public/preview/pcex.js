@@ -123,6 +123,13 @@ var pcex = {
 		var setName = url('?set');
 		var svc = url('?svc') ? url('?svc') : 'masterygrids';  //SVC is an optional parameter
 
+		var index = 0; // default goal index is 0
+		if (url('?index')) {
+			index = parseInt(url('?index'));
+			$('#back-button').attr('disabled', true).hide();
+			$('#next-button').attr('disabled', true).hide();
+		}
+
 		const load = url('?load');
 		if (load) $.ajax({
 			url: load,
@@ -132,6 +139,7 @@ var pcex = {
 			},
 			success: function (data) {
 				pcex.jsonData = data[0];
+				pcex.currentGoalIndex = index;
 
 				pcex.numberOfGoals = pcex.jsonData.activityGoals.length;
 				pcex.goalSolvedStates = new Array(pcex.numberOfGoals);

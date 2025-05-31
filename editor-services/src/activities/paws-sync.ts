@@ -40,7 +40,8 @@ const syncToAggUM2 = async (params: Params) => {
     if (um2ParentActivityInsert.insertId) activity.linkings.um2['activity-id'] = um2ParentActivityInsert.insertId;
     ids.um2.add(activity.linkings.um2['activity-id']);
 
-    for (const goal of activity.items) {
+    for (let index = 0; index < activity.items.length; index++) {
+      const goal = activity.items[index];
       goal.id = goal.item;
       // act and sub should have same appid
       // line-click action ==> act=example-name&sub=line-number&app=46
@@ -74,12 +75,12 @@ const syncToAggUM2 = async (params: Params) => {
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE content_name = ?, display_name = ?, url = ?, domain = ?, privacy = ?, visible = ?`, [
         activity.linkings.agg[`content__${goal.id}`], `${goal.details.name}__${goal.id}`,
         goal.type == 'example' ? 'pcex_set' : 'pcex_challenge', goal.details.name,
-        goal.type == 'example' ? 'Program Construction Examples' : 'Program Construction Challenges', url, domain,
+        goal.type == 'example' ? 'Program Construction Examples' : 'Program Construction Challenges', `${url}&index=${index}`, domain,
         goal.type == 'example' ? 'pcex' : 'pcex_ch', params.request.user.email,
         activity.published ? 'public' : 'private', activity.published ? 1 : 0,
         params.request.user.fullname,
         // update if exists >>>
-        `${goal.details.name}__${goal.id}`, goal.details.name, url, domain,
+        `${goal.details.name}__${goal.id}`, goal.details.name, `${url}&index=${index}`, domain,
         activity.published ? 'public' : 'private', activity.published ? 1 : 0,
       ]);
       if (aggContentInsert.insertId) activity.linkings.agg[`content__${goal.id}`] = aggContentInsert.insertId;
