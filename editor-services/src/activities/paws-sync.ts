@@ -1,7 +1,7 @@
 import { ConfigService } from "@nestjs/config";
 import { ActivitiesService } from "src/activities-service/activities.service";
 import { SourcesService } from "src/sources-service/sources.service";
-import { transaction } from "src/utils";
+import { transaction, useId } from "src/utils";
 import { DataSource } from "typeorm";
 
 type Params = {
@@ -41,31 +41,28 @@ const syncToAggUM2 = async (params: Params) => {
     ids.um2.add(activity.linkings.um2['activity-id']);
 
     for (let index = 0; index < activity.items.length; index++) {
-      const goal = activity.items[index];
-      goal.id = goal.item;
-      // act and sub should have same appid
-      // line-click action ==> act=example-name&sub=line-number&app=46
-      // challenge action ==>  act=PCEX_CHALLENGE&sub=challenge-name&appid=47
+      const source = useId(await params.sources.read({ user, id: activity.items[index].item }));
+      const contentName = `${source.name}__${activity.id}-${source.id}-${index}`;
+      const isTypeExample = activity.items[index].type == 'example';
 
       // 1. insert/update the ent_activity (um2)
       const um2ActivityInsert = await um2_qr.query(
         `INSERT INTO ent_activity (ActivityID, AppID, URI, Activity, Description, active) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE Activity = ?, active = ?`, [
-        activity.linkings.um2[`activity__${goal.id}`],
-        goal.type == 'example' ? 46 : 47, '', `${goal.details.name}__${goal.id}`,
-        goal.type == 'example' ? 'PCEX Example' : 'PCEX Challenge', activity.published ? 1 : 0,
+        activity.linkings.um2[`activity__${source.id}`],
+        isTypeExample ? 46 : 47, '', contentName,
+        isTypeExample ? 'PCEX Example' : 'PCEX Challenge', activity.published ? 1 : 0,
         // update if exists >>>
-        `${goal.details.name}__${goal.id}`, activity.published ? 1 : 0,
+        contentName, activity.published ? 1 : 0,
       ]);
-      if (um2ActivityInsert.insertId) activity.linkings.um2[`activity__${goal.id}`] = um2ActivityInsert.insertId;
-      ids.um2.add(activity.linkings.um2[`activity__${goal.id}`]);
+      if (um2ActivityInsert.insertId) activity.linkings.um2[`activity__${source.id}`] = um2ActivityInsert.insertId;
+      ids.um2.add(activity.linkings.um2[`activity__${source.id}`]);
 
       // 2. insert/update rel_pcex_set_component (um2)
       await um2_qr.query(
         `INSERT IGNORE INTO rel_pcex_set_component (ParentActivityID, ChildActivityID, AppID) VALUES (?, ?, ?)`, [
-        activity.linkings.um2['activity-id'], activity.linkings.um2[`activity__${goal.id}`], 45
+        activity.linkings.um2['activity-id'], activity.linkings.um2[`activity__${source.id}`], 45
       ]);
 
-      const source = await params.sources.read({ user, id: goal.id });
       const lang = source.language.toLowerCase();
       const domain = lang == 'python' ? 'py' : lang;
 
@@ -73,22 +70,22 @@ const syncToAggUM2 = async (params: Params) => {
       const aggContentInsert = await agg_qr.query(
         `INSERT INTO ent_content (content_id, content_name, content_type, display_name, \`desc\`, url, domain, provider_id, creator_id, privacy, visible, author_name) 
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE content_name = ?, display_name = ?, url = ?, domain = ?, privacy = ?, visible = ?`, [
-        activity.linkings.agg[`content__${goal.id}`], `${goal.details.name}__${goal.id}`,
-        goal.type == 'example' ? 'pcex_set' : 'pcex_challenge', goal.details.name,
-        goal.type == 'example' ? 'Program Construction Examples' : 'Program Construction Challenges', `${url}&index=${index}`, domain,
-        goal.type == 'example' ? 'pcex' : 'pcex_ch', params.request.user.email,
+        activity.linkings.agg[`content__${source.id}`], contentName,
+        isTypeExample ? 'pcex_set' : 'pcex_challenge', source.name,
+        isTypeExample ? 'Program Construction Examples' : 'Program Construction Challenges', `${url}&index=${index}`, domain,
+        isTypeExample ? 'pcex' : 'pcex_ch', params.request.user.email,
         activity.published ? 'public' : 'private', activity.published ? 1 : 0,
         params.request.user.fullname,
         // update if exists >>>
-        `${goal.details.name}__${goal.id}`, goal.details.name, `${url}&index=${index}`, domain,
+        contentName, source.name, `${url}&index=${index}`, domain,
         activity.published ? 'public' : 'private', activity.published ? 1 : 0,
       ]);
-      if (aggContentInsert.insertId) activity.linkings.agg[`content__${goal.id}`] = aggContentInsert.insertId;
-      ids.agg.add(activity.linkings.agg[`content__${goal.id}`]);
+      if (aggContentInsert.insertId) activity.linkings.agg[`content__${source.id}`] = aggContentInsert.insertId;
+      ids.agg.add(activity.linkings.agg[`content__${source.id}`]);
 
-      if (goal.type == 'example') {
+      if (isTypeExample) {
         // 4. insert/update example's lines
-        for (const lineNumber of Object.keys(source.lines).map(ln => parseInt(ln)).sort((a, b) => a - b)) {
+        for (const lineNumber of Object.keys(source.lines || {}).map(ln => parseInt(ln)).sort((a, b) => a - b)) {
           if (source.lines[`${lineNumber}`].comments.length == 0)
             continue; // if no comments, skip this line
 
@@ -96,24 +93,24 @@ const syncToAggUM2 = async (params: Params) => {
           const um2ExLineInsert = await um2_qr.query(
             `INSERT INTO ent_activity (ActivityID, AppID, URI, Activity, Description, active) VALUES (?, ?, ?, ?, ?, ?) 
               ON DUPLICATE KEY UPDATE Activity = ?, Description = ?, active = ?`, [
-            activity.linkings.um2[`activity-ln${lineNumber}__${goal.id}`], 46, '', `${lineNumber}`, `PCEX Line - ${goal.details.name}__${goal.id}`, activity.published ? 1 : 0,
+            activity.linkings.um2[`activity-ln${lineNumber}__${source.id}`], 46, '', `${lineNumber}`, `PCEX Line - ${contentName}`, activity.published ? 1 : 0,
             // update if exists >>>
-            `${lineNumber}`, `PCEX Line - ${goal.details.name}__${goal.id}`, activity.published ? 1 : 0,
+            `${lineNumber}`, `PCEX Line - ${contentName}`, activity.published ? 1 : 0,
           ]);
-          if (um2ExLineInsert.insertId) activity.linkings.um2[`activity-ln${lineNumber}__${goal.id}`] = um2ExLineInsert.insertId;
-          ids.um2.add(activity.linkings.um2[`activity-ln${lineNumber}__${goal.id}`]);
+          if (um2ExLineInsert.insertId) activity.linkings.um2[`activity-ln${lineNumber}__${source.id}`] = um2ExLineInsert.insertId;
+          ids.um2.add(activity.linkings.um2[`activity-ln${lineNumber}__${source.id}`]);
 
           // 4.2. insert/update rel_activity_activity for example's lines
           await um2_qr.query(
             `INSERT IGNORE INTO rel_activity_activity (ParentActivityID, ChildActivityID, AppID) VALUES (?, ?, ?)`, [
-            activity.linkings.um2[`activity__${goal.id}`], activity.linkings.um2[`activity-ln${lineNumber}__${goal.id}`], 46
+            activity.linkings.um2[`activity__${source.id}`], activity.linkings.um2[`activity-ln${lineNumber}__${source.id}`], 46
           ]);
         }
       } else {
         // 5. insert/update challenge activity
         await um2_qr.query(
           `INSERT IGNORE INTO rel_activity_activity (ParentActivityID, ChildActivityID, AppID) VALUES (?, ?, ?)`, [
-          211935, activity.linkings.um2[`activity__${goal.id}`], 47
+          211935, activity.linkings.um2[`activity__${source.id}`], 47
         ]);
       }
     }

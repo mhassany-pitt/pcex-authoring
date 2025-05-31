@@ -932,3 +932,6 @@ export class EditorComponent implements OnInit, OnDestroy {
   //   overlay.show($event);
   // }
 }
+
+// TODO: add prompt for generating distractors in specific language
+// TODO: persist the translated language so next translations or generations will also be in the target language.
