@@ -15,17 +15,9 @@ type Params = {
 };
 
 export const syncToPAWS = async (params: Params) => {
-  const isme = params.request.user.email == 'moh70@pitt.edu';
+  const isme = ['moh70@pitt.edu', 'arl122@pitt.edu'].includes(params.request.user.email);
   if (isme) await syncToAggUM2(params);
   else /**/ await old_syncToAgg(params);
-  // usr=demo
-  // grp=demo
-  // sid=preview
-  // svc=masterygrids
-  // app=46
-  // act=activity-name
-  // sub=example/challenge-name
-  // res=-1
 };
 
 const syncToAggUM2 = async (params: Params) => {
@@ -173,5 +165,3 @@ const old_syncToAgg = async (params: Params) => {
     ])
   });
 }
-
-// TODO: limit source/activity.name to 64 chars

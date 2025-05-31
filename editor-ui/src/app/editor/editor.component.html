@@ -35,9 +35,14 @@
 
       <!-- name & description -->
       <div class="w-full flex flex-col gap-2 bg-gray-100 p-2 rounded-sm shadow-md">
-        <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText [(ngModel)]="model.name"
-          (ngModelChange)="updateTitle()" placeholder="*Name" class="text-xl border-gray-200" required
-          (focus)="onNameFocus($event)" (blur)="onNameBlur($event);" />
+        <div class="flex-grow flex items-center relative">
+          <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText [(ngModel)]="model.name"
+            (ngModelChange)="updateTitle()" placeholder="*Name" class="flex-grow text-xl border-gray-200" required
+            maxlength="64" (focus)="onNameFocus($event)" (blur)="onNameBlur($event);" />
+          <span class="absolute right-2 top-2 bottom-2 text-gray-400 font-normal" style="padding: 0.35rem;">
+            {{ model.name?.length || 0 }} / 64
+          </span>
+        </div>
 
         <textarea *ngIf="!titleDescCollapsed" pInputTextarea name="description" [autoResize]="true"
           placeholder="Description" rows="1" [(ngModel)]="model.description"
