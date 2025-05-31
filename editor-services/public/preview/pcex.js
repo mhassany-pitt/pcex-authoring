@@ -210,7 +210,7 @@ var pcex = {
 
 		// remove the unique-id from end of goal name
 		// this unique-id is used to make sure goal name is globally unique
-		const goalName = pcex.currentGoal.name.replace(/__([a-f0-9]{24})$/, '');
+		const goalName = pcex.currentGoal.name.replace(/__([a-f0-9]{24})-([a-f0-9]{24})-([0-9]{1,2})$/, '');
 		if (pcex.currentGoal.fullyWorkedOut) {
 			pcex.activityType = 'ex';
 			pcex.umApplicationId = 46;

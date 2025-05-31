@@ -87,8 +87,8 @@ export class CompilerService {
       ensureDirSync(inputs);
 
       // const changes = [];
-      for (let i = 0; i < activity.items.length; i++) {
-        const item = activity.items[i];
+      for (let index = 0; index < activity.items.length; index++) {
+        const item = activity.items[index];
         const source = item.item$ || useId(await this.sources.read({ user: activity.user, id: item.item }));
 
         const clines = (source.code || '').split('\n');
@@ -108,7 +108,7 @@ export class CompilerService {
           id: source.id,
           order: 0,
           activityName: `${activity.name}__${activity.id}`,
-          name: `${source.name}__${source.id}`,
+          name: `${source.name}__${activity.id}-${source.id}-${index}`,
           goalDescription: source.description || '',
           language: source.language.toUpperCase(),
           userInput: source.programInput || '',
@@ -135,7 +135,7 @@ export class CompilerService {
           fullyWorkedOut: item.type == 'example'
         };
 
-        const jsonfile = `${inputs}${source.id}_${item.type}_${i}`;
+        const jsonfile = `${inputs}${source.id}_${item.type}_${index}`;
         // if (existsSync(jsonfile) && deepEqual(
         //   this.removeAttribute(readJsonSync(jsonfile), 'id'),
         //   this.removeAttribute(this.copyJson(newJson), 'id')
