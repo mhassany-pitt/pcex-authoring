@@ -65,7 +65,7 @@
 
             <!-- identify and explain lines -->
             <button pButton type="button" title="GPT Configuration" icon="pi pi-cog"
-              class="p-button-sm p-button-help p-button-outlined" (click)="loadGptConfig()">
+              class="p-button-sm p-button-help p-button-outlined" (click)="loadOpenAIGPTConfig()">
             </button>
             <button pButton type="button" label="Identify and Explain Lines" title="Identify and Explain Lines"
               icon="genai-icon" class="p-button-sm p-button-secondary p-button-outlined"
@@ -74,7 +74,7 @@
             </button>
             <button pButton type="button" title="Translate" icon="pi pi-language"
               class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:translate']"
-              (click)="_v['translate'] = true">
+              (click)="openTranslateDialog()">
             </button>
           </div>
 
@@ -270,21 +270,37 @@
 </p-dialog>
 
 <!-- gpt-config -->
-<p-dialog *ngIf="_v['show-gpt-config']" [(visible)]="_v['show-gpt-config']" header="GPT Configuration" [modal]="true"
-  [style]="{'width': '30rem'}" (onShow)="log({ type: 'open-gpt-config' })"
+<p-dialog *ngIf="_v['show-gpt-config']" [(visible)]="_v['show-gpt-config']" header="OpenAI-GPT Configuration"
+  [modal]="true" [style]="{'width': '35rem'}" (onShow)="log({ type: 'open-gpt-config' })"
   (onHide)="log({ type: 'close-gpt-config' });">
-  <form #form="ngForm" (ngSubmit)="saveGptConfig()" class="flex flex-col gap-2">
+  <form #form="ngForm" (ngSubmit)="saveOpenAIGPTConfig()" class="flex flex-col gap-2">
     <span class="text-xs text-gray-600">
-      Important: You must provide an API key (and organization) if you use any OpenAI model other than gpt-4o-mini.
+      You need an API key (and organization) for any OpenAI model except gpt-4o-mini.
     </span>
     <textarea pInputTextarea name="gpt-config" [placeholder]="GPT_CONF_PLACEHOLDER" rows="10"
-      [(ngModel)]="_v['gpt-config']" [required]="true" class="p-inputtext-sm w-full border-gray-200"></textarea>
-    <span class="text-gray-400 text-xs">
-      To generate explanations in a language other than English, add "target_language": "e.g., Spanish" to the GPT
-      configuration above.
+      [(ngModel)]="openAIGPTConfig" [required]="true" class="p-inputtext-sm w-full border-gray-200"></textarea>
+
+    <!-- ---------- -->
+    <hr class="w-full" />
+    <span class="-mt-2 text-xl font-bold">Translation:</span>
+    <input type="text" pInputText name="translate-tolanguage" [(ngModel)]="translation.target_language"
+      placeholder="Enter target language (e.g., Spanish)" class="flex-grow" [required]="true" />
+    <span class="text-xs text-gray-600 -mt-1">
+      This determines the language explanations and code elements will be generated in.
     </span>
+
+    <span>Also, translate code elements:</span>
+    <p-checkbox label="Classes" name="translate-classes" [(ngModel)]="translation.translate_classes" [binary]="true"
+      class="my-1 ml-2"></p-checkbox>
+    <p-checkbox label="Functions" name="translate-functions" [(ngModel)]="translation.translate_functions"
+      [binary]="true" class="-my-1 ml-2"></p-checkbox>
+    <p-checkbox label="Variables" name="translate-variables" [(ngModel)]="translation.translate_variables"
+      [binary]="true" class="my-1 ml-2"></p-checkbox>
+    <!-- ---------- -->
+
     <div class="flex items-center gap-2">
-      <button pButton type="button" label="Reset" class="p-button-sm p-button-secondary" (click)="resetGptConfig()">
+      <button pButton type="button" label="Reset" class="p-button-sm p-button-secondary"
+        (click)="resetOpenAIGPTConfig()">
       </button>
       <button pButton type="submit" label="Save" class="p-button-sm p-button-help" [disabled]="form.invalid">
       </button>

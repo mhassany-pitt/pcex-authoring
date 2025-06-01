@@ -87,6 +87,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     presence_penalty: 0
   }, null, 2);
 
+  openAIGPTConfig: string = '';
   translation: any = {};
 
   _v: any = {
@@ -239,7 +240,6 @@ export class EditorComponent implements OnInit, OnDestroy {
     }
 
     this.reloadLineMarkers();
-
     this.reloadDistractors();
 
     this.log({ type: 'select-line', line_num: lineNum, line: this.selectedLine });
@@ -850,34 +850,67 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  resetGptConfig() {
-    this._v['gpt-config'] = this.GPT_CONF_PLACEHOLDER.replace('<<YOUR_API_KEY>>', '').replace('<<YOUR_ORGANIZATION>>', '');
+  resetOpenAIGPTConfig() {
+    this.openAIGPTConfig = this.GPT_CONF_PLACEHOLDER.replace('<<YOUR_API_KEY>>', '').replace('<<YOUR_ORGANIZATION>>', '');
   }
 
-  loadGptConfig() {
+  loadOpenAIGPTConfig(then?: () => void) {
     this.api.loadGptConfig().subscribe({
       next: (config: any) => {
-        this.resetGptConfig();
-        if (config?.value)
-          this._v['gpt-config'] = JSON.stringify(config?.value, null, 2);
-        this._v['show-gpt-config'] = true;
+        config = config?.value || {};
+        this.resetOpenAIGPTConfig();
+        this.translation = {
+          target_language: config.target_language,
+          translate_classes: config.translate_classes,
+          translate_functions: config.translate_functions,
+          translate_variables: config.translate_variables,
+        };
+        delete config.target_language;
+        delete config.translate_classes;
+        delete config.translate_functions;
+        delete config.translate_variables;
+        this.openAIGPTConfig = JSON.stringify(config, null, 2);
+        if (then) then();
+        else this._v['show-gpt-config'] = true;
       },
-      error: (err: any) => this.messages.add({ severity: 'error', summary: 'Error', detail: 'Failed to load GPT configuration' }),
+      error: (err: any) => this.messages.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to load OpenAI-GPT configuration'
+      }),
     });
   }
 
-  saveGptConfig() {
-    const config = JSON.parse(this._v['gpt-config']);
+  saveOpenAIGPTConfig(then?: () => void) {
+    const config = {
+      ...JSON.parse(this.openAIGPTConfig),
+      ...this.translation
+    };
     this.api.setGptConfig(config).subscribe({
       next: (resp: any) => {
         this.log({ type: 'gpt-config-saved', value: config });
-        this.messages.add({ severity: 'success', summary: 'Success', detail: 'GPT configuration saved successfully' });
+        if (then) then();
+        else this.messages.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'OpenAI-GPT configuration saved successfully'
+        });
       },
       error: (err: any) => {
         this.log({ type: 'gpt-config-save-failed', value: config });
-        this.messages.add({ severity: 'error', summary: 'Error', detail: 'Failed to save GPT configuration' });
+        this.messages.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to save OpenAI-GPT configuration'
+        });
       },
       complete: () => delete this._v['show-gpt-config']
+    });
+  }
+
+  openTranslateDialog() {
+    this.loadOpenAIGPTConfig(() => {
+      this._v['translate'] = true;
     });
   }
 
@@ -895,7 +928,10 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.log({ type: 'generate:translate-model', payload: { ...payload, translated: resp } });
         this.model = resp;
 
-        this.reloadLineMarkers();
+        this.saveOpenAIGPTConfig(() => { /* this will avoid saveOpenAIGPTConfig's toast message */ });
+        setTimeout(() => this.selectLine(this.selectedLineNum, true, true), 300);
+
+        this.messages.add({ severity: 'success', summary: 'Success', detail: 'Source translated successfully' });
       },
       error: (error) => {
         this.log({ type: 'generate:translate-model', payload, error: error.error });

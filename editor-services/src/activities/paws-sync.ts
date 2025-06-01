@@ -15,9 +15,10 @@ type Params = {
 };
 
 export const syncToPAWS = async (params: Params) => {
-  const isme = ['moh70@pitt.edu', 'arl122@pitt.edu'].includes(params.request.user.email);
-  if (isme) await syncToAggUM2(params);
-  else /**/ await old_syncToAgg(params);
+  // const isme = ['moh70@pitt.edu', 'arl122@pitt.edu'].includes(params.request.user.email);
+  // if (isme) await syncToAggUM2(params);
+  // else /**/ await old_syncToAgg(params);
+  await syncToAggUM2(params);
 };
 
 const syncToAggUM2 = async (params: Params) => {
