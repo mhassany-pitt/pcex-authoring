@@ -99,160 +99,180 @@
           </div>
         </div>
 
-        <div *ngIf="selectedLineNum" class="w-full md:w-1/2 flex flex-col gap-4">
-          <!-- explanations -->
-          <div class="bg-gray-100 p-2 rounded-sm shadow-md flex flex-col gap-2">
-            <span class="font-bold">Explanations</span>
-            <ng-container *ngIf="selectedLineNum">
-              <!-- select-all/delete/merge/move explanations -->
-              <div *ngIf="selectedLine.comments?.length" class="flex items-center gap-2">
-                <p-checkbox name="toggle-selection" label="Select all" [(ngModel)]="_v['all-explanation-selection']"
-                  [binary]="true" class="p-checkbox-sm w-48" (ngModelChange)="onSelectAll('explanation')"></p-checkbox>
+        <div class="w-full md:w-1/2 flex flex-col gap-4">
+          <p-tabView>
+            <p-tabPanel header="Explanations" [selected]="true">
+              <div class="bg-gray-100 -m-4 p-2 flex flex-col gap-2">
+                <ng-container *ngIf="selectedLineNum">
+                  <!-- select-all/delete/merge/move explanations -->
+                  <div *ngIf="selectedLine.comments?.length" class="flex items-center gap-2">
+                    <p-checkbox name="toggle-selection" label="Select all" [(ngModel)]="_v['all-explanation-selection']"
+                      [binary]="true" class="p-checkbox-sm w-48"
+                      (ngModelChange)="onSelectAll('explanation')"></p-checkbox>
 
-                <span class="flex-grow"></span>
+                    <span class="flex-grow"></span>
 
-                <button pButton type="button" label="Delete" title="Delete" icon="fa fa-trash"
-                  class="px-2 py-1 annot-action-btn" severity="danger" size="small" outlined="true"
-                  (click)="onDelete('explanation')" [disabled]="_v['explanation-selection'].length == 0">
-                </button>
+                    <button pButton type="button" label="Delete" title="Delete" icon="fa fa-trash"
+                      class="px-2 py-1 annot-action-btn" severity="danger" size="small" outlined="true"
+                      (click)="onDelete('explanation')" [disabled]="_v['explanation-selection'].length == 0">
+                    </button>
 
-                <button pButton type="button" label="Merge" title="Merge" icon="fa fa-link"
-                  class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true" (click)="onMerge()"
-                  [disabled]="_v['explanation-selection'].length < 2">
-                </button>
+                    <button pButton type="button" label="Merge" title="Merge" icon="fa fa-link"
+                      class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true" (click)="onMerge()"
+                      [disabled]="_v['explanation-selection'].length < 2">
+                    </button>
 
-                <button pButton type="button" label="Move" title="Move" icon="fa fa-share-square-o"
-                  class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true"
-                  [disabled]="_v['explanation-selection'].length == 0"
-                  (click)="_v['move-selection-header'] = 'Explanations'; _v['move-selection'] = 'explanation';">
-                </button>
-              </div>
+                    <button pButton type="button" label="Move" title="Move" icon="fa fa-share-square-o"
+                      class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true"
+                      [disabled]="_v['explanation-selection'].length == 0"
+                      (click)="_v['move-selection-header'] = 'Explanations'; _v['move-selection'] = 'explanation';">
+                    </button>
+                  </div>
 
-              <!-- explanations -->
-              <div class="flex flex-col flex-grow gap-2 md:max-h-80 md:overflow-y-auto overflow-x-hidden relative">
-                <div *ngFor="let comment of selectedLine.comments; let i = index" #expEl
-                  class="flex items-center gap-2 relative"
-                  [ngClass]="{ 'border border-dashed border-gray-400': dragOverExpIdx == i }"
-                  (dragstart)="onExplanationDragStart($event, i)" (dragover)="onExplanationDragOver($event, i)"
-                  (drop)="onExplanationDragDrop($event, i)" (dragend)="onExplanationDragEnd(expEl, $event, i)">
-                  <!-- selection chkbx -->
-                  <p-checkbox [ngModel]="_v['explanation-selection']?.includes(comment)" [binary]="true"
-                    [name]="'explanation-select-' + i" class="p-checkbox-sm"
-                    (click)="toggleSelection('explanation', comment)"></p-checkbox>
+                  <!-- explanations -->
+                  <div class="flex flex-col flex-grow gap-2 md:max-h-80 md:overflow-y-auto overflow-x-hidden relative">
+                    <div *ngFor="let comment of selectedLine.comments; let i = index" #expEl
+                      class="flex items-center gap-2 relative"
+                      [ngClass]="{ 'border border-dashed border-gray-400': dragOverExpIdx == i }"
+                      (dragstart)="onExplanationDragStart($event, i)" (dragover)="onExplanationDragOver($event, i)"
+                      (drop)="onExplanationDragDrop($event, i)" (dragend)="onExplanationDragEnd(expEl, $event, i)">
+                      <!-- selection chkbx -->
+                      <p-checkbox [ngModel]="_v['explanation-selection']?.includes(comment)" [binary]="true"
+                        [name]="'explanation-select-' + i" class="p-checkbox-sm"
+                        (click)="toggleSelection('explanation', comment)"></p-checkbox>
 
-                  <!-- explanation -->
-                  <textarea pInputTextarea [autoResize]="true" [name]="_v['t'] + '-explanation-' + i"
-                    [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
-                    class="flex-grow border-gray-200 px-1.5 py-1 text-sm"
-                    [ngClass]="{ 'gpt-generated': _v['generated-explanations']?.includes(comment) }"
-                    (ngModelChange)="reloadLineMarkers()" (focus)="onExplanationFocus($event, comment, i)"
-                    (blur)="onExplanationBlur($event, comment, i)" autofocus="false"></textarea>
+                      <!-- explanation -->
+                      <textarea pInputTextarea [autoResize]="true" [name]="_v['t'] + '-explanation-' + i"
+                        [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
+                        class="flex-grow border-gray-200 px-1.5 py-1 text-sm"
+                        [ngClass]="{ 'gpt-generated': _v['generated-explanations']?.includes(comment) }"
+                        (ngModelChange)="reloadLineMarkers()" (focus)="onExplanationFocus($event, comment, i)"
+                        (blur)="onExplanationBlur($event, comment, i)" autofocus="false"></textarea>
 
-                  <!-- reorder-bar -->
-                  <span class="text-gray-400 hover:text-gray-600 grap mr-2"
-                    (mousedown)="expEl.setAttribute('draggable', 'true'); expDragEnabled = true;">＝</span>
-                </div>
-              </div>
-            </ng-container>
-            <!-- howto: put cursor in a line -->
-            <ng-container *ngIf="!selectedLineNum">
-              <span class="text-gray-600 text-sm">
-                ← Place the cursor in a line to add <span class="italic">explanations</span>,
-                or mark it as a <span class="italic">blank line</span>.
-              </span>
-            </ng-container>
-
-            <!-- add or generate explanations -->
-            <div class="flex items-center justify-end gap-2">
-              <button pButton type="button" label="Add" icon="pi pi-plus"
-                class="p-button-sm p-button-help p-button-outlined" (click)="addExplanation()">
-              </button>
-              <span>or</span>
-              <button pButton type="button" label="Generate Explanations" title="Generate Explanations"
-                icon="genai-icon" class="p-button-sm p-button-secondary p-button-outlined"
-                [loading]="_v['generate:explain-line']" [disabled]="!model.code" (click)="onExplainLine()">
-              </button>
-            </div>
-          </div>
-
-          <!-- distractors -->
-          <div *ngIf="selectedLineNum" class="bg-gray-100 p-2 rounded-sm shadow-md flex flex-col gap-2">
-            <span class="font-bold">Distractors</span>
-
-            <div class="flex items-center">
-              <!-- mark line as blank -->
-              <span class="flex items-center gap-2 cursor-pointer" title="Mark this line as a blank line"
-                (click)="toggleBlankLine()">
-                <i class="w-4 h-4 rounded-sm border-2 border-blue-400"
-                  [ngClass]="{'bg-blue-400': selectedLine.blank, 'bg-white': !selectedLine.blank}"></i>
-                <span>Mask this line (in a challenge)</span>
-              </span>
-
-              <span class="flex-grow"></span>
-
-              <p-checkbox name="show-all-distractors" label="Show all" [(ngModel)]="_v['show-all-distractors']"
-                [binary]="true" class="p-checkbox-sm" dir="rtl" (click)="reloadDistractors()"></p-checkbox>
-            </div>
-
-            <!-- select-all/delete/move distractor -->
-            <div *ngIf="distractors?.length" class="flex items-center gap-2">
-              <p-checkbox name="toggle-selection" label="Select all" [(ngModel)]="_v['all-distractor-selection']"
-                [binary]="true" class="p-checkbox-sm" (ngModelChange)="onSelectAll('distractor')"></p-checkbox>
-
-              <span class="flex-grow"></span>
-
-              <button pButton type="button" label="Delete" icon="fa fa-trash" class="px-2 py-1 annot-action-btn"
-                severity="danger" size="small" outlined="true" (click)="onDelete('distractor')"
-                [disabled]="_v['distractor-selection'].length == 0">
-              </button>
-
-              <button pButton type="button" label="Move" icon="fa fa-share-square-o" class="px-2 py-1 annot-action-btn"
-                size="small" outlined="true" plain="true" [disabled]="_v['distractor-selection'].length == 0"
-                (click)="_v['move-selection-header'] = 'Distractors'; _v['move-selection'] = 'distractor';">
-              </button>
-            </div>
-
-            <!-- distractors -->
-            <div *ngIf="selectedLineNum && selectedLine.blank && model.distractors?.length"
-              class="flex flex-col flex-grow gap-2 md:max-h-80 md:overflow-y-auto overflow-x-hidden relative">
-              <div *ngFor="let distractor of distractors; let i = index"
-                class="flex items-center gap-2 rounded-sm relative">
-                <!-- toggle selection -->
-                <p-checkbox [ngModel]="_v['distractor-selection']?.includes(distractor)" [binary]="true"
-                  [name]="'distractor-select-' + i" class="p-checkbox-sm"
-                  (click)="toggleSelection('distractor', distractor)"></p-checkbox>
-
-                <!-- distractor editor & description -->
-                <div class="flex flex-col flex-grow relative border border-solid border-gray-200">
-                  <ngx-monaco-editor [name]="'distractor-' + i" [(ngModel)]="distractor.code"
-                    [options]="distEditorOptions" (onInit)="setupDistractorEditor($event, distractor, i)"
-                    class="px-1 bg-white" style="height: 1.15rem; border: none;">
-                  </ngx-monaco-editor>
-                  <span *ngIf="!distractor.code" class="absolute text-xs text-gray-400 pointer-events-none"
-                    style="top: 0.125rem; left: 0.25rem;">
-                    Type the distractor line here...
+                      <!-- reorder-bar -->
+                      <span class="text-gray-400 hover:text-gray-600 grap mr-2"
+                        (mousedown)="expEl.setAttribute('draggable', 'true'); expDragEnabled = true;">＝</span>
+                    </div>
+                    <span *ngIf="!selectedLine.comments?.length" class="text-gray-600 text-sm">
+                      Use the "Add" or "Generate Explanations" buttons below
+                      to add explanations for this line.
+                    </span>
+                  </div>
+                </ng-container>
+                <!-- howto: put cursor in a line -->
+                <ng-container *ngIf="!selectedLineNum">
+                  <span class="text-gray-600 text-sm">
+                    ← Place the cursor in a line to add <span class="italic">explanations</span>,
+                    or mark it as a <span class="italic">blank line</span>.
                   </span>
-                  <textarea pInputTextarea [autoResize]="true" [name]="'distractor-description-' + i"
-                    [(ngModel)]="distractor.description" placeholder="Explanation" rows="1"
-                    class="text-xs border-0 rounded-none bg-gray-50" style="padding: 0.25rem;"
-                    (focus)="onDistractorExpFocus($event, distractor, i)"
-                    (blur)="onDistractorExpBlur($event, distractor, i)"></textarea>
+                </ng-container>
+
+                <!-- add or generate explanations -->
+                <div class="flex items-center justify-end gap-2">
+                  <button pButton type="button" label="Add" icon="pi pi-plus"
+                    class="p-button-sm p-button-help p-button-outlined" (click)="addExplanation()">
+                  </button>
+                  <span>or</span>
+                  <button pButton type="button" label="Generate Explanations" title="Generate Explanations"
+                    icon="genai-icon" class="p-button-sm p-button-secondary p-button-outlined"
+                    [loading]="_v['generate:explain-line']" [disabled]="!model.code" (click)="onExplainLine()">
+                  </button>
                 </div>
               </div>
-            </div>
+            </p-tabPanel>
+            <p-tabPanel *ngIf="selectedLineNum" header="Distractors">
+              <!-- distractors -->
+              <div class="bg-gray-100 -m-4 p-2 flex flex-col gap-2">
+                <div class="text-gray-600 text-sm">
+                  <i class="pi pi-info-circle align-middle"></i>
+                  When you mask this line, you can add "distractors"—incorrect options.
+                  This allows you to use the source as a challenge as well.
+                </div>
 
-            <!-- add or generate distractors -->
-            <div *ngIf="selectedLineNum && selectedLine.blank" class="flex items-center justify-end gap-2">
-              <button pButton type="button" label="Add" icon="pi pi-plus"
-                class="p-button-outlined p-button-sm p-button-help" (click)="addDistractor()">
-              </button>
-              <span>or</span>
-              <button pButton type="button" label="Generate Distractors" title="Generate Distractors" icon="genai-icon"
-                class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:distractors']"
-                [disabled]="!model.code" (click)="onGenDistractors()">
-              </button>
-            </div>
-          </div>
+                <hr class="w-full mt-0 mb-1" />
+
+                <div class="flex items-center mb-2">
+                  <!-- mark line as blank -->
+                  <span class="flex items-center gap-2 cursor-pointer" title="Mark this line as a blank line"
+                    (click)="toggleBlankLine()">
+                    <i class="w-4 h-4 rounded-sm border border-solid border-gray-600"
+                      [ngClass]="{'bg-blue-400': selectedLine.blank, 'bg-white': !selectedLine.blank}"></i>
+                    <span>Mask this line</span>
+                  </span>
+
+                  <span class="flex-grow"></span>
+
+                  <p-checkbox name="show-all-distractors" label="Show all" [(ngModel)]="_v['show-all-distractors']"
+                    [binary]="true" class="p-checkbox-sm" dir="rtl" (click)="reloadDistractors()"></p-checkbox>
+                </div>
+
+                <ng-container *ngIf="selectedLineNum && selectedLine.blank">
+                  <!-- select-all/delete/move distractor -->
+                  <div *ngIf="distractors.length" class="flex items-center gap-2">
+                    <p-checkbox name="toggle-selection" label="Select all" [(ngModel)]="_v['all-distractor-selection']"
+                      [binary]="true" class="p-checkbox-sm" (ngModelChange)="onSelectAll('distractor')"></p-checkbox>
+
+                    <span class="flex-grow"></span>
+
+                    <button pButton type="button" label="Delete" icon="fa fa-trash" class="px-2 py-1 annot-action-btn"
+                      severity="danger" size="small" outlined="true" (click)="onDelete('distractor')"
+                      [disabled]="_v['distractor-selection'].length == 0">
+                    </button>
+
+                    <button pButton type="button" label="Move" icon="fa fa-share-square-o"
+                      class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true"
+                      [disabled]="_v['distractor-selection'].length == 0"
+                      (click)="_v['move-selection-header'] = 'Distractors'; _v['move-selection'] = 'distractor';">
+                    </button>
+                  </div>
+
+                  <!-- distractors -->
+                  <div class="flex flex-col flex-grow gap-2 md:max-h-80 md:overflow-y-auto overflow-x-hidden relative">
+                    <div *ngFor="let distractor of distractors; let i = index"
+                      class="flex items-center gap-2 rounded-sm relative">
+                      <!-- toggle selection -->
+                      <p-checkbox [ngModel]="_v['distractor-selection']?.includes(distractor)" [binary]="true"
+                        [name]="'distractor-select-' + i" class="p-checkbox-sm"
+                        (click)="toggleSelection('distractor', distractor)"></p-checkbox>
+
+                      <!-- distractor editor & description -->
+                      <div class="flex flex-col flex-grow relative border border-solid border-gray-200">
+                        <ngx-monaco-editor [name]="'distractor-' + i" [(ngModel)]="distractor.code"
+                          [options]="distEditorOptions" (onInit)="setupDistractorEditor($event, distractor, i)"
+                          class="px-1 bg-white" style="height: 1.15rem; border: none;">
+                        </ngx-monaco-editor>
+                        <span *ngIf="!distractor.code" class="absolute text-xs text-gray-400 pointer-events-none"
+                          style="top: 0.125rem; left: 0.25rem;">
+                          Type the distractor line here...
+                        </span>
+                        <textarea pInputTextarea [autoResize]="true" [name]="'distractor-description-' + i"
+                          [(ngModel)]="distractor.description" placeholder="Explanation" rows="1"
+                          class="text-xs border-0 rounded-none bg-gray-50" style="padding: 0.25rem;"
+                          (focus)="onDistractorExpFocus($event, distractor, i)"
+                          (blur)="onDistractorExpBlur($event, distractor, i)"></textarea>
+                      </div>
+                    </div>
+                    <span *ngIf="!distractors.length" class="text-gray-600 text-sm">
+                      Use the "Add" or "Generate Distractors" buttons below
+                      to add distractors for this line.
+                    </span>
+                  </div>
+
+                  <!-- add or generate distractors -->
+                  <div class="flex items-center justify-end gap-2">
+                    <button pButton type="button" label="Add" icon="pi pi-plus"
+                      class="p-button-outlined p-button-sm p-button-help" (click)="addDistractor()">
+                    </button>
+                    <span>or</span>
+                    <button pButton type="button" label="Generate Distractors" title="Generate Distractors"
+                      icon="genai-icon" class="p-button-sm p-button-secondary p-button-outlined"
+                      [loading]="_v['generate:distractors']" [disabled]="!model.code" (click)="onGenDistractors()">
+                    </button>
+                  </div>
+                </ng-container>
+              </div>
+            </p-tabPanel>
+          </p-tabView>
         </div>
       </div>
     </div>
@@ -288,14 +308,6 @@
     <span class="text-xs text-gray-600 -mt-1">
       This determines the language explanations and code elements will be generated in.
     </span>
-
-    <span>Also, translate code elements:</span>
-    <p-checkbox label="Classes" name="translate-classes" [(ngModel)]="translation.translate_classes" [binary]="true"
-      class="my-1 ml-2"></p-checkbox>
-    <p-checkbox label="Functions" name="translate-functions" [(ngModel)]="translation.translate_functions"
-      [binary]="true" class="-my-1 ml-2"></p-checkbox>
-    <p-checkbox label="Variables" name="translate-variables" [(ngModel)]="translation.translate_variables"
-      [binary]="true" class="my-1 ml-2"></p-checkbox>
     <!-- ---------- -->
 
     <div class="flex items-center gap-2">
