@@ -39,7 +39,7 @@ export class ActivitiesController {
   async index(@Req() req: Request, @Query('include') include: string) {
     return (await this.activities.list({ user: this.getUserEmail(req), archived: include == 'archived' })).map(activity => {
       const { _id: id, published, archived, name, items, linkings } = activity;
-      return this.attachStat({ id, published, archived, name, items });
+      return this.attachStat({ id, published, archived, name, items, linkings: Object.keys(linkings || {}).length > 0 });
     });
   }
 
