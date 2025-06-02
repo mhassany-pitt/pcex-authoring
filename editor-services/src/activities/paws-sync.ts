@@ -1,7 +1,8 @@
 import { ConfigService } from "@nestjs/config";
+import { readFile } from "fs/promises";
 import { ActivitiesService } from "src/activities-service/activities.service";
 import { SourcesService } from "src/sources-service/sources.service";
-import { transaction, useId } from "src/utils";
+import { storageRoot, transaction, useId } from "src/utils";
 import { DataSource } from "typeorm";
 
 type Params = {
@@ -15,10 +16,14 @@ type Params = {
 };
 
 export const syncToPAWS = async (params: Params) => {
-  // const isme = ['moh70@pitt.edu', 'arl122@pitt.edu'].includes(params.request.user.email);
-  // if (isme) await syncToAggUM2(params);
-  // else /**/ await old_syncToAgg(params);
-  await syncToAggUM2(params);
+  const allowedUsersFilePath = `${params.config.get('STORAGE_PATH')}/paws-sync--allowed-users.txt`;
+  const allowedUsers = await readFile(allowedUsersFilePath, 'utf8');
+  if (allowedUsers.split('\n').map(user => user.trim()).includes(params.request.user.email)) {
+    console.info(`[${params.request.user.email}] sync activity (${params.activity.name}) with PAWS aggregate/um2.`);
+    await syncToAggUM2(params);
+  } else {
+    console.warn(`[${params.request.user.email}] not allowed to sync activity (${params.activity.name}) with PAWS aggregate/um2.`);
+  }
 };
 
 const syncToAggUM2 = async (params: Params) => {
