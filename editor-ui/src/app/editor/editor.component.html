@@ -100,9 +100,16 @@
         </div>
 
         <div class="w-full md:w-1/2 flex flex-col gap-4">
-          <p-tabView>
-            <p-tabPanel header="Explanations" [selected]="true">
-              <div class="bg-gray-100 -m-4 p-2 flex flex-col gap-2">
+          <p-tabView [(activeIndex)]="_v['tabview']">
+            <p-tabPanel header="Worked Example" [selected]="true">
+              <div *ngIf="_v['tabview'] == 0" class="bg-gray-100 -m-4 p-2 flex flex-col gap-2">
+                <div class="text-gray-600 text-sm">
+                  <i class="pi pi-info-circle align-middle"></i>
+                  <span class="align-middle"> Add explanations to use the source as a worked example.</span>
+                </div>
+
+                <hr class="w-full mt-0 mb-1" />
+
                 <ng-container *ngIf="selectedLineNum">
                   <!-- select-all/delete/merge/move explanations -->
                   <div *ngIf="selectedLine.comments?.length" class="flex items-center gap-2">
@@ -180,13 +187,15 @@
                 </div>
               </div>
             </p-tabPanel>
-            <p-tabPanel *ngIf="selectedLineNum" header="Distractors">
+            <p-tabPanel *ngIf="selectedLineNum" header="Code-Completion">
               <!-- distractors -->
-              <div class="bg-gray-100 -m-4 p-2 flex flex-col gap-2">
+              <div *ngIf="_v['tabview'] == 1" class="bg-gray-100 -m-4 p-2 flex flex-col gap-2">
                 <div class="text-gray-600 text-sm">
                   <i class="pi pi-info-circle align-middle"></i>
-                  When you mask this line, you can add "distractors"—incorrect options.
-                  This allows you to use the source as a challenge as well.
+                  <span class="align-middle">
+                    When you mask this line, you can add "distractors" — incorrect options;
+                    allowing you to use the source as a code-completion problem as well.
+                  </span>
                 </div>
 
                 <hr class="w-full mt-0 mb-1" />
@@ -304,7 +313,7 @@
     <hr class="w-full" />
     <span class="-mt-2 text-xl font-bold">Translation:</span>
     <input type="text" pInputText name="translate-tolanguage" [(ngModel)]="translation.target_language"
-      placeholder="Enter target language (e.g., Spanish)" class="flex-grow" [required]="true" />
+      placeholder="Enter target language (e.g., Spanish)" class="flex-grow" />
     <span class="text-xs text-gray-600 -mt-1">
       This determines the language explanations and code elements will be generated in.
     </span>

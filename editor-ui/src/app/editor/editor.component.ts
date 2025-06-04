@@ -91,6 +91,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   translation: any = {};
 
   _v: any = {
+    'tabview': 0,
     'explanation-selection': [],
     'distractor-selection': [],
     'generated-explanations': [],
@@ -573,26 +574,10 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   private findJavaMainClassName(codeSnippet: string) {
-    const classRegex = /class\s+([A-Za-z_]\w*)/g;
-    const mainMethodRegex = /public\s+static\s+void\s+main\s*\(\s*String\[\]\s*\w*\)/;
-
-    let currentClass = null;
-    let classWithMain = null;
     let classMatch;
-    while ((classMatch = classRegex.exec(codeSnippet)) !== null) {
-      currentClass = classMatch[1];
-      const classStartIndex = classMatch.index;
-      const classCode = codeSnippet.slice(classStartIndex);
-      if (mainMethodRegex.test(classCode)) {
-        classWithMain = currentClass;
-        break;
-      }
-    }
-
-    // TODO: finding class name, what if there is no main method?!
-    // TODO: add sql for interaction tracking for um2 -- (this should be only available to ourself)
-
-    return classWithMain;
+    while ((classMatch = /public\s+class\s+([A-Za-z_]\w*)/g.exec(codeSnippet)) !== null)
+      return classMatch[1];
+    return null;
   }
 
   onExplanationFocus($event: any, explanation: any, index: number) {
@@ -968,6 +953,3 @@ export class EditorComponent implements OnInit, OnDestroy {
   //   overlay.show($event);
   // }
 }
-
-// TODO: add prompt for generating distractors in specific language
-// TODO: persist the translated language so next translations or generations will also be in the target language.
