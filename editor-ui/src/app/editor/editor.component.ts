@@ -770,7 +770,8 @@ export class EditorComponent implements OnInit, OnDestroy {
       language: this.model.language,
       statement: this.model.description,
       solution: this.model.code,
-      line_number: this.selectedLineNum, n_distractors: '',
+      line_number: this.selectedLineNum,
+      n_distractors: '',
     };
 
     this._v['generate:distractors'] = true;
