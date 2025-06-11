@@ -3,18 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from "openai";
 import { ensureDir, writeFile } from 'fs-extra';
 import {
-  assistantTemplate, distJsonSchema,
-  distTaskGenerate, distractorTemplate,
-  expJsonSchema, expTaskExplainLn,
-  expTaskIdentifyAndExplain, explanationTemplate,
-  prepLn2Solution,
-  translateAssistantTemplate,
-  translateModelDistractorLn,
-  translateModelDistractorLnExplanation,
-  translateModelLnExplanation,
-  translateModelSrcLine,
-  translateModelTemplate,
-  translateSrcCodeElmsInstruction
+  assistantTemplate, distExpJsonSchema, distJsonSchema,
+  distTaskGenerate, distExpTemplate, distTemplate,
+  expJsonSchema, expTaskExplainLn, expTaskIdentifyAndExplain,
+  expTemplate, prepLn2Solution, transAssistantTemplate, transInst,
+  transModelDistLn, transModelDistLnExp, transModelLnExp,
+  transModelSrcLine, transModelTemplate, transSrcCodeElmsInst
 } from './prompts';
 import { zfill } from 'src/utils';
 
@@ -27,13 +21,16 @@ export class GptGenaiService {
     return `${this.config.get('STORAGE_PATH')}/gpt-genai`;
   }
 
-  async generate({ config, user, action, id, language, statement, solution, line_number, n_distractors, translation, model }) {
+  async generate({ config, user, action, id, language, statement, solution,
+    line_number, n_distractors, distractor, translation, model }) {
     if (action == 'identify-and-explain') {
       return await this.identifyAndExplainLines({ config, user, id, language, statement, solution });
     } else if (action == 'explain-line') {
       return await this.explainTheLine({ config, user, id, language, statement, solution, line_number });
     } else if (action == 'generate-distractors') {
       return await this.generateDistractors({ config, user, id, language, statement, solution, line_number, n_distractors });
+    } else if (action == 'generate-distractor-explanation') {
+      return await this.generateDistractorExplanation({ config, user, id, language, statement, solution, line_number, distractor });
     } else if (action == 'translate-model') {
       return await this.translateModel({ config, user, id, model, translation });
     } else {
@@ -46,7 +43,7 @@ export class GptGenaiService {
     const file = `${path}/${new Date().toISOString()}.json`;
     await ensureDir(path);
 
-    const prompt = explanationTemplate
+    const prompt = expTemplate
       .replace(/<<task>>/g, expTaskIdentifyAndExplain.replace(/<<target_language>>/g, config.target_language ? ` in ${config.target_language}` : ''))
       .replace(/<<problem_language>>/g, language)
       .replace(/<<problem_statement>>/g, statement)
@@ -75,7 +72,7 @@ export class GptGenaiService {
     const file = `${path}/${new Date().toISOString()}.json`;
     await ensureDir(path);
 
-    const prompt = explanationTemplate
+    const prompt = expTemplate
       .replace(/<<task>>/g, expTaskExplainLn.replace(/<<line_number>>/g, line_number)
         .replace(/<<target_language>>/g, config.target_language ? ` in ${config.target_language}` : ''))
       .replace(/<<problem_language>>/g, language)
@@ -104,11 +101,13 @@ export class GptGenaiService {
     const file = `${path}/${new Date().toISOString()}.json`;
     await ensureDir(path);
 
-    const prompt = distractorTemplate
+    const prompt = distTemplate
       .replace(/<<task>>/g, distTaskGenerate
         .replace(/<<line_number>>/g, line_number)
         .replace(/<<n_distractors>>/g, n_distractors)
-        .replace(/<<target_language_instruction>>/g, config.target_language ? ` Ensure the explanations are in ${config.target_language} language.` : ''))
+        .replace(/<<target_language_instruction>>/g, config.target_language
+          ? transInst.replace(/<<target_language>>/g, config.target_language)
+          : ''))
       .replace(/<<line_number>>/g, line_number)
       .replace(/<<problem_language>>/g, language)
       .replace(/<<problem_statement>>/g, statement)
@@ -131,6 +130,38 @@ export class GptGenaiService {
     return JSON.parse(response.choices[0].message.content);
   }
 
+  async generateDistractorExplanation({ config, user, id, language, statement, solution, line_number, distractor }) {
+    const path = `${this.root}/${user}/${id}/`;
+    const file = `${path}/${new Date().toISOString()}.json`;
+    await ensureDir(path);
+
+    const prompt = distExpTemplate
+      .replace(/<<target_language_instruction>>/g, config.target_language
+        ? transInst.replace(/<<target_language>>/g, config.target_language)
+        : '')
+      .replace(/<<candidate_distractor>>/g, distractor)
+      .replace(/<<line_number>>/g, line_number)
+      .replace(/<<problem_language>>/g, language)
+      .replace(/<<problem_statement>>/g, statement)
+      .replace(/<<problem_solution>>/g, prepLn2Solution(solution));
+
+    const messages = [
+      { role: 'system', content: assistantTemplate },
+      { role: 'user', content: prompt },
+    ];
+    await writeFile(file, JSON.stringify({ request: messages }));
+
+    const response = await this.promptGPT({
+      config, messages, response_format: {
+        type: "json_schema",
+        json_schema: { 'name': 'response', schema: JSON.parse(distExpJsonSchema) }
+      } as any
+    });
+    await writeFile(file, JSON.stringify({ request: messages, response }));
+
+    return JSON.parse(response.choices[0].message.content);
+  }
+
   async translateModel({ config, user, id, model, translation }) {
     const path = `${this.root}/${user}/${id}/`;
     const file = `${path}/${new Date().toISOString()}-translation.json`;
@@ -140,7 +171,7 @@ export class GptGenaiService {
     Object.keys(model.lines).sort((a, b) => parseInt(a) - parseInt(b)).forEach(ln => {
       model.lines[`${ln}`].comments.forEach((comment: any, i: number) => {
         if (comment.content)
-          lineExplanations.push(translateModelLnExplanation
+          lineExplanations.push(transModelLnExp
             .replace('<<line-number>>', zfill(parseInt(ln), 2))
             .replace('<<explanation-number>>', `${i + 1}`)
             .replace('<<explanation-content>>', comment.content));
@@ -150,16 +181,16 @@ export class GptGenaiService {
     const distsContentExp = [];
     model.distractors.forEach((distractor: any, i: number) => {
       if (distractor.code)
-        distsContentExp.push(translateModelDistractorLn
+        distsContentExp.push(transModelDistLn
           .replace('<<distractor-number>>', `${i + 1}`)
           .replace('<<line-content>>', distractor.code));
       if (distractor.description)
-        distsContentExp.push(translateModelDistractorLnExplanation
+        distsContentExp.push(transModelDistLnExp
           .replace('<<distractor-number>>', `${i + 1}`)
           .replace('<<line-explanation>>', distractor.description));
     });
 
-    const sourceCode = model.code.split('\n').map((line: string, lidx: number) => translateModelSrcLine
+    const sourceCode = model.code.split('\n').map((line: string, lidx: number) => transModelSrcLine
       .replace('<<line-number>>', zfill(lidx + 1, 2))
       .replace('<<line-content>>', line)).join('\n');
 
@@ -168,12 +199,12 @@ export class GptGenaiService {
     if (translation.translate_functions) scElms.push('function');
     if (translation.translate_variables) scElms.push('variable');
     const srcCodeElmsInstruction = scElms.length ?
-      translateSrcCodeElmsInstruction.replace('<<elements>>',
+      transSrcCodeElmsInst.replace('<<elements>>',
         scElms.length == 1 ? scElms[0] : (
           scElms.length == 2 ? `${scElms[0]} and ${scElms[1]}` :
             `${scElms[0]}, ${scElms[1]}, and ${scElms[2]}`)) : '';
 
-    const prompt = translateModelTemplate
+    const prompt = transModelTemplate
       .replace(/<<program-name>>/g, model.name)
       .replace(/<<program-description>>/g, model.description)
       .replace(/<<source-code>>/g, sourceCode)
@@ -183,7 +214,7 @@ export class GptGenaiService {
       .replace(/<<source-code-elements-translation-instruction>>/g, srcCodeElmsInstruction);
 
     const messages = [
-      { role: 'system', content: translateAssistantTemplate },
+      { role: 'system', content: transAssistantTemplate },
       { role: 'user', content: prompt },
     ];
     await writeFile(file, JSON.stringify({ request: messages }));

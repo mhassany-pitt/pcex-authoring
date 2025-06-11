@@ -1,4 +1,111 @@
+const translations = {
+	en: {
+		'title-example-prefix': 'Example: ',
+		'title-challenge-prefix': 'Challenge: ',
+		'next-btn-example': 'Next Example',
+		'next-btn-challenge': 'Challenge Me!',
+		'decrease-indentation-btn': 'Decrease Indentation',
+		'increase-indentation-btn': 'Increase Indentation',
+		'check-result-correct': 'Correct!',
+		'user-input': 'User Input',
+		'output': 'Output',
+		'incorrect-try-again': 'Incorrect. Try Again!',
+		'your-program-throws-exception': 'Your program throws exception',
+		'exception-details': 'Exception Details',
+		'your-program-has-compilation-error': 'Your program has compilation error',
+		'compilation-error-details': 'Compilation Error Details',
+		'your-program-output-is-different': 'Your program output is different than the expected output',
+		'program-output-details': 'Program Output Details',
+		'is-incorrect': 'is incorrect',
+		'are-incorrect': 'are incorrect',
+		'has-indentation-error': 'has indentation error',
+		'have-indentation-error': 'have indentation error',
+		'fill-in-your-code-here': 'FILL IN YOUR CODE HERE',
+		'drag-a-tile-to-construct': 'Drag a tile to each missing field to construct this program.',
+		'previous': 'Previous',
+		'additional-details': 'Additional details',
+		'increase-indentation-by': 'Increase indentation in line lineNumber by levelDifference', // don't translate 'lineNumber' and 'levelDifference' -- they are placeholders
+		'decrease-indentation-by': 'Decrease indentation in line lineNumber by levelDifference', // don't translate 'lineNumber' and 'levelDifference' -- they are placeholders
+		'program-construction-examples': 'Program Construction Examples',
+		'back-btn': 'Back',
+		'explain-the-program': 'Explain the program',
+		'clear': 'Clear',
+		'next-challenge': 'Next Challenge',
+		'show-me-correct-program': 'Show Me Correct Program',
+		'show-me-hint': 'Show Me Hint',
+		'tell-me-whats-wrong': 'Tell me what’s wrong',
+		'explanations': 'Explanations',
+		'next': 'Next',
+		'hint': 'Hint',
+		'drag-tile-from-here': 'Drag a tile from here',
+		'check': 'CHECK',
+		'current-output': 'Current Output',
+		'expected-output': 'Expected Output',
+		'close': 'Close',
+	},
+	es: {
+		'title-example-prefix': 'Ejemplo: ',
+		'title-challenge-prefix': 'Desafío: ',
+		'next-btn-example': 'Siguiente ejemplo',
+		'next-btn-challenge': '¡Desafíame!',
+		'decrease-indentation-btn': 'Disminuye la indentación',
+		'increase-indentation-btn': 'Aumenta la indentación',
+		'check-result-correct': '¡Correcto!',
+		'user-input': 'Entrada del usuario',
+		'output': 'Salida',
+		'incorrect-try-again': 'Incorrecto, intenta de nuevo',
+		'your-program-throws-exception': 'Tu programa arroja una excepción',
+		'exception-details': 'Detalles de la excepción',
+		'your-program-has-compilation-error': 'Tu programa tiene un error de compilación',
+		'compilation-error-details': 'Detalles del error de compilación',
+		'your-program-output-is-different': 'La salida de tu programa es distinta que la esperada',
+		'program-output-details': 'Detalles de la salida del programa',
+		'is-incorrect': 'es incorrecto(a)',
+		'are-incorrect': 'son incorrectos(as)',
+		'has-indentation-error': 'tiene error de indentación',
+		'have-indentation-error': 'tienen error de indentación',
+		'fill-in-your-code-here': 'COMPLETA TU CÓDIGO AQUÍ',
+		'drag-a-tile-to-construct': 'Arrastra un bloque de código hacia una de los espacios faltantes para construir tu programa',
+		'previous': 'Previo(a)',
+		'additional-details': 'Detalles adicionales',
+		'increase-indentation-by': 'Aumenta la indentación en la línea lineNumber en levelDifference nivel(es)', // don't translate 'lineNumber' and 'levelDifference' -- they are placeholders
+		'decrease-indentation-by': 'Disminuye la indentación en la línea lineNumber en levelDifference nivel(es)', // don't translate 'lineNumber' and 'levelDifference' -- they are placeholders
+		'program-construction-examples': 'Ejemplos de Construcción de Programas',
+		'back-btn': 'Volver',
+		'explain-the-program': 'Explica el programa',
+		'clear': 'Restablecer',
+		'next-challenge': 'Siguiente desafío',
+		'show-me-correct-program': 'Muéstrame el programa correcto',
+		'show-me-hint': 'Muéstrame una pista',
+		'tell-me-whats-wrong': 'Dime qué está mal',
+		'explanations': 'Explicaciones',
+		'next': 'Siguiente',
+		'hint': 'Pista',
+		'drag-tile-from-here': 'Arrastra un bloque de código desde aquí',
+		'check': 'COMPROBAR',
+		'current-output': 'Salida actual',
+		'expected-output': 'Salida esperada',
+		'close': 'Cerrar',
+	}
+};
+
+const _text = (key) => translations[url('?locale') || 'en']?.[key] || key;
+
 $(document).ready(function () {
+	// translate all elements with translate-key attribute
+	$('[translate-key]').each(function () {
+		$(this).text(_text($(this).attr('translate-key')));
+	});
+
+	$('#back-button > span').text(_text('back-btn'));
+	$('#next-button > span').text(_text('next-btn-challenge'));
+	$('#start-animation-button > span').text(_text('explain-the-program'));
+	$('#clear-button').text(_text('clear'));
+	$('#shortcut-next-button').text(_text('next-challenge'));
+	$('#show-correct-button').text(_text('show-me-correct-program'));
+	$('#show-hint-button').text(_text('show-me-hint'));
+	$('#show-message-details').text(_text('tell-me-whats-wrong'));
+	// -----------
 	$('#check-button').click(pcex.check);
 	$('#start-animation-button').click(pcex.startAnimation);
 	$('#stop-animation-button').click(pcex.stopAnimation);
@@ -56,7 +163,6 @@ $(document).ready(function () {
 				}
 			}
 		}
-
 	});
 
 	$('.modal').modal({
@@ -215,11 +321,11 @@ var pcex = {
 			pcex.activityType = 'ex';
 			pcex.umApplicationId = 46;
 			pcex.changeStyleToFullyWorkedOut();
-			$('#goal_title').html("<img src='img/reader-24_white.png' />Example: " + goalName);
+			$('#goal_title').html("<img src='img/reader-24_white.png' />" + _text('title-example-prefix') + goalName);
 		} else {
 			pcex.activityType = 'ch';
 			pcex.umApplicationId = 47;
-			$('#goal_title').html("<img src='img/examination-24_white.png' />Challenge: " + goalName);
+			$('#goal_title').html("<img src='img/examination-24_white.png' />" + _text('title-challenge-prefix') + goalName);
 
 			$.each(pcex.currentGoal.blankLineList, function (i, blankLine) {
 				pcex.blankLines.push(blankLine);
@@ -276,7 +382,7 @@ var pcex = {
 		const nextGoalIndex = pcex.currentGoalIndex + 1;
 		if (nextGoalIndex < pcex.numberOfGoals) {
 			const nextGoal = pcex.jsonData.activityGoals[nextGoalIndex];
-			$('#next-button span').text(nextGoal.fullyWorkedOut ? 'Next Example' : 'Challenge Me!');
+			$('#next-button span').text(nextGoal.fullyWorkedOut ? _text('next-btn-example') : _text('next-btn-challenge'));
 		}
 	},
 
@@ -518,8 +624,8 @@ var pcex = {
 		pcex.makeCheckButtonEnabledIfTilesFilled();
 
 		if (pcex.isPython && !pcex.indentPopoverShown) {
-			$('.decrease-indent-button').webuiPopover({ trigger: 'sticky', animation: 'pop', placement: 'bottom-right', content: 'Decrease Indentation', width: 140, onShow: function ($element) { $element.css('z-index', '99999') } });
-			$('.increase-indent-button').webuiPopover({ trigger: 'sticky', animation: 'pop', placement: 'bottom-left', content: 'Increase Indentation', width: 140, onShow: function ($element) { $element.css('z-index', '99999') } });
+			$('.decrease-indent-button').webuiPopover({ trigger: 'sticky', animation: 'pop', placement: 'bottom-right', content: _text('decrease-indentation-btn'), width: 140, onShow: function ($element) { $element.css('z-index', '99999') } });
+			$('.increase-indent-button').webuiPopover({ trigger: 'sticky', animation: 'pop', placement: 'bottom-left', content: _text('increase-indentation-btn'), width: 140, onShow: function ($element) { $element.css('z-index', '99999') } });
 
 			pcex.indentPopoverShown = true;
 		}
@@ -638,7 +744,6 @@ var pcex = {
 				}
 			}
 		}
-
 	},
 
 	back: function () {
@@ -804,17 +909,16 @@ var pcex = {
 
 		if (result) {
 			if (indentResult) {
-				$('#check-result-title').html('Correct!');
+				$('#check-result-title').html(_text('check-result-correct'));
 				$('#check-result-message').show();
 				if (pcex.currentGoal.userInputList.length > 0) {
-					var userInput = "<p class='modal-sub-title'>User Input</p><hr>" + pcex.constructUserInputPartFromProgramOutput(pcex.currentGoal.correctOutput) + '<hr>';
-					var correctOutput = "<p class='modal-sub-title'>Output</p><hr>" + pcex.extractProgramOutput(pcex.currentGoal.correctOutput)
+					var userInput = "<p class='modal-sub-title'>" + _text('user-input') + "</p><hr>" + pcex.constructUserInputPartFromProgramOutput(pcex.currentGoal.correctOutput) + '<hr>';
+					var correctOutput = "<p class='modal-sub-title'>" + _text('output') + "</p><hr>" + pcex.extractProgramOutput(pcex.currentGoal.correctOutput)
 
 					$('#check-result-message').html(userInput + correctOutput);
 				} else {
-					$('#check-result-message').html("<p class='modal-sub-title'>Output</p><hr>" + pcex.currentGoal.correctOutput);
+					$('#check-result-message').html("<p class='modal-sub-title'>" + _text('output') + "</p><hr>" + pcex.currentGoal.correctOutput);
 				}
-
 
 				$('#check-result-block').removeClass('wrong').addClass('correct');
 				if (!pcex.isInLastGoal) {
@@ -831,7 +935,7 @@ var pcex = {
 
 				pcex.numberOfTrials = 0;
 			} else {
-				$('#check-result-title').html('Incorrect. Try Again!');
+				$('#check-result-title').html(_text('incorrect-try-again'));
 				pcex.numberOfTrials++;
 
 				pcex.appendIncorrectResultMessage(wrongTiles, incorrectLineNumbers, wrongIndentedTiles, incorrectIndentedLineNumbers);
@@ -846,7 +950,7 @@ var pcex = {
 				pcex.trackCheckResult('indentation_err', 0, pcex.numberOfTrials, correctLineNumbers, incorrectIndentedLineNumbers, wrongAnswers);
 			}
 		} else {
-			$('#check-result-title').html('Incorrect. Try Again!');
+			$('#check-result-title').html(_text('incorrect-try-again'));
 			$('#show-message-details').hide();
 
 			if (pcex.isPython) {
@@ -874,33 +978,33 @@ var pcex = {
 
 					pcex.trackCheckResult('infinite_loop', 0, pcex.numberOfTrials, correctLineNumbers, incorrectLineNumbers, wrongAnswers);
 				} else if (alternativeOutput.toLowerCase().includes('exception')) {
-					$('#check-result-title').html('Your program throws exception');
+					$('#check-result-title').html(_text('your-program-throws-exception'));
 					$('#check-result-message').hide();
 					$('#show-message-details').show();
 
 					$('#modal-output-div').hide();
-					$('#modal-check-result-title').html('Exception Details');
+					$('#modal-check-result-title').html(_text('exception-details'));
 					$('#modal-check-result-div').show();
 					$('#modal-check-result-message').html(alternativeOutput);
 
 					pcex.trackCheckResult('exception', 0, pcex.numberOfTrials, correctLineNumbers, incorrectLineNumbers, wrongAnswers);
 				} else if (alternativeOutput.toLowerCase().includes('error')) {
-					$('#check-result-title').html('Your program has compilation error');
+					$('#check-result-title').html(_text('your-program-has-compilation-error'));
 					$('#check-result-message').hide();
 					$('#show-message-details').show();
 
 					$('#modal-output-div').hide();
-					$('#modal-check-result-title').html('Compilation Error Details');
+					$('#modal-check-result-title').html(_text('compilation-error-details'));
 					$('#modal-check-result-div').show();
 					$('#modal-check-result-message').html(alternativeOutput);
 
 					pcex.trackCheckResult('compilation_err', 0, pcex.numberOfTrials, correctLineNumbers, incorrectLineNumbers, wrongAnswers);
 				} else {
 					$('#check-result-message').show();
-					$('#check-result-message').html('Your program output is different than the expected output');
+					$('#check-result-message').html(_text('your-program-output-is-different'));
 					$('#show-message-details').show();
 
-					$('#modal-check-result-title').html('Program Output Details');
+					$('#modal-check-result-title').html(_text('program-output-details'));
 
 					var currentProgramOutputPart = pcex.extractProgramOutput(alternativeOutput);
 					var expectedProgramOutputPart = pcex.extractProgramOutput(pcex.currentGoal.correctOutput);
@@ -908,7 +1012,7 @@ var pcex = {
 					if (pcex.currentGoal.userInputList.length > 0) {
 						var userInputPart = pcex.constructUserInputPartFromProgramOutput(alternativeOutput);
 						$('#modal-check-result-div').show();
-						$('#modal-check-result-message').html("<p class='modal-sub-title'>User Input</p>" + userInputPart);
+						$('#modal-check-result-message').html("<p class='modal-sub-title'>" + _text('user-input') + "</p>" + userInputPart);
 					} else {
 						$('#modal-check-result-message').empty();
 						$('#modal-check-result-div').hide();
@@ -948,7 +1052,7 @@ var pcex = {
 		var incorrectResultDiv = document.createElement('div');
 		$(incorrectResultDiv).css('display', 'grid');
 		if (incorrectLines.length > 0) {
-			var resultMessage = pcex.createIncorrectResultMessage(incorrectLines, incorrectLineNumbers, "is incorrect", "are incorrect");
+			var resultMessage = pcex.createIncorrectResultMessage(incorrectLines, incorrectLineNumbers, _text('is-incorrect'), _text('are-incorrect'));
 			$(incorrectResultDiv).append(resultMessage);
 		}
 
@@ -957,7 +1061,7 @@ var pcex = {
 
 
 		if (incorrectIndentedLines.length > 0) {
-			var resultMessage = pcex.createIncorrectResultMessage(incorrectIndentedLines, incorrectIndentedLineNumbers, "has indentation error", "have indentation error");
+			var resultMessage = pcex.createIncorrectResultMessage(incorrectIndentedLines, incorrectIndentedLineNumbers, _text('has-indentation-error'), _text('have-indentation-error'));
 			$(incorrectResultDiv).append(resultMessage);
 		}
 
@@ -1013,7 +1117,6 @@ var pcex = {
 		$('#modal-check-result-message').empty();
 		$('#modal-current-output-message').empty();
 		$('#modal-expected-output-message').empty();
-
 	},
 
 	constructUserInputPartFromProgramOutput: function (output) {
@@ -1150,7 +1253,7 @@ var pcex = {
 				if (pcex.droppedTiles[index]) {
 					sourceCode += pcex.getIndentedCode(pcex.droppedTiles[index].line, true, index) + "\n";
 				} else {
-					sourceCode += pcex.commentString + "FILL IN YOUR CODE HERE\n";
+					sourceCode += pcex.commentString + _text('fill-in-your-code-here') + "\n";
 				}
 			}
 
@@ -1210,7 +1313,7 @@ var pcex = {
 		}
 
 
-		$('#goal_description').html(pcex.currentGoal.goalDescription + "<br><br>Drag a tile to each missing field to construct this program.");
+		$('#goal_description').html(pcex.currentGoal.goalDescription + "<br><br>" + _text('drag-a-tile-to-construct'));
 		$('#goal_title').removeClass('primary-color').addClass('primary-challenge-color');
 		$('#drag-tile-div').show();
 		$('#explanation-div').hide();
@@ -1250,11 +1353,11 @@ var pcex = {
 
 		if (!disableNavigation && line.commentList.length > 1) {
 			var helpBackButton = document.createElement('a');
-			$(helpBackButton).attr('id', 'help_back_line_' + line.id).addClass('btn btn-info btn-sm').html('Previous').attr('disabled', true);
+			$(helpBackButton).attr('id', 'help_back_line_' + line.id).addClass('btn btn-info btn-sm').html(_text('previous')).attr('disabled', true);
 			$(helpDiv).append(helpBackButton);
 
 			var helpNextButton = document.createElement('a');
-			$(helpNextButton).attr('id', 'help_next_line_' + line.id).addClass('btn btn-info btn-sm').html('Additional details');
+			$(helpNextButton).attr('id', 'help_next_line_' + line.id).addClass('btn btn-info btn-sm').html(_text('additional-details'));
 			$(helpDiv).append(helpNextButton);
 		}
 
@@ -1398,7 +1501,6 @@ var pcex = {
 				$('#animation-next-button').attr('disabled', false);
 			}
 		}
-
 	},
 
 	showHint: function () {
@@ -1432,14 +1534,13 @@ var pcex = {
 			var levelDifference = 0;
 
 			if (currentIndentLevel < requiredIndentLevel) {
-				indentationMessage = "Increase";
+				indentationMessage = _text('increase-indentation-by').replace('lineNumber', `${relatedBlankLine.line.number}`).replace('levelDifference', `${levelDifference}`)
 				levelDifference = requiredIndentLevel - currentIndentLevel;
 			} else {
-				indentationMessage = "Decrease";
+				indentationMessage = _text('decrease-indentation-by').replace('lineNumber', `${relatedBlankLine.line.number}`).replace('levelDifference', `${levelDifference}`)
 				levelDifference = currentIndentLevel - requiredIndentLevel;
 			}
 
-			indentationMessage += " indentation in line " + relatedBlankLine.line.number + " by " + levelDifference;
 			var messageSpan = document.createElement('span');
 			$(messageSpan).html(indentationMessage);
 			$(hintContent).append(messageSpan);
@@ -1501,7 +1602,6 @@ var pcex = {
 				//To catch 'Uncaught Error: Collapse is transitioning' of bootstrap. Alpha version has this problem need to update bootstrap
 			}
 		}
-
 	},
 
 	isScrollNeeded: function () {
@@ -1515,7 +1615,6 @@ var pcex = {
 			$('#goal_column').css('z-index', '99999');
 			$('#overlay').fadeIn(300);
 		}
-
 	},
 
 	trackUserActivity: function () {
@@ -1557,14 +1656,12 @@ var pcex = {
 				result: result
 			}
 
-
 			pcex.reportToPcexServer("/track/result", trackingData);
 		}
 	},
 
 	trackExplanation: function (explanationType, explanationLevel, lineNumber) {
 		if (pcex.pcexTrackingID) {
-
 			var trackingData = {
 				tracking_id: pcex.pcexTrackingID,
 				explanation_type: explanationType,
@@ -1574,7 +1671,6 @@ var pcex = {
 
 			pcex.reportToPcexServer("/track/explanation", trackingData);
 		}
-
 	},
 
 	trackHint: function (hintType, lineNumber) {
@@ -1587,7 +1683,6 @@ var pcex = {
 
 			pcex.reportToPcexServer("/track/hint", trackingData);
 		}
-
 	},
 
 	reportToPcexServer: function (apiPath, trackingData, successFunc, errorFunc) {

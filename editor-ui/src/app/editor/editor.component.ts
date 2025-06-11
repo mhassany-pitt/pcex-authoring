@@ -763,6 +763,39 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
   }
 
+  onGenDistExplanation(distractor: any, i: number) {
+    const payload = {
+      action: 'generate-distractor-explanation',
+      id: this.model.id,
+      language: this.model.language,
+      statement: this.model.description,
+      solution: this.model.code,
+      line_number: this.selectedLineNum,
+      distractor: distractor.code,
+    };
+
+    this._v['generate:distractor-explanation' + i] = true;
+    this.http.post(`${environment.apiUrl}/gpt-genai`, payload, { withCredentials: true }).subscribe({
+      next: ({ explanation }: any) => {
+        this.log({ type: 'generate:distractor-explanation', payload, explanation });
+
+        distractor.description = explanation;
+
+        delete this._v['generate:distractor-explanation' + i];
+      },
+      error: (error) => {
+        this.log({ type: 'generate:distractor-explanation', payload, error: error.error });
+
+        if (error.status == 422) this.messages.add({
+          severity: 'error', summary: 'Error',
+          detail: error.error.message
+        });
+
+        delete this._v['generate:distractor-explanation' + i];
+      }
+    });
+  }
+
   onGenDistractors() {
     const payload = {
       action: 'generate-distractors',

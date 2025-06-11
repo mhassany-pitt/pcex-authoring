@@ -64,17 +64,17 @@
             <span class="w-48 font-bold flex-grow">Source Code</span>
 
             <!-- identify and explain lines -->
-            <button pButton type="button" title="GPT Configuration" icon="pi pi-cog"
+            <button pButton type="button" title="Configure GPT (globally)" icon="pi pi-cog"
               class="p-button-sm p-button-help p-button-outlined" (click)="loadOpenAIGPTConfig()">
             </button>
-            <button pButton type="button" label="Identify and Explain Lines" title="Identify and Explain Lines"
+            <button pButton type="button" label="Identify and Explain Lines" title="Identify and Explain Lines of code"
               icon="genai-icon" class="p-button-sm p-button-secondary p-button-outlined"
               [loading]="_v['generate:identify-and-explain']" [disabled]="!model.code"
               (click)="onIdentifyAndExplainLines()">
             </button>
-            <button pButton type="button" title="Translate" icon="pi pi-language"
-              class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:translate']"
-              (click)="openTranslateDialog()">
+            <button pButton type="button" title="Translate this source into target natural language"
+              icon="pi pi-language" class="p-button-sm p-button-secondary p-button-outlined"
+              [loading]="_v['generate:translate']" (click)="openTranslateDialog()">
             </button>
           </div>
 
@@ -119,19 +119,19 @@
 
                     <span class="flex-grow"></span>
 
-                    <button pButton type="button" label="Delete" title="Delete" icon="fa fa-trash"
+                    <button pButton type="button" label="Delete" title="Delete selected explanations" icon="fa fa-trash"
                       class="px-2 py-1 annot-action-btn" severity="danger" size="small" outlined="true"
                       (click)="onDelete('explanation')" [disabled]="_v['explanation-selection'].length == 0">
                     </button>
 
-                    <button pButton type="button" label="Merge" title="Merge" icon="fa fa-link"
-                      class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true" (click)="onMerge()"
-                      [disabled]="_v['explanation-selection'].length < 2">
+                    <button pButton type="button" label="Merge" title="Merge selected explanations into one"
+                      icon="fa fa-link" class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true"
+                      (click)="onMerge()" [disabled]="_v['explanation-selection'].length < 2">
                     </button>
 
-                    <button pButton type="button" label="Move" title="Move" icon="fa fa-share-square-o"
-                      class="px-2 py-1 annot-action-btn" size="small" outlined="true" plain="true"
-                      [disabled]="_v['explanation-selection'].length == 0"
+                    <button pButton type="button" label="Move" title="Move selected explanations to another line"
+                      icon="fa fa-share-square-o" class="px-2 py-1 annot-action-btn" size="small" outlined="true"
+                      plain="true" [disabled]="_v['explanation-selection'].length == 0"
                       (click)="_v['move-selection-header'] = 'Explanations'; _v['move-selection'] = 'explanation';">
                     </button>
                   </div>
@@ -180,9 +180,10 @@
                     class="p-button-sm p-button-help p-button-outlined" (click)="addExplanation()">
                   </button>
                   <span>or</span>
-                  <button pButton type="button" label="Generate Explanations" title="Generate Explanations"
-                    icon="genai-icon" class="p-button-sm p-button-secondary p-button-outlined"
-                    [loading]="_v['generate:explain-line']" [disabled]="!model.code" (click)="onExplainLine()">
+                  <button pButton type="button" label="Generate Explanations"
+                    title="Generate explanations for this line" icon="genai-icon"
+                    class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:explain-line']"
+                    [disabled]="!model.code" (click)="onExplainLine()">
                   </button>
                 </div>
               </div>
@@ -254,11 +255,21 @@
                           style="top: 0.125rem; left: 0.25rem;">
                           Type the distractor line here...
                         </span>
-                        <textarea pInputTextarea [autoResize]="true" [name]="'distractor-description-' + i"
-                          [(ngModel)]="distractor.description" placeholder="Explanation" rows="1"
-                          class="text-xs border-0 rounded-none bg-gray-50" style="padding: 0.25rem;"
-                          (focus)="onDistractorExpFocus($event, distractor, i)"
-                          (blur)="onDistractorExpBlur($event, distractor, i)"></textarea>
+                        <div class="flex items-stretch">
+                          <textarea pInputTextarea [autoResize]="true" [name]="'distractor-description-' + i"
+                            [(ngModel)]="distractor.description" placeholder="Explanation" rows="1"
+                            class="text-xs border-0 rounded-none bg-gray-50 flex-grow" style="padding: 0.25rem;"
+                            (focus)="onDistractorExpFocus($event, distractor, i)"
+                            (blur)="onDistractorExpBlur($event, distractor, i)"></textarea>
+                          <button pButton type="button" [label]="_v['gen-dist-exp-label-' + i]" icon="genai-icon"
+                            title="Generate explanation for this distractor"
+                            class="p-button-sm p-button-secondary p-button-text gen-dist-explanation-btn"
+                            [loading]="_v['generate:distractor-explanation' + i]" [disabled]="!distractor.code"
+                            (click)="onGenDistExplanation(distractor, i)"
+                            (mouseenter)="_v['gen-dist-exp-label-' + i] = 'Generate Explanation'"
+                            (mouseleave)="_v['gen-dist-exp-label-' + i] = ''">
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <span *ngIf="!distractors.length" class="text-gray-600 text-sm">
@@ -273,9 +284,10 @@
                       class="p-button-outlined p-button-sm p-button-help" (click)="addDistractor()">
                     </button>
                     <span>or</span>
-                    <button pButton type="button" label="Generate Distractors" title="Generate Distractors"
-                      icon="genai-icon" class="p-button-sm p-button-secondary p-button-outlined"
-                      [loading]="_v['generate:distractors']" [disabled]="!model.code" (click)="onGenDistractors()">
+                    <button pButton type="button" label="Generate Distractors"
+                      title="Generate distractors for this blank line" icon="genai-icon"
+                      class="p-button-sm p-button-secondary p-button-outlined" [loading]="_v['generate:distractors']"
+                      [disabled]="!model.code" (click)="onGenDistractors()">
                     </button>
                   </div>
                 </ng-container>
@@ -369,7 +381,8 @@
       <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
         class="p-button-sm p-button-secondary p-button-text" (click)="_v['translate'] = false">
       </button>
-      <button pButton type="submit" label="Translate" title="Translate" icon="pi pi-language" class="p-button-sm"
+      <button pButton type="submit" label="Translate"
+        [title]="'Translate the source into ' + translation.target_language" icon=" pi pi-language" class="p-button-sm"
         [disabled]="form.invalid" [loading]="_v['translate'] == 'loading'">
       </button>
     </div>

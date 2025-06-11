@@ -5,12 +5,15 @@ export const prepLn2Solution = (code: string) => {
 export const $schema = `"$schema":"http://json-schema.org/draft-07/schema#"`;
 export const expJsonSchema = `{${$schema},"type":"object","properties": {},"patternProperties":{"^[0-9]+$":{"type":"array","items":{"type":"string"}}},"required":[],"additionalProperties":false}`;
 export const distJsonSchema = `{${$schema},"type":"object","properties": {},"patternProperties":{"^[0-9]+$":{"type":"array","items":{"type":"object","properties":{"distractor":{"type":"string"},"misconceptions":{"type":"array","items":{"type":"string"}},"explanation":{"type":"string"}},"required":["distractor","misconceptions","explanation"]}}},"required":[],"additionalProperties":false}`;
+export const distExpJsonSchema = `{${$schema},"type": "object","properties": {"explanation": {"type": "string"}},"required": ["explanation"],"additionalProperties": false}`;
+
+// --------------
 
 export const assistantTemplate = `You are a learning support bot focused on introductory programming.`;
 
 export const expTaskIdentifyAndExplain = `Given the following PCEX, explain the essential lines<<target_language>>.`;
 export const expTaskExplainLn = `Given the following PCEX, explain Line <<line_number>><<target_language>>.`;
-export const explanationTemplate = `
+export const expTemplate = `
 A program construction example (PCEX) includes a problem statement and solution. 
 
 In a PCEX, only essential lines are explained. These explanations:
@@ -42,8 +45,10 @@ Format your output strictly in the following JSON structure, without including a
     ... 
 }`.trim();
 
+// --------------
+
 export const distTaskGenerate = `Given the following problem statement and solution, generate <<n_distractors>>plausible distractors solely for Line <<line_number>>. The generated distractors must target common misconceptions that students may have and are valid for this program and specifically for Line <<line_number>>.<<target_language_instruction>>`;
-export const distractorTemplate = `
+export const distTemplate = `
 The following problem statement and solution will serve as a program construction challenge question, with Line <<line_number>> masked. In an introductory programming course, e.g.: CS1, students will be asked to choose the correct answer from several options, including one correct answer and multiple incorrect alternatives.		
 
 YOUR TASK:
@@ -70,9 +75,36 @@ Format your output strictly in the following JSON structure, without including a
 }
 `.trim();
 
-export const translateAssistantTemplate = `You are a helpful assistant that translates programming worked examples into other natural languages, maintaining both technical accuracy and the original code formatting.`;
+// --------------
 
-export const translateModelTemplate = `
+export const distExpTemplate = `
+The following problem statement and solution will serve as a program construction challenge question, with Line <<line_number>> masked. In an introductory programming course, e.g.: CS1, students will be asked to choose the correct answer from several options, including one correct answer and multiple incorrect alternatives.		
+
+YOUR TASK:
+Given the following problem statement and solution, explain the DISTRACTOR for Line <<line_number>>. <<target_language_instruction>> Keep the explanation concise and very short.
+
+DISTRACTOR:
+<<candidate_distractor>>
+
+PROBLEM STATEMENT:
+<<problem_statement>>
+
+PROBLEM SOLUTION:
+'''<<problem_language>>
+<<problem_solution>>
+'''
+
+EXAMPLE OUTPUT:
+Format your output strictly in the following JSON structure, without including anything else."	
+{
+    "explanation": "A step-by-step explanation, explaining the targeted misconceptions, detailing why a student might select it due to the misconceptions. Describe how using the distractor instead of the correct line would impact the program, noting any errors or unintended behaviors. Contrast the distractor with the correct line by highlighting what key aspects are missing or misimplemented, and clarify why the distractor is invalid. Do not reveal or mention the correct answer in the explanation. These explanations should directly address the reader using 'you' to make the guidance personal and engaging. Ensure the explanation is clear and provides enough context to understand why the distractor is a plausible but incorrect choice."
+}
+`.trim();
+
+// --------------
+
+export const transAssistantTemplate = `You are a helpful assistant that translates programming worked examples into other natural languages, maintaining both technical accuracy and the original code formatting.`;
+export const transModelTemplate = `
 [[TASK-DEFINITION]]
 You will be given a worked example. Your job is to translate the [[WORKED-EXAMPLE]] according to the [[TASK-INSTRUCTIONS]].
 
@@ -96,8 +128,12 @@ You will be given a worked example. Your job is to translate the [[WORKED-EXAMPL
 Translate the given worked example into <<target-language>>. Be sure to specifically translate the sections labeled [[PROGRAM-NAME]], [[PROGRAM-DESCRIPTION]], [[SOURCE-CODE]], [[LINE-EXPLANATIONS]], and [[LINE-DISTRACTORS]]. <<source-code-elements-translation-instruction>>Do not translate keywords, standard functions, or library names. Preserve the original format and Do NOT add, remove, or change any content beyond translation.
 `.trim();
 
-export const translateModelSrcLine = "[[LINE<<line-number>>]] <<line-content>>";
-export const translateModelLnExplanation = "[[LINE<<line-number>>.EXPL<<explanation-number>>]] <<explanation-content>>";
-export const translateModelDistractorLn = "[[DIST<<distractor-number>>.LC]] <<line-content>>";
-export const translateModelDistractorLnExplanation = "[[DIST<<distractor-number>>.EXPL]] <<line-explanation>>";
-export const translateSrcCodeElmsInstruction = `Translate all user-defined <<elements>> names and make sure they are ASCII-folded. `;
+export const transModelSrcLine = "[[LINE<<line-number>>]] <<line-content>>";
+export const transModelLnExp = "[[LINE<<line-number>>.EXPL<<explanation-number>>]] <<explanation-content>>";
+export const transModelDistLn = "[[DIST<<distractor-number>>.LC]] <<line-content>>";
+export const transModelDistLnExp = "[[DIST<<distractor-number>>.EXPL]] <<line-explanation>>";
+export const transSrcCodeElmsInst = `Translate all user-defined <<elements>> names and make sure they are ASCII-folded. `;
+
+// --------------
+
+export const transInst = ` Ensure the explanations are in <<target_language>> language.`;
