@@ -8,7 +8,7 @@ import {
   expJsonSchema, expTaskExplainLn, expTaskIdentifyAndExplain,
   expTemplate, prepLn2Solution, transAssistantTemplate, transInst,
   transModelDistLn, transModelDistLnExp, transModelLnExp,
-  transModelSrcLine, transModelTemplate, transSrcCodeElmsInst
+  transModelSrcLine, transModelTemplate, transSrcCodeElmsInst,
 } from './prompts';
 import { zfill } from 'src/utils';
 
@@ -178,14 +178,14 @@ export class GptGenaiService {
       })
     });
 
-    const distsContentExp = [];
+    const distExplanations = [];
     model.distractors.forEach((distractor: any, i: number) => {
       if (distractor.code)
-        distsContentExp.push(transModelDistLn
+        distExplanations.push(transModelDistLn
           .replace('<<distractor-number>>', `${i + 1}`)
           .replace('<<line-content>>', distractor.code));
       if (distractor.description)
-        distsContentExp.push(transModelDistLnExp
+        distExplanations.push(transModelDistLnExp
           .replace('<<distractor-number>>', `${i + 1}`)
           .replace('<<line-explanation>>', distractor.description));
     });
@@ -194,24 +194,33 @@ export class GptGenaiService {
       .replace('<<line-number>>', zfill(lidx + 1, 2))
       .replace('<<line-content>>', line)).join('\n');
 
-    const scElms = [];
-    if (translation.translate_classes) scElms.push('class');
-    if (translation.translate_functions) scElms.push('function');
-    if (translation.translate_variables) scElms.push('variable');
-    const srcCodeElmsInstruction = scElms.length ?
-      transSrcCodeElmsInst.replace('<<elements>>',
-        scElms.length == 1 ? scElms[0] : (
-          scElms.length == 2 ? `${scElms[0]} and ${scElms[1]}` :
-            `${scElms[0]}, ${scElms[1]}, and ${scElms[2]}`)) : '';
+    const join = (arr: string[], sep2 = ' and ') => arr.length < 3 ? arr.join(sep2)
+      : `${arr.slice(0, -1).join(', ')}, and ${arr[arr.length - 1]}`;
+
+    const srcFlags = {
+      'classes': translation.translate_classes,
+      'functions/methods': translation.translate_functions,
+      'variables': translation.translate_variables,
+      'string-literals': translation.translate_strings,
+      'comments': translation.translate_comments,
+    };
+    const transElms = Object.keys(srcFlags).filter(k => srcFlags[k]);
+
+    const sectFlags = {
+      '[[SOURCE-CODE]]': transElms.length > 0,
+      '[[LINE-EXPLANATIONS]]': lineExplanations.length > 0,
+      '[[LINE-DISTRACTORS]]': distExplanations.length > 0,
+    };
 
     const prompt = transModelTemplate
       .replace(/<<program-name>>/g, model.name)
       .replace(/<<program-description>>/g, model.description)
       .replace(/<<source-code>>/g, sourceCode)
-      .replace(/<<line-explanations>>/g, lineExplanations.join('\n'))
-      .replace(/<<line-distractors>>/g, distsContentExp.join('\n'))
+      .replace(/<<line-explanations>>/g, lineExplanations.length ? `\n[[LINE-EXPLANATIONS]]\n${lineExplanations.join('\n')}\n` : '')
+      .replace(/<<line-distractors>>/g, distExplanations.length ? `\n[[LINE-DISTRACTORS]]\n${distExplanations.join('\n')}\n` : '')
       .replace(/<<target-language>>/g, translation.target_language)
-      .replace(/<<source-code-elements-translation-instruction>>/g, srcCodeElmsInstruction);
+      .replace(/<<translate-sections>>/g, join(['[[PROGRAM-NAME]]', '[[PROGRAM-DESCRIPTION]]', ...Object.keys(sectFlags).filter(k => sectFlags[k])]))
+      .replace(/<<src-translation-instruction>>/g, transElms.length ? transSrcCodeElmsInst.replace('<<elements>>', join(transElms)) : '');
 
     const messages = [
       { role: 'system', content: transAssistantTemplate },
@@ -234,14 +243,16 @@ export class GptGenaiService {
       translated.indexOf('[[SOURCE-CODE]]')
     ).trim();
 
+    const first = (...indices: number[]) => indices.find(i => i > -1) || -1;
+
     model.code = translated.substring(
       translated.indexOf('[[SOURCE-CODE]]') + '[[SOURCE-CODE]]'.length,
-      translated.indexOf('[[LINE-EXPLANATIONS]]')
+      first(translated.indexOf('[[LINE-EXPLANATIONS]]'), translated.indexOf('[[LINE-DISTRACTORS]]'), translated.length)
     ).split('\n[[LINE').map(l => l.substring(l.indexOf(']]') + ']]'.length + 1)).join('\n').trim();
 
-    for (const l of translated.substring(
+    if (lineExplanations.length) for (const l of translated.substring(
       translated.indexOf('[[LINE-EXPLANATIONS]]') + '[[LINE-EXPLANATIONS]]'.length,
-      translated.indexOf('[[LINE-DISTRACTORS]]')
+      first(translated.indexOf('[[LINE-DISTRACTORS]]'), translated.length)
     ).split('\n[[LINE')) {
       if (l.trim().length < 1)
         continue;
@@ -250,7 +261,7 @@ export class GptGenaiService {
       model.lines[`${parseInt(idxs[0])}`].comments[`${parseInt(idxs[1]) - 1}`].content = ps[1];
     }
 
-    for (const d of translated.substring(
+    if (distExplanations.length) for (const d of translated.substring(
       translated.indexOf('[[LINE-DISTRACTORS]]') + '[[LINE-DISTRACTORS]]'.length
     ).split('\n[[DIST')) {
       if (d.trim().length < 1)

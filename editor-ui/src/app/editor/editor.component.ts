@@ -883,11 +883,15 @@ export class EditorComponent implements OnInit, OnDestroy {
           translate_classes: config.translate_classes,
           translate_functions: config.translate_functions,
           translate_variables: config.translate_variables,
+          translate_strings: config.translate_strings,
+          translate_comments: config.translate_comments,
         };
         delete config.target_language;
         delete config.translate_classes;
         delete config.translate_functions;
         delete config.translate_variables;
+        delete config.translate_strings;
+        delete config.translate_comments;
         this.openAIGPTConfig = JSON.stringify(config, null, 2);
         if (then) then();
         else this._v['show-gpt-config'] = true;

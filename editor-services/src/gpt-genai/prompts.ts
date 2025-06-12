@@ -117,22 +117,16 @@ You will be given a worked example. Your job is to translate the [[WORKED-EXAMPL
 
 [[SOURCE-CODE]]
 <<source-code>>
-
-[[LINE-EXPLANATIONS]]
-<<line-explanations>>
-
-[[LINE-DISTRACTORS]]
-<<line-distractors>>
-
+<<line-explanations>><<line-distractors>>
 [[TASK-INSTRUCTIONS]]
-Translate the given worked example into <<target-language>>. Be sure to specifically translate the sections labeled [[PROGRAM-NAME]], [[PROGRAM-DESCRIPTION]], [[SOURCE-CODE]], [[LINE-EXPLANATIONS]], and [[LINE-DISTRACTORS]]. <<source-code-elements-translation-instruction>>Do not translate keywords, standard functions, or library names. Preserve the original format and Do NOT add, remove, or change any content beyond translation.
+Translate the given worked example into <<target-language>>. Be sure to specifically translate the sections labeled <<translate-sections>>. <<src-translation-instruction>>Preserve the original format and Do NOT add, remove, or change any content beyond translation.
 `.trim();
 
 export const transModelSrcLine = "[[LINE<<line-number>>]] <<line-content>>";
 export const transModelLnExp = "[[LINE<<line-number>>.EXPL<<explanation-number>>]] <<explanation-content>>";
 export const transModelDistLn = "[[DIST<<distractor-number>>.LC]] <<line-content>>";
 export const transModelDistLnExp = "[[DIST<<distractor-number>>.EXPL]] <<line-explanation>>";
-export const transSrcCodeElmsInst = `Translate all user-defined <<elements>> names and make sure they are ASCII-folded. `;
+export const transSrcCodeElmsInst = `In the [[SOURCE-CODE]] section, translate ONLY user-defined <<elements>>; make sure they are ASCII-folded (i.e., remove any accents or non-ASCII characters). `;
 
 // --------------
 
