@@ -42,6 +42,14 @@ const translations = {
 		'current-output': 'Current Output',
 		'expected-output': 'Expected Output',
 		'close': 'Close',
+		'helpful-explanation-instruction': 'Please rate the explanation on a scale of 1 (low) to 5 (high):',
+		'it-clearly-explained-why-this-option-is-wrong': 'It clearly explained why this option is wrong.',
+		'it-clarified-a-misconception-i-didnt-realize-i-had': 'It clarified a misconception I didn’t realize I had.',
+		'it-helped-me-grasp-the-concept-better': 'It helped me grasp the concept better.',
+		'here-is-what-i-would-add-change-in-this-explanation': 'What could make this explanation clearer or more helpful?',
+		'submit-feedback': 'Submit Feedback',
+		'feedback-submitted-successfully': 'Feedback submitted successfully. Thank you for your feedback!',
+		'feedback-submission-error': 'An error occurred while submitting feedback. Please try again later.',
 	},
 	es: {
 		'title-example-prefix': 'Ejemplo: ',
@@ -86,6 +94,14 @@ const translations = {
 		'current-output': 'Salida actual',
 		'expected-output': 'Salida esperada',
 		'close': 'Cerrar',
+		'helpful-explanation-instruction': 'Por favor, califica la explicación en una escala del 1 (bajo) al 5 (alto):',
+		'it-clearly-explained-why-this-option-is-wrong': 'Explicó claramente por qué esta opción es incorrecta.',
+		'it-clarified-a-misconception-i-didnt-realize-i-had': 'Aclaró una idea errónea que no me había dado cuenta de que tenía.',
+		'it-helped-me-grasp-the-concept-better': 'Me ayudó a comprender mejor el concepto.',
+		'here-is-what-i-would-add-change-in-this-explanation': '¿Qué podría hacer que esta explicación fuera más clara o útil?',
+		'submit-feedback': 'Enviar comentarios',
+		'feedback-submitted-successfully': 'Comentarios enviados con éxito. ¡Gracias por tus comentarios!',
+		'feedback-submission-error': 'Ocurrió un error al enviar los comentarios. Por favor, inténtalo de nuevo más tarde.',
 	}
 };
 
@@ -111,6 +127,7 @@ $(document).ready(function () {
 	$('#stop-animation-button').click(pcex.stopAnimation);
 	$('#animation-next-button').click(pcex.animationNext);
 	$('#animation-back-button').click(pcex.animationBack);
+	$(document).on('click', '#distractor-explanation-feedback-ui button[type=button]', pcex.handleDistractorExplanationFeedbackSubmit);
 
 	$('#clear-button').click(pcex.clearIncorrectAnswer);
 
@@ -1334,7 +1351,14 @@ var pcex = {
 		pcex.addAnimationExplanation(helpButtonClicked);
 	},
 
-	createHelpWindowContent: function (line, disableNavigation) {
+	createHelpWindowContent: function (line, disableNavigation, tile) {
+		const use_tile = tile?.commentList?.join('').trim().length > 0;
+		let org_line = null;
+		if (use_tile) {
+			org_line = line;
+			line = tile;
+		}
+
 		var helpDiv = document.createElement('div');
 		$(helpDiv).attr('id', 'help_comment_' + line.id);
 		$(helpDiv).attr('help_index', 0);
@@ -1351,6 +1375,56 @@ var pcex = {
 			}
 		});
 
+		// ask for feedback if it is a distractor explanation
+		if (use_tile) {
+			const feedback_ui = $(`
+				<div id="distractor-explanation-feedback-ui">
+				<input type="hidden" name="helpful-explanation-line" />
+				<input type="hidden" name="helpful-explanation-tile" />
+				<table>
+					<tr>
+						<td>${_text('helpful-explanation-instruction')}</td>
+						<td>1</td>
+						<td>2</td>
+						<td>3</td>
+						<td>4</td>
+						<td>5</td>
+					</tr>
+					<tr>
+						<td>&nbsp;&nbsp;${_text('it-clearly-explained-why-this-option-is-wrong')}</td>
+						<td><label><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="1"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="2"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="3"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="4"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="5"/></label></td>
+					</tr>
+					<tr>
+						<td>&nbsp;&nbsp;${_text('it-clarified-a-misconception-i-didnt-realize-i-had')}</td>
+						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="1"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="2"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="3"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="4"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="5"/></label></td>
+					</tr>
+					<tr>
+						<td>&nbsp;&nbsp;${_text('it-helped-me-grasp-the-concept-better')}</td>
+						<td><label><input type="radio" name="helpful-explanation-it-helped-me-grasp-the-concept-better" value="1"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-helped-me-grasp-the-concept-better" value="2"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-helped-me-grasp-the-concept-better" value="3"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-helped-me-grasp-the-concept-better" value="4"/></label></td>
+						<td><label><input type="radio" name="helpful-explanation-it-helped-me-grasp-the-concept-better" value="5"/></label></td>
+					</tr>
+					<tr><td colspan="6">${_text('here-is-what-i-would-add-change-in-this-explanation')}</td></tr>
+					<tr><td colspan="6"><textarea name="helpful-explanation-open-feedback"></textarea></td></tr>
+					<tr><td colspan="6"><button type="button">${_text('submit-feedback')}</button></td></tr>
+					<tr><td colspan="6" id="helpful-explanation-submission-feedback"></td></tr>
+				</table>
+			</div>`);
+			feedback_ui.find('input[name="helpful-explanation-line"]').attr('value', JSON.stringify(org_line));
+			feedback_ui.find('input[name="helpful-explanation-tile"]').attr('value', JSON.stringify(tile));
+			$(helpDiv).append(feedback_ui);
+		}
+
 		if (!disableNavigation && line.commentList.length > 1) {
 			var helpBackButton = document.createElement('a');
 			$(helpBackButton).attr('id', 'help_back_line_' + line.id).addClass('btn btn-info btn-sm').html(_text('previous')).attr('disabled', true);
@@ -1365,6 +1439,50 @@ var pcex = {
 		$(wrapper).append(helpDiv);
 
 		return wrapper;
+	},
+
+	handleDistractorExplanationFeedbackSubmit: function () {
+		const feedback_ui = $('#distractor-explanation-feedback-ui');
+		const feedbacks = {
+			'goal-id': pcex.currentGoal.id,
+			'goal-name': pcex.currentGoal.name,
+			'user-usr': pcex.userCredentials?.usr,
+			'user-group': pcex.userCredentials?.grp,
+			'user-session-id': pcex.userCredentials?.sid,
+			'user-svc': pcex.userCredentials?.svc,
+			'line': JSON.parse(feedback_ui.find('input[name="helpful-explanation-line"]').val()),
+			'tile': JSON.parse(feedback_ui.find('input[name="helpful-explanation-tile"]').val()),
+			feedback: feedback_ui.find('textarea[name="helpful-explanation-open-feedback"]').val(),
+		};
+		feedback_ui.find('input[type="radio"]:checked').each(function () {
+			feedbacks[$(this).attr('name').replace('helpful-explanation-', '')] = $(this).val();
+		});
+
+		$.ajax({
+			type: 'POST',
+			url: (
+				location.href.startsWith('http://localhost:3000') ?
+					'http://localhost:3000' : 'http://adapt2.sis.pitt.edu/pcex-authoring'
+			) + '/api/distractor-explanation/feedback',
+			data: JSON.stringify(feedbacks),
+			contentType: 'application/json',
+			dataType: 'json',
+			success: function (response) {
+				$('#helpful-explanation-submission-feedback').html(`
+					<span style="color:green;">${_text('feedback-submitted-successfully')}</span>	
+				`);
+			},
+			error: function () {
+				$('#helpful-explanation-submission-feedback').html(`
+					<span style="color:red;">${_text('feedback-submission-error')}</span>	
+				`);
+			},
+			complete: function () {
+				setTimeout(() => {
+					$('#helpful-explanation-submission-feedback').html(``);
+				}, 5000);
+			}
+		});
 	},
 
 	stopAnimation: function () {
@@ -1546,7 +1664,10 @@ var pcex = {
 			$(hintContent).append(messageSpan);
 
 		} else {
-			hintContent = pcex.createHelpWindowContent(relatedBlankLine.line, true);
+			hintContent = pcex.createHelpWindowContent(
+				relatedBlankLine.line, true,
+				pcex.droppedTiles[relatedBlankLineIndex].line
+			);
 		}
 
 		pcex.trackHint('explanation', relatedBlankLine.line.number);
