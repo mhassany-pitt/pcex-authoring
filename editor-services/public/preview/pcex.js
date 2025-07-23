@@ -242,8 +242,8 @@ var pcex = {
 		var usr = url('?usr');
 		var grp = url('?grp');
 		var sid = url('?sid');
-		var language = url('?lang');
-		var setName = url('?set');
+		// var language = url('?lang');
+		// var setName = url('?set');
 		var svc = url('?svc') ? url('?svc') : 'masterygrids';  //SVC is an optional parameter
 
 		var index = 0; // default goal index is 0
@@ -1666,7 +1666,7 @@ var pcex = {
 		} else {
 			hintContent = pcex.createHelpWindowContent(
 				relatedBlankLine.line, true,
-				pcex.droppedTiles[relatedBlankLineIndex].line
+				// pcex.droppedTiles[relatedBlankLineIndex].line // <-- disable feedback form for now
 			);
 		}
 
