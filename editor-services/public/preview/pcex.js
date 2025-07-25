@@ -45,7 +45,6 @@ const translations = {
 		'helpful-explanation-instruction': 'Please rate the explanation on a scale of 1 (low) to 5 (high):',
 		'it-clearly-explained-why-this-option-is-wrong': 'It clearly explained why this option is wrong.',
 		'it-clarified-a-misconception-i-didnt-realize-i-had': 'It clarified a misconception I didn’t realize I had.',
-		'it-helped-me-grasp-the-concept-better': 'It helped me grasp the concept better.',
 		'here-is-what-i-would-add-change-in-this-explanation': 'What could make this explanation clearer or more helpful?',
 		'submit-feedback': 'Submit Feedback',
 		'feedback-submitted-successfully': 'Feedback submitted successfully. Thank you for your feedback!',
@@ -97,7 +96,6 @@ const translations = {
 		'helpful-explanation-instruction': 'Por favor, califica la explicación en una escala del 1 (bajo) al 5 (alto):',
 		'it-clearly-explained-why-this-option-is-wrong': 'Explicó claramente por qué esta opción es incorrecta.',
 		'it-clarified-a-misconception-i-didnt-realize-i-had': 'Aclaró una idea errónea que no me había dado cuenta de que tenía.',
-		'it-helped-me-grasp-the-concept-better': 'Me ayudó a comprender mejor el concepto.',
 		'here-is-what-i-would-add-change-in-this-explanation': '¿Qué podría hacer que esta explicación fuera más clara o útil?',
 		'submit-feedback': 'Enviar comentarios',
 		'feedback-submitted-successfully': 'Comentarios enviados con éxito. ¡Gracias por tus comentarios!',
@@ -1381,9 +1379,10 @@ var pcex = {
 				<div id="distractor-explanation-feedback-ui">
 				<input type="hidden" name="helpful-explanation-line" />
 				<input type="hidden" name="helpful-explanation-tile" />
+				<b>${_text('helpful-explanation-instruction')}</b>
 				<table>
 					<tr>
-						<td>${_text('helpful-explanation-instruction')}</td>
+						<td></td>
 						<td>1</td>
 						<td>2</td>
 						<td>3</td>
@@ -1405,14 +1404,6 @@ var pcex = {
 						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="3"/></label></td>
 						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="4"/></label></td>
 						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="5"/></label></td>
-					</tr>
-					<tr>
-						<td>&nbsp;&nbsp;${_text('it-helped-me-grasp-the-concept-better')}</td>
-						<td><label><input type="radio" name="helpful-explanation-it-helped-me-grasp-the-concept-better" value="1"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-helped-me-grasp-the-concept-better" value="2"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-helped-me-grasp-the-concept-better" value="3"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-helped-me-grasp-the-concept-better" value="4"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-helped-me-grasp-the-concept-better" value="5"/></label></td>
 					</tr>
 					<tr><td colspan="6">${_text('here-is-what-i-would-add-change-in-this-explanation')}</td></tr>
 					<tr><td colspan="6"><textarea name="helpful-explanation-open-feedback"></textarea></td></tr>
