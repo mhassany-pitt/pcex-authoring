@@ -1,14 +1,15 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitiesService } from '../activities.service';
 import { arrayMoveMutable } from 'array-move';
-import { Component, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { environment } from '../../environments/environment';
 import { getNavMenuBar } from '../utilities';
 import { HttpClient } from '@angular/common/http';
-import { KeyCode, KeyMod, Range } from 'monaco-editor';
+import { Range } from 'monaco-editor';
 import { SourcesService } from '../sources.service';
 import { Title } from '@angular/platform-browser';
+import detectLang from 'lang-detector';
 
 @Component({
   selector: 'app-editor',
@@ -497,7 +498,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   detectEditorLang() {
-    const extension = this.detectLangExt(this.model.code);
+    const extension = this.detectEditorLangExtenion(this.model.code);
     const filename = extension == '.java' ? (this.findJavaMainClassName(this.model.code) || 'Main') : 'main';
     this.model.filename = `${filename}${extension}`;
     const map: any = { '.java': 'JAVA', '.py': 'PYTHON' };
@@ -553,23 +554,11 @@ export class EditorComponent implements OnInit, OnDestroy {
       : [];
   }
 
-  private detectLangExt(snippet: string) {
-    let pscore = 'and,as,async,await,class,def,elif,else,except,False,for,if,import,in,is,lambda,None,not,or,print,self,True,try,while,with'.split(',')
-      .filter(k => snippet.includes(k)).length;
-    let jscore = 'boolean,catch,char,class,double,extends,float,implements,import,int,interface,new,package,private,protected,public,static,String,throws,try,void'.split(',')
-      .filter(k => snippet.includes(k)).length;
-
-    if (snippet.match(/def\s+\w+\s*\(.*\)\s*:/)) pscore++;
-    if (snippet.match(/class\s+\w+\s*:/)) pscore++;
-    if (snippet.includes(';')) jscore++;
-    if (snippet.includes('{') && snippet.includes('}')) jscore++;
-
-    if (pscore > jscore) {
-      return '.py';
-    } else if (jscore > pscore) {
-      return '.java';
-    } else {
-      return '.txt';
+  private detectEditorLangExtenion(snippet: string) {
+    switch (detectLang(snippet).toLowerCase()) {
+      case 'java': return '.java';
+      case 'python': return '.py';
+      default: return '.txt';
     }
   }
 
