@@ -501,7 +501,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     const extension = this.detectEditorLangExtenion(this.model.code);
     const filename = extension == '.java' ? (this.findJavaMainClassName(this.model.code) || 'Main') : 'main';
     this.model.filename = `${filename}${extension}`;
-    const map: any = { '.java': 'JAVA', '.py': 'PYTHON' };
+    const map: any = { '.java': 'JAVA', '.py': 'PYTHON', '.c': 'C', '.cpp': 'CPP' };
     this.model.language = extension in map ? map[extension] : 'TEXT';
   }
 
@@ -558,6 +558,8 @@ export class EditorComponent implements OnInit, OnDestroy {
     switch (detectLang(snippet).toLowerCase()) {
       case 'java': return '.java';
       case 'python': return '.py';
+      case 'c++': return '.cpp';
+      case 'c': return '.c';
       default: return '.txt';
     }
   }
