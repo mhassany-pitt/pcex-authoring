@@ -499,8 +499,10 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   detectEditorLang() {
     const extension = this.detectEditorLangExtenion(this.model.code);
-    const filename = extension == '.java' ? (this.findJavaMainClassName(this.model.code) || 'Main') : 'main';
-    this.model.filename = `${filename}${extension}`;
+    if (!this.model.filename) {
+      const filename = extension == '.java' ? (this.findJavaMainClassName(this.model.code) || 'Main') : 'main';
+      this.model.filename = `${filename}${extension}`;
+    }
     const map: any = { '.java': 'JAVA', '.py': 'PYTHON', '.c': 'C', '.cpp': 'CPP' };
     this.model.language = extension in map ? map[extension] : 'TEXT';
   }
