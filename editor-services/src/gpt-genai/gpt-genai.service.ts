@@ -109,6 +109,7 @@ export class GptGenaiService {
           ? transInst.replace(/<<target_language>>/g, config.target_language)
           : ''))
       .replace(/<<line_number>>/g, line_number)
+      .replace(/<<line_content>>/g, (solution.split('\n')[line_number - 1] || '').trim())
       .replace(/<<problem_language>>/g, language)
       .replace(/<<problem_statement>>/g, statement)
       .replace(/<<problem_solution>>/g, prepLn2Solution(solution));

@@ -49,7 +49,7 @@ Format your output strictly in the following JSON structure, without including a
 
 export const distTaskGenerate = `Given the following problem statement and solution, generate <<n_distractors>>plausible distractors solely for Line <<line_number>>. The generated distractors must target common misconceptions that students may have and are valid for this program and specifically for Line <<line_number>>.<<target_language_instruction>>`;
 export const distTemplate = `
-The following problem statement and solution will serve as a program construction challenge question, with Line <<line_number>> masked. In an introductory programming course, e.g.: CS1, students will be asked to choose the correct answer from several options, including one correct answer and multiple incorrect alternatives.		
+The following problem statement and solution will serve as a program construction challenge question, with Line <<line_number>> masked. In an introductory programming course, e.g.: CS1, students will be asked to choose the correct answer from several options, including one correct answer and multiple incorrect alternatives.
 
 YOUR TASK:
 <<task>>
@@ -62,8 +62,13 @@ PROBLEM SOLUTION:
 <<problem_solution>>
 '''
 
+LINE <<line_number>>:
+'''<<problem_language>>
+<<line_content>>
+'''
+
 EXAMPLE OUTPUT:
-Format your output strictly in the following JSON structure, without including anything else."	
+Format your output strictly in the following JSON structure, without including anything else.
 {
     "<<line_number>>": [
         {
@@ -78,7 +83,7 @@ Format your output strictly in the following JSON structure, without including a
 // --------------
 
 export const distExpTemplate = `
-The following problem statement and solution will serve as a program construction challenge question, with Line <<line_number>> masked. In an introductory programming course, e.g.: CS1, students will be asked to choose the correct answer from several options, including one correct answer and multiple incorrect alternatives.		
+The following problem statement and solution will serve as a program construction challenge question, with Line <<line_number>> masked. In an introductory programming course, e.g.: CS1, students will be asked to choose the correct answer from several options, including one correct answer and multiple incorrect alternatives.
 
 YOUR TASK:
 Given the following problem statement and solution, explain the DISTRACTOR for Line <<line_number>>. <<target_language_instruction>> Keep the explanation concise and very short.
@@ -95,7 +100,7 @@ PROBLEM SOLUTION:
 '''
 
 EXAMPLE OUTPUT:
-Format your output strictly in the following JSON structure, without including anything else."	
+Format your output strictly in the following JSON structure, without including anything else.
 {
     "explanation": "A step-by-step explanation, explaining the targeted misconceptions, detailing why a student might select it due to the misconceptions. Describe how using the distractor instead of the correct line would impact the program, noting any errors or unintended behaviors. Contrast the distractor with the correct line by highlighting what key aspects are missing or misimplemented, and clarify why the distractor is invalid. Do not reveal or mention the correct answer in the explanation. These explanations should directly address the reader using 'you' to make the guidance personal and engaging. Ensure the explanation is clear and provides enough context to understand why the distractor is a plausible but incorrect choice."
 }
