@@ -64,7 +64,7 @@ export class GptGenaiService {
     });
     await writeFile(file, JSON.stringify({ request: messages, response }));
 
-    return JSON.parse(response.choices[0].message.content);
+    return JSON.parse(this.removeJsonQuotes(response.choices[0].message.content));
   }
 
   async explainTheLine({ config, user, id, language, statement, solution, line_number }) {
@@ -93,7 +93,7 @@ export class GptGenaiService {
     });
     await writeFile(file, JSON.stringify({ request: messages, response }));
 
-    return JSON.parse(response.choices[0].message.content);
+    return JSON.parse(this.removeJsonQuotes(response.choices[0].message.content));
   }
 
   async generateDistractors({ config, user, id, language, statement, solution, line_number, n_distractors }) {
@@ -127,7 +127,7 @@ export class GptGenaiService {
     });
     await writeFile(file, JSON.stringify({ request: messages, response }));
 
-    return JSON.parse(response.choices[0].message.content);
+    return JSON.parse(this.removeJsonQuotes(response.choices[0].message.content));
   }
 
   async generateDistractorExplanation({ config, user, id, language, statement, solution, line_number, distractor }) {
@@ -159,7 +159,7 @@ export class GptGenaiService {
     });
     await writeFile(file, JSON.stringify({ request: messages, response }));
 
-    return JSON.parse(response.choices[0].message.content);
+    return JSON.parse(this.removeJsonQuotes(response.choices[0].message.content));
   }
 
   async translateModel({ config, user, id, model, translation }) {
@@ -300,12 +300,11 @@ export class GptGenaiService {
     });
   }
 
-  // private removeJsonQuotes(resp: string) {
-  //   for (const char of ['"', "'", '`']) {
-  //     const quote = char.repeat(3);
-  //     if (resp.startsWith(quote + 'json')) resp = resp.substring(7);
-  //     if (resp.endsWith(quote)) resp = resp.substring(0, resp.length - 3);
-  //   }
-  //   return resp.trim();
-  // }
+  private removeJsonQuotes(resp: string) {
+    for (const quote of ['"""', "'''", '```']) {
+      if (resp.startsWith(quote + 'json')) resp = resp.substring(7);
+      if (resp.endsWith(quote)) resp = resp.substring(0, resp.length - 3);
+    }
+    return resp.trim();
+  }
 }

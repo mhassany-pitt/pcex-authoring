@@ -35,10 +35,10 @@
 
       <!-- name & description -->
       <div class="w-full flex flex-col gap-2 bg-gray-100 p-2 rounded-sm shadow-md">
-        <div class="flex-grow flex items-center relative">
-          <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText [(ngModel)]="model.name"
-            (ngModelChange)="updateTitle()" placeholder="*Name" class="flex-grow text-xl border-gray-200" required
-            maxlength="128" (focus)="onNameFocus($event)" (blur)="onNameBlur($event);" />
+        <div *ngIf="!titleDescCollapsed" class="flex-grow flex items-center relative">
+          <input type="text" name="name" pInputText [(ngModel)]="model.name" (ngModelChange)="updateTitle()"
+            placeholder="*Name" class="flex-grow text-xl border-gray-200" required maxlength="128"
+            (focus)="onNameFocus($event)" (blur)="onNameBlur($event);" />
           <span class="absolute right-2 top-2 bottom-2 text-gray-400 font-normal" style="padding: 0.35rem;">
             {{ model.name?.length || 0 }} / 128
           </span>
@@ -49,14 +49,14 @@
           class="p-inputtext-sm w-full border-gray-200" (focus)="onDescriptionFocus($event)"
           (blur)="onDescriptionBlur($event)"></textarea>
 
-        <p-chips name="tags" [(ngModel)]="model.tags" placeholder="Add tags" (onAdd)="addTag($event)"
-          (onRemove)="removeTag($event)"></p-chips>
+        <p-chips *ngIf="!titleDescCollapsed" name="tags" [(ngModel)]="model.tags" placeholder="Add tags"
+          (onAdd)="addTag($event)" (onRemove)="removeTag($event)"></p-chips>
 
         <!-- expand/collapse (name & description) -->
-        <div class="flex items-center gap-2 cursor-pointer text-gray-400"
+        <div class="flex flex-col items-start gap-2 mr-24 cursor-pointer text-gray-400"
           (click)="titleDescCollapsed = !titleDescCollapsed">
-          <span *ngIf="titleDescCollapsed" class="text-xs">{{ model.description }}</span>
-          <span *ngIf="titleDescCollapsed" class="text-xs">{{ model.tags }}</span>
+          <span *ngIf="titleDescCollapsed && model.description" class="text-xs">{{ model.description }}</span>
+          <span *ngIf="titleDescCollapsed && model.tags?.length" class="text-xs">{{ model.tags?.join(', ') }}</span>
           <i class="pi text-xs"
             [ngClass]="{ 'pi-chevron-up' : !titleDescCollapsed, 'pi-chevron-down': titleDescCollapsed }"></i>
         </div>
