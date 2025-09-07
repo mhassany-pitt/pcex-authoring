@@ -9,6 +9,7 @@ export class Source {
   @Prop() archived: boolean;
   @Prop() name: string;
   @Prop() description: string;
+  @Prop() tags: string[];
   @Prop() language: string;
   @Prop() filename: string;
   @Prop() code: string;

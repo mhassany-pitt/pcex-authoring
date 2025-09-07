@@ -14,6 +14,7 @@ import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { ToastModule } from 'primeng/toast';
   ],
   imports: [
     CommonModule, FormsModule,
-    HubRoutingModule,
+    HubRoutingModule, TagModule,
     DialogModule, ButtonModule,
     InputTextModule, TableModule,
     DropdownModule, SelectButtonModule,

@@ -13,6 +13,14 @@ export class ActivitiesService {
     @InjectModel('activities') private activities: Model<Activity>
   ) { }
 
+  db() {
+    return this.activities;
+  }
+
+  async backup() {
+    return (await this.activities.find()).map(toObject);
+  }
+
   async list({ user, archived }) {
     const filter = { user };
     if (!archived) filter['archived'] = { $ne: true };
@@ -27,9 +35,10 @@ export class ActivitiesService {
     return toObject(await this.activities.findOne({ user, _id }));
   }
 
-  async update({ user, _id, ...model }) {
+  async update({ user, id: _id, ...model }) {
     return await this.activities.updateOne({ user, _id }, model);
   }
+
   async remove({ user, id: _id }): Promise<any> {
     return await this.activities.deleteOne({ user, _id });
   }

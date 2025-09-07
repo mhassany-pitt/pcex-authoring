@@ -538,6 +538,14 @@ export class EditorComponent implements OnInit, OnDestroy {
     this.log({ type: 'description-blur', value: this.model.description, prev_value: this.lastValue, });
   }
 
+  addTag(event: any) {
+    this.log({ type: 'add-tag', value: event.value });
+  }
+
+  removeTag(event: any) {
+    this.log({ type: 'remove-tag', value: event.value });
+  }
+
   onEditorFocus($event: any) {
     this.lastValue = this.takeSnapshot(this.model.code);
     this.log({ type: 'editor-focus', value: this.model.code });

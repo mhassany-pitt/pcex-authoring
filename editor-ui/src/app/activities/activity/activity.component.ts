@@ -9,7 +9,9 @@ import { ActivitiesService } from '../../activities.service';
 export class ActivityComponent implements OnInit {
 
   @Input() activity: any;
+
   sources: any[] = [];
+  sources_org: any[] = [];
 
   model: any;
 
@@ -22,7 +24,12 @@ export class ActivityComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.sources().subscribe(
-      (sources: any) => this.sources = sources,
+      (sources: any) => {
+        this.sources_org = sources;
+        this.sources = sources.map(({ id, name, tags, language }: any) => ({
+          id, name: `${language} | ${name}${(tags?.length > 0 ? ' [tags:' + tags.join(', ') + ']' : '')}`
+        }));
+      },
       (error: any) => console.log(error)
     )
 
@@ -48,11 +55,13 @@ export class ActivityComponent implements OnInit {
 
   update() {
     for (const item of this.model.items) {
-      const details = this.sources.find(source => source.id == item.item);
+      const details = this.sources_org.find(source => source.id == item.item);
       if (details) item.details = {
         name: details.name,
         description: details.description,
+        language: details.language,
       };
+      console.log(item);
     }
 
     const editing = this.model.id;

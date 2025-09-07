@@ -18,6 +18,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ChipsModule } from 'primeng/chips';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     CommonModule, FormsModule,
     EditorRoutingModule,
     MonacoEditorModule.forRoot(),
-    InputTextModule,
+    InputTextModule, ChipsModule,
     InputTextareaModule, DialogModule,
     CheckboxModule, ButtonModule,
     TabViewModule, SelectButtonModule,

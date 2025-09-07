@@ -28,6 +28,10 @@ export class UsersService {
     }
   }
 
+  async backup() {
+    return (await this.users.find()).map(toObject);
+  }
+
   async list() {
     return (await this.users.find()).map(toObject);
   }

@@ -25,6 +25,14 @@ export class SourcesService {
   //   }
   // }
 
+  db() {
+    return this.sources;
+  }
+
+  async backup() {
+    return (await this.sources.find()).map(toObject);
+  }
+
   async list({ user, archived }) {
     const filter = { user };
     if (!archived) filter['archived'] = { $ne: true };

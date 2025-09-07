@@ -61,9 +61,12 @@
           <td>
             <div class="flex flex-col gap-2" [ngClass]="{ 'line-through': source.archived }">
               <span [routerLink]="['/editor', source.id]" class="font-bold cursor-pointer text-blue-700">
-                {{source.name || '[name not specified]'}}
+                {{source.language ? source.language + ' | ' : ''}}{{source.name || '[name not specified]'}}
               </span>
               <span class="text-xs ml-2">{{source.description}}</span>
+              <span *ngIf="source.tags?.length" class="text-xs ml-2">
+                <p-tag *ngFor="let tag of source.tags" [value]="tag" severity="success" />
+              </span>
             </div>
           </td>
         </tr>

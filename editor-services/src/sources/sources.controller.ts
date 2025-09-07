@@ -21,13 +21,18 @@ export class SourcesController {
 
   private getUserEmail(req: any) { return req.user.email; }
 
+  // @Get('backup')
+  // async backup() {
+  //   return await this.sources.backup();
+  // }
+
   @Get()
   @UseGuards(AuthenticatedGuard)
   async index(@Req() req: Request, @Query('include') include: string) {
     return (await this.sources.list({ user: this.getUserEmail(req), archived: include == 'archived' })).map(source => {
-      const { _id: id, archived, name, description } = source;
-      return { id, archived, name, description };
-    });
+      const { _id: id, archived, name, description, tags, language } = source;
+      return { id, archived, name, description, tags, language };
+    }).sort((a, b) => b.id.toString().localeCompare(a.id.toString()));
   }
 
   @Post()
