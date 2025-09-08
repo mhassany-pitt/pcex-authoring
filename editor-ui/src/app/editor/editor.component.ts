@@ -497,14 +497,17 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  detectEditorLang() {
-    const extension = this.detectEditorLangExtenion(this.model.code);
-    if (!this.model.filename) {
-      const filename = extension == '.java' ? (this.findJavaMainClassName(this.model.code) || 'Main') : 'main';
-      this.model.filename = `${filename}${extension}`;
-    }
-    const map: any = { '.java': 'JAVA', '.py': 'PYTHON', '.c': 'C', '.cpp': 'CPP' };
-    this.model.language = extension in map ? map[extension] : 'TEXT';
+  onFilenameBlur() {
+    const filename = (this.model.filename || '').trim().toLowerCase();
+    let language = 'TEXT';
+    /**/ if (filename.endsWith('.java')) language = 'JAVA';
+    else if (filename.endsWith('.py')) language = 'PYTHON';
+    else if (filename.endsWith('.cpp')) language = 'CPP';
+    else if (filename.endsWith('.c')) language = 'C';
+    this.model.language = language;
+    this.setEditorsLang();
+
+    this.log({ type: 'filename-blur', value: this.model.filename });
   }
 
   setEditorsLang() {
@@ -552,26 +555,10 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   onEditorBlur($event: any) {
-    const prev = this.model.language;
-    this.detectEditorLang();
-    if (this.model.language != prev)
-      this.setEditorsLang();
-
     this.log({ type: 'editor-blur', value: this.model.code, prev_value: this.lastValue, });
-
     this.targetLns = this.model?.code
       ? this.model.code.split('\n').map((l: string, i: number) => ({ value: i + 1, label: `Ln ${i + 1}: ${l}` }))
       : [];
-  }
-
-  private detectEditorLangExtenion(snippet: string) {
-    switch (detectLang(snippet).toLowerCase()) {
-      case 'java': return '.java';
-      case 'python': return '.py';
-      case 'c++': return '.cpp';
-      case 'c': return '.c';
-      default: return '.txt';
-    }
   }
 
   private findJavaMainClassName(codeSnippet: string) {

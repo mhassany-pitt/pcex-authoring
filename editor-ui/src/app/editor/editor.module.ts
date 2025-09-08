@@ -19,6 +19,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ChipsModule } from 'primeng/chips';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { ChipsModule } from 'primeng/chips';
     TabViewModule, SelectButtonModule,
     MenuModule, DropdownModule, OverlayPanelModule,
     ConfirmDialogModule, ToastModule,
+    InputGroupModule, InputGroupAddonModule,
   ],
   providers: [
     ConfirmationService, MessageService,
