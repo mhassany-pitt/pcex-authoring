@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { Range } from 'monaco-editor';
 import { SourcesService } from '../sources.service';
 import { Title } from '@angular/platform-browser';
-import detectLang from 'lang-detector';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-editor',
@@ -108,6 +108,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private confirm: ConfirmationService,
     private messages: MessageService,
+    public app: AppService,
   ) { }
 
   takeSnapshot(val: any) {
@@ -145,6 +146,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.updateTitle();
         this.setEditorsLang();
         setTimeout(() => this.reloadLineMarkers(), 100);
+        this.moh70FindUnDanglings();
 
         this.log({ type: 'model-loaded', value: this.model });
       },
@@ -700,7 +702,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  onExplainLine() {
+  onExplainLine(then?: () => void) {
     this.onGenExplanations({
       type: 'generate:explain-line',
       payload: {
@@ -710,11 +712,12 @@ export class EditorComponent implements OnInit, OnDestroy {
         language: this.model.language,
         statement: this.model.description,
         solution: this.model.code,
-      }
+      },
+      then,
     });
   }
 
-  onGenExplanations({ type, payload }: any) {
+  onGenExplanations({ type, payload, then }: any) {
     this._v[type] = true;
     this.http.post(`${environment.apiUrl}/gpt-genai`, payload, { withCredentials: true }).subscribe({
       next: (resp: any) => {
@@ -737,6 +740,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         delete this._v[type];
 
         this.selectLine(this.selectedLineNum, true, true);
+        then?.();
       },
       error: (error) => {
         this.log({ type, payload, error: error.error });
@@ -784,7 +788,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  onGenDistractors() {
+  onGenDistractors(then?: () => void) {
     const payload = {
       action: 'generate-distractors',
       id: this.model.id,
@@ -816,6 +820,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         delete this._v['generate:distractors'];
 
         this.selectLine(this.selectedLineNum, true, true);
+        then?.();
       },
       error: (error) => {
         this.log({ type: 'generate:distractors', payload, error: error.error });
@@ -978,4 +983,85 @@ export class EditorComponent implements OnInit, OnDestroy {
   //   console.log($event.target);
   //   overlay.show($event);
   // }
+
+  moh70Generate() {
+    this._v['moh70-generate'] = true;
+
+    const lines2Explain = Object.keys(this.model.lines).filter((ln: any) =>
+      this.model.lines[ln].comments.length > 0 &&
+      this.model.lines[ln].comments.filter((c: any) => c.content?.trim() == '// TODO: generate').length > 0
+    ).map(ln => parseInt(ln));
+    const lines2Distractor = Object.keys(this.model.lines).filter((ln: any) =>
+      this.model.lines[ln].blank &&
+      this.model.distractors.filter((d: any) => d.line_number == parseInt(ln)).length == 0
+    ).map(ln => parseInt(ln));
+
+    const distractorNextLine = (i: number) => {
+      this.selectLine(lines2Distractor[i], true, true);
+      setTimeout(() => {
+        this.onGenDistractors(() => {
+          if (i + 1 < lines2Distractor.length)
+            distractorNextLine(i + 1);
+          else {
+            delete this._v['moh70-generate'];
+            alert('MOH-70 generation completed!');
+          }
+        });
+      }, 300);
+    }
+
+    const explainNextLine = (i: number) => {
+      this.selectLine(lines2Explain[i], true, true);
+      setTimeout(() => {
+        this.onExplainLine(() => {
+          if (i + 1 < lines2Explain.length)
+            explainNextLine(i + 1);
+          else if (lines2Distractor.length) {
+            this._v['tabview'] = 1;
+            distractorNextLine(0);
+          } else {
+            delete this._v['moh70-generate'];
+            alert('MOH-70 generation completed!');
+          }
+        });
+      }, 300);
+    }
+
+    if (lines2Explain.length)
+      explainNextLine(0);
+    else if (lines2Distractor.length) {
+      this._v['tabview'] = 1;
+      distractorNextLine(0);
+    } else {
+      delete this._v['moh70-generate'];
+      alert('No lines to explain or add distractors!');
+    }
+  }
+
+  moh70RemoveTodoMarkers() {
+    this.model.tags = this.model.tags?.filter((t: string) => t != 'done!') || [];
+
+    Object.keys(this.model.lines).forEach(ln => {
+      const line = this.model.lines[ln];
+      line.comments = line.comments.filter((c: any) => c.content?.trim() != '// TODO: generate');
+    });
+
+    this.model.archived = false;
+  }
+
+  moh70FindUnDanglings() {
+    const dang_Exps = new Set<string>();
+    const dang_Dists = new Set<string>();
+    Object.keys(this.model.lines).filter(ln => {
+      const line = this.model.lines[ln];
+      const todo = line.comments.filter((c: any) => c.content?.trim() == '// TODO: generate');
+      const dists = this.model.distractors.filter((d: any) => d.line_number == parseInt(ln));
+      if (todo.length > 0 && line.comments.length == 1)
+        dang_Exps.add(ln);
+      if (line.blank && dists.length == 0)
+        dang_Dists.add(ln);
+    });
+    this._v['moh70-dangling-explanations'] = Array.from(dang_Exps).map(ln => parseInt(ln));
+    this._v['moh70-dangling-distractors'] = Array.from(dang_Dists).map(ln => parseInt(ln));
+  }
 }

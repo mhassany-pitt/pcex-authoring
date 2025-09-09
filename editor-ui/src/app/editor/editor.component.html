@@ -28,6 +28,20 @@
     </div>
 
     <div class="flex-grow container mx-auto mt-24 mb-16 flex flex-col gap-4 z-0">
+      <div *ngIf="app.user && app.user.email == 'moh70@pitt.edu'"
+        class="flex items-center gap-2 bg-gray-100 shadow-md p-4">
+        <span class="uppercase font-bold">moh70 toolbox:</span>
+        <button pButton type="button" label="Explain Lines & Generate Distractors" icon="genai-icon"
+          class="p-button-sm p-button-secondary p-button-outlined" (click)="moh70Generate()"
+          [loading]="_v['moh70-generate']" [disabled]="_v['moh70-generate']">
+        </button>
+        <button pButton type="button" label="Clean TODO-Markers" icon="pi pi-trash"
+          class="p-button-sm p-button-secondary p-button-outlined" (click)="moh70RemoveTodoMarkers()">
+        </button>
+        <span>DANGLINGS EXPLANATIONS:[{{ _v['moh70-dangling-explanations']?.join(',') }}]</span>
+        <span>DANGLINGS DISTRACTORS:[{{ _v['moh70-dangling-distractors']?.join(',') }}]</span>
+      </div>
+
       <span class="text-xs text-gray-400 -mb-2">
         *Required fields (<i>name, source code</i>) are marked with
         asterisks.
@@ -232,7 +246,8 @@
                   <!-- select-all/delete/move distractor -->
                   <div *ngIf="distractors.length" class="flex items-center gap-2">
                     <p-checkbox name="toggle-selection" label="Select all" [(ngModel)]="_v['all-distractor-selection']"
-                      [binary]="true" class="p-checkbox-sm" (ngModelChange)="onSelectAll('distractor')"></p-checkbox>
+                      [binary]="true" class="p-checkbox-sm w-48"
+                      (ngModelChange)="onSelectAll('distractor')"></p-checkbox>
 
                     <span class="flex-grow"></span>
 
