@@ -60,8 +60,8 @@ export class ActivityComponent implements OnInit {
         name: details.name,
         description: details.description,
         language: details.language,
+        tags: details.tags,
       };
-      console.log(item);
     }
 
     const editing = this.model.id;
