@@ -1820,11 +1820,11 @@ var pcex = {
 			result = 0;
 		}
 
-		// var sub = pcex.getCurrentGoalFileNameWithoutExtensions();
+		var sub = pcex.getCurrentGoalFileNameWithoutExtensions();
 
 		var umParams = "app=" + pcex.umApplicationId +
 			"&act=PCEX_Challenge" +
-			"&sub=" + pcex.currentGoal.name + // sub +
+			"&sub=" + sub +
 			"&res=" + result;
 
 		pcex.reportToUM(umParams);
@@ -1832,10 +1832,10 @@ var pcex = {
 
 	reportLineClicksToUm: function (lineNumber) {
 		if (pcex.currentGoal.fullyWorkedOut) {
-			// var exampleFileName = pcex.getCurrentGoalFileNameWithoutExtensions();
+			var exampleFileName = pcex.getCurrentGoalFileNameWithoutExtensions();
 
 			var umParams = "app=" + pcex.umApplicationId +
-				"&act=" + pcex.currentGoal.name + // exampleFileName +
+				"&act=" + exampleFileName +
 				"&sub=" + lineNumber +
 				"&res=-1";
 
