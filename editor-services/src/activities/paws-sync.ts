@@ -26,11 +26,17 @@ export const syncToPAWS = async (params: Params) => {
   }
 };
 
+const cleanName = (name: string) => {
+  // remove single quote, double quote, and comma
+  return name.replace(/['",]/g, '');
+}
+
 const syncToAggUM2 = async (params: Params) => {
   await transaction<void>([params.ds_agg, params.ds_um2], async (agg_qr, um2_qr) => {
     const activity = params.activity;
-    const user = params.request.user.email;
+    const activityName = cleanName(`${activity.name}__${activity.id}`);
 
+    const user = params.request.user.email;
     activity.linkings = (await params.activities.read({ user, id: activity.id })).linkings || { um2: {}, agg: {} };
 
     const url = `${params.config.get('PREVIEW_ACTIVITY_URL')}/${activity.id}?_t=${Date.now()}`;
@@ -39,16 +45,16 @@ const syncToAggUM2 = async (params: Params) => {
     // insert/update activity in um2
     const um2ParentActivityInsert = await um2_qr.query(
       `INSERT INTO ent_activity (ActivityID, AppID, URI, Activity, Description, active) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE URI = ?, Activity = ?, active = ?`, [
-      activity.linkings.um2['activity-id'], 45, url, `${activity.name}__${activity.id}`, 'PCEX Set', activity.published ? 1 : 0,
+      activity.linkings.um2['activity-id'], 45, url, activityName, 'PCEX Set', activity.published ? 1 : 0,
       // update if exists >>>
-      url, `${activity.name}__${activity.id}`, activity.published ? 1 : 0,
+      url, activityName, activity.published ? 1 : 0,
     ]);
     if (um2ParentActivityInsert.insertId) activity.linkings.um2['activity-id'] = um2ParentActivityInsert.insertId;
     ids.um2.add(activity.linkings.um2['activity-id']);
 
     for (let index = 0; index < activity.items.length; index++) {
       const source = useId(await params.sources.read({ user, id: activity.items[index].item }));
-      const contentName = `${source.name}__${activity.id}-${source.id}-${index}`;
+      const contentName = cleanName(`${source.name}__${activity.id}-${source.id}-${index}`);
       const isTypeExample = activity.items[index].type == 'example';
 
       // 1. insert/update the ent_activity (um2)
@@ -69,6 +75,13 @@ const syncToAggUM2 = async (params: Params) => {
         activity.linkings.um2['activity-id'], activity.linkings.um2[`activity__${source.id}`], 45
       ]);
 
+      // -----------------
+      // IMPORTANT-NOTE:
+      // for pcex_example, activity_name must be used as the content_name!
+      // so, there can only be one example per activity (for now).
+      // in um2 when calculating the progress of an activity, for pcex_example, activity_name is used.
+      // -----------------
+
       const lang = source.language.toLowerCase();
       const domain = lang == 'python' ? 'py' : lang;
 
@@ -76,14 +89,16 @@ const syncToAggUM2 = async (params: Params) => {
       const aggContentInsert = await agg_qr.query(
         `INSERT INTO ent_content (content_id, content_name, content_type, display_name, \`desc\`, url, domain, provider_id, creator_id, privacy, visible, author_name) 
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE content_name = ?, display_name = ?, url = ?, domain = ?, privacy = ?, visible = ?`, [
-        activity.linkings.agg[`content__${source.id}`], contentName,
+        activity.linkings.agg[`content__${source.id}`],
+        isTypeExample ? activityName : contentName,
         isTypeExample ? 'pcex_set' : 'pcex_challenge', source.name,
         isTypeExample ? 'Program Construction Examples' : 'Program Construction Challenges', `${url}&index=${index}`, domain,
         isTypeExample ? 'pcex' : 'pcex_ch', params.request.user.email,
         activity.published ? 'public' : 'private', activity.published ? 1 : 0,
         params.request.user.fullname,
         // update if exists >>>
-        contentName, source.name, `${url}&index=${index}`, domain,
+        isTypeExample ? activityName : contentName,
+        source.name, `${url}&index=${index}`, domain,
         activity.published ? 'public' : 'private', activity.published ? 1 : 0,
       ]);
       if (aggContentInsert.insertId) activity.linkings.agg[`content__${source.id}`] = aggContentInsert.insertId;
@@ -139,33 +154,33 @@ const syncToAggUM2 = async (params: Params) => {
   }, async () => { });
 };
 
-const old_syncToAgg = async (params: Params) => {
-  const activity = params.activity;
-  const user = params.request.user.email;
-  params.ds_agg.transaction(async (manager) => {
-    const MAPPING_ID = `[AUTO-GENERATED:DONT-CHANGE-THIS:PCEX_AUTHORING_MAPPED_ID=${activity.id}]`;
+// const old_syncToAgg = async (params: Params) => {
+//   const activity = params.activity;
+//   const user = params.request.user.email;
+//   params.ds_agg.transaction(async (manager) => {
+//     const MAPPING_ID = `[AUTO-GENERATED:DONT-CHANGE-THIS:PCEX_AUTHORING_MAPPED_ID=${activity.id}]`;
 
-    const [prevMapping] = await manager.query(
-      'SELECT content_id FROM ent_content WHERE provider_id = ? AND comment = ?',
-      ['pcex_activity', MAPPING_ID]
-    );
+//     const [prevMapping] = await manager.query(
+//       'SELECT content_id FROM ent_content WHERE provider_id = ? AND comment = ?',
+//       ['pcex_activity', MAPPING_ID]
+//     );
 
-    if (prevMapping)
-      await manager.query("DELETE FROM ent_content WHERE content_id = ?", [prevMapping.content_id]);
+//     if (prevMapping)
+//       await manager.query("DELETE FROM ent_content WHERE content_id = ?", [prevMapping.content_id]);
 
-    let language = (activity.items?.length
-      ? (await params.sources.read({ user, id: activity.items[0].item })).language
-      : 'undefined').toLowerCase();
-    if (language == 'python') language = 'py';
+//     let language = (activity.items?.length
+//       ? (await params.sources.read({ user, id: activity.items[0].item })).language
+//       : 'undefined').toLowerCase();
+//     if (language == 'python') language = 'py';
 
-    if (activity.published) manager.query(
-      "INSERT INTO ent_content (content_id, content_name, content_type, display_name, `desc`," +
-      " url, `domain`, provider_id, comment, visible, creation_date, creator_id, privacy, author_name) " +
-      "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-      prevMapping?.content_id, `${activity.name}_${Date.now()}`, 'pcex_activity', activity.name, activity.description,
-      `${params.config.get('PREVIEW_ACTIVITY_URL')}/${activity.id}?_t=${Date.now()}`,
-      language, 'pcex_activity', MAPPING_ID, 1, new Date(), params.request.user.email, 'public',
-      params.request.user.fullname
-    ])
-  });
-}
+//     if (activity.published) manager.query(
+//       "INSERT INTO ent_content (content_id, content_name, content_type, display_name, `desc`," +
+//       " url, `domain`, provider_id, comment, visible, creation_date, creator_id, privacy, author_name) " +
+//       "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+//       prevMapping?.content_id, `${activity.name}_${Date.now()}`, 'pcex_activity', activity.name, activity.description,
+//       `${params.config.get('PREVIEW_ACTIVITY_URL')}/${activity.id}?_t=${Date.now()}`,
+//       language, 'pcex_activity', MAPPING_ID, 1, new Date(), params.request.user.email, 'public',
+//       params.request.user.fullname
+//     ])
+//   });
+// }
