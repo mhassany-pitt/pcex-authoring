@@ -105,6 +105,9 @@ const translations = {
 
 const _text = (key) => translations[url('?locale') || 'en']?.[key] || key;
 
+// remove single quote, double quote, and comma
+const cleanName = (name) => name?.replace(/['",]/g, '');
+
 $(document).ready(function () {
 	// translate all elements with translate-key attribute
 	$('[translate-key]').each(function () {
@@ -1438,7 +1441,7 @@ var pcex = {
 		const feedback_ui = $('#distractor-explanation-feedback-ui');
 		const feedbacks = {
 			'goal-id': pcex.currentGoal.id,
-			'goal-name': pcex.currentGoal.name,
+			'goal-name': cleanName(pcex.currentGoal.name),
 			'user-usr': pcex.userCredentials?.usr,
 			'user-group': pcex.userCredentials?.grp,
 			'user-session-id': pcex.userCredentials?.sid,
@@ -1824,7 +1827,7 @@ var pcex = {
 
 		var umParams = "app=" + pcex.umApplicationId +
 			"&act=PCEX_Challenge" +
-			"&sub=" + pcex.currentGoal.name + // sub +
+			"&sub=" + cleanName(pcex.currentGoal.name) + // sub +
 			"&res=" + result;
 
 		pcex.reportToUM(umParams);
@@ -1835,7 +1838,7 @@ var pcex = {
 			// var exampleFileName = pcex.getCurrentGoalFileNameWithoutExtensions();
 
 			var umParams = "app=" + pcex.umApplicationId +
-				"&act=" + pcex.currentGoal.name + // exampleFileName +
+				"&act=" + cleanName(pcex.currentGoal.name) + // exampleFileName +
 				"&sub=" + lineNumber +
 				"&res=-1";
 

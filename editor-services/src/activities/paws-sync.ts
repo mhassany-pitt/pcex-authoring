@@ -26,10 +26,8 @@ export const syncToPAWS = async (params: Params) => {
   }
 };
 
-const cleanName = (name: string) => {
-  // remove single quote, double quote, and comma
-  return name.replace(/['",]/g, '');
-}
+// remove single quote, double quote, and comma
+const cleanName = (name: string) => name.replace(/['",]/g, '');
 
 const syncToAggUM2 = async (params: Params) => {
   await transaction<void>([params.ds_agg, params.ds_um2], async (agg_qr, um2_qr) => {
