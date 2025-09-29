@@ -42,10 +42,13 @@ const translations = {
 		'current-output': 'Current Output',
 		'expected-output': 'Expected Output',
 		'close': 'Close',
-		'helpful-explanation-instruction': 'Please rate the explanation on a scale of 1 (low) to 5 (high):',
+		'provide-feedback': 'provide feedback on this explanation (optional)',
+		'helpful-explanation-instruction': 'Please rate this explanation on a 1–5 scale (1=low, 5=high):',
 		'it-clearly-explained-why-this-option-is-wrong': 'It clearly explained why this option is wrong.',
 		'it-clarified-a-misconception-i-didnt-realize-i-had': 'It clarified a misconception I didn’t realize I had.',
-		'here-is-what-i-would-add-change-in-this-explanation': 'What could make this explanation clearer or more helpful?',
+		'here-is-what-i-would-add-change-in-this-explanation': 'What could make this explanation more helpful (optional)?',
+		'it-is-clear-and-easy-to-understand': 'It is clear and easy to understand.',
+		'it-helped-me-understand-the-purpose-of-the-line': 'It helped me understand the purpose of the line.',
 		'submit-feedback': 'Submit Feedback',
 		'feedback-submitted-successfully': 'Feedback submitted successfully. Thank you for your feedback!',
 		'feedback-submission-error': 'An error occurred while submitting feedback. Please try again later.',
@@ -93,10 +96,13 @@ const translations = {
 		'current-output': 'Salida actual',
 		'expected-output': 'Salida esperada',
 		'close': 'Cerrar',
-		'helpful-explanation-instruction': 'Por favor, califica la explicación en una escala del 1 (bajo) al 5 (alto):',
+		'provide-feedback': 'da tu opinión sobre esta explicación (opcional)',
+		'helpful-explanation-instruction': 'Por favor califique esta explicación en una escala del 1 al 5 (1 = bajo, 5 = alto):',
 		'it-clearly-explained-why-this-option-is-wrong': 'Explicó claramente por qué esta opción es incorrecta.',
 		'it-clarified-a-misconception-i-didnt-realize-i-had': 'Aclaró una idea errónea que no me había dado cuenta de que tenía.',
-		'here-is-what-i-would-add-change-in-this-explanation': '¿Qué podría hacer que esta explicación fuera más clara o útil?',
+		'here-is-what-i-would-add-change-in-this-explanation': '¿Qué podría hacer que esta explicación fuera más útil (opcional)?',
+		'it-is-clear-and-easy-to-understand': 'Está claro y es fácil de entender.',
+		'it-helped-me-understand-the-purpose-of-the-line': 'Me ayudó a entender el propósito de la línea.',
 		'submit-feedback': 'Enviar comentarios',
 		'feedback-submitted-successfully': 'Comentarios enviados con éxito. ¡Gracias por tus comentarios!',
 		'feedback-submission-error': 'Ocurrió un error al enviar los comentarios. Por favor, inténtalo de nuevo más tarde.',
@@ -107,6 +113,8 @@ const _text = (key) => translations[url('?locale') || 'en']?.[key] || key;
 
 // remove single quote, double quote, and comma
 const cleanName = (name) => name?.replace(/['",]/g, '');
+
+const isWeatPCEX = (name) => name.replace(/__([a-f0-9]{24})-([a-f0-9]{24})_(example|challenge)-([0-9]{1,2})$/, '').replace(/__([a-f0-9]{24})-([a-f0-9]{24})-([0-9]{1,2})$/, '') != name;
 
 $(document).ready(function () {
 	// translate all elements with translate-key attribute
@@ -124,10 +132,13 @@ $(document).ready(function () {
 	$('#show-message-details').text(_text('tell-me-whats-wrong'));
 	// -----------
 	$('#check-button').click(pcex.check);
-	$('#start-animation-button').click(pcex.startAnimation);
-	$('#stop-animation-button').click(pcex.stopAnimation);
+	$('#start-animation-button').click(pcex.startAnimationClick);
+	$('#stop-animation-button').click(pcex.stopAnimationClick);
 	$('#animation-next-button').click(pcex.animationNext);
 	$('#animation-back-button').click(pcex.animationBack);
+	$(document).on('click', '#line-explanation-provide-feedback-btn', pcex.handleLineExplanationFeedbackToggle);
+	$(document).on('click', '#line-explanation-feedback-ui button[type=button]', pcex.handleLineExplanationFeedbackSubmit);
+	$(document).on('click', '#distractor-explanation-provide-feedback-btn', pcex.handleDistractorExplanationFeedbackToggle);
 	$(document).on('click', '#distractor-explanation-feedback-ui button[type=button]', pcex.handleDistractorExplanationFeedbackSubmit);
 
 	$('#clear-button').click(pcex.clearIncorrectAnswer);
@@ -198,7 +209,6 @@ $(document).ready(function () {
 	$('.container-fluid').show();
 });
 
-
 var pcex = {
 	//For Reporting
 	userCredentials: null,
@@ -239,6 +249,21 @@ var pcex = {
 	indentedIncorrectBlanLineIDs: [],
 	droppedTileIndentation: null,
 
+	resizeIframe: function () {
+		parent.postMessage({
+			messageType: "resize",
+			iframeHeight: document.body.scrollHeight + 24,
+			iframeUrl: window.location.href
+		}, "*");
+
+		parent.postMessage({
+			subject: "lti.frameResize",
+			message_id: Math.random().toString(36).substring(2),
+			height: document.body.scrollHeight + 24,
+			width: document.body.scrollWidth + 24,
+		}, "*");
+	},
+
 	parse: function (language, setName) {
 		var usr = url('?usr');
 		var grp = url('?grp');
@@ -246,6 +271,7 @@ var pcex = {
 		// var language = url('?lang');
 		// var setName = url('?set');
 		var svc = url('?svc') ? url('?svc') : 'masterygrids';  //SVC is an optional parameter
+		const load = url('?load');
 
 		var index = 0; // default goal index is 0
 		if (url('?index')) {
@@ -254,13 +280,10 @@ var pcex = {
 			$('#next-button').attr('disabled', true).hide();
 		}
 
-		const load = url('?load');
 		if (load) $.ajax({
 			url: load,
 			dataType: 'json',
-			xhrFields: {
-				withCredentials: true
-			},
+			xhrFields: { withCredentials: true },
 			success: function (data) {
 				pcex.jsonData = data[0];
 				pcex.currentGoalIndex = index;
@@ -329,6 +352,7 @@ var pcex = {
 		$(pre).append(code);
 		$('#div_code').append(pre);
 		hljs.highlightBlock(code);
+		pcex.fixBrokenHelpIcons();
 
 		pcex.currentGoal.goalDescription = pcex.currentGoal.goalDescription.replace(/\\n/g, '<br>');
 
@@ -396,6 +420,8 @@ var pcex = {
 
 		$("a[id^='help_']").unbind('click').click(pcex.handleHelpButtonClicked);
 		pcex.trackUserActivity();
+
+		pcex.resizeIframe();
 	},
 
 	updateNextButtonText: function () {
@@ -584,6 +610,7 @@ var pcex = {
 		$(tileCode).text(tile.line.content.trim())
 		$(tilePre).addClass("tile-blank-line " + pcex.codeHighlightClass).append(tileCode);
 		hljs.highlightBlock(tilePre);
+		pcex.fixBrokenHelpIcons();
 		return tilePre;
 	},
 
@@ -625,6 +652,7 @@ var pcex = {
 		}
 
 		hljs.highlightBlock(lineContent);
+		pcex.fixBrokenHelpIcons();
 
 		pcex.makeFilledBlankLineDraggable($(target), tile);
 
@@ -636,10 +664,10 @@ var pcex = {
 					var lineElement = $('#' + pcex.blankLineIDs[i]).children(0)
 					$(lineElement).replaceWith(updatedBlankLineContent);
 					hljs.highlightBlock(updatedBlankLineContent);
+					pcex.fixBrokenHelpIcons();
 				}
 			}
 		}
-
 
 		pcex.makeCheckButtonEnabledIfTilesFilled();
 
@@ -933,7 +961,7 @@ var pcex = {
 				$('#check-result-message').show();
 				if (pcex.currentGoal.userInputList.length > 0) {
 					var userInput = "<p class='modal-sub-title'>" + _text('user-input') + "</p><hr>" + pcex.constructUserInputPartFromProgramOutput(pcex.currentGoal.correctOutput) + '<hr>';
-					var correctOutput = "<p class='modal-sub-title'>" + _text('output') + "</p><hr>" + pcex.extractProgramOutput(pcex.currentGoal.correctOutput)
+					var correctOutput = "<p class='modal-sub-title'>" + _text('output') + "</p><hr>" + pcex.extractProgramOutput(pcex.currentGoal.correctOutput);
 
 					$('#check-result-message').html(userInput + correctOutput);
 				} else {
@@ -1054,7 +1082,6 @@ var pcex = {
 			pcex.reportCheckResultToUm(false);
 		}
 
-
 		$('#check-button').attr("disabled", true);
 
 		if ((!indentResult || !result)) {
@@ -1066,6 +1093,8 @@ var pcex = {
 				$('#show-hint-button').show();
 			}
 		}
+
+		setTimeout(() => pcex.resizeIframe(), 300);
 	},
 
 	appendIncorrectResultMessage: function (incorrectLines, incorrectLineNumbers, incorrectIndentedLines, incorrectIndentedLineNumbers) {
@@ -1137,6 +1166,8 @@ var pcex = {
 		$('#modal-check-result-message').empty();
 		$('#modal-current-output-message').empty();
 		$('#modal-expected-output-message').empty();
+
+		pcex.resizeIframe();
 	},
 
 	constructUserInputPartFromProgramOutput: function (output) {
@@ -1183,6 +1214,7 @@ var pcex = {
 		});
 
 		pcex.trackHint('evaluation_details', 0);
+		pcex.resizeIframe();
 	},
 
 	higlightCorrectBlankLines: function (blankLineIds) {
@@ -1236,6 +1268,13 @@ var pcex = {
 		pcex.activityType = 'ch_not_solved';
 		pcex.trackUserActivity();
 		pcex.showCorrect();
+
+		pcex.resizeIframe();
+	},
+
+	fixBrokenHelpIcons() {
+		// find the help icons has was mistakenly highlighted as code
+		$('i.material-icons > span.hljs-comment:contains("help")').each((i, el) => el.parentElement.innerHTML = 'help');
 	},
 
 	showCorrect: function () {
@@ -1245,6 +1284,7 @@ var pcex = {
 
 			$("#line_" + blankLine.line.id).replaceWith(lineContent);
 			hljs.highlightBlock(lineContent);
+			pcex.fixBrokenHelpIcons();
 		});
 
 
@@ -1332,11 +1372,14 @@ var pcex = {
 			$('#back-button').removeClass('btn-primary').addClass('btn-challenge');
 		}
 
-
 		$('#goal_description').html(pcex.currentGoal.goalDescription + "<br><br>" + _text('drag-a-tile-to-construct'));
 		$('#goal_title').removeClass('primary-color').addClass('primary-challenge-color');
 		$('#drag-tile-div').show();
 		$('#explanation-div').hide();
+	},
+
+	startAnimationClick: function (event) {
+		pcex.startAnimation(false)
 	},
 
 	startAnimation: function (helpButtonClicked) {
@@ -1355,9 +1398,12 @@ var pcex = {
 	},
 
 	createHelpWindowContent: function (line, disableNavigation, tile) {
-		const use_tile = tile?.commentList?.join('').trim().length > 0;
+		const is_distractor_explanation = tile?.commentList?.join('').trim().length > 0;
+
+		// use tile's comments instead of line's comments
+		// this will show distractor's explanation instead of line's explanation
 		let org_line = null;
-		if (use_tile) {
+		if (is_distractor_explanation) {
 			org_line = line;
 			line = tile;
 		}
@@ -1378,49 +1424,6 @@ var pcex = {
 			}
 		});
 
-		// ask for feedback if it is a distractor explanation
-		if (use_tile) {
-			const feedback_ui = $(`
-				<div id="distractor-explanation-feedback-ui">
-				<input type="hidden" name="helpful-explanation-line" />
-				<input type="hidden" name="helpful-explanation-tile" />
-				<b>${_text('helpful-explanation-instruction')}</b>
-				<table>
-					<tr>
-						<td></td>
-						<td>1</td>
-						<td>2</td>
-						<td>3</td>
-						<td>4</td>
-						<td>5</td>
-					</tr>
-					<tr>
-						<td>&nbsp;&nbsp;${_text('it-clearly-explained-why-this-option-is-wrong')}</td>
-						<td><label><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="1"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="2"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="3"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="4"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="5"/></label></td>
-					</tr>
-					<tr>
-						<td>&nbsp;&nbsp;${_text('it-clarified-a-misconception-i-didnt-realize-i-had')}</td>
-						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="1"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="2"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="3"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="4"/></label></td>
-						<td><label><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="5"/></label></td>
-					</tr>
-					<tr><td colspan="6">${_text('here-is-what-i-would-add-change-in-this-explanation')}</td></tr>
-					<tr><td colspan="6"><textarea name="helpful-explanation-open-feedback"></textarea></td></tr>
-					<tr><td colspan="6"><button type="button">${_text('submit-feedback')}</button></td></tr>
-					<tr><td colspan="6" id="helpful-explanation-submission-feedback"></td></tr>
-				</table>
-			</div>`);
-			feedback_ui.find('input[name="helpful-explanation-line"]').attr('value', JSON.stringify(org_line));
-			feedback_ui.find('input[name="helpful-explanation-tile"]').attr('value', JSON.stringify(tile));
-			$(helpDiv).append(feedback_ui);
-		}
-
 		if (!disableNavigation && line.commentList.length > 1) {
 			var helpBackButton = document.createElement('a');
 			$(helpBackButton).attr('id', 'help_back_line_' + line.id).addClass('btn btn-info btn-sm').html(_text('previous')).attr('disabled', true);
@@ -1431,26 +1434,135 @@ var pcex = {
 			$(helpDiv).append(helpNextButton);
 		}
 
+		if (is_distractor_explanation) {
+			$(helpDiv).append(pcex.getDistractorExplanationFeedbackUI(org_line, tile));
+		} else if (isWeatPCEX(pcex.currentGoal.name)) { // line explanation
+			$(helpDiv).append(pcex.getLineExplanationFeedbackUI(line));
+		}
+
 		var wrapper = document.createElement('div');
 		$(wrapper).append(helpDiv);
 
 		return wrapper;
 	},
 
+	getDistractorExplanationFeedbackUI: function (line, tile) {
+		const feedback_ui = $(`
+			<div style="margin-top:10px;">
+				<input type="hidden" name="distractor-explanation-line" />
+				<input type="hidden" name="distractor-explanation-tile" />
+				<span id="distractor-explanation-provide-feedback-btn">${_text('provide-feedback')}</span>
+				<div id="distractor-explanation-feedback-ui" style="display:none;">
+					<table >
+						<tr>
+							<td><b>${_text('helpful-explanation-instruction')}</b></td>
+						</tr>
+						<tr>
+							<td>${_text('it-clearly-explained-why-this-option-is-wrong')}</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="controls">
+								<label><span>1</span><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="1"/></label>
+								<label><span>2</span><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="2"/></label>
+								<label><span>3</span><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="3"/></label>
+								<label><span>4</span><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="4"/></label>
+								<label><span>5</span><input type="radio" name="helpful-explanation-it-clearly-explained-why-this-option-is-wrong" value="5"/></label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>${_text('it-clarified-a-misconception-i-didnt-realize-i-had')}</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="controls">
+								<label><span>1</span><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="1"/></label>
+								<label><span>2</span><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="2"/></label>
+								<label><span>3</span><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="3"/></label>
+								<label><span>4</span><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="4"/></label>
+								<label><span>5</span><input type="radio" name="helpful-explanation-it-clarified-a-misconception-i-didnt-realize-i-had" value="5"/></label>
+								</div>
+							</td>
+						</tr>
+						
+						<tr><td>${_text('here-is-what-i-would-add-change-in-this-explanation')}</td></tr>
+						<tr><td><textarea name="helpful-explanation-open-feedback"></textarea></td></tr>
+						<tr><td><button type="button">${_text('submit-feedback')}</button></td></tr>
+						<tr><td id="helpful-explanation-submission-feedback"></td></tr>
+					</table>
+				</div>
+			</div>`);
+		feedback_ui.find('input[name="distractor-explanation-line"]').attr('value', JSON.stringify(line));
+		feedback_ui.find('input[name="distractor-explanation-tile"]').attr('value', JSON.stringify(tile));
+		return feedback_ui;
+	},
+
+	getLineExplanationFeedbackUI: function (line) {
+		const feedback_ui = $(`
+			<div style="margin-top:10px;">
+				<input type="hidden" name="line-explanation-line" />
+				<span id="line-explanation-provide-feedback-btn">${_text('provide-feedback')}</span>
+				<div id="line-explanation-feedback-ui" style="display:none;">
+					<table >
+						<tr>
+							<td><b>${_text('helpful-explanation-instruction')}</b></td>
+						</tr>
+						<tr>
+							<td>${_text('it-is-clear-and-easy-to-understand')}</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="controls">
+								<label><span>1</span><input type="radio" name="helpful-explanation-it-is-clear-and-easy-to-understand" value="1"/></label>
+								<label><span>2</span><input type="radio" name="helpful-explanation-it-is-clear-and-easy-to-understand" value="2"/></label>
+								<label><span>3</span><input type="radio" name="helpful-explanation-it-is-clear-and-easy-to-understand" value="3"/></label>
+								<label><span>4</span><input type="radio" name="helpful-explanation-it-is-clear-and-easy-to-understand" value="4"/></label>
+								<label><span>5</span><input type="radio" name="helpful-explanation-it-is-clear-and-easy-to-understand" value="5"/></label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>${_text('it-helped-me-understand-the-purpose-of-the-line')}</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="controls">
+								<label><span>1</span><input type="radio" name="helpful-explanation-it-helped-me-understand-the-purpose-of-the-line" value="1"/></label>
+								<label><span>2</span><input type="radio" name="helpful-explanation-it-helped-me-understand-the-purpose-of-the-line" value="2"/></label>
+								<label><span>3</span><input type="radio" name="helpful-explanation-it-helped-me-understand-the-purpose-of-the-line" value="3"/></label>
+								<label><span>4</span><input type="radio" name="helpful-explanation-it-helped-me-understand-the-purpose-of-the-line" value="4"/></label>
+								<label><span>5</span><input type="radio" name="helpful-explanation-it-helped-me-understand-the-purpose-of-the-line" value="5"/></label>
+								</div>
+							</td>
+						</tr>
+						
+						<tr><td>${_text('here-is-what-i-would-add-change-in-this-explanation')}</td></tr>
+						<tr><td><textarea name="helpful-explanation-open-feedback"></textarea></td></tr>
+						<tr><td><button type="button">${_text('submit-feedback')}</button></td></tr>
+						<tr><td id="helpful-explanation-submission-feedback"></td></tr>
+					</table>
+				</div>
+			</div>`);
+		feedback_ui.find('input[name="line-explanation-line"]').attr('value', JSON.stringify(line));
+		return feedback_ui;
+	},
+
 	handleDistractorExplanationFeedbackSubmit: function () {
-		const feedback_ui = $('#distractor-explanation-feedback-ui');
 		const feedbacks = {
+			'activity-id': pcex.jsonData['id'],
+			'activity-name': cleanName(pcex.jsonData['activityName']),
 			'goal-id': pcex.currentGoal.id,
 			'goal-name': cleanName(pcex.currentGoal.name),
 			'user-usr': pcex.userCredentials?.usr,
 			'user-group': pcex.userCredentials?.grp,
 			'user-session-id': pcex.userCredentials?.sid,
 			'user-svc': pcex.userCredentials?.svc,
-			'line': JSON.parse(feedback_ui.find('input[name="helpful-explanation-line"]').val()),
-			'tile': JSON.parse(feedback_ui.find('input[name="helpful-explanation-tile"]').val()),
-			feedback: feedback_ui.find('textarea[name="helpful-explanation-open-feedback"]').val(),
+			'line': JSON.parse($('input[name="distractor-explanation-line"]').val()),
+			'tile': JSON.parse($('input[name="distractor-explanation-tile"]').val()),
+			feedback: $('textarea[name="helpful-explanation-open-feedback"]').val(),
 		};
-		feedback_ui.find('input[type="radio"]:checked').each(function () {
+		$('#distractor-explanation-feedback-ui input[type="radio"]:checked').each(function () {
 			feedbacks[$(this).attr('name').replace('helpful-explanation-', '')] = $(this).val();
 		});
 
@@ -1481,6 +1593,123 @@ var pcex = {
 		});
 	},
 
+	handleDistractorExplanationFeedbackToggle: function () {
+		const feedbacks = {
+			'activity-id': pcex.jsonData['id'],
+			'activity-name': cleanName(pcex.jsonData['activityName']),
+			'goal-id': pcex.currentGoal.id,
+			'goal-name': cleanName(pcex.currentGoal.name),
+			'user-usr': pcex.userCredentials?.usr,
+			'user-group': pcex.userCredentials?.grp,
+			'user-session-id': pcex.userCredentials?.sid,
+			'user-svc': pcex.userCredentials?.svc,
+			'line': JSON.parse($('input[name="distractor-explanation-line"]').val()),
+			'tile': JSON.parse($('input[name="distractor-explanation-tile"]').val()),
+			'toggle': $('#distractor-explanation-feedback-ui').is(':visible') ? 'hide' : 'show',
+		};
+
+		$.ajax({
+			type: 'POST',
+			url: (
+				location.href.startsWith('http://localhost:3000') ?
+					'http://localhost:3000' : 'http://adapt2.sis.pitt.edu/pcex-authoring'
+			) + '/api/distractor-explanation/feedback',
+			data: JSON.stringify(feedbacks),
+			contentType: 'application/json',
+			dataType: 'json',
+			success: function (response) { },
+			error: function () { },
+			complete: function () {
+				$('#distractor-explanation-feedback-ui').toggle();
+			}
+		});
+	},
+
+	handleLineExplanationFeedbackSubmit: function () {
+		const feedbacks = {
+			'activity-id': pcex.jsonData['id'],
+			'activity-name': cleanName(pcex.jsonData['activityName']),
+			'goal-id': pcex.currentGoal.id,
+			'goal-name': cleanName(pcex.currentGoal.name),
+			'user-usr': pcex.userCredentials?.usr,
+			'user-group': pcex.userCredentials?.grp,
+			'user-session-id': pcex.userCredentials?.sid,
+			'user-svc': pcex.userCredentials?.svc,
+			'line': {
+				...JSON.parse($('input[name="line-explanation-line"]').val()),
+				index: parseInt($('#line-explanation-feedback-ui').closest('[help_index]').attr('help_index')),
+			},
+			feedback: $('textarea[name="helpful-explanation-open-feedback"]').val(),
+		};
+		$('#line-explanation-feedback-ui input[type="radio"]:checked').each(function () {
+			feedbacks[$(this).attr('name').replace('helpful-explanation-', '')] = $(this).val();
+		});
+
+		$.ajax({
+			type: 'POST',
+			url: (
+				location.href.startsWith('http://localhost:3000') ?
+					'http://localhost:3000' : 'http://adapt2.sis.pitt.edu/pcex-authoring'
+			) + '/api/distractor-explanation/feedback',
+			data: JSON.stringify(feedbacks),
+			contentType: 'application/json',
+			dataType: 'json',
+			success: function (response) {
+				$('#helpful-explanation-submission-feedback').html(`
+					<span style="color:green;">${_text('feedback-submitted-successfully')}</span>	
+				`);
+			},
+			error: function () {
+				$('#helpful-explanation-submission-feedback').html(`
+					<span style="color:red;">${_text('feedback-submission-error')}</span>	
+				`);
+			},
+			complete: function () {
+				setTimeout(() => {
+					$('#helpful-explanation-submission-feedback').html(``);
+				}, 5000);
+			}
+		});
+	},
+
+	handleLineExplanationFeedbackToggle: function () {
+		const feedbacks = {
+			'activity-id': pcex.jsonData['id'],
+			'activity-name': cleanName(pcex.jsonData['activityName']),
+			'goal-id': pcex.currentGoal.id,
+			'goal-name': cleanName(pcex.currentGoal.name),
+			'user-usr': pcex.userCredentials?.usr,
+			'user-group': pcex.userCredentials?.grp,
+			'user-session-id': pcex.userCredentials?.sid,
+			'user-svc': pcex.userCredentials?.svc,
+			'line': {
+				...JSON.parse($('input[name="line-explanation-line"]').val()),
+				index: parseInt($('#line-explanation-feedback-ui').closest('[help_index]').attr('help_index')),
+			},
+			'toggle': $('#line-explanation-feedback-ui').is(':visible') ? 'hide' : 'show',
+		};
+
+		$.ajax({
+			type: 'POST',
+			url: (
+				location.href.startsWith('http://localhost:3000') ?
+					'http://localhost:3000' : 'http://adapt2.sis.pitt.edu/pcex-authoring'
+			) + '/api/distractor-explanation/feedback',
+			data: JSON.stringify(feedbacks),
+			contentType: 'application/json',
+			dataType: 'json',
+			success: function (response) { },
+			error: function () { },
+			complete: function () {
+				$('#line-explanation-feedback-ui').toggle();
+			}
+		});
+	},
+
+	stopAnimationClick: function () {
+		pcex.stopAnimation()
+	},
+
 	stopAnimation: function () {
 		$('#start-animation-button').show();
 		$('#stop-animation-button').hide();
@@ -1495,6 +1724,8 @@ var pcex = {
 
 		pcex.animationStepIndex = 0;
 		pcex.animationStarted = false;
+
+		pcex.resizeIframe();
 	},
 
 	animationNext: function () {
@@ -1562,6 +1793,7 @@ var pcex = {
 
 				return $('#line_' + line.id).addClass('blink-me');
 			});
+
 			$(helpContent).find("a[id^='help_next']").click(function () {
 				var line = pcex.linesWithExplanation[pcex.animationStepIndex];
 				$('#line_' + line.id).removeClass('blink-me');
@@ -1584,7 +1816,6 @@ var pcex = {
 				pcex.trackExplanation('sequential', index + 1, line.number);
 
 				return $('#line_' + line.id).addClass('blink-me');
-
 			});
 
 			var lineOffsetPosition = $('#line_' + line.id).offset().top + 20;
@@ -1602,7 +1833,6 @@ var pcex = {
 				$(window).scrollTop(lineRelativePosition);
 			}
 
-
 			if (pcex.animationStepIndex == 0) {
 				$('#animation-back-button').attr('disabled', true);
 			} else {
@@ -1614,6 +1844,8 @@ var pcex = {
 			} else {
 				$('#animation-next-button').attr('disabled', false);
 			}
+
+			pcex.resizeIframe();
 		}
 	},
 
@@ -1648,10 +1880,10 @@ var pcex = {
 			var levelDifference = 0;
 
 			if (currentIndentLevel < requiredIndentLevel) {
-				indentationMessage = _text('increase-indentation-by').replace('lineNumber', `${relatedBlankLine.line.number}`).replace('levelDifference', `${levelDifference}`)
+				indentationMessage = _text('increase-indentation-by').replace('lineNumber', `${relatedBlankLine.line.number}`).replace('levelDifference', `${levelDifference}`);
 				levelDifference = requiredIndentLevel - currentIndentLevel;
 			} else {
-				indentationMessage = _text('decrease-indentation-by').replace('lineNumber', `${relatedBlankLine.line.number}`).replace('levelDifference', `${levelDifference}`)
+				indentationMessage = _text('decrease-indentation-by').replace('lineNumber', `${relatedBlankLine.line.number}`).replace('levelDifference', `${levelDifference}`);
 				levelDifference = currentIndentLevel - requiredIndentLevel;
 			}
 
@@ -1662,7 +1894,7 @@ var pcex = {
 		} else {
 			hintContent = pcex.createHelpWindowContent(
 				relatedBlankLine.line, true,
-				// pcex.droppedTiles[relatedBlankLineIndex].line // <-- disable feedback form for now
+				pcex.droppedTiles[relatedBlankLineIndex].line // pass the tile too
 			);
 		}
 
@@ -1671,6 +1903,8 @@ var pcex = {
 		$('#hint').append(hintContent);
 		$('#hint-div').show();
 		pcex.hideCheckCollapsible();
+
+		pcex.resizeIframe();
 	},
 
 	clearHint: function () {
@@ -1679,6 +1913,8 @@ var pcex = {
 		$('#hint-div').hide();
 
 		pcex.makeCheckButtonEnabledIfTilesFilled();
+
+		pcex.resizeIframe();
 	},
 
 	handleHelpButtonClicked: function (element) {
