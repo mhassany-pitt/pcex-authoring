@@ -5,7 +5,6 @@ import session from 'express-session';
 import FileStore from 'session-file-store';
 import passport from 'passport';
 import * as bodyParser from 'body-parser';
-import { corsMiddleware } from './cors-middleware';
 
 declare const module: any;
 
@@ -16,7 +15,11 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   const production = (process.env.NODE_ENV || 'development').toLowerCase() == 'production';
   if (production) {
-    app.use(corsMiddleware);
+    app.enableCors({
+      credentials: true,
+      // accept requests from any origin
+      origin: (origin, callback) => callback(null, true),
+    });
   } else {
     app.enableCors({ credentials: true, origin: 'http://localhost:4200' });
   }
