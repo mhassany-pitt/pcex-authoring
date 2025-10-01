@@ -13,7 +13,7 @@ const translations = {
 		'your-program-throws-exception': 'Your program throws exception',
 		'exception-details': 'Exception Details',
 		'your-program-has-compilation-error': 'Your program has compilation error',
-		'compilation-error-details': 'Compilation Error Details',
+		'compilation-error-details': 'Compilation Error',
 		'your-program-output-is-different': 'Your program output is different than the expected output',
 		'program-output-details': 'Program Output Details',
 		'is-incorrect': 'is incorrect',
@@ -32,7 +32,7 @@ const translations = {
 		'clear': 'Clear',
 		'next-challenge': 'Next Challenge',
 		'show-me-correct-program': 'Show Me Correct Program',
-		'show-me-hint': 'Show Me Hint',
+		'show-me-hint': 'Explain',
 		'tell-me-whats-wrong': 'Tell me what’s wrong',
 		'explanations': 'Explanations',
 		'next': 'Next',
@@ -67,7 +67,7 @@ const translations = {
 		'your-program-throws-exception': 'Tu programa arroja una excepción',
 		'exception-details': 'Detalles de la excepción',
 		'your-program-has-compilation-error': 'Tu programa tiene un error de compilación',
-		'compilation-error-details': 'Detalles del error de compilación',
+		'compilation-error-details': 'Error de compilación',
 		'your-program-output-is-different': 'La salida de tu programa es distinta que la esperada',
 		'program-output-details': 'Detalles de la salida del programa',
 		'is-incorrect': 'es incorrecto(a)',
@@ -86,7 +86,7 @@ const translations = {
 		'clear': 'Restablecer',
 		'next-challenge': 'Siguiente desafío',
 		'show-me-correct-program': 'Muéstrame el programa correcto',
-		'show-me-hint': 'Muéstrame una pista',
+		'show-me-hint': 'Explica',
 		'tell-me-whats-wrong': 'Dime qué está mal',
 		'explanations': 'Explicaciones',
 		'next': 'Siguiente',
@@ -1500,7 +1500,7 @@ var pcex = {
 
 	getLineExplanationFeedbackUI: function (line) {
 		const feedback_ui = $(`
-			<div style="margin-top:10px;">
+			<form style="margin-top:10px;">
 				<input type="hidden" name="line-explanation-line" />
 				<span id="line-explanation-provide-feedback-btn">${_text('provide-feedback')}</span>
 				<div id="line-explanation-feedback-ui" style="display:none;">
@@ -1543,7 +1543,7 @@ var pcex = {
 						<tr><td id="helpful-explanation-submission-feedback"></td></tr>
 					</table>
 				</div>
-			</div>`);
+			</form>`);
 		feedback_ui.find('input[name="line-explanation-line"]').attr('value', JSON.stringify(line));
 		return feedback_ui;
 	},
@@ -1814,6 +1814,10 @@ var pcex = {
 				}
 
 				pcex.trackExplanation('sequential', index + 1, line.number);
+
+				// reset feedback-ui
+				helpDiv.find('form').trigger("reset");
+				helpDiv.find('#line-explanation-feedback-ui').hide();
 
 				return $('#line_' + line.id).addClass('blink-me');
 			});
