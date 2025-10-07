@@ -481,6 +481,8 @@ var pcex = {
 				if (pcex.currentGoal.fullyWorkedOut == false) {
 					$(helpButton).hide();
 					lineNumberSpan.style.marginLeft = '21px';
+				} else {
+					lineNumberSpan.style.marginLeft = '5px';
 				}
 			}
 
@@ -497,6 +499,8 @@ var pcex = {
 					$(increaseIndentButton).css('z-index', '99999');
 					$('#overlay').fadeIn(300);
 				}
+
+				lineNumberSpan.style.marginLeft = '21px';
 			}
 		} else {
 			lineContent.append(indentedCode);
@@ -695,8 +699,12 @@ var pcex = {
 		var blankLineIndex = $(this).attr('lineIndex');
 		pcex.handleIndentButtonClicked(blankLineIndex);
 
-		var lineText = pcex.getTextNode($(this).parent());
-		lineText.data = '    ' + lineText.data;
+		const firstEl = $(this).closest('.line').find('.linenumber')[0].nextSibling;
+		if (firstEl.nodeType === 3) { // a text node
+			firstEl.nodeValue = '    ' + firstEl.nodeValue;
+		} else if (firstEl.nodeType === 1) { // an element node
+			firstEl.innerHTML = '    ' + firstEl.innerHTML;
+		}
 
 		pcex.droppedTileIndentation[blankLineIndex]++;
 
@@ -707,9 +715,12 @@ var pcex = {
 		var blankLineIndex = $(this).attr('lineIndex');
 		pcex.handleIndentButtonClicked(blankLineIndex);
 
-		var lineText = pcex.getTextNode($(this).parent());
-		lineText.data = lineText.data.replace(/^\s{4}/, '');
-
+		const firstEl = $(this).closest('.line').find('.linenumber')[0].nextSibling;
+		if (firstEl.nodeType === 3) { // a text node
+			firstEl.nodeValue = firstEl.nodeValue.replace(/^\s{4}/, '');
+		} else if (firstEl.nodeType === 1) { // an element node	
+			firstEl.innerHTML = firstEl.innerHTML.replace(/^\s{4}/, '');
+		}
 
 		if (pcex.droppedTileIndentation[blankLineIndex] > 0) {
 			pcex.droppedTileIndentation[blankLineIndex]--;
@@ -1287,11 +1298,10 @@ var pcex = {
 			pcex.fixBrokenHelpIcons();
 		});
 
-
 		$.each(pcex.currentGoal.lineList, function (i, line) {
 			const helpBtn = $("#help_" + line.id);
 			helpBtn.unbind('click').click(pcex.handleHelpButtonClicked).show();
-			helpBtn.next().css('margin-left', '0px');
+			helpBtn.next().css('margin-left', '5px');
 		});
 
 		pcex.higlightCorrectBlankLines(pcex.blankLineIDs);
