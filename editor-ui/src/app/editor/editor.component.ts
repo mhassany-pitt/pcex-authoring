@@ -1065,3 +1065,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     this._v['moh70-dangling-distractors'] = Array.from(dang_Dists).map(ln => parseInt(ln));
   }
 }
+
+// TODO: add the last gpt-model
+// TODO: create a demo of how to use the tool including the translation feature
+// TODO: create the list of activities that we need to translate to arabic
