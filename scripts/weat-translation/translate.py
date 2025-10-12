@@ -98,7 +98,7 @@ for i, activity_fn in enumerate(os.listdir("./activities")):
         )
 
         generation = client.responses.create(
-            model="gpt-4o-mini",
+            model="gpt-5-mini",
             input=[system_msg, user_msg],
             text={"format": {"type": "text"}},  # Format of the input text
             temperature=0,  # Temperature for randomness

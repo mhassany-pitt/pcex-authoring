@@ -40,7 +40,7 @@ export class GptGenaiController {
         },
       });
       worker.on('message', (result) => res.json(result));
-      worker.on('error', (error) => res.status(500).json({ message: error.message }));
+      worker.on('error', (error) => res.status(422).json({ message: error.message }));
     } catch (error) {
       return res.status(422).json({ message: error.message });
     }

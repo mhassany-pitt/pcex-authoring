@@ -9,7 +9,9 @@ export const distExpJsonSchema = `{${$schema},"type": "object","properties": {"e
 
 // --------------
 
-export const assistantTemplate = `You are a learning support bot focused on introductory programming.`;
+export const assistantTemplate = `You are a learning support bot focused on introductory programming.
+
+Use simple, clear language and avoid advanced technical terms unless absolutely necessary.`;
 
 export const expTaskIdentifyAndExplain = `Given the following PCEX, explain the essential lines<<target_language>>.`;
 export const expTaskExplainLn = `Given the following PCEX, explain Line <<line_number>><<target_language>>.`;
@@ -41,7 +43,7 @@ PROBLEM SOLUTION:
 EXAMPLE OUTPUT:
 Format your output strictly in the following JSON structure, without including anything else.
 {
-    "line number": ["explanation 1", ..., "explanation n"], 
+    "<<line_number>>": ["explanation 1", ..., "explanation n"], 
     ... 
 }`.trim();
 

@@ -44,27 +44,31 @@ export class GptGenaiService {
     await ensureDir(path);
 
     const prompt = expTemplate
-      .replace(/<<task>>/g, expTaskIdentifyAndExplain.replace(/<<target_language>>/g, config.target_language ? ` in ${config.target_language}` : ''))
+      .replace(/<<task>>/g, expTaskIdentifyAndExplain.replace(/<<target_language>>/g,
+        config.target_language ? ` in ${config.target_language}` : ''))
+      .replace(/<<line_number>>/g, 'line number')
       .replace(/<<problem_language>>/g, language)
       .replace(/<<problem_statement>>/g, statement)
       .replace(/<<problem_solution>>/g, prepLn2Solution(solution));
 
-    const messages = [
+    const input = [
       { role: 'system', content: assistantTemplate },
       { role: 'user', content: prompt },
     ];
 
-    await writeFile(file, JSON.stringify({ request: messages }));
+    await writeFile(file, JSON.stringify({ request: input }));
 
     const response = await this.promptGPT({
-      config, messages, response_format: {
+      config, input, format: {
         type: "json_schema",
-        json_schema: { 'name': 'response', schema: JSON.parse(expJsonSchema) }
+        name: 'response',
+        strict: true,
+        schema: JSON.parse(expJsonSchema),
       } as any
     });
-    await writeFile(file, JSON.stringify({ request: messages, response }));
+    await writeFile(file, JSON.stringify({ request: input, response }));
 
-    return JSON.parse(this.removeJsonQuotes(response.choices[0].message.content));
+    return JSON.parse(this.removeJsonQuotes(response.output_text));
   }
 
   async explainTheLine({ config, user, id, language, statement, solution, line_number }) {
@@ -75,25 +79,28 @@ export class GptGenaiService {
     const prompt = expTemplate
       .replace(/<<task>>/g, expTaskExplainLn.replace(/<<line_number>>/g, line_number)
         .replace(/<<target_language>>/g, config.target_language ? ` in ${config.target_language}` : ''))
+      .replace(/<<line_number>>/g, line_number)
       .replace(/<<problem_language>>/g, language)
       .replace(/<<problem_statement>>/g, statement)
       .replace(/<<problem_solution>>/g, prepLn2Solution(solution));
 
-    const messages = [
+    const input = [
       { role: 'system', content: assistantTemplate },
       { role: 'user', content: prompt },
     ];
-    await writeFile(file, JSON.stringify({ request: messages }));
+    await writeFile(file, JSON.stringify({ request: input }));
 
     const response = await this.promptGPT({
-      config, messages, response_format: {
+      config, input, format: {
         type: "json_schema",
-        json_schema: { 'name': 'response', schema: JSON.parse(expJsonSchema) }
+        name: 'response',
+        strict: true,
+        schema: JSON.parse(expJsonSchema),
       } as any
     });
-    await writeFile(file, JSON.stringify({ request: messages, response }));
+    await writeFile(file, JSON.stringify({ request: input, response }));
 
-    return JSON.parse(this.removeJsonQuotes(response.choices[0].message.content));
+    return JSON.parse(this.removeJsonQuotes(response.output_text));
   }
 
   async generateDistractors({ config, user, id, language, statement, solution, line_number, n_distractors }) {
@@ -114,21 +121,23 @@ export class GptGenaiService {
       .replace(/<<problem_statement>>/g, statement)
       .replace(/<<problem_solution>>/g, prepLn2Solution(solution));
 
-    const messages = [
+    const input = [
       { role: 'system', content: assistantTemplate },
       { role: 'user', content: prompt },
     ];
-    await writeFile(file, JSON.stringify({ request: messages }));
+    await writeFile(file, JSON.stringify({ request: input }));
 
     const response = await this.promptGPT({
-      config, messages, response_format: {
+      config, input, format: {
         type: "json_schema",
-        json_schema: { 'name': 'response', schema: JSON.parse(distJsonSchema) }
+        name: 'response',
+        strict: true,
+        schema: JSON.parse(distJsonSchema),
       } as any
     });
-    await writeFile(file, JSON.stringify({ request: messages, response }));
+    await writeFile(file, JSON.stringify({ request: input, response }));
 
-    return JSON.parse(this.removeJsonQuotes(response.choices[0].message.content));
+    return JSON.parse(this.removeJsonQuotes(response.output_text));
   }
 
   async generateDistractorExplanation({ config, user, id, language, statement, solution, line_number, distractor }) {
@@ -146,21 +155,23 @@ export class GptGenaiService {
       .replace(/<<problem_statement>>/g, statement)
       .replace(/<<problem_solution>>/g, prepLn2Solution(solution));
 
-    const messages = [
+    const input = [
       { role: 'system', content: assistantTemplate },
       { role: 'user', content: prompt },
     ];
-    await writeFile(file, JSON.stringify({ request: messages }));
+    await writeFile(file, JSON.stringify({ request: input }));
 
     const response = await this.promptGPT({
-      config, messages, response_format: {
+      config, input, format: {
         type: "json_schema",
-        json_schema: { 'name': 'response', schema: JSON.parse(distExpJsonSchema) }
+        name: 'response',
+        strict: true,
+        schema: JSON.parse(distExpJsonSchema),
       } as any
     });
-    await writeFile(file, JSON.stringify({ request: messages, response }));
+    await writeFile(file, JSON.stringify({ request: input, response }));
 
-    return JSON.parse(this.removeJsonQuotes(response.choices[0].message.content));
+    return JSON.parse(this.removeJsonQuotes(response.output_text));
   }
 
   async translateModel({ config, user, id, model, translation }) {
@@ -223,16 +234,16 @@ export class GptGenaiService {
       .replace(/<<translate-sections>>/g, join(['[[PROGRAM-NAME]]', '[[PROGRAM-DESCRIPTION]]', ...Object.keys(sectFlags).filter(k => sectFlags[k])]))
       .replace(/<<src-translation-instruction>>/g, transElms.length ? transSrcCodeElmsInst.replace('<<elements>>', join(transElms)) : '');
 
-    const messages = [
+    const input = [
       { role: 'system', content: transAssistantTemplate },
       { role: 'user', content: prompt },
     ];
-    await writeFile(file, JSON.stringify({ request: messages }));
+    await writeFile(file, JSON.stringify({ request: input }));
 
-    const response = await this.promptGPT({ config, messages, response_format: { type: 'text' } });
-    await writeFile(file, JSON.stringify({ request: messages, response }));
+    const response = await this.promptGPT({ config, input, format: { type: 'text' } });
+    await writeFile(file, JSON.stringify({ request: input, response }));
 
-    const translated = response.choices[0].message.content;
+    const translated = response.output_text;
 
     model.name = translated.substring(
       translated.indexOf('[[PROGRAM-NAME]]') + '[[PROGRAM-NAME]]'.length,
@@ -278,27 +289,19 @@ export class GptGenaiService {
   }
 
   async validate(config: any) {
-    config.model = config.model || 'gpt-4o-mini';
-    if (config.model != 'gpt-4o-mini' && !config.api_key)
-      throw new Error('API key is required if you are usign a model other than gpt-4o-mini.');
+    config.model = config.model || 'gpt-5-mini';
+    if (config.model != 'gpt-5-mini' && !config.api_key)
+      throw new Error('API key is required if you are usign a model other than gpt-5-mini.');
     config.api_key = config.api_key || this.config.get('OPENAI_API_KEY');
-    config.organization = config.organization || this.config.get('OPENAI_ORG_ID');
-    config.temperature = config.temperature || 0;
-    config.max_tokens = config.max_tokens || 2048;
-    config.top_p = config.top_p || 1;
-    config.frequency_penalty = config.frequency_penalty || 0;
-    config.presence_penalty = config.presence_penalty || 0;
+    // config.organization = config.organization || this.config.get('OPENAI_ORG_ID');
     return config;
   }
 
-  private async promptGPT({ messages, config, response_format }) {
-    const api = new OpenAI({ apiKey: config.api_key, organization: config.organization });
-    const { model, temperature, max_tokens,
-      top_p, frequency_penalty, presence_penalty } = config;
-    return await api.chat.completions.create({
-      messages, model, temperature, max_tokens,
-      top_p, frequency_penalty, presence_penalty
-    });
+  private async promptGPT({ input, config, format }) {
+    const { api_key, organization, model, ...params } = config;
+    const payload = { ...params, model, text: { format }, input };
+    const openai = new OpenAI({ apiKey: api_key, organization: organization });
+    return await openai.responses.create(payload);
   }
 
   private removeJsonQuotes(resp: string) {

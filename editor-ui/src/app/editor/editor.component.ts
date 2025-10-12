@@ -78,14 +78,9 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   GPT_CONF_PLACEHOLDER = JSON.stringify({
-    model: "gpt-4o-mini",
+    model: "gpt-5-mini",
     api_key: "<<YOUR_API_KEY>>",
-    organization: "<<YOUR_ORGANIZATION>>",
-    temperature: 0,
-    max_tokens: 2048,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0
+    // organization: "<<YOUR_ORGANIZATION>>",
   }, null, 2);
 
   openAIGPTConfig: string = '';
@@ -747,7 +742,8 @@ export class EditorComponent implements OnInit, OnDestroy {
 
         if (error.status == 422) this.messages.add({
           severity: 'error', summary: 'Error',
-          detail: error.error.message
+          detail: error.error.message,
+          life: 10000
         });
 
         delete this._v[type];
@@ -863,7 +859,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   resetOpenAIGPTConfig() {
-    this.openAIGPTConfig = this.GPT_CONF_PLACEHOLDER.replace('<<YOUR_API_KEY>>', '').replace('<<YOUR_ORGANIZATION>>', '');
+    this.openAIGPTConfig = this.GPT_CONF_PLACEHOLDER.replace('<<YOUR_API_KEY>>', ''); // .replace('<<YOUR_ORGANIZATION>>', '');
   }
 
   loadOpenAIGPTConfig(then?: () => void) {
