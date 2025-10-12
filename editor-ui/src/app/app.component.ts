@@ -15,15 +15,15 @@ import { DropdownModule } from 'primeng/dropdown';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AccordionModule } from 'primeng/accordion';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet, FormsModule,
-    LoadingBarRouterModule,
-    LoadingBarHttpClientModule,
-    HttpClientModule,
+    CommonModule, LoadingBarRouterModule,
+    LoadingBarHttpClientModule, HttpClientModule,
     FormsModule, ButtonModule, AccordionModule, TableModule,
     InputTextModule, DialogModule, InputTextareaModule,
     CheckboxModule, DropdownModule, SelectButtonModule,
@@ -33,13 +33,21 @@ import { AccordionModule } from 'primeng/accordion';
   styleUrl: './app.component.less'
 })
 export class AppComponent {
-  docUrl = 'https://docs.google.com/document/d/1biWaF23Vy7tFpXQE0WDgte3_iaaWfa1MrJxxxs7bpHg';
 
-  get welcomeMessageDismissed() { return localStorage.getItem('pcex-authoring.welcome') === 'dismissed'; }
+  lastDismissed = 0;
+  VERSION = 20251012;
 
-  constructor(public app: AppService) { }
+  DOCUMENTATION_URL = 'https://docs.google.com/document/d/1biWaF23Vy7tFpXQE0WDgte3_iaaWfa1MrJxxxs7bpHg';
 
-  dismissWelcomeMessage() {
-    localStorage.setItem('pcex-authoring.welcome', 'dismissed');
+  constructor(public app: AppService) {
+    this.lastDismissed = parseInt(localStorage.getItem('pcex-authoring.update-notice.version') || '0', 10);
+  }
+
+  getStorageItem(key: string) {
+    return localStorage.getItem(key);
+  }
+
+  setStorageItem(key: string, value: string) {
+    localStorage.setItem(key, value);
   }
 }

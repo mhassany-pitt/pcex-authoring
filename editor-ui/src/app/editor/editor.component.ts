@@ -70,11 +70,14 @@ export class EditorComponent implements OnInit, OnDestroy {
   get titleDescCollapsed() { return localStorage.getItem('pcex.prefs.titleDescCollapsed') == 'true'; }
   set titleDescCollapsed(value) { localStorage.setItem('pcex.prefs.titleDescCollapsed', `${value}`); }
 
-  get trackingMessageDismissed() { return localStorage.getItem('pcex-authoring.tracking') === 'dismissed'; }
+  get trackingMessageDismissed() { return localStorage.getItem('pcex-authoring.tracking') == 'dismissed'; }
   dismissTrackingMessage() {
     localStorage.setItem('pcex-authoring.tracking', 'dismissed');
-    if (this._v['dont-collect-data'])
-      this.log({ type: 'tracking-message-dismissed', collectdata: !this._v['dont-collect-data'] }, true);
+    localStorage.setItem('pcex-authoring.tracking.dont-collect-data', this._v['dont-collect-data']);
+    if (this._v['dont-collect-data']) this.log({
+      type: 'tracking-message-dismissed',
+      collectdata: !this._v['dont-collect-data']
+    }, true);
   }
 
   GPT_CONF_PLACEHOLDER = JSON.stringify({
@@ -106,14 +109,16 @@ export class EditorComponent implements OnInit, OnDestroy {
     private confirm: ConfirmationService,
     private messages: MessageService,
     public app: AppService,
-  ) { }
+  ) {
+    this._v['dont-collect-data'] = localStorage.getItem('pcex-authoring.tracking.dont-collect-data') == 'true';
+  }
 
   takeSnapshot(val: any) {
     return val ? JSON.parse(JSON.stringify(val)) : val;
   }
 
   log(event: any, force?: boolean) {
-    if (!force && this._v['dont-collect-data'])
+    if (this._v['dont-collect-data'] && !force)
       return;
 
     event = { ...this.takeSnapshot(event), dtime: Date.now(), v: 'oct24' };
@@ -177,8 +182,10 @@ export class EditorComponent implements OnInit, OnDestroy {
     // editor.onKeyUp(($event: any) => this.recordKeys($event.browserEvent, 'keyup'));
 
     editor.onDidChangeCursorPosition(($event: any) => this.ngZone.run(() => {
-      if (this._v['viewing-untranslated'])
+      if (this._v['viewing-untranslated']) {
+        this.reloadLineMarkers();
         return;
+      }
 
       if (this.selectedLineNum != $event.position.lineNumber) {
         this.selectLine($event.position.lineNumber, false);

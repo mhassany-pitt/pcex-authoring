@@ -1,33 +1,49 @@
 <ngx-loading-bar ref="router" [height]="'0.25rem'"></ngx-loading-bar>
 <ngx-loading-bar ref="http" [height]="'0.25rem'"></ngx-loading-bar>
 
-<router-outlet></router-outlet>
+<router-outlet />
 
-<p-dialog [visible]="!welcomeMessageDismissed" header="Welcome!" position="top" [closable]="false" [modal]="true"
-  [style]="{'max-width': '30rem', 'margin-top': '5rem'}" appendTo="body">
-  <div>
+<p-dialog [visible]="getStorageItem('pcex-authoring.welcome') != 'dismissed'" header="Welcome!" position="top"
+  [closable]="false" [modal]="true" [style]="{'max-width': '30rem', 'margin-top': '5rem'}" appendTo="body">
+  <p class="mt-0 leading-normal">
     PCEX Authoring Tool is an easy to use web-app for authoring PCEX examples and challenges.
-  </div>
+    <br />
+    <br />
 
-  <div class="my-2">
     If you are new to this tool, feel free to read the
-    <a [href]="docUrl" target="_blank" class="underline">documentation</a>.
-  </div>
+    <a [href]="DOCUMENTATION_URL" target="_blank" class="underline">documentation</a>.
 
-  <div>
+    <br />
+    <br />
     You can always access the documentation by
     clicking on the <i class="pi pi-question-circle"></i> icon at the
     bottom right corner of the screen.
-  </div>
+  </p>
 
-  <div class="mt-4">
-    <button pButton type="button" label="Dismiss" class="p-button-sm p-button-help" style="padding: 0.25rem 0.5rem;"
-      (click)="dismissWelcomeMessage()">
-    </button>
-  </div>
+
+  <button pButton type="button" label="Dismiss" class="p-button-help" (click)="
+      setStorageItem('pcex-authoring.welcome', 'dismissed'); 
+      setStorageItem('pcex-authoring.update-notice.version', VERSION.toString());
+      lastDismissed = VERSION;">
+  </button>
 </p-dialog>
 
-<a [href]="docUrl" target="_blank"
+<p-dialog [visible]="getStorageItem('pcex-authoring.welcome') == 'dismissed' && lastDismissed < VERSION"
+  header="New Update!" position="top" [closable]="false" [modal]="true"
+  [style]="{'max-width': '30rem', 'margin-top': '5rem'}" appendTo="body">
+  <p class="mt-0 leading-normal">
+    We have made some updates to the tool since your last visit. Check out the
+    <a href="https://docs.google.com/document/d/1PUO33f69zC6hlV9cTOS8RhMF_g6gLkcCUAcsfpUSGPk/edit?usp=sharing"
+      target="_blank" class="underline">documentation</a>
+    for more information.
+  </p>
+  <button pButton type="button" label="Dismiss" class="p-button-help" (click)="
+      setStorageItem('pcex-authoring.update-notice.version', VERSION.toString());
+      lastDismissed = VERSION;">
+  </button>
+</p-dialog>
+
+<a [href]="DOCUMENTATION_URL" target="_blank"
   class="fixed right-4 bottom-4 flex items-center gap-2 border rounded-2xl px-1 bg-gray-100 text-gray-400 hover:text-blue-600 no-underline"
   style="z-index: 999999;" (mouseenter)="docLbl.classList.remove('hidden')"
   (mouseleave)="docLbl.classList.add('hidden')">
