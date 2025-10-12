@@ -49,16 +49,12 @@
 
       <!-- name & description -->
       <div class="w-full flex flex-col gap-2 bg-gray-100 p-2 rounded-sm shadow-md">
-        <div *ngIf="!titleDescCollapsed" class="flex-grow flex items-center relative">
-          <input type="text" name="name" pInputText [(ngModel)]="model.name" (ngModelChange)="updateTitle()"
-            placeholder="*Name" class="flex-grow text-xl border-gray-200" required maxlength="128"
-            (focus)="onNameFocus($event)" (blur)="onNameBlur($event);" />
-          <span class="absolute right-2 top-2 bottom-2 text-gray-400 font-normal" style="padding: 0.35rem;">
-            {{ model.name?.length || 0 }} / 128
-          </span>
-        </div>
+        <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText dir="auto" [(ngModel)]="model.name"
+          (ngModelChange)="updateTitle()" placeholder="*Name" class="flex-grow text-xl border-gray-200"
+          [class.border-red-600]="model.name?.length >= 128" required maxlength="128" (focus)="onNameFocus($event)"
+          (blur)="onNameBlur($event);" />
 
-        <textarea *ngIf="!titleDescCollapsed" pInputTextarea name="description" [autoResize]="true"
+        <textarea *ngIf="!titleDescCollapsed" pInputTextarea name="description" dir="auto" [autoResize]="true"
           placeholder="Description" rows="1" [(ngModel)]="model.description"
           class="p-inputtext-sm w-full border-gray-200" (focus)="onDescriptionFocus($event)"
           (blur)="onDescriptionBlur($event)"></textarea>
@@ -175,7 +171,7 @@
                         (click)="toggleSelection('explanation', comment)"></p-checkbox>
 
                       <!-- explanation -->
-                      <textarea pInputTextarea [autoResize]="true" [name]="_v['t'] + '-explanation-' + i"
+                      <textarea pInputTextarea [autoResize]="true" dir="auto" [name]="_v['t'] + '-explanation-' + i"
                         [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
                         class="flex-grow border-gray-200 px-1.5 py-1 text-sm"
                         [ngClass]="{ 'gpt-generated': _v['generated-explanations']?.includes(comment) }"
@@ -283,7 +279,7 @@
                           Type the distractor line here...
                         </span>
                         <div class="flex items-stretch">
-                          <textarea pInputTextarea [autoResize]="true" [name]="'distractor-description-' + i"
+                          <textarea pInputTextarea [autoResize]="true" dir="auto" [name]="'distractor-description-' + i"
                             [(ngModel)]="distractor.description" placeholder="Explanation" rows="1"
                             class="text-xs border-0 rounded-none bg-gray-50 flex-grow" style="padding: 0.25rem;"
                             (focus)="onDistractorExpFocus($event, distractor, i)"
@@ -389,10 +385,12 @@
 <p-dialog *ngIf="_v['translate']" [(visible)]="_v['translate']" header="Translate Source" [closable]="false"
   [modal]="true" [style]="{'width': '25rem'}" appendTo="body">
   <form #form="ngForm" class="flex flex-col gap-2" (submit)="translate()">
+    <span>Specify Target Language:</span>
     <input type="text" pInputText name="translate-tolanguage" [(ngModel)]="translation.target_language"
-      placeholder="Enter target language (e.g., Spanish)" class="flex-grow" [required]="true" />
+      placeholder="e.g.: Spanish" [required]="true" />
     <span class="text-xs text-gray-600 -mt-1">
-      This determines the language your source name, description, and code elements will be translated into.
+      This determines the language your source name, description, explanations,
+      distractors, and code elements will be translated into.
     </span>
 
     <span>Also, translate code elements:</span>
@@ -408,7 +406,7 @@
       class="ml-2" />
 
     <span class="text-xs text-gray-600">
-      Note: Make sure to "Save" for keeping the changes or refresh the page to undo.
+      Note: After translation, make sure to "Save" your changes or refresh the page to undo.
     </span>
 
     <div class="flex items-center justify-end gap-2 mt-2">
