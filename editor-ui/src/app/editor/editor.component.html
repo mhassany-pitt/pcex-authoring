@@ -13,6 +13,11 @@
         <span class="flex-grow"></span>
 
         <div class="flex items-center gap-2">
+          <button *ngIf="_v['allow-untranslated-view']" pButton type="button"
+            [label]="viewUntranslated ? 'View Original [Read-only!]' : 'View Translated'" icon="pi pi-file-o"
+            class="p-button-sm p-button-plain p-button-outlined -my-2" (click)="toggleTranslation()">
+          </button>
+
           <button pButton type="button" label="Preview" icon="pi pi-eye"
             class="p-button-sm p-button-help p-button-text -my-2" (click)="preview()" [loading]="_v['preview']"
             [disabled]="_v['preview']">
@@ -28,6 +33,9 @@
     </div>
 
     <div class="flex-grow container mx-auto mt-24 mb-16 flex flex-col gap-4 z-0">
+
+      {{this.distEditors.length}}
+      <!-- ------------------------------------------- -->
       <div *ngIf="false && app.user && app.user.email == 'moh70@pitt.edu'"
         class="flex items-center gap-2 bg-gray-100 shadow-md p-4">
         <span class="uppercase font-bold">moh70 toolbox:</span>
@@ -41,6 +49,7 @@
         <span>DANGLINGS EXPLANATIONS:[{{ _v['moh70-dangling-explanations']?.join(',') }}]</span>
         <span>DANGLINGS DISTRACTORS:[{{ _v['moh70-dangling-distractors']?.join(',') }}]</span>
       </div>
+      <!-- ------------------------------------------- -->
 
       <span class="text-xs text-gray-400 -mb-2">
         *Required fields (<i>name, source code</i>) are marked with
@@ -49,15 +58,16 @@
 
       <!-- name & description -->
       <div class="w-full flex flex-col gap-2 bg-gray-100 p-2 rounded-sm shadow-md">
-        <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText dir="auto" [(ngModel)]="model.name"
-          (ngModelChange)="updateTitle()" placeholder="*Name" class="flex-grow text-xl border-gray-200"
+        <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText dir="auto"
+          [(ngModel)]="model[viewUntranslated ? 'untr_name' : 'name']" (ngModelChange)="updateTitle()"
+          placeholder="*Name" class="flex-grow text-xl border-gray-200"
           [class.border-red-600]="model.name?.length >= 128" required maxlength="128" (focus)="onNameFocus($event)"
-          (blur)="onNameBlur($event);" />
+          (blur)="onNameBlur($event);" [disabled]="viewUntranslated" />
 
         <textarea *ngIf="!titleDescCollapsed" pInputTextarea name="description" dir="auto" [autoResize]="true"
-          placeholder="Description" rows="1" [(ngModel)]="model.description"
+          placeholder="Description" rows="1" [(ngModel)]="model[viewUntranslated ? 'untr_description' : 'description']"
           class="p-inputtext-sm w-full border-gray-200" (focus)="onDescriptionFocus($event)"
-          (blur)="onDescriptionBlur($event)"></textarea>
+          (blur)="onDescriptionBlur($event)" [disabled]="viewUntranslated"></textarea>
 
         <p-chips *ngIf="!titleDescCollapsed" name="tags" [(ngModel)]="model.tags" placeholder="Add tags"
           (onAdd)="addTag($event)" (onRemove)="removeTag($event)"></p-chips>
@@ -102,9 +112,9 @@
 
           <!-- source code editor -->
           <div class="flex-grow flex flex-col relative">
-            <ngx-monaco-editor id="src-editor" name="code" [(ngModel)]="model.code" [options]="srcEditorOptions"
-              (onInit)="setupSourceEditor($event)" required class="flex-grow rounded-sm border hover:border-gray-600"
-              style="height: auto; min-height: 250px;">
+            <ngx-monaco-editor id="src-editor" name="code" [(ngModel)]="model[viewUntranslated ? 'untr_code' : 'code']"
+              [options]="srcEditorOptions" (onInit)="setupSourceEditor($event)" required
+              class="flex-grow rounded-sm border hover:border-gray-600" style="height: auto; min-height: 250px;">
             </ngx-monaco-editor>
             <span *ngIf="!model.code" class="absolute top-0.5 left-12 text-xs text-gray-400 pointer-events-none">
               *type your source code here...
@@ -172,11 +182,13 @@
 
                       <!-- explanation -->
                       <textarea pInputTextarea [autoResize]="true" dir="auto" [name]="_v['t'] + '-explanation-' + i"
-                        [(ngModel)]="comment.content" [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
+                        [(ngModel)]="comment[viewUntranslated ? 'untr_content' : 'content']"
+                        [disabled]="!selectedLineNum" rows="1" placeholder="Explanation"
                         class="flex-grow border-gray-200 px-1.5 py-1 text-sm"
                         [ngClass]="{ 'gpt-generated': _v['generated-explanations']?.includes(comment) }"
                         (ngModelChange)="reloadLineMarkers()" (focus)="onExplanationFocus($event, comment, i)"
-                        (blur)="onExplanationBlur($event, comment, i)" autofocus="false"></textarea>
+                        (blur)="onExplanationBlur($event, comment, i)" autofocus="false"
+                        [disabled]="viewUntranslated"></textarea>
 
                       <!-- reorder-bar -->
                       <span class="text-gray-400 hover:text-gray-600 grap mr-2"
@@ -270,7 +282,8 @@
 
                       <!-- distractor editor & description -->
                       <div class="flex flex-col flex-grow relative border border-solid border-gray-200">
-                        <ngx-monaco-editor [name]="'distractor-' + i" [(ngModel)]="distractor.code"
+                        <ngx-monaco-editor [name]="'distractor-' + i"
+                          [(ngModel)]="distractor[viewUntranslated ? 'untr_code' : 'code']"
                           [options]="distEditorOptions" (onInit)="setupDistractorEditor($event, distractor, i)"
                           class="px-1 bg-white" style="height: 1.15rem; border: none;">
                         </ngx-monaco-editor>
@@ -280,10 +293,12 @@
                         </span>
                         <div class="flex items-stretch">
                           <textarea pInputTextarea [autoResize]="true" dir="auto" [name]="'distractor-description-' + i"
-                            [(ngModel)]="distractor.description" placeholder="Explanation" rows="1"
+                            [(ngModel)]="distractor[viewUntranslated ? 'untr_description' : 'description']"
+                            placeholder="Explanation" rows="1"
                             class="text-xs border-0 rounded-none bg-gray-50 flex-grow" style="padding: 0.25rem;"
                             (focus)="onDistractorExpFocus($event, distractor, i)"
-                            (blur)="onDistractorExpBlur($event, distractor, i)"></textarea>
+                            (blur)="onDistractorExpBlur($event, distractor, i)"
+                            [disabled]="viewUntranslated"></textarea>
                           <button pButton type="button" [label]="_v['gen-dist-exp-label-' + i]" icon="genai-icon"
                             title="Generate explanation for this distractor"
                             class="p-button-sm p-button-secondary p-button-text gen-dist-explanation-btn"

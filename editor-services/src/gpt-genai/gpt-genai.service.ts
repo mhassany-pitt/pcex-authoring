@@ -245,11 +245,13 @@ export class GptGenaiService {
 
     const translated = response.output_text;
 
+    model.untr_name = model.name; // backup
     model.name = translated.substring(
       translated.indexOf('[[PROGRAM-NAME]]') + '[[PROGRAM-NAME]]'.length,
       translated.indexOf('[[PROGRAM-DESCRIPTION]]')
     ).trim();
 
+    model.untr_description = model.description; // backup
     model.description = translated.substring(
       translated.indexOf('[[PROGRAM-DESCRIPTION]]') + '[[PROGRAM-DESCRIPTION]]'.length,
       translated.indexOf('[[SOURCE-CODE]]')
@@ -257,6 +259,7 @@ export class GptGenaiService {
 
     const first = (...indices: number[]) => indices.find(i => i > -1) || -1;
 
+    model.untr_code = model.code; // backup
     model.code = translated.substring(
       translated.indexOf('[[SOURCE-CODE]]') + '[[SOURCE-CODE]]'.length,
       first(translated.indexOf('[[LINE-EXPLANATIONS]]'), translated.indexOf('[[LINE-DISTRACTORS]]'), translated.length)
@@ -270,7 +273,9 @@ export class GptGenaiService {
         continue;
       const ps = l.split(']] ');
       const idxs = ps[0].replace('EXPL', '').split('.');
-      model.lines[`${parseInt(idxs[0])}`].comments[`${parseInt(idxs[1]) - 1}`].content = ps[1];
+      const line = model.lines[`${parseInt(idxs[0])}`].comments[`${parseInt(idxs[1]) - 1}`];
+      line.untr_content = line.content; // backup
+      line.content = ps[1];
     }
 
     if (distExplanations.length) for (const d of translated.substring(
@@ -281,8 +286,13 @@ export class GptGenaiService {
       const ps = d.split(']] ');
       const idxs = ps[0].split('.');
       const dist = model.distractors[parseInt(idxs[0]) - 1];
-      if (idxs[1] == 'LC') /*  */ dist.code = ps[1]
-      else if (idxs[1] == 'EXPL') dist.description = ps[1]
+      if (idxs[1] == 'LC') {
+        dist.untr_code = dist.code; // backup
+        dist.code = ps[1];
+      } else if (idxs[1] == 'EXPL') {
+        dist.untr_description = dist.description; // backup
+        dist.description = ps[1];
+      }
     }
 
     return model;
@@ -298,7 +308,20 @@ export class GptGenaiService {
   }
 
   private async promptGPT({ input, config, format }) {
-    const { api_key, organization, model, ...params } = config;
+    const {
+      // IGNORE these params
+      // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+      target_language,
+      translate_classes,
+      translate_functions,
+      translate_variables,
+      translate_strings,
+      translate_comments,
+      // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+      // pass the rest to GPT
+      api_key, organization, model,
+      ...params
+    } = config;
     const payload = { ...params, model, text: { format }, input };
     const openai = new OpenAI({ apiKey: api_key, organization: organization });
     return await openai.responses.create(payload);

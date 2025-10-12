@@ -86,6 +86,8 @@ export class EditorComponent implements OnInit, OnDestroy {
   openAIGPTConfig: string = '';
   translation: any = {};
 
+  viewUntranslated = false;
+
   _v: any = {
     'tabview': 0,
     'explanation-selection': [],
@@ -136,6 +138,8 @@ export class EditorComponent implements OnInit, OnDestroy {
         source.code = source.code || '';
         source.lines = source.lines || {};
         source.distractors = source.distractors || [];
+        this._v['allow-untranslated-view'] = !!source.untr_name || !!source.untr_description;
+
         this.model = source;
 
         this.updateTitle();
@@ -173,6 +177,9 @@ export class EditorComponent implements OnInit, OnDestroy {
     // editor.onKeyUp(($event: any) => this.recordKeys($event.browserEvent, 'keyup'));
 
     editor.onDidChangeCursorPosition(($event: any) => this.ngZone.run(() => {
+      if (this._v['viewing-untranslated'])
+        return;
+
       if (this.selectedLineNum != $event.position.lineNumber) {
         this.selectLine($event.position.lineNumber, false);
       }
@@ -188,7 +195,8 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   setupDistractorEditor(editor: any, distractor: any, index: number) {
-    this.distEditors.push(editor);
+    this.distEditors = this.distEditors.filter(e => e.distractor != distractor);
+    this.distEditors.push({ distractor, editor });
     // this.setupAsSingleLineEditor(editor);
 
     editor.onDidFocusEditorText(($event: any) => this.onDistractorFocus($event, distractor, index));
@@ -514,7 +522,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
     const editors = [];
     if (this.srcEditor) editors.push(this.srcEditor);
-    if (this.distEditors) editors.push(...this.distEditors);
+    if (this.distEditors) editors.push(...this.distEditors.map(e => e.editor));
 
     for (let editor of editors)
       monaco.editor.setModelLanguage(editor.getModel(), language);
@@ -1060,8 +1068,12 @@ export class EditorComponent implements OnInit, OnDestroy {
     this._v['moh70-dangling-explanations'] = Array.from(dang_Exps).map(ln => parseInt(ln));
     this._v['moh70-dangling-distractors'] = Array.from(dang_Dists).map(ln => parseInt(ln));
   }
-}
 
-// TODO: add the last gpt-model
-// TODO: create a demo of how to use the tool including the translation feature
-// TODO: create the list of activities that we need to translate to arabic
+  toggleTranslation() {
+    this._v['viewing-untranslated'] = setTimeout(() => delete this._v['viewing-untranslated'], 300);
+    this.viewUntranslated = !this.viewUntranslated;
+    this.srcEditor.updateOptions({ readOnly: this.viewUntranslated });
+    this.distEditors.forEach((e: any) => e.editor.updateOptions({ readOnly: this.viewUntranslated }));
+    this.log({ type: 'view-untranslated', value: this.viewUntranslated });
+  }
+}
