@@ -38,34 +38,40 @@
           <th>Name & Description</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-source>
+      <ng-template pTemplate="body" let-$source>
         <tr>
           <td>
             <div class="flex flex-col items-center justify-center gap-1">
               <button pButton type="button" icon="pi pi-briefcase"
-                [title]="source.archived ? 'Unarchive source' : 'Archive source'"
-                class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': source.archived }"
-                (click)="toggleArchive(source)">
+                [title]="$source.archived ? 'Unarchive source' : 'Archive source'"
+                class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': $source.archived }"
+                (click)="toggleArchive($source)">
               </button>
               <button pButton type="button"
-                [title]="api.isGeneratingPreviewJson(source.id) ? 'Generating Preview' : 'Preview'"
-                icon="pi {{ api.isGeneratingPreviewJson(source.id) ? 'pi-spin pi-spinner' : 'pi-eye' }}"
-                class="p-button-text p-button-sm p-button-secondary preview-btn" (click)="preview(source)"
-                [disabled]="api.isGeneratingPreviewJson(source.id)">
+                [title]="api.isGeneratingPreviewJson($source.id) ? 'Generating Preview' : 'Preview'"
+                icon="pi {{ api.isGeneratingPreviewJson($source.id) ? 'pi-spin pi-spinner' : 'pi-eye' }}"
+                class="p-button-text p-button-sm p-button-secondary preview-btn" (click)="preview($source)"
+                [disabled]="api.isGeneratingPreviewJson($source.id)">
               </button>
               <button pButton type="button" icon="pi pi-clone" title="Clone Source"
-                class="p-button-text p-button-sm p-button-plain clone-btn" (click)="clone(source)">
+                class="p-button-text p-button-sm p-button-plain clone-btn" (click)="clone($source)">
               </button>
             </div>
           </td>
           <td>
-            <div class="flex flex-col gap-2" [ngClass]="{ 'line-through': source.archived }">
-              <span [routerLink]="['/editor', source.id]" class="font-bold cursor-pointer text-blue-700">
-                {{source.language ? source.language + ' | ' : ''}}{{source.name || '[name not specified]'}}
+            <div class="flex flex-col gap-2" [ngClass]="{ 'line-through': $source.archived }">
+              <span [routerLink]="['/editor', $source.id]" class="font-bold cursor-pointer text-blue-700">
+                {{$source.language ? $source.language + ' | ' : ''}}{{$source.name || '[name not specified]'}}
               </span>
-              <span class="text-xs ml-2">{{source.description}}</span>
-              <span *ngIf="source.tags?.length" class="text-xs ml-2">
-                <p-tag *ngFor="let tag of source.tags" [value]="tag" severity="success" class="mr-1" />
+              <span class="text-xs ml-2">{{$source.description}}</span>
+              <span *ngIf="$source.tags?.length" class="text-xs ml-2">
+                <p-tag *ngFor="let tag of $source.tags" [value]="tag" severity="success" class="mr-1" />
+              </span>
+              <span class="text-xs -mb-1" [ngClass]="{'font-bold': $source.user == app.user?.email}">
+                Created by: {{ $source.user }} <span *ngIf="$source.user == app.user?.email">(you)</span>
+              </span>
+              <span *ngIf="$source.collaborator_emails?.length" class="text-xs -mt-1">
+                Collaborators: {{ $source.collaborator_emails.join(', ') }}
               </span>
             </div>
           </td>

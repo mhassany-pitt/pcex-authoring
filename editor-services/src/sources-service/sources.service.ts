@@ -34,7 +34,7 @@ export class SourcesService {
   }
 
   async list({ user, archived }) {
-    const filter = { user };
+    const filter = { $or: [{ user }, { collaborator_emails: user }] };
     if (!archived) filter['archived'] = { $ne: true };
     return (await this.sources.find(filter)).map(toObject);
   }
@@ -44,16 +44,16 @@ export class SourcesService {
   }
 
   async read({ user, id: _id }) {
-    return toObject(await this.sources.findOne({ user, _id }));
+    return toObject(await this.sources.findOne({ $or: [{ user }, { collaborator_emails: user }], _id }));
   }
 
   async update({ user, _id, ...model }) {
-    return await this.sources.updateOne({ user, _id }, model);
+    return await this.sources.updateOne({ $or: [{ user }, { collaborator_emails: user }], _id }, model);
   }
 
-  async remove({ user, id: _id }): Promise<any> {
-    return await this.sources.deleteOne({ user, _id });
-  }
+  // async remove({ user, id: _id }): Promise<any> {
+  //   return await this.sources.deleteOne({ user, _id });
+  // }
 
   async log({ id, log }) {
     await writeFile(

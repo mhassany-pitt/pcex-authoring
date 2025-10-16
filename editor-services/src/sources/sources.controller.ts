@@ -30,8 +30,8 @@ export class SourcesController {
   @UseGuards(AuthenticatedGuard)
   async index(@Req() req: Request, @Query('include') include: string) {
     return (await this.sources.list({ user: this.getUserEmail(req), archived: include == 'archived' })).map(source => {
-      const { _id: id, archived, name, description, tags, language } = source;
-      return { id, archived, name, description, tags, language };
+      const { _id: id, archived, name, description, tags, language, user, collaborator_emails } = source;
+      return { id, archived, name, description, tags, language, user, collaborator_emails };
     }).sort((a, b) => b.id.toString().localeCompare(a.id.toString()));
   }
 
@@ -62,14 +62,14 @@ export class SourcesController {
     await this.sources.update({ ...updates, user: this.getUserEmail(req), _id: id });
   }
 
-  @Delete(':id')
-  @UseGuards(AuthenticatedGuard)
-  async remove(@Req() req: Request, @Param('id') id: string) {
-    const source = await this.sources.read({ user: this.getUserEmail(req), id });
-    if (!source) throw new NotFoundException();
+  // @Delete(':id')
+  // @UseGuards(AuthenticatedGuard)
+  // async remove(@Req() req: Request, @Param('id') id: string) {
+  //   const source = await this.sources.read({ user: this.getUserEmail(req), id });
+  //   if (!source) throw new NotFoundException();
 
-    await this.sources.remove({ user: this.getUserEmail(req), id });
-  }
+  //   await this.sources.remove({ user: this.getUserEmail(req), id });
+  // }
 
   @Post(':id/log')
   @UseGuards(AuthenticatedGuard)

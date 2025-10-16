@@ -20,6 +20,8 @@ export class Source {
   // @Prop({ type: [Object] }) variations: any[];
   @Prop({ type: [Object] }) distractors: any[];
   @Prop() programInput: string;
+
+  @Prop() collaborator_emails: string[];
 }
 
 export const SourceSchema = SchemaFactory.createForClass(Source);

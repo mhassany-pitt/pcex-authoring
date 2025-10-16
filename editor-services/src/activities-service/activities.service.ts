@@ -22,7 +22,7 @@ export class ActivitiesService {
   }
 
   async list({ user, archived }) {
-    const filter = { user };
+    const filter = { $or: [{ user }, { collaborator_emails: user }] };
     if (!archived) filter['archived'] = { $ne: true };
     return (await this.activities.find(filter)).map(toObject);
   }
@@ -32,14 +32,14 @@ export class ActivitiesService {
   }
 
   async read({ user, id: _id }) {
-    return toObject(await this.activities.findOne({ user, _id }));
+    return toObject(await this.activities.findOne({ $or: [{ user }, { collaborator_emails: user }], _id }));
   }
 
   async update({ user, id: _id, ...model }) {
-    return await this.activities.updateOne({ user, _id }, model);
+    return await this.activities.updateOne({ $or: [{ user }, { collaborator_emails: user }], _id }, model);
   }
 
-  async remove({ user, id: _id }): Promise<any> {
-    return await this.activities.deleteOne({ user, _id });
-  }
+  // async remove({ user, id: _id }): Promise<any> {
+  //   return await this.activities.deleteOne({ user, _id });
+  // }
 }

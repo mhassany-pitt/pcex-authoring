@@ -954,6 +954,7 @@ export class EditorComponent implements OnInit, OnDestroy {
       next: (resp: any) => {
         this.log({ type: 'generate:translate-model', payload: { ...payload, translated: resp } });
         this.model = resp;
+        this._v['allow-untranslated-view'] = !!resp.untr_name || !!resp.untr_description;
 
         this.saveOpenAIGPTConfig(() => { /* this will avoid saveOpenAIGPTConfig's toast message */ });
         setTimeout(() => this.selectLine(this.selectedLineNum, true, true), 300);

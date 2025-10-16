@@ -16,6 +16,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
+import { ChipsModule } from 'primeng/chips';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { TagModule } from 'primeng/tag';
     SelectButtonModule, UserAuthCtrlModule,
     InputTextModule, CheckboxModule,
     ConfirmDialogModule, TagModule,
+    ChipsModule,
   ],
   providers: [
     ConfirmationService

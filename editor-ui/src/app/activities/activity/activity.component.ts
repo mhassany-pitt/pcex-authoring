@@ -15,6 +15,8 @@ export class ActivityComponent implements OnInit {
 
   model: any;
 
+  _v: any = {};
+
   @Output()
   completed = new EventEmitter();
 

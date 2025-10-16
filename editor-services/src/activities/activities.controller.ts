@@ -158,8 +158,8 @@ export class ActivitiesController {
   @UseGuards(AuthenticatedGuard)
   async index(@Req() req: Request, @Query('include') include: string) {
     return (await this.activities.list({ user: this.getUserEmail(req), archived: include == 'archived' })).map(activity => {
-      const { _id: id, published, archived, name, items, linkings } = activity;
-      return this.attachStat({ id, published, archived, name, items, linkings: Object.keys(linkings || {}).length > 0 });
+      const { _id: id, published, archived, name, items, linkings, user, collaborator_emails } = activity;
+      return this.attachStat({ id, published, archived, name, items, linkings: Object.keys(linkings || {}).length > 0, user, collaborator_emails });
     }).sort((a, b) => b.id.toString().localeCompare(a.id.toString()));
   }
 
@@ -197,14 +197,14 @@ export class ActivitiesController {
     await this.activities.update({ ...updates, user: this.getUserEmail(req), _id: id });
   }
 
-  @Delete(':id')
-  @UseGuards(AuthenticatedGuard)
-  async remove(@Req() req: Request, @Param('id') id: string) {
-    const activity = await this.activities.read({ user: this.getUserEmail(req), id });
-    if (!activity) throw new NotFoundException();
+  // @Delete(':id')
+  // @UseGuards(AuthenticatedGuard)
+  // async remove(@Req() req: Request, @Param('id') id: string) {
+  //   const activity = await this.activities.read({ user: this.getUserEmail(req), id });
+  //   if (!activity) throw new NotFoundException();
 
-    await this.activities.remove({ user: this.getUserEmail(req), id });
-  }
+  //   await this.activities.remove({ user: this.getUserEmail(req), id });
+  // }
 
   // private async authorizePreview(req: Request, id: string, type: string) {
   // TODO: should we authorize?!

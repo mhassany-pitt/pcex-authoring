@@ -11,6 +11,8 @@ export class Activity {
   @Prop() name: string;
   @Prop({ type: [Object] }) items: any[];
   @Prop({ type: Object }) linkings: any;
+
+  @Prop() collaborator_emails: string[];
 }
 
 export const ActivitySchema = SchemaFactory.createForClass(Activity);
