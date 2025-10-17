@@ -64,6 +64,10 @@ export class HubController {
       const source = toObject(await this.service.getSource(item.item));
       if (!source) continue;
 
+      source.archived = false;
+      source.tags = activity.tags || [];
+      source.collaborator_emails = activity.collaborator_emails || [];
+
       // clone source
       const { _id, user: $dum1, ...others } = source;
       const srcClone = useId(toObject(
@@ -71,6 +75,8 @@ export class HubController {
 
       // update item id
       item.item = srcClone.id;
+      item.details.language = srcClone.language;
+      item.details.tags = srcClone.tags;
 
       // compile source
       const c_items = [{ item$: { ...srcClone, id: `${srcClone.id}_example` }, type: 'example' }];
@@ -81,18 +87,20 @@ export class HubController {
 
     if (!activity.sourcesOnly) {
       // clone activity
-      const { name, items } = activity;
+      const { name, items, collaborator_emails } = activity;
       for (let i = 0; i < items.length; i++) items[i] = {
         item: items[i].item,
         type: items[i].type,
         details: {
           name: items[i].details.name,
-          description: items[i].details.description
+          description: items[i].details.description,
+          language: items[i].details.language,
+          tags: items[i].details.tags,
         }
       };
 
       // compile activity
-      const actClone = useId(toObject(await this.service.createActivity({ user, name, items })));
+      const actClone = useId(toObject(await this.service.createActivity({ user, name, items, collaborator_emails })));
       await this.compiler.compile(actClone);
     }
 

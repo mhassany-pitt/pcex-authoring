@@ -102,24 +102,35 @@
   <form #form="ngForm" class="flex flex-col gap-2" (ngSubmit)="submitClone()">
     <input type="text" name="activity-name" pInputText [(ngModel)]="cloningActivity.name" placeholder="*Activity Name"
       class="text-xl" required />
-    <span>{{ cloningActivity.author.fullname }} ({{ cloningActivity.author.email }})</span>
-    <span class="text-gray-600 text-xs">Select the sources that you want to be cloned!</span>
+    <span class="text-xs text-gray-600">
+      Created by: {{ cloningActivity.author.fullname }} ({{ cloningActivity.author.email }})
+    </span>
+
+    <span class="mt-4 font-bold">Select the sources that you want to be cloned:</span>
     <ul class="mt-0">
       <li *ngFor="let item of cloningActivity.items" class="mt-2">
-        <div>
-          <p-checkbox [(ngModel)]="item.cloneItem" [binary]="true" [name]="'clone-source-' + item.id"
-            class="align-middle" />
+        <div class="flex items-center gap-2">
+          <p-checkbox [(ngModel)]="item.cloneItem" [binary]="true" [name]="'clone-source-' + item.id" />
           <input type="text" [name]="'source-name' + item.id" pInputText [(ngModel)]="item.details.name"
-            placeholder="*Source Name" class="mx-1" required size="40" />
-          <span class="align-middle">({{ item.type }})</span>
+            placeholder="*Source Name" class="flex-grow" required />
+          <span class="uppercase text-gray-400">[{{ item.details.language || '' }} {{ item.type }}]</span>
         </div>
         <div class="text-xs mt-1">{{ item.details.description }}</div>
       </li>
     </ul>
-    <div>
-      <p-checkbox [(ngModel)]="cloningActivity.sourcesOnly" [binary]="true" name="clone-activity"
-        label="Only clone the sources (the activity itself will not be cloned)." />
-    </div>
+
+    <span class="mt-4 font-bold">What should be cloned:</span>
+    <span class="text-xs text-gray-600">By default, everything is cloned.</span>
+    <p-checkbox name="clone-activity" [(ngModel)]="cloningActivity.sourcesOnly" [binary]="true"
+      label="Only clone the sources" class="ml-4" />
+
+    <span class="mt-4 font-bold">Add tags to the cloned sources:</span>
+    <p-chips name="tags" [(ngModel)]="cloningActivity.tags" separator="," placeholder="Source tags"
+      class="p-chips-sm ml-4" />
+
+    <span class="mt-4 font-bold">Type collaborator's email and press enter to add:</span>
+    <p-chips name="collaborator_emails" [(ngModel)]="cloningActivity.collaborator_emails" separator=","
+      placeholder="user@company.com, ..." class="p-chips-sm ml-4" />
 
     <div class="flex items-center justify-end mt-2">
       <button pButton label="Cancel" icon="pi pi-chevron-left" class="p-button-sm p-button-secondary p-button-text"

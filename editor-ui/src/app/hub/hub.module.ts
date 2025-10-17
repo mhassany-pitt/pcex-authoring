@@ -15,6 +15,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
+import { ChipsModule } from 'primeng/chips';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { TagModule } from 'primeng/tag';
     InputTextModule, TableModule,
     DropdownModule, SelectButtonModule,
     CheckboxModule, ToastModule,
-    UserAuthCtrlModule,
+    UserAuthCtrlModule, ChipsModule,
   ],
   providers: [
     MessageService,
