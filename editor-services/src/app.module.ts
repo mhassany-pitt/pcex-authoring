@@ -12,9 +12,10 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HubModule } from './hub/hub.module';
 import { GptGenaiModule } from './gpt-genai/gpt-genai.module';
-import { BulkModule } from './bulk/bulk.module';
+// import { BulkModule } from './bulk/bulk.module';
 import { KeyValueModule } from './keyvalue/keyvalue.module';
 import { KeyValueServiceModule } from './keyvalue-service/keyvalue-service.module';
+import { BackupModule } from './backup/backup.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { KeyValueServiceModule } from './keyvalue-service/keyvalue-service.modul
     ActivitiesModule,
     AuthModule, UsersModule,
     UserAdminModule, HubModule,
-    GptGenaiModule, KeyValueModule, KeyValueServiceModule,
+    GptGenaiModule, KeyValueModule,
+    KeyValueServiceModule, BackupModule,
     // BulkModule,
   ],
   controllers: [AppController],

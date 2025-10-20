@@ -1,10 +1,10 @@
 import {
-  Body, Controller, Delete, Get, NotFoundException, Param,
+  Body, Controller, Get, NotFoundException, Param,
   Patch, Post, Query, Req, Res, StreamableFile, UseGuards
 } from '@nestjs/common';
 import { ActivitiesService } from '../activities-service/activities.service';
 import { CompilerService } from '../compiler-service/compiler.service';
-import { createReadStream, exists } from 'fs-extra';
+import { createReadStream } from 'fs-extra';
 import { Request, Response } from 'express';
 import { toObject, useId } from 'src/utils';
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
@@ -27,30 +27,12 @@ export class ActivitiesController {
     @InjectDataSource('um2') private ds_um2: DataSource,
   ) { }
 
-  @Get('trim')
-  async trim() {
-    const activities = await this.activities.db().find();
-    const logs = [];
-    for (let activity of activities) {
-      const { id, ...$activity } = useId(toObject(activity));
-      $activity.collaborator_emails = $activity.collaborator_emails?.map((c: string) => c.trim().toLowerCase()).filter((c: string) => c);
-      await this.activities.db().updateOne({ _id: id }, { ...$activity });
-      logs.push(`Trimmed activity ${id}`);
-    }
-    return logs;
-  }
-
   private getUserEmail(req: any) { return req.user.email; }
 
   private attachStat(activity: any) {
     activity.stat = this.compiler.getSizeLastModified(activity.id);
     return activity;
   }
-
-  // @Get('backup')
-  // async backup() {
-  //   return await this.activities.backup();
-  // }
 
   @Get()
   @UseGuards(AuthenticatedGuard)

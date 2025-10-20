@@ -62,12 +62,4 @@ export class HubController {
       return res.status(422).json({ message: error.message });
     }
   }
-
-  @Get('backup')
-  @UseGuards(AuthenticatedGuard)
-  async backup(@Req() req: any) {
-    if (req.user.email == 'moh70@pitt.edu')
-      return await this.service.backup();
-    throw new NotFoundException();
-  }
 }
