@@ -185,6 +185,8 @@ export class ActivitiesController {
     const activity = await this.activities.read({ user: this.getUserEmail(req), id });
     if (!activity) throw new NotFoundException();
 
+    updates.collaborator_emails = updates.collaborator_emails?.map((c: string) => c.trim().toLowerCase()).filter((c: string) => c);
+
     await syncToPAWS({
       ds_agg: this.ds_agg,
       ds_um2: this.ds_um2,

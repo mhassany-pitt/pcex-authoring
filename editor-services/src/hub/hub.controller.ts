@@ -1,6 +1,5 @@
 import {
-  Body,
-  Controller, Get, NotFoundException,
+  Body, Controller, Get, NotFoundException,
   Param, Post, Query, Req, Res, StreamableFile,
   UseGuards
 } from '@nestjs/common';
@@ -8,8 +7,9 @@ import { HubService } from './hub.service';
 import { createReadStream } from 'fs';
 import { Response } from 'express';
 import { CompilerService } from 'src/compiler-service/compiler.service';
-import { toObject, useId } from 'src/utils';
+import { useId } from 'src/utils';
 import { UsersService } from 'src/users/users.service';
+import { Worker } from 'worker_threads';
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
 
 @Controller('hub')
@@ -48,62 +48,18 @@ export class HubController {
 
   @Post('clone')
   @UseGuards(AuthenticatedGuard)
-  async clone(@Body() activity: any, @Req() req: Request) {
-    const exists = await this.service.getActivity(activity.id);
-    if (!exists || !exists.published)
-      throw new NotFoundException();
-
-    // validate items
-    const vitems = exists.items.map(i => i.item);
-    activity.items = activity.items.filter((i: any) => vitems.includes(i.item));
-
-    const user = (req as any).user.email;
-
-    // clone sources
-    for (const item of activity.items) {
-      const source = toObject(await this.service.getSource(item.item));
-      if (!source) continue;
-
-      source.archived = false;
-      source.tags = activity.tags || [];
-      source.collaborator_emails = activity.collaborator_emails || [];
-
-      // clone source
-      const { _id, user: $dum1, ...others } = source;
-      const srcClone = useId(toObject(
-        await this.service.createSource({ ...others, user, name: item.details.name })));
-
-      // update item id
-      item.item = srcClone.id;
-      item.details.language = srcClone.language;
-      item.details.tags = srcClone.tags;
-
-      // compile source
-      const c_items = [{ item$: { ...srcClone, id: `${srcClone.id}_example` }, type: 'example' }];
-      const challenge = Object.keys(srcClone.lines).filter(ln => srcClone.lines[ln].blank);
-      if (challenge) c_items.push({ item$: { ...srcClone, id: `${srcClone.id}_challenge` }, type: 'challenge' });
-      await this.compiler.compile({ id: srcClone.id, name: srcClone.name, items: c_items });
+  async clone(@Body() activity: any, @Req() req: any, @Res() res: Response) {
+    try {
+      const worker = new Worker(`${__dirname}/clone.js`, {
+        workerData: {
+          user: req.user.email,
+          ...activity
+        },
+      });
+      worker.on('message', (result) => res.json(result));
+      worker.on('error', (error) => res.status(422).json({ message: error.message }));
+    } catch (error) {
+      return res.status(422).json({ message: error.message });
     }
-
-    if (!activity.sourcesOnly) {
-      // clone activity
-      const { name, items, collaborator_emails } = activity;
-      for (let i = 0; i < items.length; i++) items[i] = {
-        item: items[i].item,
-        type: items[i].type,
-        details: {
-          name: items[i].details.name,
-          description: items[i].details.description,
-          language: items[i].details.language,
-          tags: items[i].details.tags,
-        }
-      };
-
-      // compile activity
-      const actClone = useId(toObject(await this.service.createActivity({ user, name, items, collaborator_emails })));
-      await this.compiler.compile(actClone);
-    }
-
-    return {};
   }
 }

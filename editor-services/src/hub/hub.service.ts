@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Activity } from 'src/activities-service/activity.schema';
 import { Source } from 'src/sources-service/source.schema';
-import { toObject } from 'src/utils';
+import { toObject, useId } from 'src/utils';
 
 @Injectable()
 export class HubService {
