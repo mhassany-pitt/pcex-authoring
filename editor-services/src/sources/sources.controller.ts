@@ -59,6 +59,9 @@ export class SourcesController {
     const source = await this.sources.read({ user: this.getUserEmail(req), id });
     if (!source) throw new NotFoundException();
 
+    updates.tags = updates.tags?.map((t: string) => t.trim()).filter((t: string) => t);
+    updates.collaborator_emails = updates.collaborator_emails?.map((c: string) => c.trim().toLowerCase()).filter((c: string) => c);
+
     await this.sources.update({ ...updates, user: this.getUserEmail(req), _id: id });
   }
 

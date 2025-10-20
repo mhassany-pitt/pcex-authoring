@@ -6,6 +6,7 @@ import { ActivitySchema } from 'src/activities-service/activity.schema';
 import { SourceSchema } from 'src/sources-service/source.schema';
 import { CompilerServiceModule } from 'src/compiler-service/compiler-service.module';
 import { UsersModule } from 'src/users/users.module';
+import { CloneService } from './clone.service';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { UsersModule } from 'src/users/users.module';
     CompilerServiceModule,
   ],
   controllers: [HubController],
-  providers: [HubService]
+  providers: [HubService, CloneService],
 })
 export class HubModule { }
