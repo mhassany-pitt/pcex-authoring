@@ -121,7 +121,12 @@ export class EditorComponent implements OnInit, OnDestroy {
     if (this._v['dont-collect-data'] && !force)
       return;
 
-    event = { ...this.takeSnapshot(event), dtime: Date.now(), v: 'oct24' };
+    event = {
+      ...this.takeSnapshot(event),
+      author: this.app.user.email,
+      dtime: Date.now(),
+      v: 'oct24',
+    };
     event.since_dtime0 = event.dtime - this.dtime0;
     const log = {
       tries: 0,
