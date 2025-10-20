@@ -15,6 +15,13 @@ export class HubService {
     @InjectModel('sources') private sources: Model<Source>,
   ) { }
 
+  async backup() {
+    return {
+      activities: (await this.activities.find()).map(e => useId(toObject(e))),
+      sources: (await this.sources.find()).map(e => useId(toObject(e))),
+    };
+  }
+
   async list({ key }) {
     const filter = { published: true };
     if (key) filter['name'] = { $regex: key, $options: 'i' };

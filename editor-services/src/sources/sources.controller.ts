@@ -14,6 +14,20 @@ export class SourcesController {
     private sources: SourcesService,
   ) { }
 
+  @Get('trim')
+  async trim() {
+    const sources = await this.sources.db().find();
+    const logs = [];
+    for (let source of sources) {
+      const { id, ...$source } = useId(toObject(source));
+      $source.tags = $source.tags?.map((t: string) => t.trim()).filter((t: string) => t);
+      $source.collaborator_emails = $source.collaborator_emails?.map((c: string) => c.trim().toLowerCase()).filter((c: string) => c);
+      await this.sources.db().updateOne({ _id: id }, { ...$source });
+      logs.push(`Trimmed source ${id}`);
+    }
+    return logs;
+  }
+
   // @Get('samples')
   // async samples() {
   //   return await this.sources.samples();

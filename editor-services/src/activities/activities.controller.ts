@@ -14,65 +14,6 @@ import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { syncToPAWS } from './paws-sync';
-// import { appendFile, readFile } from 'fs/promises';
-
-// const activities2clone = [
-//   "arithmetic.bmi_calculator",
-//   "arithmetic.f_to_c_conversion",
-//   "arithmetic.pythagorean_theorem",
-//   "arithmetic.time_conversion",
-//   "arraylist.vocabulary",
-//   "arrays.j_array_basic",
-//   "arrays.j_array_change",
-//   "arrays.j_array_fill",
-//   "arrays.j_array_min_max",
-//   "arrays.j_array_process_elements",
-//   "arrays.j_array_rotate",
-//   "arrays.j_search_array",
-//   "arrays.j_temperature",
-//   "arrays2d.j_array2d_basic",
-//   "arrays2d.j_print_medals",
-//   "arrays2d.j_soda_survery",
-//   "artihmetic.vending_machine",
-//   "artithmetic.inc_dec_operators",
-//   "booleans.fail_course",
-//   "booleans.hot_dry",
-//   "booleans.phone_age",
-//   "booleans.rent_car",
-//   "booleans.three_booleans",
-//   "exceptions.j_check_age",
-//   "exceptions.j_check_producut_code",
-//   "files.j_input_stat",
-//   "files.j_work_hours",
-//   "for_loops.j_for_one",
-//   "for_loops.j_for_three",
-//   "for_loops.j_for_two",
-//   "for_loops.j_squares",
-//   "ifelse.if_else_if_grade",
-//   "ifelse.if_else_num",
-//   "ifelse.if_else_wage",
-//   "ifelse.nested_if_min_max",
-//   "ifelse.nested_if_temperature",
-//   "inheritance.animals",
-//   "inheritance.point",
-//   "nested_for.repeated_sequence",
-//   "nested_for.star_patterns",
-//   "objects.classes.account",
-//   "objects.classes.loan",
-//   "objects.classes.point",
-//   "objects.classes.tv",
-//   "strings.addition",
-//   "strings.charAt",
-//   "strings.equals",
-//   "strings.escape_chars",
-//   "strings.substring",
-//   "while_loops.divisor",
-//   "while_loops.inputs",
-//   "while_loops.j_average",
-//   "while_loops.j_check_adjacent",
-//   "while_loops.j_digits",
-//   "while_loops.win_percentage",
-// ];
 
 @Controller('activities')
 export class ActivitiesController {
@@ -84,63 +25,20 @@ export class ActivitiesController {
     private compiler: CompilerService,
     @InjectDataSource('aggregate') private ds_agg: DataSource,
     @InjectDataSource('um2') private ds_um2: DataSource,
-  ) {
-    // setTimeout(() => this.tmpCloneStudySources(), 0);
+  ) { }
+
+  @Get('trim')
+  async trim() {
+    const activities = await this.activities.db().find();
+    const logs = [];
+    for (let activity of activities) {
+      const { id, ...$activity } = useId(toObject(activity));
+      $activity.collaborator_emails = $activity.collaborator_emails?.map((c: string) => c.trim().toLowerCase()).filter((c: string) => c);
+      await this.activities.db().updateOne({ _id: id }, { ...$activity });
+      logs.push(`Trimmed activity ${id}`);
+    }
+    return logs;
   }
-
-  // private async attachLanguages() {
-  //   for (let activity of (await this.activities.backup()).map(useId)) {
-  //     let count = 0;
-  //     for (let source of activity.items) {
-  //       if (!source.details.language || !source.details.tags) {
-  //         const $source = useId(await this.sources.read({ id: source.item, user: activity.user }));
-  //         source.details.language = $source.language;
-  //         source.details.tags = $source.tags;
-  //         console.log(`added missing languages/tags to ${activity.name} --> ${$source.name} (${$source.language})`);
-  //         count++;
-  //       }
-  //     }
-
-  //     if (count) {
-  //       const { id, user, ...others } = activity;
-  //       await this.activities.update({ ...others, user, id });
-  //     }
-  //   }
-  // }
-
-  // private async tmpCloneStudySources() {
-  //   const path = `${this.config.get('STORAGE_PATH')}/study-clone-cache.txt`;
-  //   const cache = await exists(path)
-  //     ? (await readFile(path, 'utf-8')).split('\n').map(line => line.trim())
-  //     : [];
-
-  //   for (const { id, ...activity } of (
-  //     await this.activities.list({ user: 'moh70@pitt.edu', archived: true })
-  //   ).filter(a => activities2clone.includes(a.name)).map(useId).map(({ linkings, ...a }) => a)) {
-  //     if (cache.includes(activity.name)) {
-  //       continue;
-  //     }
-
-  //     for (const item of activity.items) {
-  //       const { id, ...attrs } = useId(await this.sources.read({ id: item.item, user: activity.user }));
-  //       attrs.tags ||= [];
-  //       attrs.tags.push('llm-gpt4o');
-  //       Object.keys(attrs.lines || {}).forEach(k => {
-  //         if (attrs.lines[k].comments?.length > 0)
-  //           attrs.lines[k].comments = [{ content: '// TODO: generate' }]
-  //       });
-  //       attrs.distractors = [];;
-  //       item.item = useId(toObject(await this.sources.create({ ...attrs }))).id;
-  //     }
-
-  //     await this.activities.create({ ...activity });
-  //     cache.push(activity.name);
-  //     await appendFile(path, `${activity.name}\n`);
-  //     console.log('cloned:', activity.name);
-  //   }
-
-  //   this.attachLanguages();
-  // }
 
   private getUserEmail(req: any) { return req.user.email; }
 
