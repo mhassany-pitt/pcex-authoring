@@ -13,7 +13,49 @@ export class HubService {
     private config: ConfigService,
     @InjectModel('activities') private activities: Model<Activity>,
     @InjectModel('sources') private sources: Model<Source>,
-  ) { }
+  ) {
+    this.trim();
+  }
+
+  private async trim() {
+    this.sources.find().cursor().eachAsync(async (doc) => {
+      const source = useId(toObject(doc));
+      const changes = {};
+
+      if (source.tags) {
+        const tags = source.tags.map((t: string) => t.trim()).filter((t: string) => t);
+        source.tags = tags;
+        changes['tags'] = tags;
+      }
+
+      if (source.collaborator_emails) {
+        const cols = source.collaborator_emails.map((c: string) => c.trim().toLowerCase()).filter((c: string) => c);
+        source.collaborator_emails = cols;
+        changes['collaborator_emails'] = cols;
+      }
+
+      if (Object.keys(changes).length) {
+        await this.activities.updateOne({ _id: source.id }, { $set: { ...changes } });
+        console.log(`Trimmed source ${source.id}`);
+      }
+    });
+
+    this.activities.find().cursor().eachAsync(async (doc) => {
+      const activity = useId(toObject(doc));
+      const changes = {};
+
+      if (activity.collaborator_emails) {
+        const cols = activity.collaborator_emails.map((c: string) => c.trim().toLowerCase()).filter((c: string) => c);
+        activity.collaborator_emails = cols;
+        changes['collaborator_emails'] = cols;
+      }
+
+      if (Object.keys(changes).length) {
+        await this.activities.updateOne({ _id: activity.id }, { $set: { ...changes } });
+        console.log(`Trimmed activity ${activity.id}`);
+      }
+    });
+  }
 
   async backup() {
     return {
