@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivitiesService } from '../../activities.service';
+import { AppService } from '../../app.service';
 
 @Component({
   selector: 'app-activity',
@@ -21,6 +22,7 @@ export class ActivityComponent implements OnInit {
   completed = new EventEmitter();
 
   constructor(
+    public app: AppService,
     private api: ActivitiesService,
   ) { }
 
@@ -74,5 +76,9 @@ export class ActivityComponent implements OnInit {
       },
       (error: any) => console.log(error)
     )
+  }
+
+  validate_pawssync_conflict() {
+    return this.app.paws_sync_allowed && this.model.items.filter((i: any) => i.type == 'example').length == 1;
   }
 }

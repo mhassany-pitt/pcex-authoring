@@ -6,17 +6,30 @@ import { AuthenticatedGuard } from './authenticated.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { compare, hash } from 'bcryptjs';
+import { ConfigService } from '@nestjs/config';
+import { readFile } from 'fs/promises';
 
 @Controller('auth')
 export class AuthController {
 
   constructor(
+    private config: ConfigService,
     private users: UsersService,
   ) { }
 
+  async allowPAWsSync(req: any): Promise<boolean> {
+    const email = req.user?.email?.toLowerCase();
+    return email ? (
+      await readFile(`${this.config.get('STORAGE_PATH')}/paws-sync--allowed-users.txt`, 'utf8')
+    ).toLowerCase().split('\n').map(user => user.trim()).includes(email) : false;
+  }
+
   @Get('handshake')
-  handshake(@Req() req: any) {
-    return { user: req.user };
+  async handshake(@Req() req: any) {
+    return {
+      user: req.user,
+      allow_paws_sync: await this.allowPAWsSync(req),
+    };
   }
 
   @Post('register')

@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 export class AppService {
 
   user: any;
+  paws_sync_allowed: boolean = false;
 
   constructor(private http: HttpClient) { }
 
@@ -15,6 +16,7 @@ export class AppService {
       .get(`${environment.apiUrl}/auth/handshake`, { withCredentials: true })
       .pipe(map((resp: any) => {
         this.user = resp?.user;
+        this.paws_sync_allowed = resp?.allow_paws_sync;
         return resp;
       }));
   }

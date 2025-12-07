@@ -2181,21 +2181,21 @@ var pcex = {
 		return pcex.currentGoal.fileName.replace(".java", "").replace(".py", "");
 	},
 
-	reportToUMThroughPCEX: function (umParams) {
-		$.ajax({
-			url: 'http://pawscomp2.sis.pitt.edu/pcex/api/reportUM/' + umParams,
-			type: "GET",
-			complete: function () {
-				//called when complete
-			},
+	// reportToUMThroughPCEX: function (umParams) {
+	// 	$.ajax({
+	// 		url: 'http://pawscomp2.sis.pitt.edu/pcex/api/reportUM/' + umParams,
+	// 		type: "GET",
+	// 		complete: function () {
+	// 			//called when complete
+	// 		},
 
-			success: function () {
-				//console.log('reported to um');
-			},
+	// 		success: function () {
+	// 			//console.log('reported to um');
+	// 		},
 
-			error: function () {
-				//console.log('um report error');
-			},
-		});
-	},
+	// 		error: function () {
+	// 			//console.log('um report error');
+	// 		},
+	// 	});
+	// },
 }

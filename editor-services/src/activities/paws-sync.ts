@@ -18,15 +18,16 @@ type Params = {
 export const syncToPAWS = async (params: Params) => {
   const allowedUsersFilePath = `${params.config.get('STORAGE_PATH')}/paws-sync--allowed-users.txt`;
   const allowedUsers = await readFile(allowedUsersFilePath, 'utf8');
-  if (allowedUsers.split('\n').map(user => user.trim()).includes(params.request.user.email)) {
-    console.info(`[${params.request.user.email}] sync activity (${params.activity.name}) with PAWS aggregate/um2.`);
+  const email = params.request.user?.email?.toLowerCase();
+  if (allowedUsers.toLowerCase().split('\n').map(user => user.trim()).includes(email)) {
+    console.info(`[${email}] sync activity (${params.activity.name}) with PAWS aggregate/um2.`);
     await syncToAggUM2(params);
   } else {
-    console.warn(`[${params.request.user.email}] not allowed to sync activity (${params.activity.name}) with PAWS aggregate/um2.`);
+    console.warn(`[${email}] not allowed to sync activity (${params.activity.name}) with PAWS aggregate/um2.`);
   }
 };
 
-// remove single quote, double quote, and comma
+  // remove single quote, double quote, and comma
 const cleanName = (name: string) => name.replace(/['",]/g, '');
 
 const syncToAggUM2 = async (params: Params) => {
@@ -100,6 +101,9 @@ const syncToAggUM2 = async (params: Params) => {
         activity.published ? 'public' : 'private', activity.published ? 1 : 0,
       ]);
       if (aggContentInsert.insertId) activity.linkings.agg[`content__${source.id}`] = aggContentInsert.insertId;
+      ids.agg.add(activity.linkings.agg[`content__${source.id}`]);
+
+      // title, problem-statement, code, solution, iframe-url
       await agg_qr.query('DELETE FROM ent_content_attrs WHERE content_id = ?', [activity.linkings.agg[`content__${source.id}`]]);
       await agg_qr.query(
         `INSERT INTO ent_content_attrs (content_id, description, code, preview_url, metadata) VALUES (?, ?, ?, ?, ?)`, [
@@ -110,9 +114,6 @@ const syncToAggUM2 = async (params: Params) => {
           })),
         })
       ]);
-
-      // title, problem-statement, code, solution, iframe-url
-      ids.agg.add(activity.linkings.agg[`content__${source.id}`]);
 
       if (isTypeExample) {
         // 4. insert/update example's lines
