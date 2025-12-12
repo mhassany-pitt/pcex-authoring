@@ -67,16 +67,24 @@ export class ActivitiesController {
 
     updates.collaborator_emails = updates.collaborator_emails?.map((c: string) => c.trim().toLowerCase()).filter((c: string) => c);
 
-    await syncToPAWS({
-      ds_agg: this.ds_agg,
-      ds_um2: this.ds_um2,
-      config: this.config,
-      activities: this.activities,
-      sources: this.sources,
-      request: req,
-      activity: updates
-    });
+    const resp = {};
+    try {
+      await syncToPAWS({
+        ds_agg: this.ds_agg,
+        ds_um2: this.ds_um2,
+        config: this.config,
+        activities: this.activities,
+        sources: this.sources,
+        request: req,
+        activity: updates
+      });
+    } catch (error) {
+      console.error('PAWS sync error:', error);
+      resp['paws_sync_error'] = 'Failed to sync with PAWS UM/Aggregate.';
+    }
+
     await this.activities.update({ ...updates, user: this.getUserEmail(req), _id: id });
+    return resp;
   }
 
   // @Delete(':id')

@@ -66,12 +66,17 @@ export class ActivitiesComponent implements OnInit {
   toggleArchive(activity: any) {
     activity.archived = !activity.archived;
     this.api.update(activity).subscribe(
-      (activity: any) => this.reload(),
+      (activity: any) => {
+        this.alert_paws_sync_error(activity);
+        this.reload();
+      },
       (error: any) => console.log(error)
     );
   }
 
   update(activity: any) {
+    this.alert_paws_sync_error(activity);
+
     if (activity) setTimeout(() => {
       this.genPreviewJson(activity, async () => {
         const updated: any = await this.api.read(activity.id).toPromise();
@@ -102,9 +107,19 @@ export class ActivitiesComponent implements OnInit {
   togglePublish(activity: any) {
     activity.published = !activity.published;
     this.api.update(activity).subscribe(
-      (resp: any) => this.reload(),
+      (resp: any) => {
+        this.alert_paws_sync_error(activity);
+        this.reload();
+      },
       (error: any) => console.log(error)
     )
+  }
+
+  alert_paws_sync_error(activity: any) {
+    if (activity?.paws_sync_error) {
+      alert(activity.paws_sync_error);
+      delete activity.paws_sync_error;
+    }
   }
 
   clone(activity: any) {

@@ -71,7 +71,7 @@ export class ActivityComponent implements OnInit {
     const editing = this.model.id;
     (editing ? this.api.update(this.model) : this.api.create(this.model)).subscribe(
       (resp: any) => {
-        const activity = { ... this.activity, ...resp };
+        const activity = { ...this.activity, ...resp };
         this.completed.emit(activity);
       },
       (error: any) => console.log(error)
@@ -79,6 +79,14 @@ export class ActivityComponent implements OnInit {
   }
 
   validate_pawssync_conflict() {
-    return this.app.paws_sync_allowed && this.model.items.filter((i: any) => i.type == 'example').length == 1;
+    if (!this.app.paws_sync_allowed) return true;
+
+    const items: any[] = this.model.items || [];
+    const itemIds = items.filter(i => i.item).map(i => i.item);
+    const noDuplicateIds = new Set(itemIds).size === itemIds.length;
+
+    const exactlyOneExample = items.filter(i => i.type === "example").length === 1;
+
+    return exactlyOneExample && noDuplicateIds;
   }
 }

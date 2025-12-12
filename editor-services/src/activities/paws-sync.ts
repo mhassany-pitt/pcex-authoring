@@ -2,8 +2,8 @@ import { ConfigService } from "@nestjs/config";
 import { readFile } from "fs/promises";
 import { ActivitiesService } from "src/activities-service/activities.service";
 import { SourcesService } from "src/sources-service/sources.service";
-import { storageRoot, transaction, useId } from "src/utils";
-import { DataSource } from "typeorm";
+import { transaction, useId } from "src/utils";
+import { DataSource, QueryRunner } from "typeorm";
 
 type Params = {
   ds_agg: DataSource,
@@ -22,13 +22,19 @@ export const syncToPAWS = async (params: Params) => {
   if (allowedUsers.toLowerCase().split('\n').map(user => user.trim()).includes(email)) {
     console.info(`[${email}] sync activity (${params.activity.name}) with PAWS aggregate/um2.`);
     await syncToAggUM2(params);
+    // IMPORTANT: /aggregateUMServices and /cbum needs restart to reflect the changes
   } else {
     console.warn(`[${email}] not allowed to sync activity (${params.activity.name}) with PAWS aggregate/um2.`);
   }
 };
 
-  // remove single quote, double quote, and comma
+// remove single quote, double quote, and comma
 const cleanName = (name: string) => name.replace(/['",]/g, '');
+
+const exec_query = async (ds: QueryRunner, query: string, params: any[]) => {
+  console.log(`[PAWS-SYNC-QUERY] ${query}\n\t --> [${JSON.stringify(params || {})}]`);
+  return await ds.query(query, params);
+}
 
 const syncToAggUM2 = async (params: Params) => {
   await transaction<void>([params.ds_agg, params.ds_um2], async (agg_qr, um2_qr) => {
@@ -42,7 +48,7 @@ const syncToAggUM2 = async (params: Params) => {
     const ids = { um2: new Set<number>(), agg: new Set<number>() };
 
     // insert/update activity in um2
-    const um2ParentActivityInsert = await um2_qr.query(
+    const um2ParentActivityInsert = await exec_query(um2_qr,
       `INSERT INTO ent_activity (ActivityID, AppID, URI, Activity, Description, active) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE URI = ?, Activity = ?, active = ?`, [
       activity.linkings.um2['activity-id'], 45, url, activityName, 'PCEX Set', activity.published ? 1 : 0,
       // update if exists >>>
@@ -57,7 +63,7 @@ const syncToAggUM2 = async (params: Params) => {
       const isTypeExample = activity.items[index].type == 'example';
 
       // 1. insert/update the ent_activity (um2)
-      const um2ActivityInsert = await um2_qr.query(
+      const um2ActivityInsert = await exec_query(um2_qr,
         `INSERT INTO ent_activity (ActivityID, AppID, URI, Activity, Description, active) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE Activity = ?, active = ?`, [
         activity.linkings.um2[`activity__${source.id}`],
         isTypeExample ? 46 : 47, '', contentName,
@@ -69,7 +75,7 @@ const syncToAggUM2 = async (params: Params) => {
       ids.um2.add(activity.linkings.um2[`activity__${source.id}`]);
 
       // 2. insert/update rel_pcex_set_component (um2)
-      await um2_qr.query(
+      await exec_query(um2_qr,
         `INSERT IGNORE INTO rel_pcex_set_component (ParentActivityID, ChildActivityID, AppID) VALUES (?, ?, ?)`, [
         activity.linkings.um2['activity-id'], activity.linkings.um2[`activity__${source.id}`], 45
       ]);
@@ -85,7 +91,7 @@ const syncToAggUM2 = async (params: Params) => {
       const domain = lang == 'python' ? 'py' : lang;
 
       // 3. insert/update ent_content (aggregate)
-      const aggContentInsert = await agg_qr.query(
+      const aggContentInsert = await exec_query(agg_qr,
         `INSERT INTO ent_content (content_id, content_name, content_type, display_name, \`desc\`, url, domain, provider_id, creator_id, privacy, visible, author_name) 
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE content_name = ?, display_name = ?, url = ?, domain = ?, privacy = ?, visible = ?`, [
         activity.linkings.agg[`content__${source.id}`],
@@ -104,8 +110,8 @@ const syncToAggUM2 = async (params: Params) => {
       ids.agg.add(activity.linkings.agg[`content__${source.id}`]);
 
       // title, problem-statement, code, solution, iframe-url
-      await agg_qr.query('DELETE FROM ent_content_attrs WHERE content_id = ?', [activity.linkings.agg[`content__${source.id}`]]);
-      await agg_qr.query(
+      await exec_query(agg_qr, 'DELETE FROM ent_content_attrs WHERE content_id = ?', [activity.linkings.agg[`content__${source.id}`]]);
+      await exec_query(agg_qr,
         `INSERT INTO ent_content_attrs (content_id, description, code, preview_url, metadata) VALUES (?, ?, ?, ?, ?)`, [
         activity.linkings.agg[`content__${source.id}`], source.description, source.code, `${url}&index=${index}`,
         isTypeExample ? '' : JSON.stringify({
@@ -122,7 +128,7 @@ const syncToAggUM2 = async (params: Params) => {
             continue; // if no comments, skip this line
 
           // 4.1. insert/update ent_activity for each line
-          const um2ExLineInsert = await um2_qr.query(
+          const um2ExLineInsert = await exec_query(um2_qr,
             `INSERT INTO ent_activity (ActivityID, AppID, URI, Activity, Description, active) VALUES (?, ?, ?, ?, ?, ?) 
               ON DUPLICATE KEY UPDATE Activity = ?, Description = ?, active = ?`, [
             activity.linkings.um2[`activity-ln${lineNumber}__${source.id}`], 46, '', `${lineNumber}`, `PCEX Line - ${contentName}`, activity.published ? 1 : 0,
@@ -133,14 +139,14 @@ const syncToAggUM2 = async (params: Params) => {
           ids.um2.add(activity.linkings.um2[`activity-ln${lineNumber}__${source.id}`]);
 
           // 4.2. insert/update rel_activity_activity for example's lines
-          await um2_qr.query(
+          await exec_query(um2_qr,
             `INSERT IGNORE INTO rel_activity_activity (ParentActivityID, ChildActivityID, AppID) VALUES (?, ?, ?)`, [
             activity.linkings.um2[`activity__${source.id}`], activity.linkings.um2[`activity-ln${lineNumber}__${source.id}`], 46
           ]);
         }
       } else {
         // 5. insert/update challenge activity
-        await um2_qr.query(
+        await exec_query(um2_qr,
           `INSERT IGNORE INTO rel_activity_activity (ParentActivityID, ChildActivityID, AppID) VALUES (?, ?, ?)`, [
           211935, activity.linkings.um2[`activity__${source.id}`], 47
         ]);
@@ -150,48 +156,17 @@ const syncToAggUM2 = async (params: Params) => {
     // remove old linkings (um2)
     for (const [key, id] of Object.entries<number>(activity.linkings.um2)) {
       if (ids.um2.has(id)) continue; // skip if still linked
-      await um2_qr.query("DELETE FROM rel_pcex_set_component WHERE ParentActivityID = ? OR ChildActivityID = ?", [id, id]);
-      await um2_qr.query("DELETE FROM rel_activity_activity WHERE ParentActivityID = ? OR ChildActivityID = ?", [id, id]);
-      await um2_qr.query("DELETE FROM ent_activity WHERE ActivityID = ?", [id]);
+      await exec_query(um2_qr, "DELETE FROM rel_pcex_set_component WHERE ParentActivityID = ? OR ChildActivityID = ?", [id, id]);
+      await exec_query(um2_qr, "DELETE FROM rel_activity_activity WHERE ParentActivityID = ? OR ChildActivityID = ?", [id, id]);
+      await exec_query(um2_qr, "DELETE FROM ent_activity WHERE ActivityID = ?", [id]);
       delete activity.linkings.um2[key];
     }
 
     // remove old linkings (agg)
     for (const [key, id] of Object.entries<number>(activity.linkings.agg)) {
       if (ids.agg.has(id)) continue; // skip if still linked
-      await agg_qr.query("DELETE FROM ent_content WHERE content_id = ?", [id]);
+      await exec_query(agg_qr, "DELETE FROM ent_content WHERE content_id = ?", [id]);
       delete activity.linkings.agg[key];
     }
   }, async () => { });
 };
-
-// const old_syncToAgg = async (params: Params) => {
-//   const activity = params.activity;
-//   const user = params.request.user.email;
-//   params.ds_agg.transaction(async (manager) => {
-//     const MAPPING_ID = `[AUTO-GENERATED:DONT-CHANGE-THIS:PCEX_AUTHORING_MAPPED_ID=${activity.id}]`;
-
-//     const [prevMapping] = await manager.query(
-//       'SELECT content_id FROM ent_content WHERE provider_id = ? AND comment = ?',
-//       ['pcex_activity', MAPPING_ID]
-//     );
-
-//     if (prevMapping)
-//       await manager.query("DELETE FROM ent_content WHERE content_id = ?", [prevMapping.content_id]);
-
-//     let language = (activity.items?.length
-//       ? (await params.sources.read({ user, id: activity.items[0].item })).language
-//       : 'undefined').toLowerCase();
-//     if (language == 'python') language = 'py';
-
-//     if (activity.published) manager.query(
-//       "INSERT INTO ent_content (content_id, content_name, content_type, display_name, `desc`," +
-//       " url, `domain`, provider_id, comment, visible, creation_date, creator_id, privacy, author_name) " +
-//       "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
-//       prevMapping?.content_id, `${activity.name}_${Date.now()}`, 'pcex_activity', activity.name, activity.description,
-//       `${params.config.get('PREVIEW_ACTIVITY_URL')}/${activity.id}?_t=${Date.now()}`,
-//       language, 'pcex_activity', MAPPING_ID, 1, new Date(), params.request.user.email, 'public',
-//       params.request.user.fullname
-//     ])
-//   });
-// }
