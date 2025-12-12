@@ -327,9 +327,7 @@ var pcex = {
 		var svc = url('?svc') ? url('?svc') : 'masterygrids';  //SVC is an optional parameter
 		const load = url('?load');
 
-		var index = 0; // default goal index is 0
 		if (url('?index')) {
-			index = parseInt(url('?index'));
 			$('#back-button').attr('disabled', true).hide();
 			$('#next-button').attr('disabled', true).hide();
 		}
@@ -340,7 +338,7 @@ var pcex = {
 			xhrFields: { withCredentials: true },
 			success: function (data) {
 				pcex.jsonData = data[0];
-				pcex.currentGoalIndex = index;
+				pcex.currentGoalIndex = parseInt(url('?index') || '0');
 
 				pcex.numberOfGoals = pcex.jsonData.activityGoals.length;
 				pcex.goalSolvedStates = new Array(pcex.numberOfGoals);
@@ -1416,7 +1414,6 @@ var pcex = {
 		$('#drag-tile-div').hide();
 		pcex.hideCheckCollapsible();
 		$('#show-correct-button').hide();
-
 	},
 
 	changeStyleToChallenge: function () {
@@ -1426,9 +1423,7 @@ var pcex = {
 		$('#animation-back-button').hide();
 		$('#check-button').show();
 
-
 		$('#next-button').removeClass('btn-primary').addClass('btn-challenge');
-
 
 		if ($('#back-button').hasClass('pcex_button') == false) {
 			$('#back-button').removeClass().addClass('pcex_button btn-sm btn-responsive btn-challenge waves-effect waves-light');
@@ -1612,6 +1607,12 @@ var pcex = {
 		return feedback_ui;
 	},
 
+	get_distexp_feedback_api_url: function () {
+		return (location.href.startsWith('http://localhost:3000') ?
+			'http://localhost:3000' : (pcex.base_domain() + '/pcex-authoring')
+		) + '/api/distractor-explanation/feedback';
+	},
+
 	handleDistractorExplanationFeedbackSubmit: function () {
 		const feedbacks = {
 			'activity-id': pcex.jsonData['id'],
@@ -1632,10 +1633,7 @@ var pcex = {
 
 		$.ajax({
 			type: 'POST',
-			url: (
-				location.href.startsWith('http://localhost:3000') ?
-					'http://localhost:3000' : 'http://adapt2.sis.pitt.edu/pcex-authoring'
-			) + '/api/distractor-explanation/feedback',
+			url: pcex.get_distexp_feedback_api_url(),
 			data: JSON.stringify(feedbacks),
 			contentType: 'application/json',
 			dataType: 'json',
@@ -1674,10 +1672,7 @@ var pcex = {
 
 		$.ajax({
 			type: 'POST',
-			url: (
-				location.href.startsWith('http://localhost:3000') ?
-					'http://localhost:3000' : 'http://adapt2.sis.pitt.edu/pcex-authoring'
-			) + '/api/distractor-explanation/feedback',
+			url: pcex.get_distexp_feedback_api_url(),
 			data: JSON.stringify(feedbacks),
 			contentType: 'application/json',
 			dataType: 'json',
@@ -1711,10 +1706,7 @@ var pcex = {
 
 		$.ajax({
 			type: 'POST',
-			url: (
-				location.href.startsWith('http://localhost:3000') ?
-					'http://localhost:3000' : 'http://adapt2.sis.pitt.edu/pcex-authoring'
-			) + '/api/distractor-explanation/feedback',
+			url: pcex.get_distexp_feedback_api_url(),
 			data: JSON.stringify(feedbacks),
 			contentType: 'application/json',
 			dataType: 'json',
@@ -1755,10 +1747,7 @@ var pcex = {
 
 		$.ajax({
 			type: 'POST',
-			url: (
-				location.href.startsWith('http://localhost:3000') ?
-					'http://localhost:3000' : 'http://adapt2.sis.pitt.edu/pcex-authoring'
-			) + '/api/distractor-explanation/feedback',
+			url: pcex.get_distexp_feedback_api_url(),
 			data: JSON.stringify(feedbacks),
 			contentType: 'application/json',
 			dataType: 'json',
@@ -2108,7 +2097,7 @@ var pcex = {
 
 	reportToPcexServer: function (apiPath, trackingData, successFunc, errorFunc) {
 		$.ajax({
-			url: "http://pawscomp2.sis.pitt.edu/pcex/api" + apiPath,
+			url: pcex.base_domain() + "/pcex/api" + apiPath,
 			type: "POST",
 			dataType: "json", // expected format for response
 			contentType: "application/json; charset=utf-8", // send as JSON
@@ -2158,7 +2147,7 @@ var pcex = {
 				"&svc=" + pcex.userCredentials.svc;
 
 			$.ajax({
-				url: 'http://pawscomp2.sis.pitt.edu/cbum/um?' + umParams,
+				url: pcex.base_domain() + '/cbum/um?' + umParams,
 				type: "GET",
 				complete: function () {
 					//called when complete
@@ -2179,6 +2168,10 @@ var pcex = {
 
 	getCurrentGoalFileNameWithoutExtensions: function () {
 		return pcex.currentGoal.fileName.replace(".java", "").replace(".py", "");
+	},
+
+	base_domain: function () {
+		return location.href.startsWith('https://') ? 'https://proxy.personalized-learning.org' : 'http://pawscomp2.sis.pitt.edu';
 	},
 
 	// reportToUMThroughPCEX: function (umParams) {
