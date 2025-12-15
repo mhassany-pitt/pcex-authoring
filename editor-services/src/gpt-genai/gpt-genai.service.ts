@@ -319,10 +319,10 @@ export class GptGenaiService {
       translate_comments,
       // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
       // pass the rest to GPT
-      api_key, organization, model,
-      ...params
+      api_key, organization,
+      model, text, ...params
     } = config;
-    const payload = { ...params, model, text: { format }, input };
+    const payload = { ...params, model, text: { ...text, format }, input };
     const openai = new OpenAI({ apiKey: api_key, organization: organization });
     return await openai.responses.create(payload);
   }
