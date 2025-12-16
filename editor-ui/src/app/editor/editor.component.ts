@@ -521,6 +521,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     else if (filename.endsWith('.py')) language = 'PYTHON';
     else if (filename.endsWith('.cpp')) language = 'CPP';
     else if (filename.endsWith('.c')) language = 'C';
+    else if (filename.endsWith('.asm') || filename.endsWith('.s')) language = 'ASM';
     this.model.language = language;
     this.setEditorsLang();
 

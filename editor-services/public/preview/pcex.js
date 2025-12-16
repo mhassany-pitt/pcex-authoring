@@ -367,6 +367,10 @@ var pcex = {
 			pcex.indentChar = '    ';
 			pcex.commentString = '#';
 			pcex.codeHighlightClass = 'python hljs';
+		} else if (language === 'ASM') {
+			pcex.indentChar = '    ';
+			pcex.commentString = ';';
+			pcex.codeHighlightClass = 'x86asm hljs';
 		} else {
 			pcex.indentChar = '  ';
 			pcex.commentString = '//';

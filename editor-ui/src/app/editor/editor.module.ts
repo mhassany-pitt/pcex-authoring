@@ -21,6 +21,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ChipsModule } from 'primeng/chips';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { registerAssemblyLanguage } from './editor.asm.support';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,9 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
   imports: [
     CommonModule, FormsModule,
     EditorRoutingModule,
-    MonacoEditorModule.forRoot(),
+    MonacoEditorModule.forRoot({
+      onMonacoLoad: () => registerAssemblyLanguage((window as any).monaco),
+    }),
     InputTextModule, ChipsModule,
     InputTextareaModule, DialogModule,
     CheckboxModule, ButtonModule,
