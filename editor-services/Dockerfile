@@ -1,5 +1,5 @@
 FROM node:20-alpine
-RUN apk add --no-cache openjdk11-jre
+RUN apk add --no-cache openjdk11-jdk
 RUN apk add --no-cache python3
 RUN apk add --no-cache g++
 RUN apk add --no-cache gcc
