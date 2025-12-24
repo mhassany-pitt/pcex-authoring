@@ -1090,4 +1090,38 @@ export class EditorComponent implements OnInit, OnDestroy {
     this.distEditors.forEach((e: any) => e.editor.updateOptions({ readOnly: this.viewUntranslated }));
     this.log({ type: 'view-untranslated', value: this.viewUntranslated });
   }
+
+  onExtraFileSelected($event: any) {
+    const file = $event.target.files[0];
+    const reader = new FileReader();
+    if (file.size > 64 * 1024) {
+      alert('File size exceeds 64KB limit. \nPlease choose a smaller file.');
+      return;
+    }
+    // read contents as base64 to allow binary files
+    reader.onload = (e: any) => {
+      this.model.extraFiles ||= [];
+      const duplicate = this.model.extraFiles.filter((f: any) => f.path == `./${file.name}`);
+      if (duplicate.length > 0) {
+        alert('A file with the same path name already exists. \nPlease change the file path and try again.');
+        return;
+      }
+      const content = e.target.result;
+      this.model.extraFiles.push({ path: `./${file.name}`, content });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onExtraFileDownload($event: any, extraFile: any) {
+    const link = document.createElement('a');
+    link.href = extraFile.content;
+    link.download = extraFile.path.replace('./', '');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  onExtraFileDelete($event: any, extraFile: any) {
+    this.model.extraFiles = this.model.extraFiles.filter((f: any) => f != extraFile);
+  }
 }

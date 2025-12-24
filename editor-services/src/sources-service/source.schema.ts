@@ -20,6 +20,7 @@ export class Source {
   // @Prop({ type: [Object] }) variations: any[];
   @Prop({ type: [Object] }) distractors: any[];
   @Prop() programInput: string;
+  @Prop({ type: [Object] }) extraFiles: any[];
 
   @Prop() collaborator_emails: string[];
 }

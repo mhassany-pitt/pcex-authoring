@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import {
   ensureDirSync, writeJsonSync, statSync,
   existsSync, rmSync, readJsonSync, readdirSync,
-  createWriteStream, rmdirSync
+  createWriteStream, rmdirSync, writeFileSync
 } from 'fs-extra';
 import { v4 as uuid4 } from 'uuid';
 import { exec } from 'shelljs';
@@ -86,6 +86,11 @@ export class CompilerService {
         rmSync(inputs, { recursive: true });
       ensureDirSync(inputs);
 
+      const extrafiles = `${workspace}/extra-files/`;
+      if (existsSync(extrafiles))
+        rmSync(extrafiles, { recursive: true });
+      ensureDirSync(extrafiles);
+
       // const changes = [];
       for (let index = 0; index < activity.items.length; index++) {
         const item = activity.items[index];
@@ -141,8 +146,19 @@ export class CompilerService {
         //   this.removeAttribute(this.copyJson(newJson), 'id')
         // )) return false; // skip unchanged source items
 
+        console.log(`written input file: ${jsonfile}`);
         writeJsonSync(jsonfile, newJson);
         // changes.push(item);
+
+        for (const extraFile of source.extraFiles || []) {
+          // remove ../ to prevent the path from escaping the inputs directory
+          const path = `${extrafiles}${extraFile.path.replace(/\.\.\//g, '')}`;
+          console.log(`added extra-file: ${path}`);
+          ensureDirSync(path.substring(0, path.lastIndexOf('/')));
+          const base64Data = extraFile.content.split(';base64,').pop();
+          const buffer = Buffer.from(base64Data, 'base64');
+          writeFileSync(path, new Uint8Array(buffer));
+        }
       }
 
       const resp: any = {};
@@ -156,7 +172,7 @@ export class CompilerService {
         rmSync(outputs, { recursive: true });
 
       const PcExParserRunner = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
-        `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.PcExParserRunner "../${inputs}" "../${outputs}"`);
+        `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.PcExParserRunner "../${inputs}" "../${outputs}" "../${extrafiles}"`);
 
       resp.PcExParserRunner = {
         code: PcExParserRunner.code,

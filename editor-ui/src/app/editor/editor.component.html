@@ -125,12 +125,37 @@
           </div>
 
           <!-- program input -->
-          <div class="flex flex-col">
+          <div class="flex flex-col gap-1">
             <span class="font-bold">Program Input</span>
             <span class="text-gray-600 text-xs">Inputs available through System.in (Java) and input (Python).</span>
             <textarea pInputTextarea name="program-input" [autoResize]="true" [(ngModel)]="model.programInput"
-              placeholder="e.g.: 5 10 15 20" class="mt-2 text-xs rounded-sm border-gray-200" [rows]="1"
+              placeholder="e.g.: 5 10 15 20" class="text-xs rounded-sm border-gray-200" [rows]="1"
               (focus)="onProgInputFocus($event)" (blur)="onProgInputBlur($event)"></textarea>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <span class="font-bold">Extra Files ({{ (model.extraFiles || []).length }})</span>
+            <span class="text-gray-600 text-xs">
+              Additional files required to run the source code (e.g., data files).
+              Each file can't be larger than 64KB. <br />
+              If needed, after selecting the file, you can change its relative path (to the source code).
+            </span>
+            <div *ngFor="let extraFile of model.extraFiles; let i = index" class="flex items-center gap-1">
+              <input type="text" pInputText [name]="'extra-files-'+i" [(ngModel)]="extraFile.path"
+                placeholder="Enter relative file path" class="flex-grow" size="small" />
+              <button pButton type="button" icon="pi pi-download" size="small" outlined="true" plain="true"
+                (click)="onExtraFileDownload($event, extraFile)">
+              </button>
+              <button pButton type="button" icon="pi pi-trash" severity="danger" size="small" outlined="true"
+                plain="true" (click)="onExtraFileDelete($event, extraFile)">
+              </button>
+            </div>
+            <div>
+              <button pButton type="button" label="Upload File" icon="pi pi-plus" class="px-2 py-1" size="small"
+                outlined="true" plain="true" (click)="extraFileInput.click()">
+              </button>
+              <input type="file" #extraFileInput style="display: none;" (change)="onExtraFileSelected($event)" />
+            </div>
           </div>
         </div>
 
