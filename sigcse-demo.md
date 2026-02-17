@@ -6,16 +6,16 @@ You can choose any of the following examples to explore the features of the WEAT
 ## Demo User-Accounts:
 | Email                        | Password     |
 |------------------------------|--------------|
-| sigcse25.01@paws.pitt.edu    | sigcse25.01  |
-| sigcse25.02@paws.pitt.edu    | sigcse25.02  |
-| sigcse25.03@paws.pitt.edu    | sigcse25.03  |
-| sigcse25.04@paws.pitt.edu    | sigcse25.04  |
-| sigcse25.05@paws.pitt.edu    | sigcse25.05  |
-| sigcse25.06@paws.pitt.edu    | sigcse25.06  |
-| sigcse25.07@paws.pitt.edu    | sigcse25.07  |
-| sigcse25.08@paws.pitt.edu    | sigcse25.08  |
-| sigcse25.09@paws.pitt.edu    | sigcse25.09  |
-| sigcse25.10@paws.pitt.edu    | sigcse25.10  |
+| sigcse01@paws.pitt.edu       | sigcse01     |
+| sigcse02@paws.pitt.edu       | sigcse02     |
+| sigcse03@paws.pitt.edu       | sigcse03     |
+| sigcse04@paws.pitt.edu       | sigcse04     |
+| sigcse05@paws.pitt.edu       | sigcse05     |
+| sigcse06@paws.pitt.edu       | sigcse06     |
+| sigcse07@paws.pitt.edu       | sigcse07     |
+| sigcse08@paws.pitt.edu       | sigcse08     |
+| sigcse09@paws.pitt.edu       | sigcse09     |
+| sigcse10@paws.pitt.edu       | sigcse10     |
 
 ## Examples:
 ### 1. Introduction to Variables and Conditions
