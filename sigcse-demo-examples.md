@@ -1,23 +1,8 @@
 # Worked Example Authoring Tool -- WEAT
-Please open the [WEAT authoring tool](http://adapt2.sis.pitt.edu/pcex-authoring/#/hub) and log in using one of the demo accounts below. 
+Please open the [WEAT authoring tool](http://adapt2.sis.pitt.edu/pcex-authoring/#/hub) and log in using your demo account. 
 
 You can choose any of the following examples to explore the features of the WEAT. You're welcome to use any other example of your choice. 
 
-## Demo User-Accounts:
-| Email                        | Password     |
-|------------------------------|--------------|
-| sigcse01@paws.pitt.edu       | sigcse01     |
-| sigcse02@paws.pitt.edu       | sigcse02     |
-| sigcse03@paws.pitt.edu       | sigcse03     |
-| sigcse04@paws.pitt.edu       | sigcse04     |
-| sigcse05@paws.pitt.edu       | sigcse05     |
-| sigcse06@paws.pitt.edu       | sigcse06     |
-| sigcse07@paws.pitt.edu       | sigcse07     |
-| sigcse08@paws.pitt.edu       | sigcse08     |
-| sigcse09@paws.pitt.edu       | sigcse09     |
-| sigcse10@paws.pitt.edu       | sigcse10     |
-
-## Examples:
 ### 1. Introduction to Variables and Conditions
 Write a program that takes an integer input from the user and checks if it is even or odd. The program should output "Even" if the number is even and "Odd" if it is odd.
 ```python
