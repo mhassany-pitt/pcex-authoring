@@ -12,7 +12,7 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HubModule } from './hub/hub.module';
 import { GptGenaiModule } from './gpt-genai/gpt-genai.module';
-// import { BulkModule } from './bulk/bulk.module';
+import { BulkModule } from './bulk/bulk.module';
 import { KeyValueModule } from './keyvalue/keyvalue.module';
 import { KeyValueServiceModule } from './keyvalue-service/keyvalue-service.module';
 import { BackupModule } from './backup/backup.module';
@@ -22,7 +22,7 @@ import { BackupModule } from './backup/backup.module';
     ServeStaticModule.forRoot({ rootPath: join(__dirname, '..', 'public') }),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env.${(process.env.NODE_ENV || 'development').toLowerCase()}`
+      envFilePath: `.env.${(process.env.NODE_ENV || 'development').toLowerCase()}`,
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -31,14 +31,18 @@ import { BackupModule } from './backup/backup.module';
     }),
     SourcesModule,
     ActivitiesModule,
-    AuthModule, UsersModule,
-    UserAdminModule, HubModule,
-    GptGenaiModule, KeyValueModule,
-    KeyValueServiceModule, BackupModule,
-    // BulkModule,
+    AuthModule,
+    UsersModule,
+    UserAdminModule,
+    HubModule,
+    GptGenaiModule,
+    KeyValueModule,
+    KeyValueServiceModule,
+    BackupModule,
+    BulkModule,
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],
-  exports: [AppService]
+  exports: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
