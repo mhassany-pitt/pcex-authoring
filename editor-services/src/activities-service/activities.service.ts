@@ -39,7 +39,7 @@ export class ActivitiesService {
     return await this.activities.updateOne({ $or: [{ user }, { collaborator_emails: user }], _id }, model);
   }
 
-  // async remove({ user, id: _id }): Promise<any> {
-  //   return await this.activities.deleteOne({ user, _id });
-  // }
+  async remove({ user, id: _id }): Promise<any> {
+    return await this.activities.deleteOne({ user, _id });
+  }
 }

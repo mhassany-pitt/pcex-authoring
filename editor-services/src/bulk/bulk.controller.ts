@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpException,
   Param,
   Patch,
@@ -57,6 +58,16 @@ export class BulkController {
     return this.compileSource(id, body.user);
   }
 
+  @Delete('sources/:id')
+  async deleteSource(@Request() req: any, @Param('id') id: string) {
+    if (!(await this.validate(req)))
+      throw new HttpException('Unauthorized', 401);
+    const source = await this.sources.read({ id, user: req.query.user });
+    if (!source) throw new HttpException('Source not found', 404);
+    await this.sources.remove({ id, user: req.query.user });
+    return { id };
+  }
+
   private async compileSource(id: string, user: string) {
     console.log(`Compiling source ${id} for user ${user}`);
     const source = useId(await this.sources.read({ id, user }));
@@ -98,6 +109,16 @@ export class BulkController {
     if (!activity) throw new HttpException('Activity not found', 404);
     await this.activities.update({ ...body, id });
     return this.compileActivity(id, body.user);
+  }
+
+  @Delete('activities/:id')
+  async deleteActivity(@Request() req: any, @Param('id') id: string) {
+    if (!(await this.validate(req)))
+      throw new HttpException('Unauthorized', 401);
+    const activity = await this.activities.read({ id, user: req.query.user });
+    if (!activity) throw new HttpException('Activity not found', 404);
+    await this.activities.remove({ id, user: req.query.user });
+    return { id };
   }
 
   private async compileActivity(id: string, user: string) {

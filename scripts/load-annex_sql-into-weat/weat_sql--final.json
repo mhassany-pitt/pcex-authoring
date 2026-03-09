@@ -1,0 +1,3192 @@
+[
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Table Creation",
+    "description": "Create a table named `Students` with the following schema:\n\n- `sid`: variable-length string up to 20 characters, required (cannot be NULL)\n- `name`: variable-length string up to 20 characters\n- `login`: variable-length string up to 10 characters\n- `age`: integer, with a default value of `NULL`\n- `gpa`: real number, with a default value of `0.00`\n\nWrite the SQL statement to define this table.",
+    "filename": "query.sql",
+    "code": "CREATE TABLE Students\n     (sid VARCHAR(20) NOT NULL,\n      name VARCHAR(20),\n      login VARCHAR(10),\n      age INTEGER DEFAULT NULL,\n      gpa REAL DEFAULT 0.00);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The query to create a new table should start with 'CREATE TABLE' clause followed by the table name. The table name must not conflict with the name of one of the existing tables. "
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "Column named sid, which is character domain type, has 20 digit space and does not allow NULL value. <br>In the body of the CREATE TABLE clause, the columns of the newly created table are defined. Firstly, every column in the table must have a unique name and domain name is to identify the kind of data that the column stores. Lastly, required data is to determine whether the column contains required data and prevents NULL values from appearing in the column; otherwise, NULL values are allowed."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "Each column definition is separated by comma. "
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "VARCHAR data type allows a column to store character strings varying in length from row to row. CHAR, another data type involving charater strings, is for columns holding fixed-length character string. "
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "'age' column is integer domain type and if user does not enter any value, the DBMS system automatically fill the tuple with NULL value by defining DEFAULT value as 'NULL'."
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": " 'gpa' column defaults to 0.00 value. The 'CREATE TABLE' clause ends with closing parenthesis.<br><br>All SQL statements end with semicolon (;)."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableCreation1",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Primary Key (1)",
+    "description": "Create a table named `Enrolled` to store which students are enrolled in which courses and the grade each student receives. The table should have:\n\n- `sid`: a student ID, up to 20 characters\n- `cid`: a course ID, up to 20 characters\n- `grade`: a grade code, up to 2 characters\n\nEach student can appear in multiple courses, and each course can have multiple students, but a student cannot be enrolled in the same course more than once. Enforce this by making the combination of `sid` and `cid` the primary key.",
+    "filename": "query.sql",
+    "code": "CREATE TABLE Enrolled\n     (sid CHAR(20),\n      cid CHAR(20),\n      grade CHAR(2),\n      PRIMARY KEY (sid, cid));",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This table is to record enrollment information for each student, so both student ID and course ID are defined as the schema of 'Enrolled' table. "
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "'sid' is student ID and 20 digits character type."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "'cid' is course ID and 20 digits character type."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "'grade' is grade of each student and 2 digits character type."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "A student can take a course only once and it is not allowable to take the same course twice. Students have a single grade for each course, because a primary key is specified using both sid and cid. A table's primary key must have a unique value for each row of the table."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableCreation2",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Primary Key and Unique Key",
+    "description": "Create a table named Enrolled to store course enrollment records. Each record should have:\n\n- eid: a required enrollment ID, stored as a fixed-length 20-character string, and used as the primary key.\n- sid: a student ID, stored as a fixed-length 20-character string.\n- cid: a course ID, stored as a fixed-length 20-character string.\n\nAlso enforce the rule that the same student cannot be enrolled in the same course more than once, by making the combination of sid and cid unique.",
+    "filename": "query.sql",
+    "code": "CREATE TABLE Enrolled\n     (eid CHAR(20) NOT NULL, \n      sid CHAR(20),\n      cid CHAR(20),\n      PRIMARY KEY (eid),\n      UNIQUE (sid, cid));",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "Students can take a single course only once, not more than once."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "This column is for enrollment ID and it is defined as primary key. Hence, the value should be unique among rows of the table"
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "This column is for student ID and it is defined as a part of candidate key which is defined in UNIQUE clause. "
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This course ID is also another part of candidate key which is defined in UNIQUE clause. "
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "If there is more than one same eids, there is integrity error. "
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": "UNIQUE keyword is to specify an unique value in every row, but not the primary key of a table. The unique values which can be primary key is called as candidate key. In this example, the pair of cid and sid should be unique. A student whose sid is 1324 can enroll in 'DB Management' course once but not more than once. Howver, the student can take other classes having differnt cids. It is possible to define the UNIQUE key as an attribute constraint. "
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableCreation3",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Foreign Key",
+    "description": "Assume a table `Students` already exists with primary key `sid`.\n\nWrite an SQL statement to create a table `Enrolled` to store course enrollments. The table should:\n\n- Include:\n  - `sid` as a required student ID, up to 20 characters\n  - `cid` as a required course ID, up to 20 characters\n  - `grade` as an optional 2-character grade\n- Use the combination of `sid` and `cid` as the primary key\n- Make `sid` a foreign key referencing `Students`\n- If a student is deleted from `Students`, automatically delete that student\u2019s enrollment records\n- If a student ID in `Students` is updated, set the corresponding `sid` in `Enrolled` to its default value",
+    "filename": "query.sql",
+    "code": "CREATE TABLE Enrolled\n     (sid CHAR(20) NOT NULL,\n      cid CHAR(20) NOT NULL,\n      grade CHAR(2),\n      PRIMARY KEY (sid,  cid),\n      FOREIGN KEY (sid)\n      REFERENCES Students\n      ON DELETE CASCADE\n      ON UPDATE SET DEFAULT);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This table is to store student's enrollment information. There is separate table for 'Students' per se and it's primary key is 'sid.' "
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "'sid' is student ID. Before being defined as a part of 'Enrolled' table, it is defined in 'Students' table."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "For a given student and course,  there is a single grade."
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": "'Sid' in Enrolled table is a foreign key that references 'Students' table. Foreign key clause identify the table's relationships to other tables in the database. Columns forming the relationship is called as foreign key. "
+          }
+        ]
+      },
+      "7": {
+        "comments": [
+          {
+            "content": "This clause specifies that the foreign key 'sid' is referenced from 'student' table. Keyword 'REFERENCES' is followed by the table name where foreign key is actually defined. Specially, 'REFERENCES' is important part to specify the related table, and the 'FOREIGN KEY' and 'REFERENCES' keyword should not be separated by comma. If there is only table name after it, the DBMS will take the primary key of that table as the foreign key. "
+          }
+        ]
+      },
+      "8": {
+        "comments": [
+          {
+            "content": "If a row of one or more foreign keys is deleted, the tuple in the foreign key will lose the value to point to. In this example, if the sid, 'ktl123' is deleted in the 'Students' table, the 'ktl123' tuple in this 'Enrolled' is unable to know the student's information any more, because it lose the reference point. Note that deleting a row from referring 'Enrolled' table never poses a problem. The DBMS enforces the default NO ACTION if no rule is explicitly specified. <Br>The CASCADE delete rule tells the DBMS that when a referred row is deleted, all of its pointed rows should automatically be delete from the foreign key."
+          }
+        ]
+      },
+      "9": {
+        "comments": [
+          {
+            "content": "If foreign key is modified by UPDATE statement, the new value should match the value in reference table 'Students'. The SET DEFAULT update rule tells the DBMS that when a value in a referred table is update, the the foreign key values in all of its corresponding rows should also be set to the default value. This rule can be different according the kind of database that you are using. In some DBMS, the restrict rule is defined as SET NULL. In this case, it is impossible to define this restrict rule into primary key of reference table. "
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableCreation4",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Table Drop",
+    "description": "Write an SQL statement to permanently remove the table named Students from the database.",
+    "filename": "query.sql",
+    "code": "DROP TABLE Students;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "Table named  'Students' is deleted. The schema information and the tuples are removed. With proper permission, you can drop one of your own tables and drop a table owned by another user."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableDrop1",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Column Addition",
+    "description": "You are given an existing table named `Students`.\n\nWrite an SQL statement to modify the table by adding a new column named `firstYear` that stores integer values.",
+    "filename": "query.sql",
+    "code": "ALTER TABLE Students\n      ADD COLUMN firstYear INTEGER;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This ALTER TABLE statement is to add column title 'firstYear' to the existing 'Students' table."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "The most common use of the ALTER TABLE statement. The column definition clause in the ALTER TABLE statement is just like the one in the CREATE TABLE statement and it works the same way."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableAlteration1",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Column Drop",
+    "description": "Write an SQL statement to remove the `age` column from the `Student` table.",
+    "filename": "query.sql",
+    "code": "ALTER TABLE Student\n      DROP COLUMN age;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The ALTER TABLE statement can be used to drop one or more columns from an existing table. Note that dropping a column can pose the data-integrity issues. For example, if you drop a column that is a primary key in some relationship, the foreign key columns that refer to the dropped column become invalid."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "DROP COLUMN clause is followed by the column name to be dropped - 'age'"
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableAlteration2",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Inserting Data (1)",
+    "description": "Insert a new record into the `Students` table for a student with ID `2007001`, name `Jamie Done`, and age `22`.",
+    "filename": "query.sql",
+    "code": "INSERT INTO Students(sid, name, age)\n      VALUES('2007001', 'Jamie Done', 22);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "Student 'Jamie Done' who is 22 years old and his student id number, '2007001' are inserted into 'Students' table."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "VALUES clause is to define the inserted value. The order of values should correspond to the column order. Especially, if the column has character domain type, it is embraced by single/double quotation. 'sid' and 'name' column have character domain type, so the value has single quotation. "
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataInsertion1",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Deleting Data",
+    "description": "Delete all rows from the `Students` table, leaving the table itself intact.",
+    "filename": "query.sql",
+    "code": "DELETE\n      FROM Students;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "DELETE statement is to delete one or more <B>ROWS</b> of data. The keyword 'DELETE' to define the kind of SQL statement and 'from' to specify the target table are mantantory information."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "It is to delete all rows from 'Students' table"
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataDeletion1",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Selecting One Attribute",
+    "description": "Return the student ID (`sid`) for every record in the `Student` table.",
+    "filename": "query.sql",
+    "code": "SELECT sid \n      FROM Student;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "In SELECT statement, SELECT and FROM clauses are required. The SELECT clause can specify the column(s) in the table to be retrieved. The items are usually specified by a list of columns, separated by commas. In this example, only one column - sid - is selected, hence there is no need to be separated by comma."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "The FROM clause lists the tables that contain the tuple to be retrieved by the query. Data can be drawn from one table or multiple tables."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection1",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Selecting Multiple Attributes",
+    "description": "Return the `name` and `login` of every student from the `Student` table.",
+    "filename": "query.sql",
+    "code": "SELECT name, login\n      FROM Student;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The columns are usually specified by a SELECT list, a list of select items separated by commas. In Student table, 'name' and 'login' attributes in 'Students' table are selected."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection2",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Selecting All Attributes",
+    "description": "Write an SQL query to return every column and every row from the `Student` table.",
+    "filename": "query.sql",
+    "code": "SELECT * \n      FROM Student;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "As a convenience, SQL lets you use an asterisk (*) in place of the select list as an abbreviation for 'all columns'."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "'FROM' clause is to define the target table. "
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection3",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Skipping Duplicates",
+    "description": "Write an SQL query to return the names of all students from the `Student` table, ensuring that each name appears only once in the result.",
+    "filename": "query.sql",
+    "code": "SELECT DISTINCT name \n      FROM Student;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "DISTINCT keyword eliminates rows of query results in SELECT statement and is located before the column name to erase the duplicate. If the DISTINCT keyword is omitted, SQL does not eliminate duplicate and it has the same result when user use ALL  keyword instead of DISTINCT."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection4",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Aggregate Functions (1)",
+    "description": "Find the average GPA of all students in the `Student` table. Return a single value representing the mean of the `gpa` column.",
+    "filename": "query.sql",
+    "code": "SELECT AVG(gpa) \n      FROM Student;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The AVG() aggregate function takes a column of data and computes its average. In this example, 'gpa' column is averaged out and produces a single average value."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection5",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Selection Condition",
+    "description": "Return the name, quota, and sales amount of the salesperson whose employee number is 107 from the `Salesperson` table.",
+    "filename": "query.sql",
+    "code": "SELECT Name, Quota, Sales\n      FROM Salesperson\n      WHERE emp_no = 107;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This query retrieve three columns in 'Salesperson' table - Name, Quota, and Sales."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "Especially this SQL is to retrieve rows of data which are related to the person whose employee number is 107.<br> The WHERE clause is used to limit the rows you want to retrieve. The WHERE clause consists of the WHERE keyword followed by a search condition. The search condition can produce one of the three results. If the search condition is TRUE, the row is included in the query results. If the search condition is FALSE, the row is excluded from the query results. If the search condition has a NULL (unknown) value, the row is excluded from the query results. Basically, the search condition acts as a filter for rows of the table. Rows satisfying the condition pass through the filter and become part of the query results."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection6",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Comparison Condition (1)",
+    "description": "Write an SQL query to retrieve all information for students from the `Student` table whose GPA is greater than 3.2.",
+    "filename": "query.sql",
+    "code": "SELECT * \n      FROM Student \n      WHERE gpa > 3.2;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This query is to find all columns in 'Students' table."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "WHERE condition narrows down the results into students whose gpa is higher than 3.2"
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection7",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Comparison Condition (2)",
+    "description": "Write a query to list the city, current sales, and sales target for all offices in the `Offices` table where the office\u2019s sales are less than 80% of its target.",
+    "filename": "query.sql",
+    "code": "SELECT City, Sales, Target\n      FROM Offices \n      WHERE Sales < (.8 * Target);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This is to choose cities, the sales amount and the target amount from 'Offices' table."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "This is to find sales less than 80 percent of the target amount. To process this condition, SQL constructs a temporary column containing the value of the expression (.8 * Target), 'Target' is one column in 'Offices' table and then compares them with values in 'Sales' column."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection8",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Comparison Condition (3)",
+    "description": "Write an SQL query to list the city and manager ID for all offices, excluding any office managed by employee 108.\n\nTable: Offices\n- OfficeID\n- City\n- Mgr\n\nReturn:\n- City\n- Mgr",
+    "filename": "query.sql",
+    "code": "SELECT City, Mgr\n      FROM Offices \n      WHERE Mgr <> 108;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This query is to list cities and the name of managers in 'Offices' tables."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "The results should exclude the values corresponding to the manager 108. <> expression is to test inequality. That is to say, this condition is to find manager whose number is <b>NOT</b> 108"
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection9",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Multiple Table Selection (1)",
+    "description": "Given the relations:\n\n- Student(sid, name, ...)\n- Enrolled(sid, cid, grade, ...)\n\nWrite a query to return the name of each student and the course ID of every course in which that student received a grade of \"A\".",
+    "filename": "query.sql",
+    "code": "SELECT S.name, E.cid \n      FROM Student S, Enrolled E\n      WHERE S.sid = E.sid AND E.grade = \"A\";",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This example is to retrieve student's name and course id."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "The FROM clause identifies all of the tables that contribute data to the query results. This SQL statement retrieves data from two tables - Students and Enrolled. If a query refers to another user's talbe or the name of the table is very long, it becomes easier to use shorter aliases like S, and E for the two tables. Once table aliases are defined, it is important to specify table alias in column select list. 'name' column is attached to 'Students' table alias S, and 'cid' is attached to 'Enrolled' table alias E."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "In condition, table aliases also are used. It compares sid column values in both 'Students' and 'Enrolled'. <br>This condition is to find the students who get A grade."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection10",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Multiple Comparisons (1)",
+    "description": "Retrieve the loan numbers of all loans issued by the Perryridge branch where the loan amount is greater than 1200.",
+    "filename": "query.sql",
+    "code": "SELECT loan_number \n      FROM loan\n      WHERE branch_name = Perryridge AND amount > 1200;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "More than one comparison results in conditions can be combined using logical connectives AND, OR and NOT. This condition is to test both if the branch name is Perryridge <b>AND</b> if the amount is greater than 1200."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelecton11",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Check Constraint (1)",
+    "description": "Create a table named `Reserves` to store boat reservations.\n\nRequirements:\n- Include the attributes:\n  - `sname` as a fixed-length character string of length 10\n  - `bid` as an integer\n  - `day` as a date\n- Make `(bid, day)` the primary key.\n- Assume there is already a table `boats(bid, bname, ...)`.\n- Add a table-level constraint named `noInterlakeRes` that prevents any reservation from being entered for the boat whose name is `'Interlake'`. Use a subquery on the `boats` table to enforce this rule.",
+    "filename": "query.sql",
+    "code": "CREATE TABLE Reserves\n    (sname CHAR(10),\n     bid INTEGER,\n     day DATE,\n     PRIMARY KEY(bid, day),\n     CONSTRAINT noInterlakeRes\n     CHECK\n      ('Interlake' <>\n             (SELECT B.bname\n              FROM boats B\n              WHERE B.bid = bid)));",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This is to create table named 'Reserves'. It has three columns - sname, bid, and day."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "'sname' column is 10 ditigs character domain type."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "'bid' is integer domain type."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "'day' is date domain type."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "One boat have to be reserved once in a day."
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": "This is to define CHECK constraint. Before defining constraint, it is capable to specify the constraint name. The following CHECK constraint is named as 'noInterlakeRes'."
+          }
+        ]
+      },
+      "7": {
+        "comments": [
+          {
+            "content": "CHECK contraint is a search condition that produces a true/false value. When a check constraint is specified for a column, the DBMS authomatically checks the value of that column each time a new row is inserted or a row is updated to ensure that the search condition is true. A column check constraint is specified as part of the column definition within the CREATE TABLE statement."
+          }
+        ]
+      },
+      "8": {
+        "comments": [
+          {
+            "content": "In this example, CHECK constraint named 'noInterlakeRes' is to check whether the name of boat ('bname') that a person want to reserve is 'Interlake'. It is to limit the reservation of 'Interlake' boat."
+          }
+        ]
+      },
+      "9": {
+        "comments": [
+          {
+            "content": "This subquery is to specify the condition should be checked for 'Interlake' column. This subquery is to read boat name from 'boats' table. "
+          }
+        ]
+      },
+      "10": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "11": {
+        "comments": [
+          {
+            "content": "This is to read boat name in 'boats' table corresponding to the boat id. "
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableCreation5",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Check Constraint (2)",
+    "description": "Create a table named `Sailors` to store sailor information with the following requirements:\n\n- `sid`: integer, unique identifier for each sailor, and the primary key\n- `sname`: fixed-length character string of length 10\n- `rating`: integer value that must be between 1 and 10 inclusive\n- `age`: real number\n\nWrite the SQL `CREATE TABLE` statement to enforce these constraints.",
+    "filename": "query.sql",
+    "code": "CREATE TABLE Sailors\n    (sid INTEGER,\n     sname CHAR(10),\n     rating INTEGER,\n     age REAL,\n     PRIMARY KEY (sid),\n     CHECK (rating >= 1 AND rating <= 10));",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This example is to define 'Sailors' table. There are four columns - sid, sname, rating, and age."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "7": {
+        "comments": [
+          {
+            "content": "Especially, the value of 'rating' is restricted to the value from 1 to 10. When a check constraint is specified for a column the DBMS authomatically checks the value of that column each time a new row is inserted or a row is updated to ensure that the search condition is true."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableCreation6",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Assertion Creation (1)",
+    "description": "Write an SQL statement to create a table named sailors with the following columns: sid as INTEGER, sname as CHAR(10), rating as INTEGER, and age as REAL. Make sid the primary key. Also add a table-level CHECK constraint requiring that the sum of the number of sid values currently in the table sailor and the number of sid values currently in the table boats must be less than 100.",
+    "filename": "query.sql",
+    "code": "CREATE TABLE sailors\n   (sid INTEGER,\n    sname CHAR(10),\n    rating INTEGER,\n    age REAL,\n    PRIMARY KEY (sid),\n    CHECK\n    ((SELECT COUNT(S.sid) \n     FROM sailor S) + \n    (SELECT COUNT(B.sid) \n     FROM boats B)\n     < 100));",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This example is to create table for sailors and everything to insert sailor it is required to check whether the sum of the number of sailors and the number of boats are not exceeded 100. <b>** This example is connected to the next example.</b> "
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "7": {
+        "comments": [
+          {
+            "content": "This example is to specify the total number of sailors and boats should be less 100. However, this example is WRONG. This check constraint which checks both 'sailor' and 'boats' tables belongs to 'sailors' table itself recursively. If sailors is empty, the number of Boats tuples can be anything!"
+          }
+        ]
+      },
+      "8": {
+        "comments": [
+          {
+            "content": "<b>This first example is WRONG.</b> If sailors is empty, the number of Boats tuples can be anything! It returns the number sailor id. The most nested query is executed firstly. "
+          }
+        ]
+      },
+      "9": {
+        "comments": [
+          {
+            "content": "Two separate queries are linked using summation sign. Both query results are sum up. "
+          }
+        ]
+      },
+      "10": {
+        "comments": [
+          {
+            "content": "This query returns the number of boats."
+          }
+        ]
+      },
+      "11": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "12": {
+        "comments": [
+          {
+            "content": "The summed results of two subqueries is compared with '100' and if the value is less than 100, the condition is satisfied. "
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableCreation7",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Inserting Data (2)",
+    "description": "Insert a new record into the `Students` table for a student with the following details:\n\n- `sid`: 53688\n- `name`: Smith\n- `login`: smith@ee\n- `age`: 18\n- `gpa`: 3.2\n\nWrite the SQL statement to add this student to the table.",
+    "filename": "query.sql",
+    "code": "INSERT INTO Students(sid, name, login, age, gpa)\n      VALUES('53688', 'Smith', 'smith@ee', 18, 3.2);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "'INTO' clause which is mantantory in 'INSERT' clause is to specify the table and columns to store data. The order of inserted data should be matched with the order of each column specified in SQL statement. If the column names are omitted, the data are inserted by the column order of table definition."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "'VALUES' keyword is necessary to define the inserted data. The value for sid, name, or login whose domain types are character is surrounded by single quotation mark."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataInsertion2",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Inserting Data (3)",
+    "description": "Insert into the `account` table a new account for every loan at the `Perryridge` branch, using the loan\u2019s `loan_no` as the account number, the same `branch_name`, and an initial balance of `200`.",
+    "filename": "query.sql",
+    "code": "INSERT INTO account\n      SELECT loan_no, branch_name, 200\n          FROM loan\n          WHERE branch_name = 'Perryridge';",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This examples is to create a $200 saving account for all loan customers of the Perryridge branch. Rather than specifying data by user, this sql is to insert data read from another table. <BR> 'account' table is defined as 'account_number', 'branch_name', and 'balance'. By this order, the data is stored."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "Before executing insertion, this 'SELECT' is executed to choose the data to be stored in 'account' table. From 'loan' table, instances in loan_no and branch_name columns are selected and for the last 'balance' column in 'account' table, constance 200 is defined. Hence, all selected account has the same $200 balance."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This condition is to limit the retrieved data to 'Perryridge' branch. The domain type of 'branch_name' is character, so the compared value is specified by single quotation mark."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataInsertion3",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Inserting Data (4)",
+    "description": "Insert into the `depositor` table the name of each customer and the corresponding `loan_no` for all loans issued by the `Perryridge` branch. A customer should be included if their record in `borrower` matches a loan record where `loan.accont_no = borrower.account_no`.",
+    "filename": "query.sql",
+    "code": "INSERT INTO depositor\n      SELECT customer_name, loan_no\n           FROM loan, borrower\n           WHERE branch_name ='Perryridge'\n              AND loan.accont_no = borrower.account_no;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The data is inserted into 'depositor' table. "
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "To assign created accounts to customers belonging to 'Perryridge', 'customer_name' in borrower table and 'loan_no' in loan table is selected. The data stored in the target 'depositor' table are these two data."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "'customer_name' is from 'borrower' table and 'loan_no' is from 'loan' table. "
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This is to choose customer from 'Perryridge' branch."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "This is to check whether each borrower has loan account."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataInsertion4",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Updating Data (2)",
+    "description": "Write an SQL statement to give a 1% GPA increase to every student in the `Students` table whose current GPA is at least `3.3`. The updated value should be stored back in the `gpa` column.",
+    "filename": "query.sql",
+    "code": "UPDATE Students S\n     SET S.gpa = S.gpa*1.01\n     WHERE S.gpa >= 3.3;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The 'UPDATE' keyword is followed by table 'Students' and the table is renamed as 'S' because it is little bit long to use."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "The SET clause is mandantory in UPDATE statement and it specifies which columns are to be updated. Because table name is renamed as 'S' the column name is assigned by it using dot. Each instance in 'gpa' is read, calculates 101% of the value, and is reassigned to new value."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "Not all instances are updated and gpas which is just equal or higher than 3.3 are selected."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataUpdate1",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Updating Data (3)",
+    "description": "In the `Students` table, find the student whose `sid` is `5368` and update their record by increasing their `age` by 1 and decreasing their `gpa` by 1.",
+    "filename": "query.sql",
+    "code": "UPDATE Students S\n     SET S.age = S.age+1 AND S.gpa = S.gpa-1\n     WHERE S.sid = 5368;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The UPDATE statement modifies the values of one or more columns in selected rows of table."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "The SET clause specifies a list of assignments and each assignment defines the value to be updated."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "A single row or multiple rows can be updated up to whether condition is defined in the SQL statement or not."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataUpdate2",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Updating Data (1)",
+    "description": "Write an SQL statement to increase the quota of every employee in the `Salesrep` table by 5%.",
+    "filename": "query.sql",
+    "code": "UPDATE Salesrep \n     SET quota = 1.05 * quota;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The WHERE clause can be omitted if all data in a certain column should be changed. In this example, all quota data of sales representative are increased 5%. "
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "Quotas of all sales representatives are added 5%."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataUpdate3",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Updating with condition",
+    "description": "Update the `Customers` table so that any customer currently assigned to sales representative `105`, `106`, or `107` is reassigned to sales representative `102`.",
+    "filename": "query.sql",
+    "code": "UPDATE Customers\n     SET cust_rep = 102\n     WHERE cust_rep IN (105, 106, 107);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This example shows that not only one, more than one condition can be defined in one SQL."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "IN is the set membership test. It tests whether a data value matches one of a list of target values. In this example, if cust_rep is one of 105,106, or 107, the condition turns out TRUE."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataUpdate4",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Updating with subquery",
+    "description": "Increase the `credit_limit` by `5000.00` for every customer in the `Customers` table who has placed at least one order in the `orders` table with an `amount` greater than `25000.00`.\n\nAssume:\n- `Customers.cust_num` identifies each customer\n- `orders.cust` references the customer who placed the order",
+    "filename": "query.sql",
+    "code": "UPDATE Customers\n     SET credit_limit = credit_limit + 5000.00\n     WHERE cust_num IN\n          (SELECT DISTINCT cust\n           FROM orders \n           WHERE amount > 25000.00);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "Before executing update, subquery in parenthesis is executed to limit the data. After then, this addition of $5,000 to current credit limit is updated."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "WHERE clause choose one of the customers in the results of subquery. IN is the common search condition. It tests whether a data value matches one of the list of value in the right part. It compares instances in 'cust_num' to the results of subquery."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This SELECT query is subquery, a query within a query. This query is to retrieve the list of customers who bought product in amout of 25000. When choose some data collectively, it is efficient to use subquery.  Subquery let users select rows to update based on information contains in other tables."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataUpdate5",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Deleting with Condition (1)",
+    "description": "Delete all records from the `account` table for accounts that are held at branches located in Brooklyn. Use the `branch` table to identify which `branch_name` values correspond to branches in the city `'Brooklyn'`.",
+    "filename": "query.sql",
+    "code": "DELETE FROM account\n     WHERE branch_name IN\n         (SELECT branch_name\n          FROM branch\n          WHERE branch_city = 'Brooklyn');",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The target table 'account' is specified. "
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "IN is set membership test. It tests whether a data value matches on of a list of target values. The IN in this line compares branch names with the subquery results that are branches in 'Brookly'."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "In this example, the subquery to find branch located in 'Brooklyn' is used and by comparing the list of results, they choose the accounts opened in the branches."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "WHERE clause is to choose certain rows of data by condition. 'WHERE' keyword is followed by the comparison and this example is to choose the rows which is located in 'Brookly' as the branch city and delete the information. 'branch_city' column has character domain type, so in order to compare the value, the test value should be character too. In addition, the test value 'Brookly' is embraced with single quotation, because it is character. "
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataDeletion2",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Deleting with Condition (2)",
+    "description": "Given a table `account` that stores bank account information, including a numeric column `balance`, write an SQL statement to remove all accounts whose balance is lower than the average balance of all accounts in the table.",
+    "filename": "query.sql",
+    "code": "DELETE FROM account\n     WHERE balance < \n         (SELECT AVG(balance)\n          FROM account);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The target table is 'acount.'"
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "The order of this query execution is firstly, the subquery to calculate the average amount of all account is executed and then the balance of each account is compared with the average. Lastly, the corresponding account is deleted. <br>To limit the data, balance data is compared with the average balance in subquery result."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "This subquery is to calculate average balance of each account."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataDeletion3",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Arithmetic Expression",
+    "description": "Write an SQL query to display, for every record in the `loan` table, the following:\n\n- `loan_number`\n- `branch_name`\n- the loan `amount` multiplied by 100\n\nReturn all rows from the table.",
+    "filename": "query.sql",
+    "code": "SELECT loan_number, branch_name, amount * 100\n     FROM loan;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "By directly doing arithmetic calculation such *, +, -, / to value of column, it is possible to recalculate the value. But the value stored in the database is not changed and the returned values are changed."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection12",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Multiple Comparisons (2)",
+    "description": "Given the relations:\n\n- borrower(customer_no, loan_no)\n- loan(loan_no, branch_name, amount)\n\nWrite an SQL query to find the customer number, loan number, and loan amount for all customers who have borrowed through the Perryridge branch.",
+    "filename": "query.sql",
+    "code": "SELECT customer_no, borrower.loan_no, amount\n     FROM borrower, loan\n     WHERE borrower.loan_no = loan.loan_no AND branch_name = 'Perryridge';",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This query specify column 'loan_no' should be read from 'borrower' table. The reason why this column name is specified along with the table name is that both 'borrower' and 'loan' table have the column. If the table name is not specified, the column is read from the table where the column belongs to exclusively."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "Data is read from these two tables."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "In order to loan amount attached to each customer, it tests match betwee two values in two tables. After then, loans from Perryridge branch are retrieved. The data met these two condition should be retrieved because of the AND logic."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection13",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Range Test (1)",
+    "description": "Given a table named `loan` with columns `loan_number` and `amount`, write a SQL query to return the loan numbers of all loans whose amount is between 2000 and 100000, inclusive.",
+    "filename": "query.sql",
+    "code": "SELECT loan_number \n     FROM loan\n     WHERE amount BETWEEN 2000 AND 100000;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "BETWEEN clause is range test operator. The range test checks whether a data value lies between two specified values. The left part of AND keyword is the low ends of value and right part is high ends of the range to be tested.  This is completely equivalent to (amount >= 2000) AND (amount <=100000)"
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection14",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Range Test (2)",
+    "description": "Write an SQL query to list the order number, date, product, and amount for all records in the `orders` table where the order date falls between October 1, 2006 and December 31, 2006, inclusive.",
+    "filename": "query.sql",
+    "code": "SELECT order_no, date, product, amount\n     FROM orders\n     WHERE date BETWEEN '01-OCT-06' AND '31-DEC-06';",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "Range test can be applied to date domain type, as well. This is equivalent to  (date >= '01-OCT-06') AND (date <= '31-DEC-06')"
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection15",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Multiple Table Selection (2)",
+    "description": "Given two tables:\n\n- borrower(customer_name, loan_no)\n- loan(loan_no, branch_name, amount)\n\nWrite an SQL query to list each borrower\u2019s name, the loan number, and the corresponding loan amount for all loans that have a matching record in both tables.",
+    "filename": "query.sql",
+    "code": "SELECT customer_name, T.loan_no, S.amount\n     FROM borrower AS T, loan AS S\n     WHERE T.loan_no = S.loan_no;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "Table aliases are defined in the FROM clause via the use of the AS clause. If the table name is too long, it is convenient to shorter alias name. If a query refers to another user's table, the table name can also have alias."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection16",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "String Operation",
+    "description": "Return the names of all customers whose street address contains the substring \"Main\" from the `customer` table.",
+    "filename": "query.sql",
+    "code": "SELECT customer_name \n     FROM customer\n     WHERE customer_street LIKE '%Main%';",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "SQL includes a substring-matching operator for comparisons on character strings. The operator \"like\" uses patterns that are described using two special characters: <ul><li>percent(%): The % character matches any substring.<li>underscore(_): the _ character matches any character.</ul><br>The percent sign (%) wildcard character matches any sequence of zero or more character. Wherever the 'Main' charater is located in the customer street data, it turns out to be true. Any of the following data  would match the pattern. <br>Pittsburgh Main Street, Chrismain Blvd, Main Government Bulding, Aid first Main."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection17",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Alphabetic Order",
+    "description": "Write a query to list the names of all customers who have taken a loan, using the `borrower` and `loan` tables. Match records by `loan_no`, remove duplicate customer names, and return the results sorted in ascending order by `customer_name`.",
+    "filename": "query.sql",
+    "code": "SELECT DISTINCT customer_name \n     FROM borrower AS T, loan AS S\n     WHERE T.loan_no = S.loan_no\n     ORDER BY customer_name;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "DISTINCT is to eliminated the same row of results. So the customer having loan will be displayed alphabetically without duplication."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "Table aliases are defined for both borrower and loan table. The table alias can be used if the table name is too long to write the whole name or for the convenience of query programmer"
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "Loan number in borrower table is matched with loan number in loan table."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "By using ORDER BY clause, you can define column that you want to list in order.  DESC clause specifies descending order and ASC specifies ascending order and these DESC or ASC is placed right next to the column name; ascending order is the default."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection18",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Combining Query Results (1)",
+    "description": "Retrieve the names of all customers who either have a deposit account or have taken out a loan, listing each customer only once.",
+    "filename": "query.sql",
+    "code": "(SELECT customer_name \n     FROM depositor)\n     UNION\n(SELECT customer_name \n     FROM borrower);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The first SELECT statement is to choose customers who have account."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "The UNION operation is to combine the results of two or more queries into a single table of query results. The major restriction of UNION operation is that the two tables must contain the same number of columns. It is also important that the domain type of each column in both tables should be identical. Because the UNION operation combines two sets of query results, it would tend to produce duplicate rows. However, <u>by default</u>, the UNION operation eliminates duplicate rows as part of its processing. If you want to retain duplicate rows, you can specify the ALL keyword following the UNION like 'UNION ALL.' "
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "Second SELECT statement is to find customers who have loan"
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection19",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Combining Query Results (2)",
+    "description": "Find the names of all customers who both have a deposit account and have taken out a loan.",
+    "filename": "query.sql",
+    "code": "(SELECT customer_name\n     FROM depositor)\n     INTERSECT\n(SELECT customer_name \n     FROM borrower);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This first query is to find customers having account."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "The INTERSECT operation produces a single table of the query results appearing in both input tables. It is important that the two tables must contain the same number of columns and the domain type of each column in both tables should be identical. <u>By default</u>, the INTERSECT operation eliminates duplicate rows as part of its processing. If you want to retain duplicate rows, you can specify the ALL keyword following the INTERSECT like 'INTERSECT ALL'"
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This query is to find customers having loan."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection20",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Combining Query Results (3)",
+    "description": "Retrieve the names of all customers who are listed in the `depositor` table but are not listed in the `borrower` table.\n\nIn other words, find customers who have a deposit account but do not have any loan.",
+    "filename": "query.sql",
+    "code": "(SELECT customer_name \n     FROM depositor)\n     EXCEPT\n     (SELECT customer_name\n     FROM borrower);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The first query is to find customers having account"
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "The EXCEPT operation produces a single table containing the rows that appear in the first table but that do not appear in another table. It is important that the two tables must contain the same number of columns and the domain type of each column in both tables should be identical. <u>By default</u>, the EXCEPT operation eliminates duplicate rows as part of its processing. If you want to retain duplicate rows, you can specify the ALL keyword following the EXCEPT like 'EXCEPT ALL'"
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This second query is to find customers having loan"
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection21",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Aggregate Functions (2)",
+    "description": "Find the average balance of all accounts held at the Perryridge branch.",
+    "filename": "query.sql",
+    "code": "SELECT AVG(balance)\n     FROM account\n     WHERE branch_name = 'Perryridge';",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The AVG() aggregate function computes the average of a column of data values and retrieve the calculated average value only. The data in the column must have a numeric type."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "This condition is to limit the retrieved data to 'Perryridge' branch."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection22",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Aggregate Functions (3)",
+    "description": "Return the total number of customers in the `customer` table.",
+    "filename": "query.sql",
+    "code": "SELECT COUNT(*) \n     FROM customer;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The COUNT() aggregate function calculate the total number of tuples. If the column name is specified as a part of the operation, it counts the number of values in a column. For example, COUNT(customer_name) is to calculate the total number of 'customer_name' values. COUNT(*) is to count rows of query results."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection23",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Aggregate Functions (4)",
+    "description": "Find the total number of unique customers who appear in the `depositor` table.",
+    "filename": "query.sql",
+    "code": "SELECT COUNT(DISTINCT customer_name) \n     FROM depositor;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "DISTINCT keyword is to eliminate duplicate in result, so unique customer names are just retrieved. After handling duplicate, the COUNT() aggregate function calculates the total number of values in customer_name column."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection24",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Grouped Queries",
+    "description": "For each bank branch, find the average balance of all accounts at that branch. Return the branch name and the average balance from the `account` table.",
+    "filename": "query.sql",
+    "code": "SELECT branch_name, AVG(balance)\n     FROM account\n     GROUP BY branch_name;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "By using group by, the results are grouped by branch name."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "GROUP BY clause is to group the data from its source tables and produce a single summary row for each row group. In this example, the results are grouped by the specified 'branch_name'."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection25",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Grouped Queries with Condition",
+    "description": "Given a table `account` with attributes such as `branch_name` and `balance`, write an SQL query to list each branch\u2019s name along with the average balance of accounts at that branch, but only for branches whose average account balance is greater than 600.",
+    "filename": "query.sql",
+    "code": "SELECT branch_name, AVG(balance)\n     FROM account\n     GROUP BY branch_name\n     HAVING AVG(balance) > 600;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "The result data is grouped and summarized for each branch_name."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "Just as the WHERE clause, the HAVING clause can be used to select and reject row groups. <br>As specified by 'group by', the balance data is group and subtotalled up by branch_name and then the average of subtotal balance is calculated. If the average of subtotal is greater than 600, the data is retrieved. The format of the HAVING clause parallels that of the WHERE clause, but this HAVING clause can be used as a GROUP."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection26",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Checking Null Values",
+    "description": "Find the loan numbers of all loans in the `loan` table whose `amount` has not been recorded (i.e., the `amount` value is `NULL`).",
+    "filename": "query.sql",
+    "code": "SELECT loan_no \n     FROM loan\n     WHERE amount IS NULL;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "IS NULL predicate is to handle null value directly as a comparison. If the compared value is null, it results TRUE and vice versa. NULL is just a keyword that the value is unknown. Even if the comparison test 'amount = null' were legal, the rules can be different from what you might expect. It is because this comparison is like this, 'Known Value = Unknown Value'. Hence, it is impossible to judge whether it is TRUE or FALSE."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection27",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Nested Subqueries (1)",
+    "description": "Given the following banking database tables:\n\n- borrower(customer_name, loan_number)\n- depositor(customer_name, account_number)\n\nWrite an SQL query to find the names of all customers who both have a loan and have a deposit account. Return each customer name only once.",
+    "filename": "query.sql",
+    "code": "SELECT DISTINCT customer_name \n     FROM borrower\n     WHERE customer_name IN \n          (SELECT customer_name \n           FROM depositor);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The subquery covered by round parenthesis is calculated at first and then using set membership test, the results are compared with main query results. <Br>By specifying DISTINCT, duplications in customer_name are eliminated."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "IN set membership test is to see whether a data value matches one of a list of target values. For instance, 'X IN (A, B, C)' is completely equivalent to '(X = A) OR (X = B) OR (X = C)'. In this example, customer name is tested with the customer names in 'depositor' table."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "SQL provides a mechanism for nesting subqueries. A subquery is a SELECT-FROM-WHERE statement or statement containing GROUP BY and HAVING that is nested within another query. <br>This query is to find customer name having account."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection28",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Nested Subqueries (2)",
+    "description": "Given the relations:\n\n- borrower(customer_name, loan_number)\n- depositor(customer_name, account_number)\n\nWrite an SQL query to find the names of all customers who have taken a loan but do not have any deposit account. Return each customer name only once.",
+    "filename": "query.sql",
+    "code": "SELECT DISTINCT customer_name \n     FROM borrower\n     WHERE customer_name NOT IN \n          (SELECT customer_name \n           FROM depositor);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "Customers having account are selected in subquery at first and then, customers having loan are compared with the results of subquery."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "You can check whether the data value does not match any of the target value by using the NOT IN form of the condition test."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This subquery is to find customers having account."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection29",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Comparing Subquery Results (1)",
+    "description": "Return the names of all branches whose assets are greater than the assets of at least one branch located in Brooklyn.",
+    "filename": "query.sql",
+    "code": "SELECT branch_name \n     FROM branch\n     WHERE assets > SOME\n          (SELECT assets \n           FROM branch \n          WHERE branch_city = 'Brooklyn');",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "The SOME test is used in conjunction with one of the six SQL comparison operators (=, <>, <, <=, >, >=) to compare the test value with the results of subquery. If any of the individual comparisons yield a TRUE result, the SOME test results a TRUE results. SOME and ANY are equivalent. In this example, asset of every branch is compared with every assets of branch in 'Brooklyn'."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This is to find assets of branch opened in 'Brooklyn'."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection30",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Comparing Subquery Results (2)",
+    "description": "Find the names of all branches whose assets are greater than the assets of every branch located in Brooklyn.",
+    "filename": "query.sql",
+    "code": "SELECT branch_name \n     FROM branch\n     WHERE assets > ALL\n          (SELECT assets \n           WHERE branch_city = Brooklyn);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "The ALL test is used in conjunction with one of the six SQL comparison operators (=, <>, <, <=, >, >=) to compare test value to the results of subquery. If all of the individual comparsions yield a TRUE results, the ALL test returns a TRUE result. In this example, the asset of each branch is compared with all assets of 'Brooklyn' branches and the ALL values of 'Brooklyn' branches are smaller than the asset, it is retrieved."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This is to find assets of branch opened in 'Brooklyn'."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection31",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Aggregating Subquery",
+    "description": "Find the name(s) of the branch or branches whose accounts have the highest average balance among all branches. Return only the branch_name.",
+    "filename": "query.sql",
+    "code": "SELECT branch_name \n     FROM account\n     GROUP BY branch_name\n     HAVING AVG(balance) >= ALL \n          (SELECT AVG(balance) \n           FROM account \n           GROUP BY branch_name);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "Firstly, average value of all branches are calculated in subquery and then using ALL test, the average account value of each branch is compared with the subquery results."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "This to find the branches with the largest average account balance. "
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "This is to group the account balance according to the branch."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This is condition to find the largest average account value using ALL test. Just as the WHERE clause can be used to select and reject the individual rows, the HAVING clause can be used to select and reject row groups. The format of the HAVING clause parallels that of the WHERE clause, but this HAVING clause can be used as a GROUP search conditions. To perform this >= comparison, the balance is grouped by the branch_name and the average value is calculated. The calculated single value is compared with ALL average value of each branch and if they are smaller or equal to the single value, it yields TRUE."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "This is to calculated average account value of each branch."
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "7": {
+        "comments": [
+          {
+            "content": "This is to specify to group the balance value by branch and then the grouped value is calculated in AVG function."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection32",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Derived Relations",
+    "description": "Given an `account` table that includes each account\u2019s `branch_name` and `balance`, write a SQL query to find the average account balance for each branch and return only those branches whose average balance is greater than 1200. The output should include the branch name and its average balance.",
+    "filename": "query.sql",
+    "code": "SELECT branch_name, avg_balance\n     FROM\n          (SELECT branch_name, AVG(balance)\n           FROM account\n           GROUP BY branch_name)\n           AS branch_avg(branch_name, avg_balance))\n    WHERE avg_balance > 1200;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "In this example, an derived subquery is used in the FROM clause.  The column names used in this main query is not from the original 'account' table. It is aliase name from the derived subquery relation."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "SQL allows a subquery expression to be used in the FROM clause and this is the derived relations."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "This subquery is to select branch name and average account value of branch."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "Note that we do not need to use the HAVING clause, since we compute the temporary relation <i>branch_avg</i> in the FROM clause, and the attributes of <i>branch_avg</i> can be used directly in the WHERE clause."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "This GROUP BY clause is used in derived relation."
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": "The derived subquery and the two columns are renamed using tuple variables, AS. Hence, the whole subquery is 'branch_avg', the first column is 'branch_name' and the second column is 'avg_balance'."
+          }
+        ]
+      },
+      "7": {
+        "comments": [
+          {
+            "content": "In order to limit the value of avg_balance column WHERE clause is used. Because the derived relations is temporal table and the test value, avg_balance, is read from the table directly, there is no need to used HAVING comparison."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection33",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "View Creation (1)",
+    "description": "Given a banking database with the relations:\n\n- borrower(customer_name, loan_no)\n- loan(loan_no, branch_name, amount)\n\nWrite an SQL statement to create a view named `v` that shows each customer\u2019s name together with the loan number for every loan that exists in the `loan` table. Only include rows where the borrower\u2019s `loan_no` matches a valid `loan_no` in the `loan` relation.",
+    "filename": "query.sql",
+    "code": "CREATE VIEW v AS \n     (SELECT customer_name, loan_no \n      FROM borrower, loan\n      WHERE borrower.loan_no = loan.loan_no);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "A VIEW is a virtual table in the database whose contents are defined by a query. To users, the VIEW appears like a real table, but the rows and columns of data visible through the VIEW are the query results produced by the query defining the VIEW. The SQL for new view should start with 'CREATE VIEW' and the name is followed. The view columns are defined after 'AS' keyword."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "This is the query to define view. Customers having loan and loan number are selected."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "When DBMS encounters a reference to  a view in a SQL statement, it finds the definition of the view and then the DBMS translate the request that references the view into an equivalent request against the source tables of the view and carries out the equivalent requiest."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "Views provide a variety of benefits and can be useful in many different types of databases. Views provide these major benefits: <ul><li>Security: Each user can be given permission to access the database only through a small set of views.</li><li>Query simplicity: A view can data from several different tables and present it a s a single table, turning multitable queries into single-table queries</li><li>Structural simplicity: Views can give a user a personalized view of the database structure.</li><li>Insulation from change: A view can present a consistent, unchanged image of the structure of the database, even if the underlying source tables are split, restructured, or renamed</li><li>Data Integrity: If data is accessed and entered through a view, the DBMS can automatically check the data to ensure that it meets specified integrity constraints</li></ul>. While views provide substantial advantages, there are also two major disadvantages: <ul><li>Performance: If the view is defined by a complex multitable query, then even a single query against the view becomes a complicated join, and it may take a long time to complete</li><li>Update restrictions: Updating rows of a view is possible for simple views, but more complex views cannot be updated; they are ready-only.</li></ul>"
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection34",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "View Creation (2)",
+    "description": "Given the banking database relations:\n\n- account(account_no, branch_name, balance)\n- depositor(customer_name, account_no)\n- loan(loan_no, branch_name, amount)\n- borrower(customer_name, loan_no)\n\nWrite an SQL statement to create a view named `all_customer` that contains the `branch_name` and `customer_name` of every customer who is associated with a branch either by having a deposit account there or by having taken a loan there. Each `(branch_name, customer_name)` pair should appear only once in the view.",
+    "filename": "query.sql",
+    "code": "CREATE VIEW all_customer AS \n    (SELECT branch_name, customer_name\n        FROM depositor, account\n        WHERE depositor.account_no = account.account_no)\n     UNION\n    (SELECT branch_name, customer_name\n        FROM borrower, loan\n        WHERE borrower.loan_no = loan.loan_no);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "A VIEW is a virtual table in the database whose contents are defined by a query. To users, the VIEW appears like a real table, but the rows and columns of data visible through the VIEW are the query results produced by the query defining the VIEW. "
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "This is the first query is to find the customers having account and the branch."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "VIEW is for multi-table combination as a one table. Hence, by using UNION it is possible to add up two different SQL query results. UNION is to combine two results from separate queries into one results without duplicate."
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": "This is the second query to find the customers having loan and the branch."
+          }
+        ]
+      },
+      "7": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "8": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection35",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Grouping and aggregating (1)",
+    "description": "Given two tables:\n\n- Boats(bid, bname, color)\n- Reserves(sid, bid, day)\n\nWrite an SQL query to list each red boat\u2019s ID (`bid`) and the total number of reservation records for that boat. Only include boats whose color is red, and group the results by boat ID.",
+    "filename": "query.sql",
+    "code": "SELECT b.bid, COUNT(*) AS account\n     FROM boats B, reserves R\n     WHERE R.bid = B.bid AND b.color = red\n     GROUP BY B.bid;",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "'boats' and 'reserves' tables are renamed as B and R, respectively."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "This condition tests two parts. Firstly, it tests whether the boats have been reserved by match the boat's bid with the bid in the 'reserves'. Secondly, the boat' color is limited to red."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "The COUNT function is working with this GROUP BY clause. In order to calculated the number of rows, the results are group by the bid. And then, the COUNT function is performed."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection36",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Grouping and aggregating (2)",
+    "description": "Given a table `Sailors(sid, sname, rating, age)`, write an SQL query to return, for each `rating` that is shared by more than one sailor, the `rating` and the minimum `age` among sailors with that rating who are older than 18.",
+    "filename": "query.sql",
+    "code": "SELECT S.rating, MIN (S.age)\n     FROM Sailor S\n     WHERE S.age > 18\n     GROUP BY S.rating\n     HAVING 1 < \n         (SELECT COUNT(*) \n          FROM Sailors S2\n          WHERE S.rating = S2.rating);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "Not all sailors are taken into consideration. Sailors older than 18 years are selected."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "The sailors' ratings are grouped."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "This query firstly limit ratings having at least two sailors in the rating. The total number of each ratings that sailors are beloning to is compared with 1."
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": "This subquery is to count the number of sailors belonging to each ratings."
+          }
+        ]
+      },
+      "7": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "8": {
+        "comments": [
+          {
+            "content": "The ratings in Sailors table is matched with grouped ratings."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection37",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Grouping and aggregating (3)",
+    "description": "Given a table `Sailor(sid, sname, rating, age)`, find the `rating` of every sailor whose `age` is exactly equal to the overall average age of all sailors.",
+    "filename": "query.sql",
+    "code": "SELECT S.rating \n     FROM Sailor S\n     WHERE S.age = \n         (SELECT MIN (AVG(S2.age)) \n          FROM sailors S2);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "This example is WRONG, because aggregate operations cannot be nested. This query tried to calculate average age of sailors and minimum value of it again. AVG function cannot be nested by another aggregate function."
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection38",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Assertion Creation (2)",
+    "description": "Given a database with tables `sailor` and `boats`, write an SQL assertion named `smallClub` that enforces the rule that the club must stay small: the total number of sailors plus the total number of boats must always be less than 100.",
+    "filename": "query.sql",
+    "code": "CREATE ASSERTION smallClub\n    CHECK\n    ((SELECT COUNT(S.sid) \n     FROM sailor S) + \n    (SELECT COUNT(B.sid) \n     FROM boats B)\n      < 100));",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "The previous example ('Assertion Creation (1)') checks the values within itself and it is inappropriate. This example explains ASSERTION as the right solution; not associated with either table. An ASSERTION is a database constraint that restricts the contents of the database as a whole. Like a CHECK constraint, an assertion is specified as a search condition. But the difference of ASSERTION with CHECK constraint is that the search condition in an assertion can restrict the contents of multiple tables and the data relationships among them. For that reaon, an ASSERTION is specified as part of the overall database definition, via CREATE ASSERTION statement."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "'CHECK' keyword is mandantory for creating assertion. "
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "In this example,  both sailor and boats are target tables to be compared as a search condition. This returns the number of sailors. "
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": "Two query results are summed up. "
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "This query counts the number of boats. "
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "7": {
+        "comments": [
+          {
+            "content": "The summed result of two queries is compared with 100 and checks if the value is less than 100. "
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableCreation8",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Retrieving data from view",
+    "description": "Return the names of all customers from the `all_customer` table who are associated with the branch named **'Perryridge'**.",
+    "filename": "query.sql",
+    "code": "SELECT customer_name\n      FROM all_customer\n      WHERE branch_name = 'Perryridge';",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "The view name 'all_customer' is used in the place of table."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "The results is restricted to the customers belonging to 'Perryridge' branch."
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection40",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Aggregating Derived Relations",
+    "description": "Given a table `sailors` with attributes such as `rating` and `age`, write a query to find the `rating` value(s) whose sailors have the lowest average age among all rating groups, and return both the rating and that average age.",
+    "filename": "query.sql",
+    "code": "SELECT temp.rating, temp.average\n     FROM \n        (SELECT S.rating, AVG(S.age) AS avgage\n         FROM sailors S\n         GROUP BY S.rating) AS temp\n     WHERE temp.avgage = \n    (SELECT MIN(temp.avgage) \n     FROM temp);",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "To make the previous example properly, derived relations and comparison using WHERE clause can be used. This example is also to select those ratings for which the average age is the minimum over all ratings. 'temp' in front of the each column is the name of derived relation."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": "This subquery is used with FROM. So it is derived relation. It is to calculate average age of sailors for each ratings. The sailors are grouped by their ratings and the age is averaged over each group. The averaged value is renamed as 'avgage'."
+          }
+        ]
+      },
+      "4": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "5": {
+        "comments": [
+          {
+            "content": "The whole derived subquery is renamed as 'temp'. Once the derived relation is renamed, the new name can be used in outer query."
+          }
+        ]
+      },
+      "6": {
+        "comments": [
+          {
+            "content": "The avgage value in derived relation is compared with second subquery."
+          }
+        ]
+      },
+      "7": {
+        "comments": [
+          {
+            "content": "This query is to calculate minimum average value ('avgage') in derived relation, 'temp'."
+          }
+        ]
+      },
+      "8": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:DataSelection41",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Primary Key (2)",
+    "description": "Create a table named `course` to store course information. The table should have:\n\n- `cid`: a required course ID that can store up to 20 characters and must uniquely identify each course\n- `cname`: a course name that can store up to 40 characters\n\nSet `cid` as the primary key.",
+    "filename": "query.sql",
+    "code": "CREATE TABLE course\n     (cid CHAR(20) NOT NULL PRIMARY KEY,\n      cname CHAR(40));",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": "This example is to create table for course and course ID and course name are the information to be stored."
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": "Course ID is defined as 'cid'. This column is not allowed to have null value. <BR><BR>Primary key specifies an unique identifier for each row of the table. That is to say, there is not more than one course IDs that are the same. In addition, the column defined as primary key is not allowed to be null."
+          }
+        ]
+      },
+      "3": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:admin",
+      "annex_key:TableCreation9",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  },
+  {
+    "user": "moh70@pitt.edu",
+    "language": "SQL",
+    "name": "Left Join 1",
+    "description": "Write an SQL query to retrieve all columns and all records from the Students table.",
+    "filename": "query.sql",
+    "code": "SELECT * FROM Students;\n",
+    "lines": {
+      "1": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      },
+      "2": {
+        "comments": [
+          {
+            "content": ""
+          }
+        ]
+      }
+    },
+    "tags": [
+      "language:korean",
+      "annex_author:",
+      "annex_key:LeftJoin25_1",
+      "desc-generated-by:gpt-5.4-2026-03-05"
+    ],
+    "distractors": [],
+    "collaborator_emails": ["suleehs@gmail.com"],
+    "extraFiles": [],
+    "__desc_gpt_generated": true
+  }
+]
