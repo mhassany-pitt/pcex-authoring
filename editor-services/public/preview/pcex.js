@@ -363,10 +363,14 @@ var pcex = {
 
 	setLanguageSettings: function (language) {
 		pcex.isPython = language === 'PYTHON';
-		if (pcex.isPython) {
+		if (language === 'PYTHON') {
 			pcex.indentChar = '    ';
 			pcex.commentString = '#';
 			pcex.codeHighlightClass = 'python hljs';
+		} else if (language === 'SQL') {
+			pcex.indentChar = '  ';
+			pcex.commentString = '--';
+			pcex.codeHighlightClass = 'sql hljs';
 		} else if (language === 'ASM') {
 			pcex.indentChar = '    ';
 			pcex.commentString = ';';

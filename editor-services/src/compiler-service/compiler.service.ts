@@ -1,22 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-  ensureDirSync, writeJsonSync, statSync,
-  existsSync, rmSync, readJsonSync, readdirSync,
-  createWriteStream, rmdirSync, writeFileSync
+  ensureDirSync,
+  writeJsonSync,
+  statSync,
+  existsSync,
+  rmSync,
+  readJsonSync,
+  readdirSync,
+  createWriteStream,
+  rmdirSync,
+  writeFileSync,
 } from 'fs-extra';
 import { v4 as uuid4 } from 'uuid';
 import { exec } from 'shelljs';
 import { SourcesService } from '../sources-service/sources.service';
 import { ActivitiesService } from '../activities-service/activities.service';
 import { create } from 'archiver';
-import deepEqual from 'deep-equal';
 import { useId } from 'src/utils';
 import { renameSync } from 'fs';
 
 @Injectable()
 export class CompilerService {
-
   constructor(
     private sources: SourcesService,
     private activities: ActivitiesService,
@@ -74,39 +79,41 @@ export class CompilerService {
   }
 
   async compile(activity: any) {
-    if (activity == null)
-      return null;
+    if (activity == null) return null;
 
     const workspace = `${this.root}/${activity.id}`;
     ensureDirSync(workspace);
 
     try {
       const inputs = `${workspace}/inputs/`;
-      if (existsSync(inputs))
-        rmSync(inputs, { recursive: true });
+      if (existsSync(inputs)) rmSync(inputs, { recursive: true });
       ensureDirSync(inputs);
 
       const extrafiles = `${workspace}/extra-files/`;
-      if (existsSync(extrafiles))
-        rmSync(extrafiles, { recursive: true });
+      if (existsSync(extrafiles)) rmSync(extrafiles, { recursive: true });
       ensureDirSync(extrafiles);
 
       // const changes = [];
       for (let index = 0; index < activity.items.length; index++) {
         const item = activity.items[index];
-        const source = item.item$ || useId(await this.sources.read({ user: activity.user, id: item.item }));
+        const source =
+          item.item$ ||
+          useId(
+            await this.sources.read({ user: activity.user, id: item.item }),
+          );
 
         const clines = (source.code || '').split('\n');
         const lineList = clines.map((line: string, lineNum: number) => ({
           id: uuid4(),
           number: ++lineNum, // ++: index->lineNum
           content: line,
-          commentList: `${lineNum}` in (source.lines || {})
-            ? source.lines[`${lineNum}`].comments
-              .map(comment => comment.content)
-              .filter(content => content)
-            : [],
-          indentLevel: this.calcIndentLevel(line)
+          commentList:
+            `${lineNum}` in (source.lines || {})
+              ? source.lines[`${lineNum}`].comments
+                  .map((comment) => comment.content)
+                  .filter((content) => content)
+              : [],
+          indentLevel: this.calcIndentLevel(line),
         }));
 
         const newJson = {
@@ -119,25 +126,24 @@ export class CompilerService {
           userInput: source.programInput || '',
           filename: source.filename,
           lineList,
-          distractorList: (source.distractors || [])
-            .map((distractor: any) => ({
+          distractorList: (source.distractors || []).map((distractor: any) => ({
+            id: uuid4(),
+            line: {
               id: uuid4(),
-              line: {
-                id: uuid4(),
-                number: 0,
-                content: distractor.code,
-                commentList: [distractor.description],
-                indentLevel: this.calcIndentLevel(distractor.code)
-              }
-            })),
+              number: 0,
+              content: distractor.code,
+              commentList: [distractor.description],
+              indentLevel: this.calcIndentLevel(distractor.code),
+            },
+          })),
           blankLineList: Object.keys(source.lines || {})
-            .filter(lineNum => source.lines[lineNum].blank)
-            .map(lineNum => ({
+            .filter((lineNum) => source.lines[lineNum].blank)
+            .map((lineNum) => ({
               id: uuid4(),
               line: lineList[parseInt(lineNum) - 1],
-              helpList: lineList[parseInt(lineNum) - 1].commentList
+              helpList: lineList[parseInt(lineNum) - 1].commentList,
             })),
-          fullyWorkedOut: item.type == 'example'
+          fullyWorkedOut: item.type == 'example',
         };
 
         const jsonfile = `${inputs}${source.id}_${item.type}_${index}`;
@@ -168,11 +174,12 @@ export class CompilerService {
       //   return resp;
 
       const outputs = `${workspace}/outputs/`;
-      if (existsSync(outputs))
-        rmSync(outputs, { recursive: true });
+      if (existsSync(outputs)) rmSync(outputs, { recursive: true });
 
-      const PcExParserRunner = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
-        `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.PcExParserRunner "../${inputs}" "../${outputs}" "../${extrafiles}"`);
+      const PcExParserRunner = exec(
+        `cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
+          `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.PcExParserRunner "../${inputs}" "../${outputs}" "../${extrafiles}"`,
+      );
 
       resp.PcExParserRunner = {
         code: PcExParserRunner.code,
@@ -181,17 +188,24 @@ export class CompilerService {
       };
 
       const queries = `${workspace}/queries/`;
-      if (existsSync(queries))
-        rmSync(queries, { recursive: true });
+      if (existsSync(queries)) rmSync(queries, { recursive: true });
 
-      const UMActivityQueryGenerator = exec(`cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
-        `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.UMActivityQueryGenerator "../${outputs}" "../${queries}"`);
+      const UMActivityQueryGenerator = exec(
+        `cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
+          `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.UMActivityQueryGenerator "../${outputs}" "../${queries}"`,
+      );
 
       // temporary append .sql extension to all files
-      readdirSync(queries).forEach(dir =>
+      readdirSync(queries).forEach((dir) =>
         readdirSync(`${queries}/${dir}`)
-          .filter(file => !file.endsWith('.sql'))
-          .forEach(file => renameSync(`${queries}/${dir}/${file}`, `${queries}/${dir}/${file}.sql`)));
+          .filter((file) => !file.endsWith('.sql'))
+          .forEach((file) =>
+            renameSync(
+              `${queries}/${dir}/${file}`,
+              `${queries}/${dir}/${file}.sql`,
+            ),
+          ),
+      );
 
       resp.UMActivityQueryGenerator = {
         code: UMActivityQueryGenerator.code,
@@ -225,15 +239,13 @@ export class CompilerService {
 
   async archive(activityId: string) {
     const workspace = `${this.root}/${activityId}`;
-    if (!existsSync(workspace))
-      return null;
+    if (!existsSync(workspace)) return null;
 
     const tmpdir = `${this.config.get('STORAGE_PATH')}/tmp/`;
     ensureDirSync(tmpdir);
 
     const output = `${tmpdir}${activityId}.zip`;
-    if (existsSync(output))
-      rmSync(output);
+    if (existsSync(output)) rmSync(output);
 
     const archive = create('zip', { zlib: { level: 9 } });
     archive.pipe(createWriteStream(output));
