@@ -133,7 +133,12 @@ export class CompilerService {
               number: 0,
               content: distractor.code,
               commentList: [distractor.description],
-              indentLevel: this.calcIndentLevel(distractor.code),
+              indentLevel: this.calcIndentLevel(
+                distractor.line_number > 0 && 
+                distractor.line_number - 1 < clines.length
+                  ? clines[distractor.line_number - 1]
+                  : distractor.code
+              ),
             },
           })),
           blankLineList: Object.keys(source.lines || {})

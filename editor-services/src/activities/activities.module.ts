@@ -8,23 +8,29 @@ import { CompilerServiceModule } from 'src/compiler-service/compiler-service.mod
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  controllers: [
-    ActivitiesController
-  ],
+  controllers: [ActivitiesController],
   imports: [
     TypeOrmModule.forRootAsync({
       name: 'aggregate', imports: [ConfigModule], inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({ type: 'mysql', url: config.get('MYSQL_URI_AGGREGATE') }),
+      useFactory: (config: ConfigService) => ({ 
+        type: 'mysql', 
+        url: config.get('MYSQL_URI_AGGREGATE'), 
+        charset: 'utf8mb4' 
+      }),
     }),
     TypeOrmModule.forRootAsync({
       name: 'um2', imports: [ConfigModule], inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({ type: 'mysql', url: config.get('MYSQL_URI_UM2') }),
+      useFactory: (config: ConfigService) => ({ 
+        type: 'mysql', 
+        url: config.get('MYSQL_URI_UM2'), 
+        charset: 'utf8mb4' 
+      }),
     }),
     ActivitiesServiceModule,
     SourcesServiceModule,
-    CompilerServiceModule
+    CompilerServiceModule,
   ],
   providers: [],
-  exports: []
+  exports: [],
 })
-export class ActivitiesModule { }
+export class ActivitiesModule {}
