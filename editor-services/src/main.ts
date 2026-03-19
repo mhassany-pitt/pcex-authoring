@@ -21,7 +21,10 @@ async function bootstrap() {
       origin: (origin, callback) => callback(null, true),
     });
   } else {
-    app.enableCors({ credentials: true, origin: 'http://localhost:4200' });
+    app.enableCors({ credentials: true, origin: [
+      'http://localhost:4200',
+      'http://localhost:2000',
+    ]});
   }
 
   app.use(bodyParser.json({ limit: '50mb' }));

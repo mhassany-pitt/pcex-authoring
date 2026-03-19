@@ -28,7 +28,7 @@ export class HubComponent implements OnInit {
   cloningActivity: any = null;
   cloning: boolean = false;
 
-  getIntegrationLink(activity: any, protocol: string) {
+  getLink(activity: any, protocol: string) {
     return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${activity.name.replace(/ /g, '_').replace(/\./g, '_')}__${activity.id}`
   }
 

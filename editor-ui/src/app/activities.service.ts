@@ -50,7 +50,7 @@ export class ActivitiesService {
   }
 
   download(activity: any) {
-    this.http.get(`${environment.apiUrl} / activities / ${activity.id} / download`, {
+    this.http.get(`${environment.apiUrl}/activities/${activity.id}/download`, {
       responseType: 'blob',
       withCredentials: true
     }).subscribe((blob: Blob) => {
@@ -64,6 +64,6 @@ export class ActivitiesService {
   }
 
   clone(activity: any) {
-    return this.http.post(`${environment.apiUrl} / activities / ${activity.id} / clone`, {}, { withCredentials: true });
+    return this.http.post(`${environment.apiUrl}/activities/${activity.id}/clone`, {}, { withCredentials: true });
   }
 }
