@@ -126,7 +126,7 @@ export class ActivitiesController {
   }
 
   @Get(':id/preview')
-  @UseGuards(AuthenticatedGuard)
+  // @UseGuards(AuthenticatedGuard)
   async getPreview(@Req() req: Request, @Param('id') id: string, @Res({ passthrough: true }) res: Response, @Query('type') type: string) {
     // await this.authorizePreview(req, id, type);
     res.header('Content-Type', 'application/json');

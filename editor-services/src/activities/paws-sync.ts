@@ -302,12 +302,14 @@ const syncToAggUM2 = async (params: Params) => {
 
 const syncToCatalog = async ({ activity, users, sources, config }: Params) => {
   activity.linkings.catalog ||= {};
+  const curLinkingIds = new Set<string>();
 
   // post/patch activity to catalog
   const source0 = useId(await sources.read({ user: activity.user, id: activity.items[0]?.item }));
   if (`activity-id` in activity.linkings.catalog) {
     const id = activity.linkings.catalog[`activity-id`];
     await patchToCatalog(id, await activityToCatalogItem(activity, source0, users), config);
+    curLinkingIds.add(id);
   } else {
     const { id } = await postToCatalog(await activityToCatalogItem(activity, source0, users), config);
     activity.linkings.catalog[`activity-id`] = id;
@@ -320,10 +322,17 @@ const syncToCatalog = async ({ activity, users, sources, config }: Params) => {
     if (`source__${activity.items[index].item}` in activity.linkings.catalog) {
       const id = activity.linkings.catalog[`source__${activity.items[index].item}`];
       await patchToCatalog(id, await sourceToCatalogItem(source, activity, index, type, users), config);
+      curLinkingIds.add(id);
     } else {
       const { id } = await postToCatalog(await sourceToCatalogItem(source, activity, index, type, users), config);
       activity.linkings.catalog[`source__${activity.items[index].item}`] = id;
     }
+  }
+
+  const oldLinkingIds = Object.keys(activity.linkings.catalog).filter(id => !curLinkingIds.has(id));
+  for (const oldLinkingId of oldLinkingIds) {
+    await deleteFromCatalog(activity.linkings.catalog[`${oldLinkingId}`], config);
+    delete activity.linkings.catalog[`${oldLinkingId}`];
   }
 };
 
@@ -346,6 +355,14 @@ const patchToCatalog = async (id: string, item: any, config: ConfigService) => {
     { headers: { 'api-token': apiToken, 'api-user-email': item.user_email } }
   );
   return { id: response.data.id };
+};
+
+const deleteFromCatalog = async (id: string, config: ConfigService) => { 
+  const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
+  await axios.delete(
+    `${config.get('PAWS_CATALOG_API')}/api/slc-items-api/${id}`,
+    { headers: { 'api-token': apiToken } }
+  );
 };
 
 const activityToCatalogItem = async (activity: any, source0: any, users: UsersService) => {
