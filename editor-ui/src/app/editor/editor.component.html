@@ -60,15 +60,19 @@
       <!-- name & description -->
       <div class="w-full flex flex-col gap-2 bg-gray-100 p-2 rounded-sm shadow-md">
         <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText dir="auto"
-          [(ngModel)]="model[viewUntranslated ? 'untr_name' : 'name']" (ngModelChange)="updateTitle()"
-          placeholder="*Name" class="flex-grow text-xl border-gray-200"
-          [class.border-red-600]="model.name?.length >= 128" required maxlength="128" (focus)="onNameFocus($event)"
-          (blur)="onNameBlur($event);" [disabled]="viewUntranslated" />
+        [(ngModel)]="model[viewUntranslated ? 'untr_name' : 'name']" (ngModelChange)="updateTitle()"
+        placeholder="*Name" class="flex-grow text-xl border-gray-200"
+        [class.border-red-600]="model.name?.length >= 128" required maxlength="128" (focus)="onNameFocus($event)"
+        (blur)="onNameBlur($event);" [disabled]="viewUntranslated" />
 
         <textarea *ngIf="!titleDescCollapsed" pInputTextarea name="description" dir="auto" [autoResize]="true"
           placeholder="Description" rows="1" [(ngModel)]="model[viewUntranslated ? 'untr_description' : 'description']"
           class="p-inputtext-sm w-full border-gray-200" (focus)="onDescriptionFocus($event)"
           (blur)="onDescriptionBlur($event)" [disabled]="viewUntranslated"></textarea>
+
+        <input *ngIf="!titleDescCollapsed" type="text" name="iso_language_code" pInputText dir="auto"
+          [(ngModel)]="model.iso_language_code" placeholder="*ISO Language Code (2 chars), eg: 'en' for English, 'es' for Spanish, 'fr' for French" class="text-xs border-gray-200"
+          required maxlength="2" />
 
         <p-chips *ngIf="!titleDescCollapsed" name="tags" [(ngModel)]="model.tags" separator="," placeholder="Add tags"
           (onAdd)="addTag($event)" (onRemove)="removeTag($event)"></p-chips>
@@ -77,9 +81,14 @@
         <div class="flex flex-col items-start gap-2 mr-24 cursor-pointer text-gray-400"
           (click)="titleDescCollapsed = !titleDescCollapsed">
           <span *ngIf="titleDescCollapsed && model.description" class="text-xs">
-            {{ viewUntranslated ? model.untr_description : model.description }}
+            Description: {{ viewUntranslated ? model.untr_description : model.description }}
           </span>
-          <span *ngIf="titleDescCollapsed && model.tags?.length" class="text-xs">{{ model.tags?.join(', ') }}</span>
+          <span *ngIf="titleDescCollapsed && model.iso_language_code" class="text-xs">
+            ISO Language Code: {{ model.iso_language_code }}
+          </span>
+          <span *ngIf="titleDescCollapsed && model.tags?.length" class="text-xs">
+            Tags: {{ model.tags?.join(', ') }}
+          </span>
           <i class="pi text-xs"
             [ngClass]="{ 'pi-chevron-up' : !titleDescCollapsed, 'pi-chevron-down': titleDescCollapsed }"></i>
         </div>

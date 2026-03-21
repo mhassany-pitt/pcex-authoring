@@ -1,7 +1,9 @@
 import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
 import { readFile } from 'fs/promises';
 import { ActivitiesService } from 'src/activities-service/activities.service';
 import { SourcesService } from 'src/sources-service/sources.service';
+import { UsersService } from 'src/users/users.service';
 import { transaction, useId } from 'src/utils';
 import { DataSource, QueryRunner } from 'typeorm';
 
@@ -11,6 +13,7 @@ type Params = {
   config: ConfigService;
   activities: ActivitiesService;
   sources: SourcesService;
+  users: UsersService;
   request: any;
   activity: any;
 };
@@ -29,11 +32,14 @@ export const syncToPAWS = async (params: Params) => {
     console.info(
       `[${email}] sync activity (${params.activity.name}) with PAWS aggregate/um2.`,
     );
-    await syncToAggUM2(params);
-    // IMPORTANT: /aggregateUMServices and /cbum needs restart to reflect the changes
+    await syncToAggUM2(params); // IMPORTANT: /aggregateUMServices and /cbum needs restart to reflect the changes
+    console.info(
+      `[${email}] sync activity (${params.activity.name}) with PAWS catalog v2.`,
+    );
+    await syncToCatalog(params);
   } else {
     console.warn(
-      `[${email}] not allowed to sync activity (${params.activity.name}) with PAWS aggregate/um2.`,
+      `[${email}] not allowed to sync activity (${params.activity.name}) with PAWS Catalog.`,
     );
   }
 };
@@ -58,8 +64,6 @@ const syncToAggUM2 = async (params: Params) => {
     async (agg_qr, um2_qr) => {
       const activity = params.activity;
       const activityName = cleanName(`${activity.name}__${activity.id}`);
-
-      console.log(activityName);
 
       const user = params.request.user.email;
       activity.linkings = (
@@ -294,4 +298,133 @@ const syncToAggUM2 = async (params: Params) => {
     },
     async () => {},
   );
+};
+
+const syncToCatalog = async ({ activity, users, sources, config }: Params) => {
+  activity.linkings.catalog ||= {};
+
+  // post/patch activity to catalog
+  const source0 = useId(await sources.read({ user: activity.user, id: activity.items[0]?.item }));
+  if (`activity-id` in activity.linkings.catalog) {
+    const id = activity.linkings.catalog[`activity-id`];
+    await patchToCatalog(id, await activityToCatalogItem(activity, source0, users), config);
+  } else {
+    const { id } = await postToCatalog(await activityToCatalogItem(activity, source0, users), config);
+    activity.linkings.catalog[`activity-id`] = id;
+  }
+
+  // post/patch sources to catalog
+  for (let index = 0; index < activity.items.length; index++) {
+    const type = activity.items[index].type;
+    const source = useId(await sources.read({ user: activity.user, id: activity.items[index].item }));
+    if (`source__${activity.items[index].item}` in activity.linkings.catalog) {
+      const id = activity.linkings.catalog[`source__${activity.items[index].item}`];
+      await patchToCatalog(id, await sourceToCatalogItem(source, activity, index, type, users), config);
+    } else {
+      const { id } = await postToCatalog(await sourceToCatalogItem(source, activity, index, type, users), config);
+      activity.linkings.catalog[`source__${activity.items[index].item}`] = id;
+    }
+  }
+};
+
+const postToCatalog = async (item: any, config: ConfigService) => {
+  const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
+  const response = await axios.post(
+    `${config.get('PAWS_CATALOG_API')}/api/slc-items-api/`,
+    item,
+    { headers: { 'api-token': apiToken, 'api-user-email': item.user_email } }
+  );
+  return { id: response.data.id };
+};
+
+const patchToCatalog = async (id: string, item: any, config: ConfigService) => {
+  const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
+  const { listed_at, ...others } = item;
+  const response = await axios.patch(
+    `${config.get('PAWS_CATALOG_API')}/api/slc-items-api/${id}`,
+    others,
+    { headers: { 'api-token': apiToken, 'api-user-email': item.user_email } }
+  );
+  return { id: response.data.id };
+};
+
+const activityToCatalogItem = async (activity: any, source0: any, users: UsersService) => {
+  return {
+    "user_email": activity.user,
+    "status": activity.published ? "public" : "private",
+    "listed_at": new Date().toISOString(),
+    "tags": [],
+    "identity": { 
+      "id": cleanName(`${activity.name}__${activity.id}`), 
+      "type": "CodeConstruction&CompletionBundle", 
+      "title": activity.name 
+    },
+    "links": { "demo_url": prepURL(activity, 'html') },
+    "attribution": {
+        "created_at": activity.created_at,
+        "provider": "PCEX", 
+        "publisher": "",
+        "authors": [{ "name": (await users.findUser(activity.user))?.fullname || "", "affiliation": "" }]
+    },
+    "languages": {
+        "content_language": source0?.iso_language_code || 'en',
+        "programming_languages": [source0?.language || 'unknown']
+    },
+    "content": { "prompt": "", "source_code": "" },
+    "classification": { "topics": [], "difficulty": "" },
+    "pedagogy": {
+        "learning_objectives": [],
+        "instructional_role": "",
+        "prerequisites": {"topics": [],"concepts": [],"item_ids": []}
+    },
+    "interaction": { "interaction_type": "" },
+    "delivery": [
+        { "format": "PITT", "url": prepURL(activity, 'pitt') },
+        { "format": "SPLICE", "url": prepURL(activity, 'html') }
+    ],
+    "rights": { "license": "MIT", "license_url": "", "usage_notes": "" },
+    "uses": []
+  };
+};
+
+const sourceToCatalogItem = async (source: any, activity: any, index: number, type: string, users: UsersService) => {
+  return {
+    "paws_id": activity.linkings.agg[`content__${source.id}`],
+    "user_email": source.user,
+    "status": activity.published ? "public" : "private",
+    "listed_at": new Date().toISOString(),
+    "tags": source.tags || [],
+    "identity": {
+        "id": cleanName(`${source.name}__${activity.id}-${source.id}-${index}`),
+        "type": type == 'example' ? 'CodeConstruction' : 'CodeCompletion',
+        "title": source.name,
+    },
+    "links": { "demo_url": prepURL(activity, 'html') + `?index=${index}` },
+    "attribution": {
+        "created_at": source.created_at,
+        "provider": "PCEX",
+        "publisher": "",
+        "authors": [{ "name": (await users.findUser(source.user))?.fullname || "", "affiliation": "" }]
+    },
+    "languages": {
+        "content_language": source.iso_language_code || 'en',
+        "programming_languages": [source.language || 'unknown']
+    },
+    "content": {
+        "prompt": source.description,
+        "source_code": source.code
+    },
+    "classification": { "topics": [], "difficulty": "" },
+    "pedagogy": {
+        "learning_objectives": [], "instructional_role": "",
+        "prerequisites": {"topics": [],"concepts": [],"item_ids": []}
+    },
+    "interaction": { "interaction_type": "" },
+    "delivery": [
+        { "format": "PITT", "url": prepURL(activity, 'pitt') + `?index=${index}` },
+        { "format": "SPLICE", "url": prepURL(activity, 'html') + `?index=${index}` }
+    ],
+    "rights": { "license": "MIT", "license_url": "", "usage_notes": "" },
+    "uses": []
+  };
 };

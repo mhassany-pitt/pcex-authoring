@@ -12,6 +12,7 @@ export class Source {
   @Prop() description: string;
   @Prop() untr_description: string; // untranslated description
   @Prop() tags: string[];
+  @Prop() iso_language_code: string;
   @Prop() language: string;
   @Prop() filename: string;
   @Prop() code: string;

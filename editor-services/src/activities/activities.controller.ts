@@ -14,6 +14,7 @@ import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { syncToPAWS } from './paws-sync';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('activities')
 export class ActivitiesController {
@@ -23,6 +24,7 @@ export class ActivitiesController {
     private sources: SourcesService,
     private activities: ActivitiesService,
     private compiler: CompilerService,
+    private users: UsersService,
     @InjectDataSource('aggregate') private ds_agg: DataSource,
     @InjectDataSource('um2') private ds_um2: DataSource,
   ) { }
@@ -76,11 +78,12 @@ export class ActivitiesController {
         activities: this.activities,
         sources: this.sources,
         request: req,
+        users: this.users,
         activity: updates
       });
     } catch (error) {
       console.error('PAWS sync error:', error);
-      resp['paws_sync_error'] = 'Failed to sync with PAWS UM/Aggregate.';
+      resp['paws_sync_error'] = 'Failed to sync with PAWS Catalog.';
     }
 
     await this.activities.update({ ...updates, user: this.getUserEmail(req), _id: id });
