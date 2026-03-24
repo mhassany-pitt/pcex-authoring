@@ -4,9 +4,13 @@
     // by default the http://backend-server/preview/ path will be used
     // and this is only for previous production urls!
     const params = new URLSearchParams(location.search);
-    const isDev = location.href.startsWith("http://localhost");
-    const host = isDev ? "http://localhost:2000" : "https://acos.cs.vt.edu";
-    const redirect = `${host}/html/acos-pcex/acos-pcex-examples/preview${params.size ? "?" + params.toString() : ""}`;
+    const isLocalhost = location.href.startsWith("http://localhost");
+    const domainAddr = isLocalhost ? "http://localhost:2000" : "https://acos.cs.vt.edu";
+    const isItPitt = params.has("usr") || params.has("grp") || params.has("sid");
+    if (isItPitt) params.set("example-id", "preview");
+    const exampleId = isItPitt ? '' : 'preview';
+    const protocol = isItPitt ? 'pitt' : 'html';
+    const redirect = `${domainAddr}/${protocol}/acos-pcex/acos-pcex-examples/${exampleId}${params.size ? "?" + params.toString() : ""}`;
     location.href = redirect;
   </script>
 </html>
