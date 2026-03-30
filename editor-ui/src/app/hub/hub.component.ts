@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AppService } from '../app.service';
 import { getNavMenuBar, getPreviewLink } from '../utilities';
 import { MessageService } from 'primeng/api';
+import { slugify } from 'transliteration';
 
 @Component({
   selector: 'app-hub',
@@ -29,7 +30,8 @@ export class HubComponent implements OnInit {
   cloning: boolean = false;
 
   getLink(activity: any, protocol: string) {
-    return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${activity.name.replace(/ /g, '_').replace(/\./g, '_')}__${activity.id}`
+    const name = slugify(activity.name, { separator: '_' });
+    return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${name.replace(/ /g, '_').replace(/\./g, '_')}__${activity.id}`
   }
 
   get isLoggedIn() { return !!this.app.user; }

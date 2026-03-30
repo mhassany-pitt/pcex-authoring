@@ -6,6 +6,7 @@ import { SourcesService } from 'src/sources-service/sources.service';
 import { UsersService } from 'src/users/users.service';
 import { transaction, useId } from 'src/utils';
 import { DataSource, QueryRunner } from 'typeorm';
+import { slugify } from 'transliteration';
 
 type Params = {
   ds_agg: DataSource;
@@ -55,7 +56,8 @@ const exec_query = async (ds: QueryRunner, query: string, params: any[]) => {
 };
 
 const prepURL = (activity: any, protocol: string) => {
-  return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${activity.name.replace(/ /g, '_').replace(/\./g, '_')}__${activity.id}`;
+  const name = slugify(activity.name, { separator: '_' });
+  return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${name.replace(/ /g, '_').replace(/\./g, '_')}__${activity.id}`;
 };
 
 const syncToAggUM2 = async (params: Params) => {
@@ -308,11 +310,15 @@ const syncToCatalog = async ({ activity, users, sources, config }: Params) => {
   const source0 = useId(await sources.read({ user: activity.user, id: activity.items[0]?.item }));
   if (`activity-id` in activity.linkings.catalog) {
     const id = activity.linkings.catalog[`activity-id`];
+    console.log(`Activity (${activity.name}) already linked to catalog (id=${id}), patching the item...`);
     await patchToCatalog(id, await activityToCatalogItem(activity, source0, users), config);
     curLinkingIds.add(id);
   } else {
+    console.log(`Activity (${activity.name}) not linked to catalog, posting the item...`);
     const { id } = await postToCatalog(await activityToCatalogItem(activity, source0, users), config);
     activity.linkings.catalog[`activity-id`] = id;
+    curLinkingIds.add(id);
+    console.log(`Activity (${activity.name}) linked to catalog with id=${id}`);
   }
 
   // post/patch sources to catalog
@@ -321,49 +327,68 @@ const syncToCatalog = async ({ activity, users, sources, config }: Params) => {
     const source = useId(await sources.read({ user: activity.user, id: activity.items[index].item }));
     if (`source__${activity.items[index].item}` in activity.linkings.catalog) {
       const id = activity.linkings.catalog[`source__${activity.items[index].item}`];
+      console.log(`Source (${source.name}) already linked to catalog (id=${id}), patching the item...`);
       await patchToCatalog(id, await sourceToCatalogItem(source, activity, index, type, users), config);
       curLinkingIds.add(id);
     } else {
+      console.log(`Source (${source.name}) not linked to catalog, posting the item...`);
       const { id } = await postToCatalog(await sourceToCatalogItem(source, activity, index, type, users), config);
       activity.linkings.catalog[`source__${activity.items[index].item}`] = id;
+      curLinkingIds.add(id);
+      console.log(`Source (${source.name}) linked to catalog with id=${id}`);
     }
   }
 
-  const oldLinkingIds = Object.keys(activity.linkings.catalog).filter(id => !curLinkingIds.has(id));
+  const oldLinkingIds = Object.keys(activity.linkings.catalog).filter(key => !curLinkingIds.has(activity.linkings.catalog[key]));
   for (const oldLinkingId of oldLinkingIds) {
+    console.log(`Source (${activity.linkings.catalog[`${oldLinkingId}`]}) is no longer linked to the activity, deleting from catalog...`);
     await deleteFromCatalog(activity.linkings.catalog[`${oldLinkingId}`], config);
     delete activity.linkings.catalog[`${oldLinkingId}`];
   }
+
+  console.log(`Finished syncing activity (${activity.name}) and its sources with catalog. Current catalog linkings:`, activity.linkings.catalog);
 };
 
 const postToCatalog = async (item: any, config: ConfigService) => {
   const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
+  console.log(`Posting item to catalog with data:`, JSON.stringify(item));
   const response = await axios.post(
     `${config.get('PAWS_CATALOG_API')}/api/slc-items-api/`,
     item,
     { headers: { 'api-token': apiToken, 'api-user-email': item.user_email } }
   );
+  console.log(`Post response for item:`, response.status, response.statusText, response.data.id);
   return { id: response.data.id };
 };
 
 const patchToCatalog = async (id: string, item: any, config: ConfigService) => {
   const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
   const { listed_at, ...others } = item;
+  console.log(`Patching item (id=${id}) to catalog with data:`, JSON.stringify(item));
   const response = await axios.patch(
     `${config.get('PAWS_CATALOG_API')}/api/slc-items-api/${id}`,
     others,
     { headers: { 'api-token': apiToken, 'api-user-email': item.user_email } }
   );
+  console.log(`Patch response for item (id=${id}):`, response.status, response.statusText, response.data.id);
   return { id: response.data.id };
 };
 
 const deleteFromCatalog = async (id: string, config: ConfigService) => { 
   const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
-  await axios.delete(
+  console.log(`Deleting item (id=${id}) from catalog...`);
+  const response = await axios.delete(
     `${config.get('PAWS_CATALOG_API')}/api/slc-items-api/${id}`,
     { headers: { 'api-token': apiToken } }
   );
+  console.log(`Delete response for item (id=${id}):`, response.status, response.statusText);
 };
+
+function titlecase(text: string): string {
+  return text ? text.toLowerCase().split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ') : text;
+}
 
 const activityToCatalogItem = async (activity: any, source0: any, users: UsersService) => {
   return {
@@ -372,7 +397,7 @@ const activityToCatalogItem = async (activity: any, source0: any, users: UsersSe
     "listed_at": new Date().toISOString(),
     "tags": [],
     "identity": { 
-      "id": cleanName(`${activity.name}__${activity.id}`), 
+      "id": cleanName(`${slugify(activity.name, { separator: '_' })}__${activity.id}`), 
       "type": "CodeConstruction&CompletionBundle", 
       "title": activity.name 
     },
@@ -384,8 +409,8 @@ const activityToCatalogItem = async (activity: any, source0: any, users: UsersSe
         "authors": [{ "name": (await users.findUser(activity.user))?.fullname || "", "affiliation": "" }]
     },
     "languages": {
-        "content_language": source0?.iso_language_code || 'en',
-        "programming_languages": [source0?.language || 'unknown']
+        "content_language": source0?.iso_language_code ? source0?.iso_language_code.toLowerCase() : 'en',
+        "programming_languages": [titlecase(source0?.language) || 'unknown']
     },
     "content": { "prompt": "", "source_code": "" },
     "classification": { "topics": [], "difficulty": "" },
@@ -396,8 +421,8 @@ const activityToCatalogItem = async (activity: any, source0: any, users: UsersSe
     },
     "interaction": { "interaction_type": "" },
     "delivery": [
-        { "format": "PITT", "url": prepURL(activity, 'pitt') },
-        { "format": "SPLICE", "url": prepURL(activity, 'html') }
+        { "protocol": "PITT", "url": prepURL(activity, 'pitt') },
+        { "protocol": "SPLICE", "url": prepURL(activity, 'html') }
     ],
     "rights": { "license": "MIT", "license_url": "", "usage_notes": "" },
     "uses": []
@@ -412,7 +437,7 @@ const sourceToCatalogItem = async (source: any, activity: any, index: number, ty
     "listed_at": new Date().toISOString(),
     "tags": source.tags || [],
     "identity": {
-        "id": cleanName(`${source.name}__${activity.id}-${source.id}-${index}`),
+        "id": cleanName(`${slugify(source.name, { separator: '_' })}__${activity.id}-${source.id}-${index}`),
         "type": type == 'example' ? 'CodeConstruction' : 'CodeCompletion',
         "title": source.name,
     },
@@ -424,8 +449,8 @@ const sourceToCatalogItem = async (source: any, activity: any, index: number, ty
         "authors": [{ "name": (await users.findUser(source.user))?.fullname || "", "affiliation": "" }]
     },
     "languages": {
-        "content_language": source.iso_language_code || 'en',
-        "programming_languages": [source.language || 'unknown']
+        "content_language": source.iso_language_code ? source.iso_language_code.toLowerCase() : 'en',
+        "programming_languages": [titlecase(source.language) || 'unknown']
     },
     "content": {
         "prompt": source.description,
@@ -438,8 +463,8 @@ const sourceToCatalogItem = async (source: any, activity: any, index: number, ty
     },
     "interaction": { "interaction_type": "" },
     "delivery": [
-        { "format": "PITT", "url": prepURL(activity, 'pitt') + `?index=${index}` },
-        { "format": "SPLICE", "url": prepURL(activity, 'html') + `?index=${index}` }
+        { "protocol": "PITT", "url": prepURL(activity, 'pitt') + `?index=${index}` },
+        { "protocol": "SPLICE", "url": prepURL(activity, 'html') + `?index=${index}` }
     ],
     "rights": { "license": "MIT", "license_url": "", "usage_notes": "" },
     "uses": []
