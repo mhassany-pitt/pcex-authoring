@@ -353,6 +353,10 @@ const syncToCatalog = async ({ activity, users, sources, config, isadmin }: Para
 
   // post/patch activity to catalog
   const source0 = useId(await sources.read({ isadmin, user: activity.user, id: activity.items[0]?.item }));
+  if (!(await readFromCatalog(activity.linkings.catalog[`activity-id`], config))) {
+    console.log(`Activity (${activity.name}) prior catalog id ${activity.linkings.catalog[`activity-id`]} no longer exists, removing the link`);
+    delete activity.linkings.catalog[`activity-id`];
+  }
   if (`activity-id` in activity.linkings.catalog) {
     const id = activity.linkings.catalog[`activity-id`];
     console.log(`Activity (${activity.name}) already linked to catalog (id=${id}), patching the item...`);
@@ -370,6 +374,10 @@ const syncToCatalog = async ({ activity, users, sources, config, isadmin }: Para
   for (let index = 0; index < activity.items.length; index++) {
     const type = activity.items[index].type;
     const source = useId(await sources.read({ isadmin, user: activity.user, id: activity.items[index].item }));
+    if (!(await readFromCatalog(activity.linkings.catalog[`source__${activity.items[index].item}`], config))) {
+      console.log(`Source (${source.name}) prior catalog id ${activity.linkings.catalog[`source__${activity.items[index].item}`]} no longer exists, removing the link`);
+      delete activity.linkings.catalog[`source__${activity.items[index].item}`];
+    }
     if (`source__${activity.items[index].item}` in activity.linkings.catalog) {
       const id = activity.linkings.catalog[`source__${activity.items[index].item}`];
       console.log(`Source (${source.name}) already linked to catalog (id=${id}), patching the item...`);
@@ -393,6 +401,15 @@ const syncToCatalog = async ({ activity, users, sources, config, isadmin }: Para
 
   console.log(`Finished syncing activity (${activity.name}) and its sources with catalog. Current catalog linkings:`, activity.linkings.catalog);
 };
+
+const readFromCatalog = async (id: string, config: ConfigService) => {
+  const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
+  const response = await axios.get(
+    `${config.get('PAWS_CATALOG_API')}/api/slc-items-api/${id}`,
+    { headers: { 'api-token': apiToken } }
+  );
+  return response.data;
+}
 
 const postToCatalog = async (item: any, config: ConfigService) => {
   const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
