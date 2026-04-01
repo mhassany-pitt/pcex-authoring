@@ -15,13 +15,21 @@ export class SourcesController {
   ) { }
 
   private getUserEmail(req: any) { return req.user.email; }
+  private isAppAdmin(req: any) { return req.user.roles?.includes('app-admin'); }
 
   @Get()
   @UseGuards(AuthenticatedGuard)
-  async index(@Req() req: Request, @Query('include') include: string) {
-    return (await this.sources.list({ user: this.getUserEmail(req), archived: include == 'archived' })).map(source => {
-      const { _id: id, archived, name, description, tags, language, user, collaborator_emails } = source;
-      return { id, archived, name, description, tags, language, user, collaborator_emails };
+  async index(@Req() req: Request, @Query('include') include: string, @Query('allUsers') allUsers: string) {
+    return (await this.sources.list({
+      user: allUsers == 'true' && this.isAppAdmin(req) ? undefined : this.getUserEmail(req),
+      archived: include == 'archived'
+    })).map(source => {
+      const { _id: id, archived, name, description, tags, 
+        iso_language_code, language, user, collaborator_emails, 
+        created_at, updated_at } = source;
+      return { id, archived, name, description, tags, 
+        iso_language_code, language, user, collaborator_emails, 
+        created_at, updated_at };
     }).sort((a, b) => b.id.toString().localeCompare(a.id.toString()));
   }
 

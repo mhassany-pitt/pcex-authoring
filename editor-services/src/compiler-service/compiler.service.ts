@@ -49,6 +49,19 @@ export class CompilerService {
     return `${this.config.get('STORAGE_PATH')}/compiler`;
   }
 
+  private formatError(error: any) {
+    return [
+      error?.message,
+      error?.stdout ? `stdout:\n${error.stdout}` : null,
+      error?.stderr ? `stderr:\n${error.stderr}` : null,
+      error?.stack,
+    ].filter(Boolean).join('\n\n');
+  }
+
+  private createCompileError(message: string, details?: string) {
+    return new Error([message, details].filter(Boolean).join('\n\n'));
+  }
+
   exists(id: string) {
     const outputsDir = `${this.root}/${id}/outputs`;
     return existsSync(outputsDir) && readdirSync(outputsDir).length > 0;
@@ -101,6 +114,12 @@ export class CompilerService {
           useId(
             await this.sources.read({ user: activity.user, id: item.item }),
           );
+        if (!source) {
+          throw this.createCompileError(
+            `Missing source for activity "${activity.name}" (${activity.id}).`,
+            `Item index: ${index}\nSource id: ${item.item}\nType: ${item.type}`,
+          );
+        }
 
         const clines = (source.code || '').split('\n');
         const lineList = clines.map((line: string, lineNum: number) => ({
@@ -191,6 +210,18 @@ export class CompilerService {
         stdout: PcExParserRunner.stdout,
         stderr: PcExParserRunner.stderr,
       };
+      if (PcExParserRunner.code !== 0) {
+        throw this.createCompileError(
+          `PcExParserRunner failed for activity "${activity.name}" (${activity.id}).`,
+          this.formatError(PcExParserRunner),
+        );
+      }
+      if (!existsSync(outputs) || readdirSync(outputs).length < 1) {
+        throw this.createCompileError(
+          `Preview generation produced no output for activity "${activity.name}" (${activity.id}).`,
+          'The compiler finished without creating any files in the outputs directory.',
+        );
+      }
 
       const queries = `${workspace}/queries/`;
       if (existsSync(queries)) rmSync(queries, { recursive: true });
@@ -217,15 +248,31 @@ export class CompilerService {
         stdout: UMActivityQueryGenerator.stdout,
         stderr: UMActivityQueryGenerator.stderr,
       };
+      if (UMActivityQueryGenerator.code !== 0) {
+        throw this.createCompileError(
+          `UMActivityQueryGenerator failed for activity "${activity.name}" (${activity.id}).`,
+          this.formatError(UMActivityQueryGenerator),
+        );
+      }
+      if (!existsSync(queries)) {
+        throw this.createCompileError(
+          `Query generation produced no query directory for activity "${activity.name}" (${activity.id}).`,
+        );
+      }
 
       return resp;
     } catch (exp) {
       console.error(exp);
 
-      rmdirSync(workspace, { recursive: true });
-      console.log(`cleared workspace: ${workspace}`);
+      if (existsSync(workspace)) {
+        rmdirSync(workspace, { recursive: true });
+        console.log(`cleared workspace: ${workspace}`);
+      }
 
-      return null;
+      throw this.createCompileError(
+        `Failed to compile activity "${activity?.name || activity?.id || 'unknown'}".`,
+        this.formatError(exp),
+      );
     }
   }
 

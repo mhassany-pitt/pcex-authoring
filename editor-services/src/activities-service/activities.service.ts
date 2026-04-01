@@ -22,7 +22,7 @@ export class ActivitiesService {
   }
 
   async list({ user, archived }) {
-    const filter = { $or: [{ user }, { collaborator_emails: user }] };
+    const filter: any = user ? { $or: [{ user }, { collaborator_emails: user }] } : {};
     if (!archived) filter['archived'] = { $ne: true };
     return (await this.activities.find(filter)).map(toObject);
   }
@@ -32,11 +32,13 @@ export class ActivitiesService {
   }
 
   async read({ user, id: _id }) {
-    return toObject(await this.activities.findOne({ $or: [{ user }, { collaborator_emails: user }], _id }));
+    const filter: any = user ? { $or: [{ user }, { collaborator_emails: user }], _id } : { _id };
+    return toObject(await this.activities.findOne(filter));
   }
 
   async update({ user, id: _id, ...model }) {
-    return await this.activities.updateOne({ $or: [{ user }, { collaborator_emails: user }], _id }, model);
+    const filter: any = user ? { $or: [{ user }, { collaborator_emails: user }], _id } : { _id };
+    return await this.activities.updateOne(filter, model);
   }
 
   async remove({ user, id: _id }): Promise<any> {

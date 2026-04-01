@@ -1,0 +1,230 @@
+<p-table
+  #table
+  [value]="rows"
+  [globalFilterFields]="['name', 'user', 'collaboratorEmails']"
+  styleClass="p-datatable-striped"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-2">
+        <p-checkbox
+          name="archived"
+          label="Include Archives"
+          [binary]="true"
+          [(ngModel)]="archived"
+          (ngModelChange)="reload()"
+        ></p-checkbox>
+
+        <span class="flex-grow"></span>
+
+        <button
+          *ngIf="hasActivityLogs"
+          pButton
+          type="button"
+          label="Clear Logs"
+          icon="pi pi-trash"
+          class="p-button-sm p-button-secondary p-button-outlined"
+          [disabled]="isRecompiling || isResyncing"
+          (click)="clearLogs()"
+        ></button>
+
+        <button
+          pButton
+          type="button"
+          [label]="
+            isRecompiling
+              ? 'Generating Preview-JSON...'
+              : 'Generate Preview-JSON'
+          "
+          [icon]="isRecompiling ? 'pi pi-spin pi-spinner' : 'pi pi-refresh'"
+          class="p-button-sm p-button-outlined"
+          [disabled]="
+            selectedActivityIds.length == 0 || isRecompiling || isResyncing
+          "
+          (click)="recompileSelected()"
+        ></button>
+
+        <button
+          pButton
+          type="button"
+          [label]="isResyncing ? 'Syncing to PAWS...' : 'Sync to PAWS'"
+          [icon]="isResyncing ? 'pi pi-spin pi-spinner' : 'pi pi-send'"
+          class="p-button-sm"
+          [disabled]="
+            selectedActivityIds.length == 0 || isRecompiling || isResyncing
+          "
+          (click)="resyncSelected()"
+        ></button>
+
+        <span class="p-input-icon-right">
+          <input
+            pInputText
+            type="text"
+            (input)="filter(table, $event)"
+            placeholder="Search"
+            class="p-inputtext-sm"
+          />
+          <i class="pi pi-search"></i>
+        </span>
+      </div>
+
+      <span
+        *ngIf="
+          selectedActivityIds.length > 0 && !(isRecompiling || isResyncing)
+        "
+        class="text-sm text-gray-500"
+      >
+        Selected: {{ selectedActivityIds.length }}
+      </span>
+      <div *ngIf="progressTotal > 0" class="text-sm text-gray-500">
+        {{ progressLabel }}
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 2.5rem">
+        <p-checkbox
+          [binary]="true"
+          [ngModel]="allSelected"
+          inputId="activity-select-all"
+          (onChange)="setAllSelected($event.checked)"
+        ></p-checkbox>
+      </th>
+      <th pSortableColumn="name">
+        <span>Activity and Sources</span>
+        <p-sortIcon field="name"></p-sortIcon>
+      </th>
+      <th pSortableColumn="user" class="w-64">
+        <span>Users</span>
+        <p-sortIcon field="user"></p-sortIcon>
+      </th>
+      <th pSortableColumn="updatedAt" class="w-56">
+        <span>Updated</span>
+        <p-sortIcon field="updatedAt"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td>
+        <p-checkbox
+          [binary]="true"
+          [(ngModel)]="row.selected"
+          [inputId]="'activity-select-' + row.id"
+        ></p-checkbox>
+      </td>
+      <td>
+        <div class="font-medium flex items-center gap-2">
+          <a class="text-blue-700 cursor-pointer" (click)="openPreview(row)">
+            {{ row.name || row.id }}
+          </a>
+          <img
+            *ngIf="row.linkings"
+            class="synced-with-paws"
+            title="Synced to PAWS"
+          />
+          <i
+            class="pi pi-globe text-sm"
+            [ngClass]="row.published ? 'text-blue-700' : 'text-gray-400'"
+            [title]="row.published ? 'Published' : 'Not published'"
+          ></i>
+        </div>
+      </td>
+      <td class="text-sm text-gray-500 align-top">
+        <div>{{ row.user || "-" }}</div>
+        <div
+          *ngIf="row.collaboratorEmails?.length"
+          class="text-xs text-gray-400"
+        >
+          {{ row.collaboratorEmails.join(", ") }}
+        </div>
+      </td>
+      <td class="text-sm text-gray-500 align-top">
+        {{ row.updatedAt | date: "short" }}
+      </td>
+    </tr>
+
+    <tr *ngIf="activityLogs[row.id]?.length" class="activity-log-row">
+      <td colspan="4" class="activity-log-row-cell">
+        <div class="activity-error-list flex flex-col gap-2">
+          <div
+            *ngFor="let log of activityLogs[row.id]"
+            class="activity-log"
+            [ngClass]="{
+              'activity-log--error': log.kind == 'error',
+              'activity-log--success': log.kind == 'success',
+            }"
+          >
+            <div
+              class="activity-log-title"
+              [ngClass]="{
+                'activity-log-title--error': log.kind == 'error',
+                'activity-log-title--success': log.kind == 'success',
+              }"
+            >
+              {{ log.action }}
+            </div>
+            <pre
+              class="activity-log-text"
+              [ngClass]="{
+                'activity-log-text--error': log.kind == 'error',
+                'activity-log-text--success': log.kind == 'success',
+              }"
+              >{{ log.log }}</pre
+            >
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <tr *ngIf="row.sources?.length; else noSourcesRow" class="source-row">
+      <td class="source-row-cell"></td>
+      <td class="source-row-cell">
+        <div class="flex flex-col gap-0.5 text-sm">
+          <div *ngFor="let source of row.sources" class="activity-source-item">
+            <span>{{ source.name || source.id }}</span>
+            <span class="activity-source-meta text-xs text-gray-400">
+              [{{ source.naturalLanguage || source.isoLanguageCode || "" }}
+              {{ (source.language || "").toLowerCase() }}
+              {{ (source.type || "").toLowerCase() }}]
+            </span>
+          </div>
+        </div>
+      </td>
+      <td class="align-top source-row-cell">
+        <div class="flex flex-col gap-0.5 text-xs text-gray-500">
+          <div>{{ row.sourceUsers.join(", ") || "unknown" }}</div>
+          <div
+            *ngIf="row.sourceCollaboratorEmails?.length"
+            class="text-xs text-gray-400"
+          >
+            {{ row.sourceCollaboratorEmails.join(", ") }}
+          </div>
+        </div>
+      </td>
+      <td class="align-top source-row-cell">
+        <div class="flex flex-col gap-0.5 text-xs text-gray-500">
+          <div *ngFor="let source of row.sources">
+            {{ source.updatedAt | date: "short" }}
+          </div>
+        </div>
+      </td>
+    </tr>
+
+    <ng-template #noSourcesRow>
+      <tr class="source-row">
+        <td class="source-row-cell"></td>
+        <td class="source-row-cell">
+          <span class="activity-source-empty text-gray-400 italic"
+            >No sources</span
+          >
+        </td>
+        <td class="text-sm text-gray-400 align-top source-row-cell">-</td>
+        <td class="text-sm text-gray-400 align-top source-row-cell">-</td>
+      </tr>
+    </ng-template>
+  </ng-template>
+</p-table>

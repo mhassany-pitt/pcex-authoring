@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { UserAdminService } from './user-admin.service';
-import { Router } from '@angular/router';
-import { getNavMenuBar } from '../utilities';
+import { AdminService } from './admin.service';
 
 @Component({
   selector: 'app-user-admin',
@@ -9,15 +7,13 @@ import { getNavMenuBar } from '../utilities';
   styleUrls: ['./user-admin.component.less']
 })
 export class UserAdminComponent {
-
-  getNavMenuBar = getNavMenuBar;
-
   private __areyousure = 'Are you sure that you want to proceed?';
+
   actions = [
     { label: 'Update Roles', icon: 'pi pi-shield', command: () => this.dialog = 'update-role' },
     {
       label: 'Generate Password Update Tokens', icon: 'pi pi-envelope',
-      command: () => { if (confirm(this.__areyousure)) this.genUpdatePassTokens() }
+      command: () => { if (confirm(this.__areyousure)) this.genUpdatePassTokens(); }
     },
     { separator: true },
     {
@@ -41,16 +37,15 @@ export class UserAdminComponent {
   selected: any[] = [];
 
   constructor(
-    public router: Router,
-    private service: UserAdminService,
+    private service: AdminService,
   ) { }
-
-  filter(table: any, $event: any) {
-    table.filterGlobal($event.target.value, 'contains');
-  }
 
   ngOnInit(): void {
     this.reload();
+  }
+
+  filter(table: any, $event: any) {
+    table.filterGlobal($event.target.value, 'contains');
   }
 
   reload() {
@@ -62,46 +57,48 @@ export class UserAdminComponent {
 
   createUsers() {
     this.service.create(this.model).subscribe({
-      next: (resp: any) => {
+      next: () => {
         this.dialog = false;
         this.model = {};
         this.reload();
       },
-      error: (error: any) => { console.log(error) },
-    })
+      error: (error: any) => { console.log(error); },
+    });
   }
 
-  getSelecteds() { return this.selected.filter(obj => !obj.itIsMe); }
+  getSelecteds() {
+    return this.selected.filter(obj => !obj.itIsMe);
+  }
 
   updateRoles() {
     const data = this.getSelecteds().map(obj => ({ ...obj, roles: this.model.roles }));
     this.service.update({ action: 'update', data }).subscribe({
-      next: (resp: any) => {
+      next: () => {
         this.dialog = false;
         this.model = {};
         this.reload();
       },
-      error: (error: any) => { console.log(error) },
+      error: (error: any) => { console.log(error); },
     });
   }
 
   toggle(active: boolean) {
     const data = this.getSelecteds().map(obj => ({ ...obj, active }));
     this.service.update({ action: 'update', data }).subscribe({
-      next: (resp: any) => {
+      next: () => {
         this.dialog = false;
         this.model = {};
         this.reload();
       },
-      error: (error: any) => { console.log(error) },
+      error: (error: any) => { console.log(error); },
     });
   }
 
   removeUsers() {
     const data = this.getSelecteds().map(obj => obj.email);
     this.service.update({ action: 'delete', data }).subscribe({
-      next: (resp: any) => this.reload(),
-      error: (error: any) => { console.log(error) },
+      next: () => this.reload(),
+      error: (error: any) => { console.log(error); },
     });
   }
 
@@ -125,16 +122,17 @@ export class UserAdminComponent {
 
         URL.revokeObjectURL(url);
       },
-      error: (error: any) => { console.log(error) },
+      error: (error: any) => { console.log(error); },
     });
   }
 
   updateFullname(user: any) {
     const fullname = prompt('Enter new fullname:', user.fullname);
-    if (fullname || fullname != user.fullname)
+    if (fullname || fullname != user.fullname) {
       this.service.update({ action: 'update-fullname', data: [{ ...user, fullname }] }).subscribe({
-        next: (resp: any) => this.reload(),
-        error: (error: any) => { console.log(error) },
+        next: () => this.reload(),
+        error: (error: any) => { console.log(error); },
       });
+    }
   }
 }

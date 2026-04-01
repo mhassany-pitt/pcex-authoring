@@ -5,13 +5,18 @@ import { SourcesService } from './sources.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { getPreviewLink } from './utilities';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ActivitiesService {
 
   previewJsons: any = {};
   isGeneratingPreviewJson(id: string) { return id in this.previewJsons; }
+
+  private buildQueryString({ archived, allUsers }: any = {}) {
+    const params = new URLSearchParams();
+    if (archived) params.set('include', 'archived');
+    if (allUsers) params.set('allUsers', 'true');
+    return params.toString() ? `?${params.toString()}` : '';
+  }
 
   constructor(
     private http: HttpClient,
@@ -23,16 +28,16 @@ export class ActivitiesService {
     return this.api.sources({ archived: false });
   }
 
-  activities({ archived }: any) {
-    return this.http.get(`${environment.apiUrl}/activities${archived ? '?include=archived' : ''}`, { withCredentials: true });
+  activities({ archived, allUsers }: any) {
+    return this.http.get(`${environment.apiUrl}/activities${this.buildQueryString({ archived, allUsers })}`, { withCredentials: true });
   }
 
   create(activity: any) {
     return this.http.post(`${environment.apiUrl}/activities`, activity, { withCredentials: true });
   }
 
-  read(id: string) {
-    return this.http.get(`${environment.apiUrl}/activities/${id}`, { withCredentials: true });
+  read(id: string, { allUsers }: any = {}) {
+    return this.http.get(`${environment.apiUrl}/activities/${id}${this.buildQueryString({ allUsers })}`, { withCredentials: true });
   }
 
   update(activity: any) {
@@ -41,6 +46,10 @@ export class ActivitiesService {
 
   genPreviewJson(activity: any, type: string) {
     return this.http.patch(`${environment.apiUrl}/activities/${activity.id}/preview?type=${type}`, activity, { withCredentials: true });
+  }
+
+  sync(id: string, { allUsers }: any = {}) {
+    return this.http.post(`${environment.apiUrl}/activities/${id}/sync${this.buildQueryString({ allUsers })}`, {}, { withCredentials: true });
   }
 
   previewJsonLink(activity: any, type: string) {

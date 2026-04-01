@@ -19,8 +19,12 @@ export class SourcesService {
   //   return this.http.get(`${environment.apiUrl}/sources/samples`, { withCredentials: true });
   // }
 
-  sources({ archived }: any) {
-    return this.http.get(`${environment.apiUrl}/sources${archived ? '?include=archived' : ''}`, { withCredentials: true });
+  sources({ archived, allUsers }: any) {
+    const params = new URLSearchParams();
+    if (archived) params.set('include', 'archived');
+    if (allUsers) params.set('allUsers', 'true');
+
+    return this.http.get(`${environment.apiUrl}/sources${params.toString() ? `?${params.toString()}` : ''}`, { withCredentials: true });
   }
 
   create() {
@@ -52,4 +56,3 @@ export class SourcesService {
     return this.http.post(`${environment.apiUrl}/sources/${id}/clone`, {}, { withCredentials: true });
   }
 }
-

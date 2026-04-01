@@ -3,7 +3,12 @@ import { HydratedDocument } from 'mongoose';
 
 export type ActivityDocument = HydratedDocument<Activity>;
 
-@Schema()
+@Schema({
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  }
+})
 export class Activity {
   @Prop() user: string;
   @Prop() published: boolean;
@@ -13,6 +18,8 @@ export class Activity {
   @Prop({ type: Object }) linkings: any;
 
   @Prop() collaborator_emails: string[];
+  @Prop() created_at: Date;
+  @Prop() updated_at: Date;
 }
 
 export const ActivitySchema = SchemaFactory.createForClass(Activity);

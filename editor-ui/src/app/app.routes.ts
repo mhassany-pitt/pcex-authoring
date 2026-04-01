@@ -35,8 +35,8 @@ export const routes: Routes = [
         canActivate: [HandshakeGuard]
     },
     {
-        path: 'user-admin',
-        loadChildren: () => import('./user-admin/user-admin.module').then(m => m.UserAdminModule),
+        path: 'admin',
+        loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
         canActivate: [AppAdminGuard]
     },
     {

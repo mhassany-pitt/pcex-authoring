@@ -19,28 +19,55 @@ type Params = {
   activity: any;
 };
 
+const createSyncError = (message: string, error?: any, details?: string) => {
+  const wrappedDetails = error?.isAxiosError ? null : details;
+  const wrapped: any = new Error([message, wrappedDetails].filter(Boolean).join('\n\n'));
+
+  wrapped.name = error?.name || 'Error';
+  wrapped.code = error?.code;
+  wrapped.errno = error?.errno;
+  wrapped.isAxiosError = error?.isAxiosError;
+  wrapped.config = error?.config;
+  wrapped.response = error?.response;
+  wrapped.request = error?.request;
+  wrapped.cause = error;
+  wrapped.stack = error?.stack || wrapped.stack;
+
+  return wrapped;
+};
+
 export const syncToPAWS = async (params: Params) => {
-  const allowedUsersFilePath = `${params.config.get('STORAGE_PATH')}/paws-sync--allowed-users.txt`;
-  const allowedUsers = await readFile(allowedUsersFilePath, 'utf8');
-  const email = params.request.user?.email?.toLowerCase();
-  if (
-    allowedUsers
-      .toLowerCase()
-      .split('\n')
-      .map((user) => user.trim())
-      .includes(email)
-  ) {
-    console.info(
-      `[${email}] sync activity (${params.activity.name}) with PAWS aggregate/um2.`,
-    );
-    await syncToAggUM2(params); // IMPORTANT: /aggregateUMServices and /cbum needs restart to reflect the changes
-    console.info(
-      `[${email}] sync activity (${params.activity.name}) with PAWS catalog v2.`,
-    );
-    await syncToCatalog(params);
-  } else {
-    console.warn(
-      `[${email}] not allowed to sync activity (${params.activity.name}) with PAWS Catalog.`,
+  const activityLabel = `"${params.activity?.name || params.activity?.id || 'unknown'}" (${params.activity?.id || 'unknown'})`;
+
+  try {
+    const allowedUsersFilePath = `${params.config.get('STORAGE_PATH')}/paws-sync--allowed-users.txt`;
+    const allowedUsers = await readFile(allowedUsersFilePath, 'utf8');
+    const email = params.request.user?.email?.toLowerCase();
+    if (
+      allowedUsers
+        .toLowerCase()
+        .split('\n')
+        .map((user) => user.trim())
+        .includes(email)
+    ) {
+      console.info(
+        `[${email}] sync activity (${params.activity.name}) with PAWS aggregate/um2.`,
+      );
+      await syncToAggUM2(params); // IMPORTANT: /aggregateUMServices and /cbum needs restart to reflect the changes
+      console.info(
+        `[${email}] sync activity (${params.activity.name}) with PAWS catalog v2.`,
+      );
+      await syncToCatalog(params);
+    } else {
+      console.warn(
+        `[${email}] not allowed to sync activity (${params.activity.name}) with PAWS Catalog.`,
+      );
+    }
+  } catch (error: any) {
+    throw createSyncError(
+      `Failed to sync activity ${activityLabel} to PAWS.`,
+      error,
+      error?.message || error?.stack || `${error}`,
     );
   }
 };
@@ -71,6 +98,8 @@ const syncToAggUM2 = async (params: Params) => {
       activity.linkings = (
         await params.activities.read({ user, id: activity.id })
       ).linkings || { um2: {}, agg: {} };
+      if (!activity.linkings.um2) activity.linkings.um2 = {};
+      if (!activity.linkings.agg) activity.linkings.agg = {};
 
       // const url = `${params.config.get('PREVIEW_ACTIVITY_URL')}/${activity.id}?_t=${Date.now()}`;
       const url = prepURL(activity, 'html');
@@ -104,6 +133,13 @@ const syncToAggUM2 = async (params: Params) => {
         const source = useId(
           await params.sources.read({ user, id: activity.items[index].item }),
         );
+        if (!source) {
+          throw createSyncError(
+            `Missing source while syncing activity "${activity.name}" (${activity.id}).`,
+            undefined,
+            `Item index: ${index}\nSource id: ${activity.items[index].item}\nType: ${activity.items[index].type}`,
+          );
+        }
         const contentName = cleanName(
           `${source.name}__${activity.id}-${source.id}-${index}`,
         );

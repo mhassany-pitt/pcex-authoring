@@ -3,7 +3,12 @@ import { HydratedDocument } from 'mongoose';
 
 export type SourceDocument = HydratedDocument<Source>;
 
-@Schema()
+@Schema({
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  }
+})
 export class Source {
   @Prop() user: string;
   @Prop() archived: boolean;
@@ -24,6 +29,8 @@ export class Source {
   @Prop({ type: [Object] }) extraFiles: any[];
 
   @Prop() collaborator_emails: string[];
+  @Prop() created_at: Date;
+  @Prop() updated_at: Date;
 }
 
 export const SourceSchema = SchemaFactory.createForClass(Source);

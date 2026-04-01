@@ -34,7 +34,7 @@ export class SourcesService {
   }
 
   async list({ user, archived }) {
-    const filter = { $or: [{ user }, { collaborator_emails: user }] };
+    const filter: any = user ? { $or: [{ user }, { collaborator_emails: user }] } : {};
     if (!archived) filter['archived'] = { $ne: true };
     return (await this.sources.find(filter)).map(toObject);
   }
