@@ -23,24 +23,39 @@ import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 import { DropdownModule } from 'primeng/dropdown';
 import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   declarations: [
     AdminComponent,
     UserAdminComponent,
-    ActivitySourceAdminComponent
+    ActivitySourceAdminComponent,
   ],
   imports: [
-    CommonModule, FormsModule, RouterModule,
+    CommonModule,
+    FormsModule,
+    RouterModule,
     AdminRoutingModule,
     UserAuthCtrlModule,
-    TableModule, ButtonModule,
-    InputTextModule, DialogModule,
-    InputTextareaModule, SelectButtonModule,
-    SplitButtonModule, MultiSelectModule,
-    ConfirmDialogModule, ChipsModule,
-    DropdownModule, TabViewModule, CheckboxModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    DialogModule,
+    InputTextareaModule,
+    SelectButtonModule,
+    SplitButtonModule,
+    MultiSelectModule,
+    ConfirmDialogModule,
+    ChipsModule,
+    DropdownModule,
+    TabViewModule,
+    CheckboxModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    OverlayPanelModule,
   ],
-  providers: [AdminService, ConfirmationService]
+  providers: [AdminService, ConfirmationService],
 })
-export class AdminModule { }
+export class AdminModule {}

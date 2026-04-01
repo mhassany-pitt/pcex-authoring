@@ -1,12 +1,20 @@
 <p-table
   #table
-  [value]="rows"
-  [globalFilterFields]="['name', 'user', 'collaboratorEmails']"
+  [value]="filteredRows"
+  [globalFilterFields]="[
+    'name',
+    'user',
+    'collaboratorEmails',
+    'attributesSearchValue',
+    'authorsSearchValue',
+    'programmingLanguagesSearchValue',
+    'isoLanguageCodesSearchValue',
+  ]"
   styleClass="p-datatable-striped"
 >
   <ng-template pTemplate="caption">
     <div class="flex flex-col gap-2">
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
         <p-checkbox
           name="archived"
           label="Include Archives"
@@ -24,39 +32,33 @@
           label="Clear Logs"
           icon="pi pi-trash"
           class="p-button-sm p-button-secondary p-button-outlined"
-          [disabled]="isRecompiling || isResyncing"
+          [disabled]="isRecompiling || isResyncing || isUpdatingIsoCode"
           (click)="clearLogs()"
         ></button>
 
-        <button
-          pButton
-          type="button"
-          [label]="
-            isRecompiling
-              ? 'Generating Preview-JSON...'
-              : 'Generate Preview-JSON'
-          "
-          [icon]="isRecompiling ? 'pi pi-spin pi-spinner' : 'pi pi-refresh'"
-          class="p-button-sm p-button-outlined"
+        <p-splitButton
+          [label]="actionLabel"
+          [icon]="actionIcon"
+          (onClick)="handleMainAction()"
+          [model]="actionOptions"
+          styleClass="p-button-sm"
+          menuStyleClass="w-auto whitespace-nowrap min-w-max"
           [disabled]="
-            selectedActivityIds.length == 0 || isRecompiling || isResyncing
+            selectedActivityIds.length == 0 || isRecompiling || isResyncing || isUpdatingIsoCode
           "
-          (click)="recompileSelected()"
-        ></button>
+        ></p-splitButton>
 
-        <button
-          pButton
-          type="button"
-          [label]="isResyncing ? 'Syncing to PAWS...' : 'Sync to PAWS'"
-          [icon]="isResyncing ? 'pi pi-spin pi-spinner' : 'pi pi-send'"
-          class="p-button-sm"
-          [disabled]="
-            selectedActivityIds.length == 0 || isRecompiling || isResyncing
-          "
-          (click)="resyncSelected()"
-        ></button>
+        <p-inputGroup class="w-64">
+          <p-inputGroupAddon>
+            <button
+              pButton
+              type="button"
+              icon="pi pi-sliders-h"
+              class="p-button-sm p-button-outlined -m-2 rounded-none border-none"
+              (click)="filterMenu.toggle($event)"
+            ></button>
+          </p-inputGroupAddon>
 
-        <span class="p-input-icon-right">
           <input
             pInputText
             type="text"
@@ -64,13 +66,74 @@
             placeholder="Search"
             class="p-inputtext-sm"
           />
-          <i class="pi pi-search"></i>
-        </span>
+        </p-inputGroup>
+
+        <p-overlayPanel #filterMenu appendTo="body" [dismissable]="true">
+          <div class="activity-filter-menu">
+            <div class="activity-filter-menu-actions">
+              <button
+                pButton
+                type="button"
+                label="Clear Filters"
+                class="p-button-sm p-button-text"
+                [disabled]="!selectedFilters.length"
+                (click)="clearFilters()"
+              ></button>
+            </div>
+
+            <div
+              class="activity-filter-menu-group"
+              *ngFor="let group of filterOptions"
+            >
+              <div class="activity-filter-menu-header">
+                <button
+                  type="button"
+                  class="activity-filter-menu-toggle"
+                  (click)="toggleFilterSection(group.key)"
+                >
+                  {{ group.label }}:
+                  <i
+                    class="fa"
+                    [class.fa-angle-down]="filterSections[group.key]"
+                    [class.fa-angle-right]="!filterSections[group.key]"
+                  ></i>
+                </button>
+                <hr class="activity-filter-menu-divider" />
+              </div>
+
+              <div
+                *ngIf="filterSections[group.key]"
+                class="activity-filter-menu-items"
+              >
+                <a
+                  *ngFor="let item of group.items"
+                  href=""
+                  class="activity-filter-menu-link"
+                  [class.activity-filter-menu-link--selected]="
+                    isFilterSelected(item.value)
+                  "
+                  [class.activity-filter-menu-link--muted]="
+                    !isFilterSelected(item.value) &&
+                    !isFilterAvailable(item.value)
+                  "
+                  (pointerdown)="
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                    toggleFilter(item.value)
+                  "
+                  (click)="$event.preventDefault(); $event.stopPropagation()"
+                >
+                  {{ item.label }} ({{ item.count }}),
+                </a>
+              </div>
+            </div>
+          </div>
+        </p-overlayPanel>
       </div>
 
       <span
         *ngIf="
-          selectedActivityIds.length > 0 && !(isRecompiling || isResyncing)
+          selectedActivityIds.length > 0 && !(isRecompiling || isResyncing || isUpdatingIsoCode)
         "
         class="text-sm text-gray-500"
       >
@@ -87,9 +150,9 @@
       <th style="width: 2.5rem">
         <p-checkbox
           [binary]="true"
-          [ngModel]="allSelected"
+          [ngModel]="getAllSelected(table)"
           inputId="activity-select-all"
-          (onChange)="setAllSelected($event.checked)"
+          (onChange)="setAllSelected($event.checked, table)"
         ></p-checkbox>
       </th>
       <th pSortableColumn="name">
