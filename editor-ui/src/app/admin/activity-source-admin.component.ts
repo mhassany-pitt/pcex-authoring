@@ -223,7 +223,8 @@ export class ActivitySourceAdminComponent {
   }
 
   private getLanguageName(isoLanguageCode: string) {
-    const code = isoLanguageCode?.trim().toLowerCase() || 'en';
+    const code = isoLanguageCode?.trim().toLowerCase();
+    if (!code) return 'unknown';
     return this.languageNames?.of(code)?.toLowerCase() || code;
   }
 

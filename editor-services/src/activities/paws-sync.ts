@@ -83,9 +83,11 @@ const exec_query = async (ds: QueryRunner, query: string, params: any[]) => {
   return await ds.query(query, params);
 };
 
-const prepURL = (activity: any, protocol: string) => {
+const prepURL = (activity: any, protocol: 'pitt' | 'splice' | 'html') => {
   const name = slugify(activity.name, { separator: '_' });
-  return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${name.replace(/ /g, '_').replace(/\./g, '_')}__${activity.id}`;
+  return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/`
+       + `${protocol == 'pitt' ? '?example-id=' : ''}` 
+       + `${name.replace(/ /g, '_').replace(/\./g, '_')}__${activity.id}`;
 };
 
 const syncToAggUM2 = async (params: Params) => {
@@ -105,10 +107,9 @@ const syncToAggUM2 = async (params: Params) => {
       if (!activity.linkings.um2) activity.linkings.um2 = {};
       if (!activity.linkings.agg) activity.linkings.agg = {};
 
-      // const url = `${params.config.get('PREVIEW_ACTIVITY_URL')}/${activity.id}?_t=${Date.now()}`;
-      const url = prepURL(activity, 'html');
+      const acosHtmlUrl = prepURL(activity, 'html');
       console.log('--------------------------------');
-      console.log('Prepared URL for PAWS:', url);
+      console.log('Prepared URL for PAWS:', acosHtmlUrl);
       console.log('--------------------------------');
       const ids = { um2: new Set<number>(), agg: new Set<number>() };
 
@@ -119,12 +120,12 @@ const syncToAggUM2 = async (params: Params) => {
         [
           activity.linkings.um2['activity-id'],
           45,
-          url,
+          acosHtmlUrl,
           activityName,
           'PCEX Set',
           activity.published ? 1 : 0,
           // update if exists >>>
-          url,
+          acosHtmlUrl,
           activityName,
           activity.published ? 1 : 0,
         ],
@@ -208,7 +209,7 @@ const syncToAggUM2 = async (params: Params) => {
             isTypeExample
               ? 'Program Construction Examples'
               : 'Program Construction Challenges',
-            `${url}&index=${index}`,
+            `${acosHtmlUrl}?index=${index}`,
             domain,
             isTypeExample ? 'pcex' : 'pcex_ch',
             params.request.user.email,
@@ -218,7 +219,7 @@ const syncToAggUM2 = async (params: Params) => {
             // update if exists >>>
             isTypeExample ? activityName : contentName,
             source.name,
-            `${url}&index=${index}`,
+            `${acosHtmlUrl}?index=${index}`,
             domain,
             activity.published ? 'public' : 'private',
             activity.published ? 1 : 0,
@@ -242,7 +243,7 @@ const syncToAggUM2 = async (params: Params) => {
             activity.linkings.agg[`content__${source.id}`],
             source.description,
             source.code,
-            `${url}&index=${index}`,
+            `${acosHtmlUrl}?index=${index}`,
             isTypeExample
               ? ''
               : JSON.stringify({
@@ -466,7 +467,8 @@ const activityToCatalogItem = async (activity: any, source0: any, users: UsersSe
     "interaction": { "interaction_type": "" },
     "delivery": [
         { "protocol": "PITT", "url": prepURL(activity, 'pitt') },
-        { "protocol": "SPLICE", "url": prepURL(activity, 'html') }
+        { "protocol": "SPLICE", "url": prepURL(activity, 'html') },
+        { "protocol": "HTML", "url": prepURL(activity, 'html') },
     ],
     "rights": { "license": "MIT", "license_url": "", "usage_notes": "" },
     "uses": []
@@ -507,8 +509,9 @@ const sourceToCatalogItem = async (source: any, activity: any, index: number, ty
     },
     "interaction": { "interaction_type": "" },
     "delivery": [
-        { "protocol": "PITT", "url": prepURL(activity, 'pitt') + `?index=${index}` },
-        { "protocol": "SPLICE", "url": prepURL(activity, 'html') + `?index=${index}` }
+        { "protocol": "PITT", "url": prepURL(activity, 'pitt') + `&index=${index}` },
+        { "protocol": "SPLICE", "url": prepURL(activity, 'html') + `?index=${index}` },
+        { "protocol": "HTML", "url": prepURL(activity, 'html') + `?index=${index}` },
     ],
     "rights": { "license": "MIT", "license_url": "", "usage_notes": "" },
     "uses": []
