@@ -31,12 +31,12 @@ export class SourcesService {
     return this.http.post(`${environment.apiUrl}/sources`, {}, { withCredentials: true });
   }
 
-  read(id: string) {
-    return this.http.get(`${environment.apiUrl}/sources/${id}`, { withCredentials: true });
+  read(id: string, options?: { allUsers?: boolean }) {
+    return this.http.get(`${environment.apiUrl}/sources/${id}${options?.allUsers ? '?allUsers=true' : ''}`, { withCredentials: true });
   }
 
-  update(source: any) {
-    return this.http.patch(`${environment.apiUrl}/sources/${source.id}`, source, { withCredentials: true });
+  update(source: any, options?: { allUsers?: boolean }) {
+    return this.http.patch(`${environment.apiUrl}/sources/${source.id}${options?.allUsers ? '?allUsers=true' : ''}`, source, { withCredentials: true });
   }
 
   log(id: string, log: any) {
@@ -52,7 +52,7 @@ export class SourcesService {
     return this.http.put(`${environment.apiUrl}/keyvalues/gpt-config`, { value: config }, { withCredentials: true });
   }
 
-  clone(id: string) {
-    return this.http.post(`${environment.apiUrl}/sources/${id}/clone`, {}, { withCredentials: true });
+  clone(id: string, options?: { allUsers?: boolean }) {
+    return this.http.post(`${environment.apiUrl}/sources/${id}/clone${options?.allUsers ? '?allUsers=true' : ''}`, {}, { withCredentials: true });
   }
 }

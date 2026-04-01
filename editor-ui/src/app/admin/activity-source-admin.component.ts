@@ -636,7 +636,7 @@ export class ActivitySourceAdminComponent {
 
           try {
             const sourceDoc: any = await firstValueFrom(
-              this.sourcesService.read(source.id),
+              this.sourcesService.read(source.id, { allUsers: true }),
             );
             if (sourceDoc.iso_language_code === isoCode) {
               logs.push(
@@ -644,7 +644,7 @@ export class ActivitySourceAdminComponent {
               );
             } else {
               sourceDoc.iso_language_code = isoCode;
-              await firstValueFrom(this.sourcesService.update(sourceDoc));
+              await firstValueFrom(this.sourcesService.update(sourceDoc, { allUsers: true }));
               logs.push(
                 `Successfully updated ISO-Language code for source "${source.id}".`,
               );

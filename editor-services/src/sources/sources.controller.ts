@@ -45,22 +45,36 @@ export class SourcesController {
 
   @Get(':id')
   @UseGuards(AuthenticatedGuard)
-  async read(@Req() req: Request, @Param('id') id: string) {
-    const source = await this.sources.read({ user: this.getUserEmail(req), id });
+  async read(@Req() req: Request, @Param('id') id: string, @Query('allUsers') allUsers: string) {
+    const source = await this.sources.read({
+      isadmin: allUsers == 'true' && this.isAppAdmin(req),
+      user: this.getUserEmail(req),
+      id
+    });
     if (!source) throw new NotFoundException();
     return useId(source);
   }
 
   @Patch(':id')
   @UseGuards(AuthenticatedGuard)
-  async patch(@Req() req: Request, @Param('id') id: string, @Body() updates: any) {
-    const source = await this.sources.read({ user: this.getUserEmail(req), id });
+  async patch(@Req() req: Request, @Param('id') id: string, @Body() updates: any, @Query('allUsers') allUsers: string) {
+    const isAdmin = allUsers == 'true' && this.isAppAdmin(req);
+    const source = await this.sources.read({
+      isadmin: isAdmin,
+      user: this.getUserEmail(req),
+      id
+    });
     if (!source) throw new NotFoundException();
 
     updates.tags = updates.tags?.map((t: string) => t.trim()).filter((t: string) => t);
     updates.collaborator_emails = updates.collaborator_emails?.map((c: string) => c.trim().toLowerCase()).filter((c: string) => c);
 
-    await this.sources.update({ ...updates, user: this.getUserEmail(req), _id: id });
+    await this.sources.update({
+      ...updates,
+      isadmin: isAdmin,
+      user: this.getUserEmail(req),
+      _id: id
+    });
   }
 
   // @Delete(':id')
@@ -80,8 +94,12 @@ export class SourcesController {
 
   @Post(':id/clone')
   @UseGuards(AuthenticatedGuard)
-  async clone(@Req() req: Request, @Param('id') id: string) {
-    const source = await this.sources.read({ user: this.getUserEmail(req), id });
+  async clone(@Req() req: Request, @Param('id') id: string, @Query('allUsers') allUsers: string) {
+    const source = await this.sources.read({
+      isadmin: allUsers == 'true' && this.isAppAdmin(req),
+      user: this.getUserEmail(req),
+      id
+    });
     if (!source) throw new NotFoundException();
 
     const { _id, ...attrs } = source;
