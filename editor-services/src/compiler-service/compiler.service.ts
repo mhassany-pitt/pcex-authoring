@@ -112,7 +112,8 @@ export class CompilerService {
         const source =
           item.item$ ||
           useId(
-            await this.sources.read({ user: activity.user, id: item.item }),
+            // TOFIX: what if a collaborator creates an activity with a source they collaborate (activity.user != source.user)?!
+            await this.sources.read({ isadmin: true, user: activity.user, id: item.item }),
           );
         if (!source) {
           throw this.createCompileError(

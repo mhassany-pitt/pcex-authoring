@@ -21,7 +21,8 @@ export class SourcesController {
   @UseGuards(AuthenticatedGuard)
   async index(@Req() req: Request, @Query('include') include: string, @Query('allUsers') allUsers: string) {
     return (await this.sources.list({
-      user: allUsers == 'true' && this.isAppAdmin(req) ? undefined : this.getUserEmail(req),
+      isadmin: allUsers == 'true' && this.isAppAdmin(req),
+      user: this.getUserEmail(req),
       archived: include == 'archived'
     })).map(source => {
       const { _id: id, archived, name, description, tags, 
@@ -47,7 +48,6 @@ export class SourcesController {
   async read(@Req() req: Request, @Param('id') id: string) {
     const source = await this.sources.read({ user: this.getUserEmail(req), id });
     if (!source) throw new NotFoundException();
-
     return useId(source);
   }
 

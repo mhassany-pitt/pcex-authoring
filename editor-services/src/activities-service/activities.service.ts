@@ -21,8 +21,8 @@ export class ActivitiesService {
     return (await this.activities.find()).map(toObject);
   }
 
-  async list({ user, archived }) {
-    const filter: any = user ? { $or: [{ user }, { collaborator_emails: user }] } : {};
+  async list({ isadmin, user, archived }) {
+    const filter: any = isadmin ? {} : { $or: [{ user }, { collaborator_emails: user }] };
     if (!archived) filter['archived'] = { $ne: true };
     return (await this.activities.find(filter)).map(toObject);
   }
@@ -31,17 +31,18 @@ export class ActivitiesService {
     return await this.activities.create(model);
   }
 
-  async read({ user, id: _id }) {
-    const filter: any = user ? { $or: [{ user }, { collaborator_emails: user }], _id } : { _id };
+  async read({ isadmin, user, id: _id }: { isadmin?: boolean, user: string, id: string }) {
+    const filter: any = isadmin ? { _id } : { $or: [{ user }, { collaborator_emails: user }], _id };
     return toObject(await this.activities.findOne(filter));
   }
 
-  async update({ user, id: _id, ...model }) {
-    const filter: any = user ? { $or: [{ user }, { collaborator_emails: user }], _id } : { _id };
+  async update({ isadmin, user, id: _id, ...model }: { isadmin?: boolean, user: string, id: string, [key: string]: any }) {
+    const filter: any = isadmin ? { _id } : { $or: [{ user }, { collaborator_emails: user }], _id };
     return await this.activities.updateOne(filter, model);
   }
 
-  async remove({ user, id: _id }): Promise<any> {
-    return await this.activities.deleteOne({ user, _id });
+  async remove({ isadmin, user, id: _id }: { isadmin?: boolean, user: string, id: string }): Promise<any> {
+    const filter: any = isadmin ? { _id } : { $or: [{ user }, { collaborator_emails: user }], _id };
+    return await this.activities.deleteOne(filter);
   }
 }

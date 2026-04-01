@@ -88,7 +88,8 @@ export class ActivitiesController {
   @UseGuards(AuthenticatedGuard)
   async index(@Req() req: Request, @Query('include') include: string, @Query('allUsers') allUsers: string) {
     return (await this.activities.list({
-      user: allUsers == 'true' && this.isAppAdmin(req) ? undefined : this.getUserEmail(req),
+      isadmin: allUsers == 'true' && this.isAppAdmin(req),
+      user: this.getUserEmail(req),
       archived: include == 'archived'
     })).map(activity => {
       const { _id: id, published, archived, 
@@ -114,7 +115,8 @@ export class ActivitiesController {
   @UseGuards(AuthenticatedGuard)
   async read(@Req() req: Request, @Param('id') id: string, @Query('allUsers') allUsers: string) {
     const activity = await this.activities.read({
-      user: allUsers == 'true' && this.isAppAdmin(req) ? undefined : this.getUserEmail(req),
+      isadmin: allUsers == 'true' && this.isAppAdmin(req),
+      user: this.getUserEmail(req),
       id
     });
     if (!activity) throw new NotFoundException();
@@ -140,7 +142,8 @@ export class ActivitiesController {
         sources: this.sources,
         request: req,
         users: this.users,
-        activity: updates
+        activity: updates,
+        isadmin: false,
       });
     } catch (error) {
       console.error('PAWS sync error:', error);
@@ -204,13 +207,9 @@ export class ActivitiesController {
   @Post(':id/sync')
   @UseGuards(AuthenticatedGuard)
   async sync(@Req() req: Request, @Param('id') id: string, @Query('allUsers') allUsers: string) {
-    const includeAllUsers = allUsers == 'true';
-    if (includeAllUsers && !this.isAppAdmin(req)) {
-      throw new ForbiddenException();
-    }
-
     const activity = useId(await this.activities.read({
-      user: includeAllUsers ? undefined : this.getUserEmail(req),
+      isadmin: allUsers == 'true' && this.isAppAdmin(req),
+      user: this.getUserEmail(req),
       id
     }));
     if (!activity) throw new NotFoundException();
@@ -225,7 +224,8 @@ export class ActivitiesController {
         sources: this.sources,
         request: req,
         users: this.users,
-        activity
+        activity,
+        isadmin: true,
       });
     } catch (error) {
       console.error('PAWS sync error:', error);
@@ -237,7 +237,8 @@ export class ActivitiesController {
 
     await this.activities.update({
       ...activity,
-      user: includeAllUsers ? undefined : this.getUserEmail(req),
+      isadmin: allUsers == 'true' && this.isAppAdmin(req),
+      user: this.getUserEmail(req),
       id: activity.id
     });
 

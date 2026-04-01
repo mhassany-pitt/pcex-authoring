@@ -17,6 +17,7 @@ type Params = {
   users: UsersService;
   request: any;
   activity: any;
+  isadmin: boolean;
 };
 
 const createSyncError = (message: string, error?: any, details?: string) => {
@@ -94,9 +95,12 @@ const syncToAggUM2 = async (params: Params) => {
       const activity = params.activity;
       const activityName = cleanName(`${activity.name}__${activity.id}`);
 
-      const user = params.request.user.email;
       activity.linkings = (
-        await params.activities.read({ user, id: activity.id })
+        await params.activities.read({ 
+          isadmin: params.isadmin,
+          user: params.request.user.email,
+          id: activity.id 
+        })
       ).linkings || { um2: {}, agg: {} };
       if (!activity.linkings.um2) activity.linkings.um2 = {};
       if (!activity.linkings.agg) activity.linkings.agg = {};
@@ -131,7 +135,11 @@ const syncToAggUM2 = async (params: Params) => {
 
       for (let index = 0; index < activity.items.length; index++) {
         const source = useId(
-          await params.sources.read({ user, id: activity.items[index].item }),
+          await params.sources.read({ 
+            isadmin: params.isadmin,
+            user: params.request.user.email,
+            id: activity.items[index].item 
+          }),
         );
         if (!source) {
           throw createSyncError(
@@ -338,12 +346,12 @@ const syncToAggUM2 = async (params: Params) => {
   );
 };
 
-const syncToCatalog = async ({ activity, users, sources, config }: Params) => {
+const syncToCatalog = async ({ activity, users, sources, config, isadmin }: Params) => {
   activity.linkings.catalog ||= {};
   const curLinkingIds = new Set<string>();
 
   // post/patch activity to catalog
-  const source0 = useId(await sources.read({ user: activity.user, id: activity.items[0]?.item }));
+  const source0 = useId(await sources.read({ isadmin, user: activity.user, id: activity.items[0]?.item }));
   if (`activity-id` in activity.linkings.catalog) {
     const id = activity.linkings.catalog[`activity-id`];
     console.log(`Activity (${activity.name}) already linked to catalog (id=${id}), patching the item...`);
@@ -360,7 +368,7 @@ const syncToCatalog = async ({ activity, users, sources, config }: Params) => {
   // post/patch sources to catalog
   for (let index = 0; index < activity.items.length; index++) {
     const type = activity.items[index].type;
-    const source = useId(await sources.read({ user: activity.user, id: activity.items[index].item }));
+    const source = useId(await sources.read({ isadmin, user: activity.user, id: activity.items[index].item }));
     if (`source__${activity.items[index].item}` in activity.linkings.catalog) {
       const id = activity.linkings.catalog[`source__${activity.items[index].item}`];
       console.log(`Source (${source.name}) already linked to catalog (id=${id}), patching the item...`);
