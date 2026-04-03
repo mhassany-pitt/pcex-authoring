@@ -4,9 +4,8 @@ import { DomSanitizer, Title } from '@angular/platform-browser';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { AppService } from '../app.service';
-import { getNavMenuBar, getPreviewLink } from '../utilities';
+import { getNavMenuBar, getPreviewLink, getPublishedLink } from '../utilities';
 import { MessageService } from 'primeng/api';
-import { slugify } from 'transliteration';
 
 @Component({
   selector: 'app-hub',
@@ -16,6 +15,7 @@ import { slugify } from 'transliteration';
 export class HubComponent implements OnInit {
 
   getNavMenuBar = getNavMenuBar;
+  getPublishedLink = getPublishedLink;
 
   previewLink: any;
   showPreview = false;
@@ -28,11 +28,6 @@ export class HubComponent implements OnInit {
 
   cloningActivity: any = null;
   cloning: boolean = false;
-
-  getLink(activity: any, protocol: string) {
-    const name = slugify(activity.name, { separator: '_' });
-    return `https://acos.cs.vt.edu/${protocol}/acos-pcex/acos-pcex-examples/${name.replace(/ /g, '_').replace(/\./g, '_')}__${activity.id}`
-  }
 
   get isLoggedIn() { return !!this.app.user; }
 
