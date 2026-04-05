@@ -22,11 +22,11 @@
             size="small" (click)="_v['collaborators'] = true" class="-my-2">
           </p-button>
           <button pButton type="button" label="Preview" icon="pi pi-eye"
-            class="p-button-sm p-button-help p-button-text -my-2" (click)="preview()" [loading]="_v['preview']"
+            class="p-button-sm p-button-help p-button-outlined -my-2" (click)="preview()" [loading]="_v['preview']"
             [disabled]="_v['preview']">
           </button>
           <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
-            class="p-button-sm p-button-secondary p-button-text -my-2" (click)="back()">
+            class="p-button-sm p-button-secondary p-button-outlined -my-2" (click)="back()">
           </button>
           <button pButton type="submit" label="Save" icon="pi pi-check" class="p-button-sm -my-2"
             [disabled]="form.invalid || _v['update']" [loading]="_v['update']">
@@ -59,23 +59,40 @@
 
       <!-- name & description -->
       <div class="w-full flex flex-col gap-2 bg-gray-100 p-2 rounded-sm shadow-md">
-        <input *ngIf="!titleDescCollapsed" type="text" name="name" pInputText dir="auto"
-        [(ngModel)]="model[viewUntranslated ? 'untr_name' : 'name']" (ngModelChange)="updateTitle()"
-        placeholder="*Name" class="flex-grow text-xl border-gray-200"
-        [class.border-red-600]="model.name?.length >= 128" required maxlength="128" (focus)="onNameFocus($event)"
-        (blur)="onNameBlur($event);" [disabled]="viewUntranslated" />
+        <ng-container *ngIf="!titleDescCollapsed">
+          <p-inputGroup>
+            <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 justify-end">Source Name:</p-inputGroupAddon>
+            <input type="text" name="name" pInputText dir="auto"
+              [(ngModel)]="model[viewUntranslated ? 'untr_name' : 'name']" (ngModelChange)="updateTitle()"
+              placeholder="eg: Fibonacci Sequence" class="flex-grow border-gray-200 text-xl"
+              [class.border-red-600]="model.name?.length >= 128" required maxlength="128" (focus)="onNameFocus($event)"
+              (blur)="onNameBlur($event);" [disabled]="viewUntranslated" />
+            <p-inputGroupAddon *ngIf="model.name?.length" class="text-xs px-2 border-gray-200 text-gray-400">
+              {{ model.name?.length }} / 128
+            </p-inputGroupAddon>
+          </p-inputGroup>
 
-        <textarea *ngIf="!titleDescCollapsed" pInputTextarea name="description" dir="auto" [autoResize]="true"
-          placeholder="Description" rows="1" [(ngModel)]="model[viewUntranslated ? 'untr_description' : 'description']"
-          class="p-inputtext-sm w-full border-gray-200" (focus)="onDescriptionFocus($event)"
-          (blur)="onDescriptionBlur($event)" [disabled]="viewUntranslated"></textarea>
+          <p-inputGroup>
+            <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 justify-end">Description:</p-inputGroupAddon>
+            <textarea pInputTextarea name="description" dir="auto" [autoResize]="true"
+              placeholder="Type source description here ..." rows="1" [(ngModel)]="model[viewUntranslated ? 'untr_description' : 'description']"
+              class="p-inputtext-sm flex-grow border-gray-200 min-h-10" (focus)="onDescriptionFocus($event)"
+              (blur)="onDescriptionBlur($event)" [disabled]="viewUntranslated"></textarea>
+          </p-inputGroup>
 
-        <input *ngIf="!titleDescCollapsed" type="text" name="iso_language_code" pInputText dir="auto"
-          [(ngModel)]="model.iso_language_code" placeholder="*ISO Language Code (2 chars), eg: 'en' for English, 'es' for Spanish, 'fr' for French" class="text-xs border-gray-200"
-          required maxlength="2" />
+          <p-inputGroup>
+            <p-inputGroupAddon class="text-xs border-gray-200 font-bold px-3 py-0 w-44 justify-end">ISO Language Code:</p-inputGroupAddon>
+            <input type="text" name="iso_language_code" pInputText dir="auto"
+              [(ngModel)]="model.iso_language_code" placeholder="eg: 'en' for English, 'es' for Spanish, 'fr' for French"
+              class="text-xs flex-grow border-gray-200" required maxlength="2" />
+          </p-inputGroup>
 
-        <p-chips *ngIf="!titleDescCollapsed" name="tags" [(ngModel)]="model.tags" separator="," placeholder="Add tags"
-          (onAdd)="addTag($event)" (onRemove)="removeTag($event)"></p-chips>
+          <p-inputGroup>
+            <p-inputGroupAddon class="text-xs border-gray-200 font-bold px-3 py-0 w-44 justify-end">Tags:</p-inputGroupAddon>
+            <p-chips name="tags" [(ngModel)]="model.tags" separator="," placeholder="Add tags" class="flex-grow"
+              (onAdd)="addTag($event)" (onRemove)="removeTag($event)"></p-chips>
+          </p-inputGroup>
+        </ng-container>
 
         <!-- expand/collapse (name & description) -->
         <div class="flex flex-col items-start gap-2 mr-24 cursor-pointer text-gray-400"

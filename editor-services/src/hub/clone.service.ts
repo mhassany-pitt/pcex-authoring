@@ -42,6 +42,7 @@ export class CloneService {
       item.item = srcClone.id;
       item.details.language = srcClone.language;
       item.details.tags = srcClone.tags;
+      item.details.iso_language_code = srcClone.iso_language_code;
 
       // compile source
       const c_items = [{ item$: { ...srcClone, id: `${srcClone.id}_example` }, type: 'example' }];
@@ -61,6 +62,7 @@ export class CloneService {
           description: items[i].details.description,
           language: items[i].details.language,
           tags: items[i].details.tags,
+          iso_language_code: items[i].details.iso_language_code,
         }
       };
 

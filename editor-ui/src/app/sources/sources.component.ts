@@ -15,6 +15,17 @@ export class SourcesComponent implements OnInit {
 
   getNavMenuBar = getNavMenuBar;
 
+  private readonly languageNames =
+    typeof Intl !== 'undefined' && 'DisplayNames' in Intl
+      ? new Intl.DisplayNames(['en'], { type: 'language' })
+      : null;
+
+  getLanguageName(isoLanguageCode: string) {
+    const code = isoLanguageCode?.trim().toLowerCase();
+    if (!code) return '';
+    return this.languageNames?.of(code) || code;
+  }
+
   _archived: boolean = localStorage.getItem('pcex-sources-archived') == 'true';
   get archived() { return this._archived; }
   set archived(bool) {

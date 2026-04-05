@@ -16,6 +16,17 @@ export class ActivityComponent implements OnInit {
 
   model: any;
 
+  private readonly languageNames =
+    typeof Intl !== 'undefined' && 'DisplayNames' in Intl
+      ? new Intl.DisplayNames(['en'], { type: 'language' })
+      : null;
+
+  getLanguageName(isoLanguageCode: string) {
+    const code = isoLanguageCode?.trim().toLowerCase();
+    if (!code) return '';
+    return this.languageNames?.of(code) || code;
+  }
+
   _v: any = {};
 
   @Output()
@@ -30,8 +41,8 @@ export class ActivityComponent implements OnInit {
     this.api.sources().subscribe(
       (sources: any) => {
         this.sources_org = sources;
-        this.sources = sources.map(({ id, name, tags, language }: any) => ({
-          id, name: `${language} | ${name}${(tags?.length > 0 ? ' [tags:' + tags.join(', ') + ']' : '')}`
+        this.sources = sources.map(({ id, name, tags, language, iso_language_code }: any) => ({
+          id, name: `${iso_language_code ? this.getLanguageName(iso_language_code) + ' ' : ''}${language} | ${name}${(tags?.length > 0 ? ' [tags:' + tags.join(', ') + ']' : '')}`
         }));
       },
       (error: any) => console.log(error)
@@ -65,6 +76,7 @@ export class ActivityComponent implements OnInit {
         description: details.description,
         language: details.language,
         tags: details.tags,
+        iso_language_code: details.iso_language_code,
       };
     }
 

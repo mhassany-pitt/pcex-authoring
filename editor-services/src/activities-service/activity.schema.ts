@@ -14,6 +14,7 @@ export class Activity {
   @Prop() published: boolean;
   @Prop() archived: boolean;
   @Prop() name: string;
+  @Prop() iso_language_code: string;
   @Prop({ type: [Object] }) items: any[];
   @Prop({ type: Object }) linkings: any;
 

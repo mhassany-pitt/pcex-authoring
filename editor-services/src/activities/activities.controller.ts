@@ -93,10 +93,10 @@ export class ActivitiesController {
       archived: include == 'archived'
     })).map(activity => {
       const { _id: id, published, archived, 
-        name, items, linkings, user, 
+        name, items, linkings, user, iso_language_code,
         collaborator_emails, created_at, updated_at } = activity;
       return this.attachStat({ 
-        id, published, archived, name, items, 
+        id, published, archived, name, items, iso_language_code,
         linkings: Object.keys(linkings || {}).length > 0, 
         user, collaborator_emails, 
         created_at, updated_at 

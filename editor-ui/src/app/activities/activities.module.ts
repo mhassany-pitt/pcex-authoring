@@ -17,6 +17,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
 import { ChipsModule } from 'primeng/chips';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { ChipsModule } from 'primeng/chips';
     SelectButtonModule, UserAuthCtrlModule,
     InputTextModule, CheckboxModule,
     ConfirmDialogModule, TagModule,
-    ChipsModule,
+    ChipsModule, InputGroupModule,
+    InputGroupAddonModule,
   ],
   providers: [
     ConfirmationService

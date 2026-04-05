@@ -1,11 +1,23 @@
 <form *ngIf="model" #form="ngForm" (ngSubmit)="update()" class="flex flex-col gap-2 activity-form">
-  <div class="flex-grow flex items-center relative">
-    <input type="text" name="name" pInputText [(ngModel)]="model.name" placeholder="Name" required maxlength="128"
-      class="p-button-sm flex-grow" style="padding: 0.35rem 0.5rem;" />
-    <span class="absolute right-2 top-1 bottom-1 text-gray-400 font-normal" style="padding: 0.125rem;">
+  <p-inputGroup>
+    <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 justify-end">
+      Activity Name:
+    </p-inputGroupAddon>
+    <input type="text" name="name" pInputText [(ngModel)]="model.name" placeholder="eg: Fibonacci Sequence" required maxlength="128"
+      class="p-button-sm border-gray-200" style="padding: 0.35rem 0.5rem;" />
+    <p-inputGroupAddon class="text-xs px-2 border-gray-200 text-gray-400">
       {{ model.name?.length || 0 }} / 128
-    </span>
-  </div>
+    </p-inputGroupAddon>
+  </p-inputGroup>
+
+  <p-inputGroup>
+    <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 justify-end">
+      ISO Language Code:
+    </p-inputGroupAddon>
+    <input type="text" name="iso_language_code" pInputText dir="auto"
+      [(ngModel)]="model.iso_language_code" placeholder="eg: 'en' for English, 'es' for Spanish, 'fr' for French"
+      class="p-button-sm border-gray-200" required maxlength="2" style="padding: 0.35rem 0.5rem;" />
+  </p-inputGroup>
 
   <div *ngFor="let item of model.items; let i = index;" class="flex items-center gap-2 ml-4">
     <span>{{ i + 1 }}.</span>
@@ -17,7 +29,7 @@
     <div class="flex-grow">
       <p-dropdown [name]="'activity-item-' + i" [options]="sources" [(ngModel)]="item.item"
         placeholder="Select a Source" [filter]="true" filterBy="name" [showClear]="true" [required]="true"
-        optionLabel="name" optionValue="id" styleClass="w-full" appendTo="body">
+        optionLabel="name" optionValue="id" styleClass="w-full border-gray-200" appendTo="body">
       </p-dropdown>
     </div>
 
@@ -38,7 +50,7 @@
       (click)="_v['collaborators'] = true" class="-my-2">
     </p-button>
     <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
-      class="p-button-sm p-button-secondary p-button-text" (click)="completed.emit()">
+      class="p-button-sm p-button-secondary p-button-outlined" (click)="completed.emit()">
     </button>
     <button pButton type="submit" label="Save" icon="pi pi-check" class="p-button-sm"
       [disabled]="form.invalid || model.items.length == 0 || !validate_pawssync_conflict()">

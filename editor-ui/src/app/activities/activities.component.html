@@ -82,13 +82,17 @@
                   (click)="activity = $activity">
                   <img *ngIf="$activity.linkings" class="synced-with-paws" title="Synced to PAWS" />
                   <span>{{ $activity.name || '[name not specified]' }}</span>
+                  <span *ngIf="$activity.iso_language_code" class="uppercase text-xs text-gray-400">
+                    [{{ getLanguageName($activity.iso_language_code) }}]
+                  </span>
                 </div>
 
                 <ng-container *ngFor="let item of $activity.items">
                   <div class="ml-2 font-bold">
                     <span>{{ item.details.name }}</span>
                     <span class="uppercase text-xs text-gray-400">
-                      [{{ item.details.language || '' }} {{ item.type }}]
+                      [{{ item.details.iso_language_code ? getLanguageName(item.details.iso_language_code) + ' ' : '' }}
+                      {{ item.details.language ? item.details.language + ' ' : '' }}{{ item.type }}]
                     </span>
                   </div>
                   <div class="ml-4 text-xs -mt-2 text-gray-600">
