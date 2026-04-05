@@ -40,8 +40,8 @@ export class ActivitiesService {
     return this.http.get(`${environment.apiUrl}/activities/${id}${this.buildQueryString({ allUsers })}`, { withCredentials: true });
   }
 
-  update(activity: any) {
-    return this.http.patch(`${environment.apiUrl}/activities/${activity.id}`, activity, { withCredentials: true });
+  update(activity: any, { allUsers }: any = {}) {
+    return this.http.patch(`${environment.apiUrl}/activities/${activity.id}${this.buildQueryString({ allUsers })}`, activity, { withCredentials: true });
   }
 
   genPreviewJson(activity: any, type: string) {

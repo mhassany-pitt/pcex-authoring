@@ -126,8 +126,13 @@ export class ActivitiesController {
 
   @Patch(':id')
   @UseGuards(AuthenticatedGuard)
-  async patch(@Req() req: Request, @Param('id') id: string, @Body() updates: any) {
-    const activity = await this.activities.read({ user: this.getUserEmail(req), id });
+  async patch(@Req() req: Request, @Param('id') id: string, @Body() updates: any, @Query('allUsers') allUsers: string) {
+    const isadmin = allUsers == 'true' && this.isAppAdmin(req);
+    const activity = await this.activities.read({
+      isadmin: isadmin,
+      user: this.getUserEmail(req),
+      id
+    });
     if (!activity) throw new NotFoundException();
 
     updates.collaborator_emails = updates.collaborator_emails?.map((c: string) => c.trim().toLowerCase()).filter((c: string) => c);
@@ -153,7 +158,7 @@ export class ActivitiesController {
       }
     }
 
-    await this.activities.update({ ...updates, user: this.getUserEmail(req), _id: id });
+    await this.activities.update({ ...updates, isadmin: isadmin, user: this.getUserEmail(req), id });
 
     if (updates.translations) {
       const allIds = new Set<string>([id, ...Object.values(updates.translations) as string[]]);

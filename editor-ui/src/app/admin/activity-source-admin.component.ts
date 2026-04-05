@@ -26,6 +26,8 @@ type ActivitySourceAdminRow = {
   sourceUsers: string[];
   sourceCollaboratorEmails: string[];
   updatedAt: string;
+  isoLanguageCode: string;
+  naturalLanguage: string;
   sources: ActivitySourceAdminSource[];
 };
 
@@ -175,11 +177,12 @@ export class ActivitySourceAdminComponent {
               this.normalizeFilterValue(source.language),
             ),
           );
-          const isoLanguageCodes = this.distinctValues(
-            sources.map((source: any) =>
+          const isoLanguageCodes = this.distinctValues([
+            this.normalizeIsoLanguageCode(activity.iso_language_code),
+            ...sources.map((source: any) =>
               this.normalizeIsoLanguageCode(source.isoLanguageCode),
             ),
-          );
+          ]);
 
           return {
             id: activity.id,
@@ -211,6 +214,8 @@ export class ActivitySourceAdminComponent {
               sources.flatMap((source: any) => source.collaboratorEmails || []),
             ),
             updatedAt: activity.updated_at,
+            isoLanguageCode: activity.iso_language_code,
+            naturalLanguage: this.getLanguageName(activity.iso_language_code),
             sources,
           };
         });
@@ -614,20 +619,34 @@ export class ActivitySourceAdminComponent {
         this.progressCurrent = index + 1;
         this.progressLabel = `[${this.progressCurrent} of ${this.progressTotal}] updating ISO-Language code for "${row.name || row.id}"`;
 
-        const sources = row.sources || [];
-        if (sources.length === 0) {
-          this.addActivityLog(
-            row.id,
-            'Update ISO-Language Code',
-            'error',
-            `No sources found for this activity.`,
-          );
-          continue;
-        }
-
         const logs: string[] = [];
         let hasError = false;
 
+        try {
+          const activityDoc: any = await firstValueFrom(
+            this.activitiesService.read(row.id, { allUsers: true }),
+          );
+          if (activityDoc.iso_language_code === isoCode) {
+            logs.push(
+              `Activity "${row.id}" already has ISO-Language code "${isoCode}".`,
+            );
+          } else {
+            activityDoc.iso_language_code = isoCode;
+            await firstValueFrom(
+              this.activitiesService.update(activityDoc, { allUsers: true }),
+            );
+            logs.push(
+              `Successfully updated ISO-Language code for activity "${row.id}".`,
+            );
+          }
+        } catch (error: any) {
+          hasError = true;
+          logs.push(
+            `Failed to update activity "${row.id}": ${error?.message || error}`,
+          );
+        }
+
+        const sources = row.sources || [];
         for (const source of sources) {
           if (updatedSourceIds.has(source.id)) {
             logs.push(`Source "${source.id}" already updated in this batch.`);
@@ -644,7 +663,9 @@ export class ActivitySourceAdminComponent {
               );
             } else {
               sourceDoc.iso_language_code = isoCode;
-              await firstValueFrom(this.sourcesService.update(sourceDoc, { allUsers: true }));
+              await firstValueFrom(
+                this.sourcesService.update(sourceDoc, { allUsers: true }),
+              );
               logs.push(
                 `Successfully updated ISO-Language code for source "${source.id}".`,
               );
