@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivitiesService } from '../../activities.service';
 import { AppService } from '../../app.service';
+import { isoLanguages } from '../../iso-languages';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-activity',
@@ -9,12 +11,16 @@ import { AppService } from '../../app.service';
 })
 export class ActivityComponent implements OnInit {
 
+  isoLanguages = isoLanguages;
+
   @Input() activity: any;
 
   sources: any[] = [];
   sources_org: any[] = [];
+  allActivities: any[] = [];
 
   model: any;
+  translationRows: any[] = [];
 
   private readonly languageNames =
     typeof Intl !== 'undefined' && 'DisplayNames' in Intl
@@ -35,6 +41,7 @@ export class ActivityComponent implements OnInit {
   constructor(
     public app: AppService,
     private api: ActivitiesService,
+    private confirm: ConfirmationService,
   ) { }
 
   ngOnInit(): void {
@@ -50,12 +57,25 @@ export class ActivityComponent implements OnInit {
 
     if (this.activity.id) {
       this.api.read(this.activity.id).subscribe(
-        (activity: any) => this.model = activity,
+        (activity: any) => {
+          this.model = activity;
+          this.translationRows = Object.entries(activity.translations || {}).map(([iso, id]) => ({ iso, id }));
+        },
         (error: any) => console.log(error)
       )
     } else {
       this.model = this.activity;
     }
+
+    this.api.activities({}).subscribe(
+      (activities: any) => {
+        this.allActivities = activities.map(({ id, name, iso_language_code }: any) => ({
+          id,
+          name: `${iso_language_code ? iso_language_code + ' ' : ''}${name}`,
+          iso: iso_language_code
+        }));
+      }
+    );
   }
 
   addItem() {
@@ -69,6 +89,11 @@ export class ActivityComponent implements OnInit {
   }
 
   update() {
+    this.model.translations = {};
+    for (const t of this.translationRows) {
+      if (t.iso && t.id) this.model.translations[t.iso] = t.id;
+    }
+
     for (const item of this.model.items) {
       const details = this.sources_org.find(source => source.id == item.item);
       if (details) item.details = {
@@ -100,5 +125,36 @@ export class ActivityComponent implements OnInit {
     const exactlyOneExample = items.filter(i => i.type === "example").length === 1;
 
     return exactlyOneExample && noDuplicateIds;
+  }
+
+  getAvailableLanguages() {
+    return this.isoLanguages.filter(l => l.value !== this.model.iso_language_code);
+  }
+
+  addTranslationRow() {
+    this.translationRows.push({ iso: '', id: '' });
+  }
+
+  removeTranslationRow(index: number) {
+    this.confirm.confirm({
+      header: 'Confirm',
+      message: 'Are you sure you want to remove this link?',
+      accept: () => {
+        this.translationRows.splice(index, 1);
+      }
+    });
+  }
+
+  openActivity(id: string) {
+    window.open(`${location.origin}${location.pathname}#/activities/activity/${id}`, '_blank');
+  }
+
+  getAvailableActivities(currentRow: any) {
+    const usedIds = this.translationRows.filter(r => r !== currentRow).map(r => r.id);
+    return this.allActivities.filter(a =>
+      a.id !== this.model.id &&
+      !usedIds.includes(a.id) &&
+      a.iso === currentRow.iso
+    );
   }
 }

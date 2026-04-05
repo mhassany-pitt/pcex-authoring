@@ -93,10 +93,10 @@ export class ActivitiesController {
       archived: include == 'archived'
     })).map(activity => {
       const { _id: id, published, archived, 
-        name, items, linkings, user, iso_language_code,
+        name, items, linkings, user, iso_language_code, translations,
         collaborator_emails, created_at, updated_at } = activity;
       return this.attachStat({ 
-        id, published, archived, name, items, iso_language_code,
+        id, published, archived, name, items, iso_language_code, translations,
         linkings: Object.keys(linkings || {}).length > 0, 
         user, collaborator_emails, 
         created_at, updated_at 
@@ -154,6 +154,31 @@ export class ActivitiesController {
     }
 
     await this.activities.update({ ...updates, user: this.getUserEmail(req), _id: id });
+
+    if (updates.translations) {
+      const allIds = new Set<string>([id, ...Object.values(updates.translations) as string[]]);
+      const allActivities = await Promise.all([...allIds].map(sid => this.activities.db().findById(sid)));
+      const maps = allActivities.filter(Boolean).map(a => ({
+        id: a._id.toString(),
+        iso: a.iso_language_code,
+        translations: a.translations || {}
+      }));
+
+      const combinedMap: Record<string, string> = {};
+      maps.forEach(m => {
+        if (m.iso) combinedMap[m.iso] = m.id;
+        Object.entries(m.translations).forEach(([iso, sid]) => {
+          if (sid) combinedMap[iso] = sid as string;
+        });
+      });
+
+      for (const m of maps) {
+        const translations = { ...combinedMap };
+        if (m.iso) delete translations[m.iso];
+        await this.activities.db().updateOne({ _id: m.id }, { $set: { translations } });
+      }
+    }
+
     return resp;
   }
 

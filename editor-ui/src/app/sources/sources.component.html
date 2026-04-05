@@ -1,20 +1,7 @@
 <div class="flex flex-col">
-  <div class="px-10 py-4 bg-gray-100 shadow-md fixed left-0 top-0 right-0 z-10">
-    <div class="container mx-auto flex items-center gap-2 px-2 md:px-0">
-      <img src="assets/logo.png" class="h-8 w-8" />
-      <span class="text-xl font-bold hidden md:inline-block text-nowrap">PCEX Authoring</span>
-      <span class="hidden md:inline-block"><i class="pi pi-chevron-right"></i></span>
+  <app-navbar />
 
-      <p-dropdown #navEl [options]="getNavMenuBar()" [ngModel]="'/sources'" class="-my-2 pcex-nav-dropdown"
-        (onChange)="router.navigate([$event.value]);"></p-dropdown>
-
-      <span class="flex-grow"></span>
-
-      <app-user-auth-ctrl logoutRedirect="/hub"></app-user-auth-ctrl>
-    </div>
-  </div>
-
-  <div class="container mx-auto mt-24 mb-16 border shadow-md z-0">
+  <div class="container mx-auto max-w-5xl mt-24 mb-16 border shadow-md z-0">
     <p-table #table [value]="sources" [globalFilterFields]="['name','description']">
       <ng-template pTemplate="caption">
         <div class="flex items-center gap-2">
@@ -68,11 +55,20 @@
               <span *ngIf="$source.tags?.length" class="text-xs ml-2">
                 <p-tag *ngFor="let tag of $source.tags" [value]="tag" severity="success" class="mr-1" />
               </span>
-              <span class="text-xs -mb-1" [ngClass]="{'font-bold': $source.user == app.user?.email}">
-                Created by: {{ $source.user }} <span *ngIf="$source.user == app.user?.email">(you)</span>
+              <span class="text-xs -mb-1">
+                Created by: {{ $source.user }} 
+                <span *ngIf="$source.user == app.user?.email" class="font-bold">(you)</span>
               </span>
               <span *ngIf="$source.collaborator_emails?.length" class="text-xs -mt-1">
                 Collaborators: {{ $source.collaborator_emails.join(', ') }}
+              </span>
+              <span *ngIf="$source.translations && ($source.translations | keyvalue)?.length" class="text-xs -mt-1">
+                Translations: 
+                <ng-container *ngFor="let entry of $source.translations | keyvalue; let last = last">
+                  <a [routerLink]="['/editor', entry.value]" 
+                    class="text-blue-500 no-underline hover:underline">{{ getLanguageName($any(entry.key)) }}</a>
+                  <span *ngIf="!last">, </span>
+                </ng-container>
               </span>
             </div>
           </td>

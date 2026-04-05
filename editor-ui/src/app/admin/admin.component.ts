@@ -8,7 +8,6 @@ import { getNavMenuBar } from '../utilities';
   styleUrls: ['./admin.component.less']
 })
 export class AdminComponent {
-  getNavMenuBar = getNavMenuBar;
   activeTabIndex = 0;
   private readonly maxTabIndex = 1;
 

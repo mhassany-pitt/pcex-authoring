@@ -1,4 +1,4 @@
-<form *ngIf="model" #form="ngForm" (ngSubmit)="update()" class="flex flex-col gap-2 activity-form">
+<form *ngIf="model" #form="ngForm" (ngSubmit)="update()" class="flex flex-col gap-1 activity-form">
   <p-inputGroup>
     <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 justify-end">
       Activity Name:
@@ -11,12 +11,39 @@
   </p-inputGroup>
 
   <p-inputGroup>
-    <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 justify-end">
-      ISO Language Code:
+    <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 h-8 justify-end">
+      Natural Language:
     </p-inputGroupAddon>
-    <input type="text" name="iso_language_code" pInputText dir="auto"
-      [(ngModel)]="model.iso_language_code" placeholder="eg: 'en' for English, 'es' for Spanish, 'fr' for French"
-      class="p-button-sm border-gray-200" required maxlength="2" style="padding: 0.35rem 0.5rem;" />
+    <p-dropdown name="iso_language_code" [options]="isoLanguages" [(ngModel)]="model.iso_language_code"
+      placeholder="Select Language" [filter]="true" filterBy="label" [showClear]="true"
+      optionLabel="label" optionValue="value" styleClass="flex-grow text-sm border-none" appendTo="body" class="flex-grow border border-solid border-gray-200 rounded-sm overflow-hidden h-8" [style]="{ 'line-height': '1.2' }">
+    </p-dropdown>
+  </p-inputGroup>
+
+  <p-inputGroup>
+    <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 h-auto justify-end">
+      Translations:
+    </p-inputGroupAddon>
+    <div class="flex-grow flex flex-col gap-1 p-1 border border-solid border-gray-200 border-l-0 bg-white overflow-hidden">
+      <div *ngFor="let t of translationRows; let i = index" class="flex items-center gap-1">
+        <p-dropdown [name]="'t-iso-'+i" [options]="getAvailableLanguages()" [(ngModel)]="t.iso"
+          placeholder="Language" [filter]="true" filterBy="label" [showClear]="true"
+          optionLabel="label" optionValue="value" styleClass="text-xs h-7 border-none py-0" 
+          appendTo="body" class="border border-solid border-gray-200 rounded-sm overflow-hidden max-w-48">
+        </p-dropdown>
+        <p-dropdown [name]="'t-activity-'+i" [options]="getAvailableActivities(t)" [(ngModel)]="t.id"
+          placeholder="Select Activity" [filter]="true" filterBy="name" [showClear]="true"
+          optionLabel="name" optionValue="id" styleClass="flex-grow text-xs h-7 border-none py-0" 
+          appendTo="body" class="flex-grow border border-solid border-gray-200 rounded-sm overflow-hidden">
+        </p-dropdown>
+        <button *ngIf="t.id" pButton type="button" icon="pi pi-external-link" 
+          class="p-button-sm p-button-plain p-button-text p-0 h-7 w-7" 
+          (click)="openActivity(t.id)" title="Open this activity in a new tab">
+        </button>
+        <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-danger p-button-text p-0 h-7 w-7" (click)="removeTranslationRow(i)"></button>
+      </div>
+      <button pButton type="button" label="Link Translation Variation" icon="pi pi-plus" class="p-button-text p-button-sm self-start text-xs p-1" (click)="addTranslationRow()"></button>
+    </div>
   </p-inputGroup>
 
   <div *ngFor="let item of model.items; let i = index;" class="flex items-center gap-2 ml-4">

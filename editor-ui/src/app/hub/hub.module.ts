@@ -10,12 +10,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
 import { ChipsModule } from 'primeng/chips';
+import { MenuModule } from 'primeng/menu';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ChipsModule } from 'primeng/chips';
     InputTextModule, TableModule,
     DropdownModule, SelectButtonModule,
     CheckboxModule, ToastModule,
-    UserAuthCtrlModule, ChipsModule,
+    ChipsModule,
+    MenuModule, NavbarComponent,
   ],
   providers: [
     MessageService,

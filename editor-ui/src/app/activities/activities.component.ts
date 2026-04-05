@@ -12,17 +12,19 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class ActivitiesComponent implements OnInit {
 
-  getNavMenuBar = getNavMenuBar;
-
   private readonly languageNames =
     typeof Intl !== 'undefined' && 'DisplayNames' in Intl
       ? new Intl.DisplayNames(['en'], { type: 'language' })
       : null;
 
   getLanguageName(isoLanguageCode: string) {
-    const code = isoLanguageCode?.trim().toLowerCase();
-    if (!code) return '';
-    return this.languageNames?.of(code) || code;
+    try {
+      const code = isoLanguageCode?.trim().toLowerCase();
+      if (!code) return '';
+      return this.languageNames?.of(code) || code;
+    } catch (e) {
+      return isoLanguageCode;
+    }
   }
 
   _archived: boolean = localStorage.getItem('pcex-activities-archived') == 'true';
@@ -149,6 +151,11 @@ export class ActivitiesComponent implements OnInit {
         );
       }
     });
+  }
+
+  selectActivityById(id: string) {
+    if (!this.activities) return;
+    this.activity = this.activities.find((a: any) => a.id == id);
   }
 }
 

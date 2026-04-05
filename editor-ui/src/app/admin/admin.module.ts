@@ -19,13 +19,13 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ChipsModule } from 'primeng/chips';
 import { RouterModule } from '@angular/router';
-import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 import { DropdownModule } from 'primeng/dropdown';
 import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +38,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     FormsModule,
     RouterModule,
     AdminRoutingModule,
-    UserAuthCtrlModule,
     TableModule,
     ButtonModule,
     InputTextModule,
@@ -55,6 +54,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     InputGroupModule,
     InputGroupAddonModule,
     OverlayPanelModule,
+    NavbarComponent,
   ],
   providers: [AdminService, ConfirmationService],
 })

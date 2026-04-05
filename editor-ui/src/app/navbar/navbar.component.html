@@ -1,0 +1,72 @@
+<div class="px-10 py-4 bg-gray-100 shadow-md fixed left-0 top-0 right-0 z-50">
+  <div class="container mx-auto flex items-center max-w-5xl">
+    <!-- Integrated Brand & Hub Section -->
+    <div class="flex items-center gap-2 px-2.5 py-1 cursor-pointer font-bold rounded-sm transition-all duration-200"
+         [class.bg-blue-100]="router.url.startsWith('/hub') || router.url === '/'"
+         [class.text-blue-800]="router.url.startsWith('/hub') || router.url === '/'"
+         [class.border]="router.url.startsWith('/hub') || router.url === '/'"
+         [class.border-blue-200]="router.url.startsWith('/hub') || router.url === '/'"
+         [class.shadow-sm]="router.url.startsWith('/hub') || router.url === '/'"
+         [class.text-slate-800]="!(router.url.startsWith('/hub') || router.url === '/')"
+         [class.hover:bg-gray-200]="!(router.url.startsWith('/hub') || router.url === '/')"
+         [class.scale-105]="router.url.startsWith('/hub') || router.url === '/'"
+         (click)="router.navigate(['/hub'])">
+      <img src="assets/logo.png" class="h-8 w-8" />
+      <span class="text-2xl font-black">WEAT</span>
+    </div>
+
+    <!-- Vertical Separator -->
+    <div *ngIf="isLoggedIn" class="h-6 w-px bg-gray-300 mx-6"></div>
+
+    <!-- Navigation Section (Sources, Activities) -->
+    <nav *ngIf="isLoggedIn" class="flex items-center gap-1 h-full text-nowrap">
+      <ng-container *ngFor="let item of getNavMenuBar()">
+        <div *ngIf="item.label !== 'Hub' && item.label !== 'Admin'" 
+             class="flex items-center gap-1.5 px-2.5 py-1 cursor-pointer font-bold rounded-sm transition-all duration-200 border border-transparent"
+             [class.bg-blue-100]="router.url.startsWith(item.value)"
+             [class.text-blue-800]="router.url.startsWith(item.value)"
+             [class.border-blue-200]="router.url.startsWith(item.value)"
+             [class.shadow-sm]="router.url.startsWith(item.value)"
+             [class.text-slate-500]="!router.url.startsWith(item.value)"
+             [class.hover:bg-gray-200]="!router.url.startsWith(item.value)"
+             [class.scale-105]="router.url.startsWith(item.value)"
+             (click)="router.navigate([item.value])">
+          <i class="pi text-lg" [class]="getNavIcon(item.label)"></i>
+          <span class="text-base tracking-tight">{{ item.label }}</span>
+        </div>
+      </ng-container>
+    </nav>
+
+    <span class="flex-grow"></span>
+
+    <!-- Management Cluster (Integrated Menu) -->
+    <div *ngIf="isLoggedIn" class="flex items-center gap-3">
+      <!-- User Profile Dropdown Trigger -->
+      <div class="flex items-center gap-2 group cursor-pointer px-3 py-1.5 rounded-sm hover:bg-gray-200 transition-all duration-200"
+           (click)="profileMenu.toggle($event)">
+        <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs ring-2 ring-slate-100 group-hover:ring-slate-200 transition-all shrink-0">
+          {{ app.user.fullname ? app.user.fullname.charAt(0).toUpperCase() : 'U' }}
+        </div>
+        <div class="flex flex-col -gap-1 select-none">
+          <span class="text-xs font-bold text-slate-400 leading-none">Logged in as</span>
+          <span class="text-sm font-black text-slate-700 flex items-center gap-1.5 whitespace-nowrap">
+            {{ app.user.fullname || app.user.email }}
+            <i class="pi pi-chevron-down text-[10px] text-slate-400"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- PrimeNG Submenu (Stay in component scope for styling) -->
+      <p-menu #profileMenu [model]="userMenuItems" [popup]="true" styleClass="user-menu"></p-menu>
+    </div>
+
+    <!-- Login Button (Fallback) -->
+    <div *ngIf="!isLoggedIn" class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer font-bold rounded-sm transition-all duration-200 bg-blue-100 text-blue-800 border border-blue-200 hover:bg-blue-200 shadow-sm"
+           [routerLink]="['/login']" [queryParams]="{redirect: loginRedirect}">
+        <i class="pi pi-sign-in text-lg"></i>
+        <span class="text-base tracking-tight">Login</span>
+      </div>
+    </div>
+  </div>
+</div>

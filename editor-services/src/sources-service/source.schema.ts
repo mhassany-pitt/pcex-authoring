@@ -18,6 +18,7 @@ export class Source {
   @Prop() untr_description: string; // untranslated description
   @Prop() tags: string[];
   @Prop() iso_language_code: string;
+  @Prop({ type: Object }) translations: any;
   @Prop() language: string;
   @Prop() filename: string;
   @Prop() code: string;

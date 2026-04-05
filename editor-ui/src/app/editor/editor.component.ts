@@ -11,6 +11,8 @@ import { SourcesService } from '../sources.service';
 import { Title } from '@angular/platform-browser';
 import { AppService } from '../app.service';
 
+import { isoLanguages } from '../iso-languages';
+
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
@@ -19,6 +21,7 @@ import { AppService } from '../app.service';
 export class EditorComponent implements OnInit, OnDestroy {
 
   getNavMenuBar = getNavMenuBar;
+  isoLanguages = isoLanguages;
 
   @Input() language = 'java';
 
@@ -66,6 +69,9 @@ export class EditorComponent implements OnInit, OnDestroy {
   lastValue: any = null;
 
   targetLns = [];
+
+  translationRows: any[] = [];
+  allSources: any[] = [];
 
   get titleDescCollapsed() { return localStorage.getItem('pcex.prefs.titleDescCollapsed') == 'true'; }
   set titleDescCollapsed(value) { localStorage.setItem('pcex.prefs.titleDescCollapsed', `${value}`); }
@@ -158,6 +164,8 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.moh70FindUnDanglings();
 
         this.log({ type: 'model-loaded', value: this.model });
+
+        this.translationRows = Object.entries(source.translations || {}).map(([iso, id]) => ({ iso, id }));
       },
       error: (err: any) => {
         this.messages.add({
@@ -168,6 +176,16 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
 
     // setTimeout(() => this.onSelectionChange(), 300);
+
+    this.api.sources({}).subscribe({
+      next: (sources: any) => {
+        this.allSources = sources.map(({ id, name, iso_language_code }: any) => ({
+          id,
+          name: `${iso_language_code ? iso_language_code + ' ' : ''}${name}`,
+          iso: iso_language_code
+        }));
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -858,6 +876,11 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   update() {
+    this.model.translations = {};
+    for (const t of this.translationRows) {
+      if (t.iso && t.id) this.model.translations[t.iso] = t.id;
+    }
+
     this.ignoreUntouchedLines();
     this._v['update'] = true;
     this.api.update(this.model).subscribe({
@@ -1124,5 +1147,36 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   onExtraFileDelete($event: any, extraFile: any) {
     this.model.extraFiles = this.model.extraFiles.filter((f: any) => f != extraFile);
+  }
+
+  getAvailableLanguages() {
+    return this.isoLanguages.filter(l => l.value !== this.model.iso_language_code);
+  }
+
+  addTranslationRow() {
+    this.translationRows.push({ iso: '', id: '' });
+  }
+
+  removeTranslationRow(index: number) {
+    this.confirm.confirm({
+      header: 'Confirm',
+      message: 'Are you sure you want to remove this link?',
+      accept: () => {
+        this.translationRows.splice(index, 1);
+      }
+    });
+  }
+
+  openSource(id: string) {
+    window.open(`${location.origin}${location.pathname}#/editor/${id}`, '_blank');
+  }
+
+  getAvailableSources(currentRow: any) {
+    const usedIds = this.translationRows.filter(r => r !== currentRow).map(r => r.id);
+    return this.allSources.filter(s =>
+      s.id !== this.model.id &&
+      !usedIds.includes(s.id) &&
+      s.iso === currentRow.iso
+    );
   }
 }

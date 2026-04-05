@@ -17,6 +17,7 @@ export class Activity {
   @Prop() iso_language_code: string;
   @Prop({ type: [Object] }) items: any[];
   @Prop({ type: Object }) linkings: any;
+  @Prop({ type: Object }) translations: any;
 
   @Prop() collaborator_emails: string[];
   @Prop() created_at: Date;

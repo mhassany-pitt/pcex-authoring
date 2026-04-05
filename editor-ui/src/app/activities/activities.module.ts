@@ -10,7 +10,6 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { UserAuthCtrlModule } from '../user-auth-ctrl/user-auth-ctrl.module';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -19,6 +18,7 @@ import { TagModule } from 'primeng/tag';
 import { ChipsModule } from 'primeng/chips';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -30,11 +30,11 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     ActivitiesRoutingModule,
     TableModule, ButtonModule,
     DialogModule, DropdownModule,
-    SelectButtonModule, UserAuthCtrlModule,
+    SelectButtonModule,
     InputTextModule, CheckboxModule,
     ConfirmDialogModule, TagModule,
     ChipsModule, InputGroupModule,
-    InputGroupAddonModule,
+    InputGroupAddonModule, NavbarComponent,
   ],
   providers: [
     ConfirmationService

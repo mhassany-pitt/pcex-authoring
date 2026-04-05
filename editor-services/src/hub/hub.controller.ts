@@ -30,8 +30,8 @@ export class HubController {
       }, {});
 
     return (await this.service.list({ key })).map(activity => {
-      const { id, name, items, user } = useId(activity);
-      return { id, name, items, author: users[user] };
+      const { id, name, items, user, iso_language_code, translations } = useId(activity);
+      return { id, name, items, author: users[user], iso_language_code, translations };
     }).sort((a, b) => b.id.toString().localeCompare(a.id.toString()));
   }
 
@@ -44,6 +44,13 @@ export class HubController {
     res.header('Content-Type', 'application/json');
     res.header('Content-Disposition', `attachment; filename="preview.json"`);
     return new StreamableFile(createReadStream(this.compiler.preview(id)));
+  }
+
+  @Get(':id/translations')
+  async translations(@Param('id') id: string) {
+    const activity = await this.service.getActivity(id);
+    if (!activity) throw new NotFoundException();
+    return activity.translations || {};
   }
 
   @Post('clone')

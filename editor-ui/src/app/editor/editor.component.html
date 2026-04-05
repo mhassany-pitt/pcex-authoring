@@ -3,13 +3,8 @@
     <div class="bg-gray-100 shadow-md py-4 fixed left-0 top-0 right-0 z-10">
       <div class="container mx-auto flex items-center gap-2 px-2 md:px-0">
         <img src="assets/logo.png" class="h-8 w-8" />
-        <span class="text-xl font-bold hidden md:inline-block text-nowrap">PCEX Authoring</span>
-        <span class="hidden md:inline-block"><i class="pi pi-chevron-right"></i></span>
-
-        <p-dropdown #navEl [options]="getNavMenuBar()" name="nav-bar" [ngModel]="'/sources'"
-          class="-my-2 pcex-nav-dropdown" (onChange)="router.navigate([$event.value]);">
-        </p-dropdown>
-
+        <span class="text-xl font-bold hidden md:inline-block text-nowrap">Worked-Example Authoring Tool</span>
+        
         <span class="flex-grow"></span>
 
         <div class="flex items-center gap-2">
@@ -58,7 +53,7 @@
       </span>
 
       <!-- name & description -->
-      <div class="w-full flex flex-col gap-2 bg-gray-100 p-2 rounded-sm shadow-md">
+      <div class="w-full flex flex-col gap-1 bg-gray-100 p-2 rounded-sm shadow-md">
         <ng-container *ngIf="!titleDescCollapsed">
           <p-inputGroup>
             <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 justify-end">Source Name:</p-inputGroupAddon>
@@ -81,10 +76,37 @@
           </p-inputGroup>
 
           <p-inputGroup>
-            <p-inputGroupAddon class="text-xs border-gray-200 font-bold px-3 py-0 w-44 justify-end">ISO Language Code:</p-inputGroupAddon>
-            <input type="text" name="iso_language_code" pInputText dir="auto"
-              [(ngModel)]="model.iso_language_code" placeholder="eg: 'en' for English, 'es' for Spanish, 'fr' for French"
-              class="text-xs flex-grow border-gray-200" required maxlength="2" />
+            <p-inputGroupAddon class="text-xs border-gray-200 font-bold px-3 py-0 w-44 justify-end">Natural Language:</p-inputGroupAddon>
+            <p-dropdown name="iso_language_code" [options]="isoLanguages" [(ngModel)]="model.iso_language_code"
+              placeholder="Select Language" [filter]="true" filterBy="label" [showClear]="true"
+              optionLabel="label" optionValue="value" styleClass="flex-grow text-xs border-none" appendTo="body" class="flex-grow border border-solid border-gray-200 rounded-sm overflow-hidden">
+            </p-dropdown>
+          </p-inputGroup>
+
+          <p-inputGroup>
+            <p-inputGroupAddon class="text-xs border-gray-200 font-bold px-3 py-0 w-44 justify-end h-auto">Translations:</p-inputGroupAddon>
+            <div class="flex-grow flex flex-col gap-1 p-1 border border-solid border-gray-200 border-l-0 bg-white overflow-hidden">
+              <div *ngFor="let t of translationRows; let i = index" class="flex items-center gap-1">
+                <p-dropdown [name]="'t-iso-'+i" [options]="getAvailableLanguages()" [(ngModel)]="t.iso"
+                  placeholder="Language" [filter]="true" filterBy="label" 
+                  optionLabel="label" optionValue="value" styleClass="text-xs h-7 border-none py-0" 
+                  appendTo="body" class="border border-solid border-gray-200 rounded-sm overflow-hidden max-w-48"
+                  [style]="{ 'line-height': '0.75' }">
+                </p-dropdown>
+                <p-dropdown [name]="'t-source-'+i" [options]="getAvailableSources(t)" [(ngModel)]="t.id"
+                  placeholder="Select Source" [filter]="true" filterBy="name" [showClear]="true"
+                  optionLabel="name" optionValue="id" styleClass="flex-grow text-xs h-7 border-none py-0" 
+                  appendTo="body" class="flex-grow border border-solid border-gray-200 rounded-sm overflow-hidden"
+                  [style]="{ 'line-height': '0.75' }">
+                </p-dropdown>
+                <button *ngIf="t.id" pButton type="button" icon="pi pi-external-link" 
+                  class="p-button-sm p-button-plain p-button-text p-0 h-7 w-7" 
+                  (click)="openSource(t.id)" title="Open this source in a new tab">
+                </button>
+                <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-danger p-button-text p-0 h-7 w-7" (click)="removeTranslationRow(i)"></button>
+              </div>
+              <button pButton type="button" label="Link Translation Variation" icon="pi pi-plus" class="p-button-text p-button-sm self-start text-xs p-1" (click)="addTranslationRow()"></button>
+            </div>
           </p-inputGroup>
 
           <p-inputGroup>
@@ -99,9 +121,6 @@
           (click)="titleDescCollapsed = !titleDescCollapsed">
           <span *ngIf="titleDescCollapsed && model.description" class="text-xs">
             Description: {{ viewUntranslated ? model.untr_description : model.description }}
-          </span>
-          <span *ngIf="titleDescCollapsed && model.iso_language_code" class="text-xs">
-            ISO Language Code: {{ model.iso_language_code }}
           </span>
           <span *ngIf="titleDescCollapsed && model.tags?.length" class="text-xs">
             Tags: {{ model.tags?.join(', ') }}

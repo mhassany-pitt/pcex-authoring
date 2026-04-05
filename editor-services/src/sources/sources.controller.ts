@@ -27,10 +27,10 @@ export class SourcesController {
     })).map(source => {
       const { _id: id, archived, name, description, tags, 
         iso_language_code, language, user, collaborator_emails, 
-        created_at, updated_at } = source;
+        translations, created_at, updated_at } = source;
       return { id, archived, name, description, tags, 
         iso_language_code, language, user, collaborator_emails, 
-        created_at, updated_at };
+        translations, created_at, updated_at };
     }).sort((a, b) => b.id.toString().localeCompare(a.id.toString()));
   }
 
@@ -75,6 +75,32 @@ export class SourcesController {
       user: this.getUserEmail(req),
       _id: id
     });
+
+    if (updates.translations) {
+      const allIds = new Set<string>([id, ...Object.values(updates.translations) as string[]]);
+      const allSources = await Promise.all([...allIds].map(sid => this.sources.db().findById(sid)));
+      const maps = allSources.filter(Boolean).map(s => ({
+        id: s._id.toString(),
+        iso: s.iso_language_code,
+        translations: s.translations || {}
+      }));
+
+      // Merge all translation maps
+      const combinedMap: Record<string, string> = {};
+      maps.forEach(m => {
+        if (m.iso) combinedMap[m.iso] = m.id;
+        Object.entries(m.translations).forEach(([iso, sid]) => {
+          if (sid) combinedMap[iso] = sid as string;
+        });
+      });
+
+      // Update each source with the combined map (minus itself)
+      for (const m of maps) {
+        const translations = { ...combinedMap };
+        if (m.iso) delete translations[m.iso];
+        await this.sources.db().updateOne({ _id: m.id }, { $set: { translations } });
+      }
+    }
   }
 
   // @Delete(':id')
