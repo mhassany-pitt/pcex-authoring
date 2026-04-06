@@ -91,8 +91,8 @@ export class NavbarComponent implements OnInit {
   getNavIcon(label: string) {
     switch (label) {
       case 'Hub': return 'pi-home';
-      case 'Sources': return 'pi-database';
-      case 'Activities': return 'pi-bolt';
+      case 'Sources': return 'pi-file';
+      case 'Activities': return 'pi-list-check';
       case 'Admin': return 'pi-cog';
       default: return 'pi-list';
     }

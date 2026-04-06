@@ -30,8 +30,11 @@ export class HubController {
       }, {});
 
     return (await this.service.list({ key })).map(activity => {
-      const { id, name, items, user, iso_language_code, translations } = useId(activity);
-      return { id, name, items, author: users[user], iso_language_code, translations };
+      const { id, name, items, iso_language_code, 
+        translations, user, collaborator_emails } = useId(activity);
+      return { id, name, items, author: users[user], 
+        iso_language_code, translations, 
+        collaborators: collaborator_emails };
     }).sort((a, b) => b.id.toString().localeCompare(a.id.toString()));
   }
 

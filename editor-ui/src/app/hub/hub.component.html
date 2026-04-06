@@ -8,7 +8,7 @@
         <h1 class="text-2xl font-black text-slate-800 m-0">Worked-Example Authoring Tool</h1>
         <span class="text-slate-500 font-bold text-lg">({{ activities.length }} Activities)</span>
       </div>
-      <p class="text-slate-400 text-sm max-w-2xl leading-relaxed">
+      <p class="text-slate-400 text-sm max-w-2xl leading-relaxed my-2">
         Use the search box below to filter activities by ID, title, item details, author, or tags. <br/>
         Click on an activity title or the <i class="pi pi-eye text-orange-600"></i> icon to preview.
       </p>
@@ -115,9 +115,8 @@
             <ng-template pTemplate="body" let-activity let-rowIndex="rowIndex">
               <tr #rowEl>
                 <td>
-                  <div class="flex flex-col gap-2 relative" style="width: calc(100% - 1rem);">
-                    <div class="flex items-center gap-1">
-                      <i class="pi pi-eye text-orange-600 text-sm mr-1 cursor-pointer" (click)="preview(activity)"></i>
+                  <div class="flex flex-col">
+                    <div class="flex items-center gap-1 mb-1">
                       <span class="font-bold text-blue-700 cursor-pointer" (click)="preview(activity)">
                         {{ activity.name || '[name not specified]' }}
                       </span>
@@ -144,38 +143,42 @@
                       </a>
                     </div>
 
-                    <ng-container *ngFor="let item of activity.items">
-                      <div class="font-bold">
-                        <span>{{ item.details.name }}</span>
-                        <span class="uppercase text-xs text-gray-400">
-                          [{{ item.details.iso_language_code ? getLanguageName(item.details.iso_language_code) + ' ' : '' }}
-                          {{ item.details.language ? item.details.language + ' ' : '' }}{{ item.type }}]
-                        </span>
-                      </div>
-                      <div class="ml-2 text-xs -mt-1 text-gray-600">
-                        {{ item.details.description?.substring(0, 512) }}
-                        {{ item.details.description?.length > 512 ? '...' : '' }}
-                      </div>
-                      <span *ngIf="item.details.tags?.length" class="text-xs ml-4 -mt-1">
-                        <p-tag *ngFor="let tag of item.details.tags" [value]="tag" severity="success" class="mr-1" />
-                      </span>
-                    </ng-container>
+                    <span class="text-gray-500 text-xs">
+                      Created by: {{ activity.author?.fullname }} ({{ activity.author?.email }})
+                    </span>
+                    <span *ngIf="activity.collaborators?.length" class="text-gray-500 text-xs">
+                      Collaborators: {{ activity.collaborators.join(', ') }}
+                    </span>
 
-                    <span *ngIf="activity.translations && (activity.translations | keyvalue)?.length"
-                      class="text-xs -mt-1">
-                      Translations:
+                    <div *ngIf="activity.translations && (activity.translations | keyvalue)?.length" class="text-xs">
+                      <span class="text-gray-500">Translated versions:</span>
                       <ng-container *ngFor="let entry of activity.translations | keyvalue; let last = last">
                         <span class="text-blue-500 hover:underline cursor-pointer"
                           (click)="preview({ id: $any(entry).value })">
-                          {{ getLanguageName($any(entry).key) }}
-                        </span><span *ngIf="!last">, </span>
+                          {{ getLanguageName($any(entry).key) + (last ? '' : ', ') }}
+                        </span>
                       </ng-container>
-                    </span>
+                    </div>
 
-                    <span class="absolute right-0 top-0 text-gray-500 text-xs text-right">
-                      author: {{ activity.author?.fullname }} <br />
-                      ({{ activity.author?.email }})
-                    </span>
+                    <ul class="m-0 mt-1 pl-4 text-xs">
+                      <li *ngFor="let item of activity.items; let last = last" [class.mb-1]="!last">
+                        <div class="font-semibold">
+                          <span>{{ item.details.name }}</span>
+                          <span class="uppercase text-gray-400">
+                            [{{ (item.details.iso_language_code ? getLanguageName(item.details.iso_language_code) + ' ' : '') 
+                              + (item.details.language ? item.details.language + ' ' : '') 
+                              + item.type }}]
+                          </span>
+                        </div>
+                        <div class="text-gray-600">
+                          {{ item.details.description?.substring(0, 512) }}
+                          {{ item.details.description?.length > 512 ? '...' : '' }}
+                        </div>
+                        <span *ngIf="item.details.tags?.length" class="ml-4 -mt-1">
+                          <p-tag *ngFor="let tag of item.details.tags" [value]="tag" severity="success" class="mr-1" />
+                        </span>
+                      </li>
+                    </ul>
                   </div>
                 </td>
               </tr>

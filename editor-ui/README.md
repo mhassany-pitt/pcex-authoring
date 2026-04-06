@@ -1,6 +1,6 @@
 ## Editor UI
 
-ui project for pcex authoring.
+ui project for worked-example authoring tool.
 
 ## Installation
 

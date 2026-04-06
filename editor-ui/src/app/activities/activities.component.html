@@ -64,42 +64,27 @@
           </td>
           <td>
             <ng-container *ngIf="activity != $activity; else activityForm">
-              <div class="flex flex-col gap-2" [ngClass]="{ 'line-through': $activity.archived }">
-                <div class="flex items-center gap-2 font-bold cursor-pointer text-blue-700"
-                  (click)="activity = $activity">
-                  <img *ngIf="$activity.linkings" class="synced-with-paws" title="Synced to PAWS" />
-                  <span>{{ $activity.name || '[name not specified]' }}</span>
+              <div class="flex flex-col" [ngClass]="{ 'line-through': $activity.archived }">
+                <div class="flex items-center gap-1 mb-1" (click)="activity = $activity">
+                  <span class="font-bold text-blue-700 cursor-pointer" (click)="preview($activity)">
+                    {{ $activity.name || '[name not specified]' }}
+                  </span>
                   <span *ngIf="$activity.iso_language_code" class="uppercase text-xs text-gray-400">
                     [{{ getLanguageName($activity.iso_language_code) }}]
                   </span>
+                  <img *ngIf="$activity.linkings" class="synced-with-paws" title="Synced to PAWS" />
                 </div>
 
-                <ng-container *ngFor="let item of $activity.items">
-                  <div class="ml-2 font-bold">
-                    <span>{{ item.details.name }}</span>
-                    <span class="uppercase text-xs text-gray-400">
-                      [{{ item.details.iso_language_code ? getLanguageName(item.details.iso_language_code) + ' ' : '' }}
-                      {{ item.details.language ? item.details.language + ' ' : '' }}{{ item.type }}]
-                    </span>
-                  </div>
-                  <div class="ml-4 text-xs -mt-2 text-gray-600">
-                    {{ item.details.description?.substring(0, 512) }}
-                    {{ item.details.description?.length > 512 ? '...' : '' }}
-                  </div>
-                  <span *ngIf="item.details.tags?.length" class="text-xs ml-2">
-                    <p-tag *ngFor="let tag of item.details.tags" [value]="tag" severity="success" class="mr-1" />
-                  </span>
-                </ng-container>
-
-                <span class="text-xs -mb-1">
+                <span class="text-gray-500 text-xs">
                   Created by: {{ $activity.user }} 
                   <span *ngIf="$activity.user == app.user?.email" class="font-bold">(you)</span>
                 </span>
-                <span *ngIf="$activity.collaborator_emails?.length" class="text-xs -mt-1">
+                <span *ngIf="$activity.collaborator_emails?.length" class="text-gray-500 text-xs">
                   Collaborators: {{ $activity.collaborator_emails.join(', ') }}
                 </span>
-                <span *ngIf="$activity.translations && ($activity.translations | keyvalue)?.length" class="text-xs -mt-1">
-                  Translations: 
+
+                <span *ngIf="$activity.translations && ($activity.translations | keyvalue)?.length" class="text-xs">
+                  <span class="text-gray-500">Translated versions:</span>
                    <ng-container *ngFor="let entry of $activity.translations | keyvalue; let last = last">
                     <span (click)="$event.stopPropagation(); selectActivityById($any(entry).value)" 
                     class="text-blue-500 hover:underline cursor-pointer">
@@ -107,6 +92,26 @@
                     </span><span *ngIf="!last">, </span>
                   </ng-container>
                 </span>
+
+                <ul class="m-0 mt-1 pl-4">
+                  <li *ngFor="let item of $activity.items; let last = last" [class.mb-1]="!last">
+                    <div class="font-semibold">
+                      <span>{{ item.details.name }}</span>
+                      <span class="uppercase text-xs text-gray-400">
+                        [{{ (item.details.iso_language_code ? getLanguageName(item.details.iso_language_code) + ' ' : '') 
+                          + (item.details.language ? item.details.language + ' ' : '') 
+                          + item.type }}]
+                      </span>
+                    </div>
+                    <div class="text-xs text-gray-600">
+                      {{ item.details.description?.substring(0, 512) }}
+                      {{ item.details.description?.length > 512 ? '...' : '' }}
+                    </div>
+                    <span *ngIf="item.details.tags?.length" class="text-xs ml-4 -mt-1">
+                      <p-tag *ngFor="let tag of item.details.tags" [value]="tag" severity="success" class="mr-1" />
+                    </span>
+                  </li>
+                </ul>
               </div>
             </ng-container>
             <ng-template #activityForm>

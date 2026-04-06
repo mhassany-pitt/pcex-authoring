@@ -1,6 +1,6 @@
 ## Editor Services
 
-backend services for pcex authoring.
+backend services for worked-example authoring tool.
 
 ## Installation
 

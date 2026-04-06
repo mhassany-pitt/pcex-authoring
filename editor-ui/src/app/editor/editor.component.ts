@@ -193,7 +193,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   updateTitle() {
-    this.title.setTitle(`PCEX Authoring: ${this.model.name}`);
+    this.title.setTitle(`WEAT: ${this.model.name}`);
   }
 
   setupSourceEditor(editor: any) {

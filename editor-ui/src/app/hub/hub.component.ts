@@ -82,7 +82,7 @@ export class HubComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.title.setTitle('PCEX Hub');
+    this.title.setTitle('WEAT Hub');
 
     this.filterService.register('sourceProgLangMatch', (value: any, filters: string[]) => {
       if (!filters || !filters.length) return true;
