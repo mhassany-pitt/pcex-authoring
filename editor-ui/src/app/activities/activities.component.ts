@@ -27,6 +27,14 @@ export class ActivitiesComponent implements OnInit {
     }
   }
 
+  getItemTypeLabel(type: string) {
+    switch (type) {
+      case 'example': return 'Worked-Example';
+      case 'challenge': return 'Code-Completion Problem';
+      default: return type;
+    }
+  }
+
   _archived: boolean = localStorage.getItem('pcex-activities-archived') == 'true';
   get archived() { return this._archived; }
   set archived(bool) {
@@ -85,10 +93,20 @@ export class ActivitiesComponent implements OnInit {
     this.api.activities({ archived: this.archived }).subscribe(
       (activities: any) => {
         this.activities = activities.map((activity: any) => {
-          // activity.id + activity.items.*.id/name/description
-          activity._filter_idnamedescription = `${activity.id} ` + activity.items.map((item: any) => {
-            return `${item.item} ${item.details.name} ${item.details.description} `;
-          }).join(' ');
+          activity._filter_details = [
+            activity.id,
+            activity.name,
+            activity.user,
+            ...(activity.collaborator_emails || []),
+            ...activity.items.map((item: any) => {
+              return [
+                item.item,
+                item.details.name,
+                item.details.description,
+                ...(item.details.tags || [])
+              ].join(' ');
+            })
+          ].join(' ');
           return activity;
         });
         then?.();

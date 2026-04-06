@@ -15,7 +15,7 @@ export const routes: Routes = [
         canActivate: [AuthenticatedAuthorGuard]
     },
     {
-        path: 'activities',
+        path: 'bundles',
         loadChildren: () => import('./activities/activities.module').then(m => m.ActivitiesModule),
         canActivate: [AuthenticatedAuthorGuard]
     },

@@ -37,7 +37,7 @@ export class AppComponent {
   lastDismissed = 0;
   VERSION = 20251016;
 
-  DOCUMENTATION_URL = 'https://docs.google.com/document/d/1biWaF23Vy7tFpXQE0WDgte3_iaaWfa1MrJxxxs7bpHg';
+  DOCUMENTATION_URL = 'https://github.com/mhassany-pitt/pcex-authoring/tree/main/tutorial';
 
   constructor(public app: AppService) {
     this.lastDismissed = parseInt(localStorage.getItem('pcex-authoring.update-notice.version') || '0', 10);

@@ -5,7 +5,7 @@ export const getNavMenuBar = () => {
   return [
     { label: 'Hub', value: '/hub' },
     { label: 'Sources', value: '/sources' },
-    { label: 'Bundles', value: '/activities' },
+    { label: 'Bundles', value: '/bundles' },
     { label: 'Admin', value: '/admin' },
   ];
 };

@@ -179,10 +179,10 @@ export class EditorComponent implements OnInit, OnDestroy {
 
     this.api.sources({}).subscribe({
       next: (sources: any) => {
-        this.allSources = sources.map(({ id, name, iso_language_code }: any) => ({
-          id,
-          name: `${iso_language_code ? iso_language_code + ' ' : ''}${name}`,
-          iso: iso_language_code
+        this.allSources = sources.map((s: any) => ({
+          ...s,
+          iso: s.iso_language_code,
+          _filter_details: `${s.name} ${s.description} ${s.user} ${s.tags?.join(' ') || ''} ${s.collaborator_emails?.join(' ') || ''}`.toLowerCase()
         }));
       }
     });
@@ -1161,6 +1161,8 @@ export class EditorComponent implements OnInit, OnDestroy {
     this.confirm.confirm({
       header: 'Confirm',
       message: 'Are you sure you want to remove this link?',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-plain',
       accept: () => {
         this.translationRows.splice(index, 1);
       }
@@ -1178,5 +1180,13 @@ export class EditorComponent implements OnInit, OnDestroy {
       !usedIds.includes(s.id) &&
       s.iso === currentRow.iso
     );
+  }
+
+  getSource(id: string) {
+    return this.allSources.find(s => s.id === id);
+  }
+
+  getLanguageName(iso: string) {
+    return this.isoLanguages.find((l) => l.value === iso)?.label || iso;
   }
 }

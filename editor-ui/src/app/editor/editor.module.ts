@@ -21,6 +21,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ChipsModule } from 'primeng/chips';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { TagModule } from 'primeng/tag';
 import { registerAssemblyLanguage } from './editor.asm.support';
 
 @NgModule({
@@ -39,7 +40,7 @@ import { registerAssemblyLanguage } from './editor.asm.support';
     TabViewModule, SelectButtonModule,
     MenuModule, DropdownModule, OverlayPanelModule,
     ConfirmDialogModule, ToastModule,
-    InputGroupModule, InputGroupAddonModule,
+    InputGroupModule, InputGroupAddonModule, TagModule,
   ],
   providers: [
     ConfirmationService, MessageService,

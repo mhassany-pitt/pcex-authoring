@@ -83,7 +83,16 @@ export class SourcesComponent implements OnInit {
   reload(then?: () => void) {
     this.api.sources({ archived: this.archived }).subscribe(
       (sources: any) => {
-        this.sources = sources;
+        this.sources = sources.map((source: any) => {
+          source._filter_details = [
+            source.name,
+            source.description,
+            ...(source.tags || []),
+            source.user,
+            ...(source.collaborator_emails || [])
+          ].join(' ');
+          return source;
+        });
         then?.();
       },
       (error: any) => console.log(error)

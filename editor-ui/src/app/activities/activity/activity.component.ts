@@ -47,10 +47,17 @@ export class ActivityComponent implements OnInit {
   ngOnInit(): void {
     this.api.sources().subscribe(
       (sources: any) => {
-        this.sources_org = sources;
-        this.sources = sources.map(({ id, name, tags, language, iso_language_code }: any) => ({
-          id, name: `${iso_language_code ? this.getLanguageName(iso_language_code) + ' ' : ''}${language} | ${name}${(tags?.length > 0 ? ' [tags:' + tags.join(', ') + ']' : '')}`
+        this.sources_org = sources.map((s: any) => ({
+          ...s,
+          _filter_details: [
+            s.name,
+            s.description,
+            ...(s.tags || []),
+            s.user,
+            ...(s.collaborator_emails || [])
+          ].join(' ')
         }));
+        this.sources = this.sources_org;
       },
       (error: any) => console.log(error)
     )
@@ -69,10 +76,10 @@ export class ActivityComponent implements OnInit {
 
     this.api.activities({}).subscribe(
       (activities: any) => {
-        this.allActivities = activities.map(({ id, name, iso_language_code }: any) => ({
-          id,
-          name: `${iso_language_code ? iso_language_code + ' ' : ''}${name}`,
-          iso: iso_language_code
+        this.allActivities = activities.map((a: any) => ({
+          ...a,
+          iso: a.iso_language_code,
+          _search_details: `${a.name} ${a.user} ${a.collaborator_emails?.join(' ') || ''} ${a.items?.map((i: any) => i.details?.name).join(' ') || ''}`
         }));
       }
     );
@@ -139,6 +146,8 @@ export class ActivityComponent implements OnInit {
     this.confirm.confirm({
       header: 'Confirm',
       message: 'Are you sure you want to remove this link?',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-plain',
       accept: () => {
         this.translationRows.splice(index, 1);
       }
@@ -146,7 +155,11 @@ export class ActivityComponent implements OnInit {
   }
 
   openActivity(id: string) {
-    window.open(`${location.origin}${location.pathname}#/activities?id=${id}`, '_blank');
+    window.open(`${location.origin}${location.pathname}#/bundles?id=${id}`, '_blank');
+  }
+
+  openSource(id: string) {
+    window.open(`${location.origin}${location.pathname}#/sources?id=${id}`, '_blank');
   }
 
   getAvailableActivities(currentRow: any) {
@@ -156,5 +169,24 @@ export class ActivityComponent implements OnInit {
       !usedIds.includes(a.id) &&
       a.iso === currentRow.iso
     );
+  }
+
+  getSource(id: string) {
+    return this.sources_org.find(s => s.id === id);
+  }
+
+  getActivity(id: string) {
+    return this.allActivities.find(a => a.id === id);
+  }
+
+  getFilteredSources() {
+    if (!this.model?.iso_language_code) return [];
+    return this.sources.filter(s => s.iso_language_code === this.model.iso_language_code);
+  }
+
+  getItemTypeLabel(type: string) {
+    if (type === 'example') return 'Worked-Example';
+    if (type === 'challenge') return 'Code-Completion Problem';
+    return type;
   }
 }

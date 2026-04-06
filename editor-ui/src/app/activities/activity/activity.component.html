@@ -1,18 +1,18 @@
-<form *ngIf="model" #form="ngForm" (ngSubmit)="update()" class="flex flex-col gap-1 activity-form">
+<form *ngIf="model" #form="ngForm" (ngSubmit)="update()" class="flex flex-col gap-1 -m-3 rounded-none activity-form">
   <p-inputGroup>
-    <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 justify-end">
-      Bundle Name:
+    <p-inputGroupAddon class="text-xs border-gray-200 font-bold px-3 w-44 justify-end text-slate-500 uppercase tracking-tight">
+      Bundle Name
     </p-inputGroupAddon>
     <input type="text" name="name" pInputText [(ngModel)]="model.name" placeholder="eg: Fibonacci Sequence" required maxlength="128"
-      class="p-button-sm border-gray-200" style="padding: 0.35rem 0.5rem;" />
-    <p-inputGroupAddon class="text-xs px-2 border-gray-200 text-gray-400">
+      class="p-button-sm border-gray-200 flex-grow" style="padding: 0.35rem 0.5rem;" />
+    <p-inputGroupAddon class="text-[10px] px-2 border-gray-200 text-slate-400">
       {{ model.name?.length || 0 }} / 128
     </p-inputGroupAddon>
   </p-inputGroup>
 
   <p-inputGroup>
-    <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 h-8 justify-end">
-      Natural Language:
+    <p-inputGroupAddon class="text-xs border-gray-200 font-bold px-3 w-44 h-8 justify-end text-slate-500 uppercase tracking-tight">
+      Natural Language
     </p-inputGroupAddon>
     <p-dropdown name="iso_language_code" [options]="isoLanguages" [(ngModel)]="model.iso_language_code"
       placeholder="Select Language" [filter]="true" filterBy="label" [showClear]="true"
@@ -21,8 +21,8 @@
   </p-inputGroup>
 
   <p-inputGroup>
-    <p-inputGroupAddon class="text-sm border-gray-200 font-bold px-3 w-44 h-auto justify-end">
-      Translations:
+    <p-inputGroupAddon class="text-xs border-gray-200 font-bold px-3 w-44 h-auto justify-end text-slate-500 uppercase tracking-tight">
+      Translations
     </p-inputGroupAddon>
     <div class="flex-grow flex flex-col gap-1 p-1 border border-solid border-gray-200 border-l-0 bg-white overflow-hidden">
       <div *ngFor="let t of translationRows; let i = index" class="flex items-center gap-1">
@@ -32,9 +32,56 @@
           appendTo="body" class="border border-solid border-gray-200 rounded-sm overflow-hidden max-w-48">
         </p-dropdown>
         <p-dropdown [name]="'t-activity-'+i" [options]="getAvailableActivities(t)" [(ngModel)]="t.id"
-          placeholder="Select Bundle" [filter]="true" filterBy="name" [showClear]="true"
+          placeholder="Select Bundle" [filter]="true" filterBy="_search_details" [showClear]="true"
           optionLabel="name" optionValue="id" styleClass="flex-grow text-xs h-7 border-none py-0" 
-          appendTo="body" class="flex-grow border border-solid border-gray-200 rounded-sm overflow-hidden">
+          appendTo="body" class="flex-grow border border-solid border-gray-200 rounded-sm overflow-hidden" 
+          panelStyleClass="compact-dropdown-panel activity-panel" [panelStyle]="{ 'max-width': '50vw' }">
+          
+          <ng-template pTemplate="selectedItem">
+            <div *ngIf="t.id" class="flex items-center py-0.5 overflow-hidden text-xs font-bold text-blue-600">
+              {{ getActivity(t.id)?.name }}
+            </div>
+          </ng-template>
+
+          <ng-template let-opt pTemplate="item">
+            <div class="flex flex-col py-2 border-b border-gray-100 max-w-full overflow-hidden">
+              <div class="flex items-center flex-wrap gap-1 mb-1">
+                <span class="font-bold text-blue-700 break-words whitespace-normal leading-tight">
+                  {{ opt.name || '[name not specified]' }}
+                </span>
+                <img *ngIf="opt.linkings" class="synced-with-paws" title="Synced to PAWS" src="assets/paws-sync.png" />
+              </div>
+
+              <span class="text-gray-600 text-xs break-words whitespace-normal leading-tight mb-1">
+                Created by: {{ opt.user }} 
+                <span *ngIf="opt.user == app.user?.email" class="font-bold text-gray-800">(you)</span>
+              </span>
+              <span *ngIf="opt.collaborator_emails?.length" class="text-gray-600 text-xs break-words whitespace-normal leading-tight mb-1">
+                Collaborators: {{ opt.collaborator_emails.join(', ') }}
+              </span>
+
+              <span *ngIf="opt.translations && (opt.translations | keyvalue)?.length" class="text-xs break-words whitespace-normal leading-tight mb-1">
+                <span class="text-gray-600">Translated versions: </span>
+                 <ng-container *ngFor="let entry of opt.translations | keyvalue; let last = last">
+                  <span class="text-blue-600">
+                    {{ getLanguageName($any(entry.key)) + (last ? '' : ', ') }}
+                  </span>
+                </ng-container>
+              </span>
+
+              <ul class="m-0 mt-1 pl-4 list-none border-l-2 border-gray-200">
+                <li *ngFor="let item of opt.items; let last = last" [class.mb-1]="!last" class="break-words whitespace-normal !m-0">
+                  <div class="font-semibold text-xs leading-tight">
+                    <span class="text-gray-700">{{ item.details?.name }}</span>
+                    <span class="uppercase text-[10px] text-gray-500 font-normal ml-1">
+                      [{{ (item.details?.language ? item.details.language + ' ' : '') 
+                        + getItemTypeLabel(item.type) }}]
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </ng-template>
         </p-dropdown>
         <button *ngIf="t.id" pButton type="button" icon="pi pi-external-link" 
           class="p-button-sm p-button-plain p-button-text p-0 h-7 w-7" 
@@ -42,64 +89,127 @@
         </button>
         <button pButton type="button" icon="pi pi-trash" class="p-button-sm p-button-danger p-button-text p-0 h-7 w-7" (click)="removeTranslationRow(i)"></button>
       </div>
-      <button pButton type="button" label="Link Translation Variation" icon="pi pi-plus" class="p-button-text p-button-sm self-start text-xs p-1" (click)="addTranslationRow()"></button>
+      <button pButton type="button" label="Link Translation Variation" icon="pi pi-plus" class="p-button-text p-button-sm self-start text-xs p-1 text-blue-600" (click)="addTranslationRow()"></button>
     </div>
   </p-inputGroup>
 
-  <div *ngFor="let item of model.items; let i = index;" class="flex items-center gap-2 ml-4">
-    <span>{{ i + 1 }}.</span>
+  <p-inputGroup>
+    <p-inputGroupAddon class="text-xs border-gray-200 font-bold px-3 w-44 h-auto justify-end text-slate-500 uppercase tracking-tight">
+      Bundle Sources
+    </p-inputGroupAddon>
+    <div class="flex-grow flex flex-col border border-solid border-gray-200 border-l-0 bg-white overflow-hidden min-w-0 w-0">
+      <div *ngFor="let item of model.items; let i = index;" 
+        class="flex items-start gap-1 p-2 bg-slate-50 border border-gray-100 rounded-sm hover:border-blue-200 hover:bg-white transition-all group w-full min-w-0 shadow-sm mb-1 last:mb-0">
+        
+        <div class="flex-grow flex flex-col gap-1 min-w-0">
+          <!-- Row 1: The Source -->
+          <div class="flex items-center gap-1 w-full">
+            <p-dropdown [name]="'activity-item-' + i" [options]="getFilteredSources()" [(ngModel)]="item.item"
+              placeholder="Select source to include in bundle..." [filter]="true" filterBy="_filter_details" [showClear]="true" [required]="true"
+              optionLabel="name" optionValue="id" styleClass="w-full border-gray-200 bg-white shadow-sm h-7" appendTo="body"
+              class="block flex-grow min-w-0 h-7" [style]="{ 'height': '1.75rem', 'min-height': '1.75rem', 'display': 'flex', 'align-items': 'center' }" 
+              [panelStyle]="{ 'max-width': '50vw' }" panelStyleClass="compact-dropdown-panel">
+              
+              <ng-template pTemplate="selectedItem">
+                <div *ngIf="item.item && getSource(item.item)" class="flex items-center py-0.5 overflow-hidden max-w-full">
+                  <span class="font-bold text-blue-700 text-xs break-words whitespace-normal leading-tight">
+                    {{ getSource(item.item).language ? getSource(item.item).language + ' ' : '' }}| {{ getSource(item.item).name }}
+                  </span>
+                </div>
+              </ng-template>
 
-    <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger"
-      (click)="removeItem(item)">
-    </button>
+              <ng-template let-opt pTemplate="item">
+                <div class="flex flex-col" [ngClass]="{ 'line-through': opt.archived }">
+                  <span class="font-bold cursor-pointer text-blue-700 mb-1">
+                    {{opt.language ? opt.language + ' | ' : ''}}{{opt.name || '[name not specified]'}}
+                  </span>
+                  
+                  <span class="text-gray-500 text-xs">
+                    Created by: {{ opt.user }} 
+                    <span *ngIf="opt.user == app.user?.email" class="font-bold">(you)</span>
+                  </span>
+                  <span *ngIf="opt.collaborator_emails?.length" class="text-gray-500 text-xs">
+                    Collaborators: {{ opt.collaborator_emails.join(', ') }}
+                  </span>
+    
+                  <span *ngIf="opt.translations && (opt.translations | keyvalue)?.length" class="text-xs">
+                    <span class="text-gray-500">Translated versions: </span>
+                    <ng-container *ngFor="let entry of opt.translations | keyvalue; let last = last">
+                      <span class="text-blue-500 hover:underline cursor-pointer">
+                        {{ getLanguageName($any(entry.key)) + (last ? '' : ', ') }}
+                      </span>
+                    </ng-container>
+                  </span>
+    
+                  <span class="my-1 text-xs text-gray-500">{{opt.description}}</span>
+    
+                  <span *ngIf="opt.tags?.length" class="text-xs text-gray-500">
+                    <p-tag *ngFor="let tag of opt.tags" [value]="tag" severity="success" class="mr-1" />
+                  </span>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <button *ngIf="item.item" pButton type="button" icon="pi pi-external-link" 
+              class="p-button-sm p-button-plain p-button-text p-0 h-7 w-7 flex-shrink-0" 
+              (click)="openSource(item.item)" title="Open this source in a new tab">
+            </button>
+          </div>
 
-    <div class="flex-grow">
-      <p-dropdown [name]="'activity-item-' + i" [options]="sources" [(ngModel)]="item.item"
-        placeholder="Select a Source" [filter]="true" filterBy="name" [showClear]="true" [required]="true"
-        optionLabel="name" optionValue="id" styleClass="w-full border-gray-200" appendTo="body">
-      </p-dropdown>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Use as:</span>
+            <p-selectButton [name]="'activity-type-' + i" [ngModel]="item.type" [options]="[
+                { label: 'WORKED-EXAMPLE', value: 'example' },
+                { label: 'CODE-COMPLETION PROBLEM', value: 'challenge' }
+              ]" [(ngModel)]="item.type" required class="flex-shrink-0 type-select-large uppercase tracking-tight" >
+            </p-selectButton>
+          </div>
+        </div>
+
+        <button pButton type="button" icon="pi pi-trash" 
+          class="p-button-sm p-button-danger p-button-text p-0 h-6 w-6 mt-1 flex-shrink-0"
+          title="Remove from bundle"
+          (click)="removeItem(item)">
+        </button>
+      </div>
+      <button pButton type="button" label="ADD SOURCE TO BUNDLE" icon="pi pi-plus" class="p-button-text p-button-sm self-start text-xs p-1 text-blue-600 uppercase tracking-tight" (click)="addItem()"></button>
     </div>
+  </p-inputGroup>
 
-    <p-selectButton [name]="'activity-type-' + i" [ngModel]="item.type" [options]="[
-        { label: 'Example', value: 'example' },
-        { label: 'Challenge', value: 'challenge' },
-      ]" [(ngModel)]="item.type" required class="pi-button-sm">
-    </p-selectButton>
-  </div>
-
-  <div class="flex items-center gap-2 ml-20">
-    <button pButton type="button" label="Add Source" icon="pi pi-plus" class="p-button-sm p-button-outlined"
-      (click)="addItem()"></button>
-
+  <div class="flex items-center gap-2 mt-1">
     <div class="flex-grow"></div>
 
     <p-button type="button" title="Collaborators" icon="pi pi-users" severity="help" [outlined]="true" size="small"
       (click)="_v['collaborators'] = true" class="-my-2">
     </p-button>
-    <button pButton type="button" label="Cancel" icon="pi pi-chevron-left"
-      class="p-button-sm p-button-secondary p-button-outlined" (click)="completed.emit()">
+    <button pButton type="button" label="CANCEL" icon="pi pi-chevron-left"
+      class="p-button-sm p-button-secondary p-button-outlined uppercase tracking-tight" (click)="completed.emit()">
     </button>
-    <button pButton type="submit" label="Save" icon="pi pi-check" class="p-button-sm"
+    <button pButton type="submit" label="SAVE" icon="pi pi-check" class="p-button-sm p-button-success uppercase tracking-tight"
       [disabled]="form.invalid || model.items.length == 0 || !validate_pawssync_conflict()">
     </button>
   </div>
 
-  <div *ngIf="app.paws_sync_allowed" class="p-2 bg-gray-200 text-sm">
-    1. Changes sync to the <img class="synced-with-paws" /> PAWS User Modeling Server.
-    <br />
-    2. Each bundle can include <span class="text-orange-800 font-bold underline">ONLY ONE</span>
-    example and any number of challenges.
-    <br />
-    3. One source <span class="text-orange-800 font-bold underline">CAN'T</span>
-    be used both as example and challenge in the same bundle.
+  <div *ngIf="app.paws_sync_allowed" class="p-3 bg-amber-50 border border-amber-100 rounded-sm text-xs leading-relaxed text-slate-600">
+    <div class="flex items-center gap-2">
+      <span class="bg-amber-100 text-amber-800 font-bold px-1 rounded text-[10px]">1</span>
+      <span>Changes sync to the <img class="synced-with-paws" /> PAWS User Modeling Server.</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="bg-amber-100 text-amber-800 font-bold px-1 rounded text-[10px]">2</span>
+      <span>Each bundle can include <span class="text-amber-800 font-bold underline">ONLY ONE</span> example and any number of challenges.</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="bg-amber-100 text-amber-800 font-bold px-1 rounded text-[10px]">3</span>
+      <span>One source <span class="text-amber-700 font-bold underline">CAN'T</span> be used both as example and challenge in the same bundle.</span>
+    </div>
   </div>
 </form>
 
-<p-dialog header="Collaborators" [(visible)]="_v['collaborators']" [modal]="true"
+<p-dialog header="COLLABORATORS" [(visible)]="_v['collaborators']" [modal]="true"
   [style]="{ width: '75vw', 'max-width': '500px' }">
   <div class="flex flex-col gap-2">
     <p-chips *ngIf="model" [(ngModel)]="model.collaborator_emails" separator="," placeholder="user@company.com, ..."
       class="p-chips-sm"></p-chips>
-    <span class="text-xs text-gray-400">Type collaborator's email and press enter to add.</span>
+    <span class="text-[11px] text-slate-400 mt-1 tracking-tight">Type collaborator's email and press enter to add.</span>
   </div>
 </p-dialog>

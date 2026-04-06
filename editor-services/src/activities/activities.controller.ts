@@ -16,7 +16,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { syncToPAWS } from './paws-sync';
 import { UsersService } from 'src/users/users.service';
 
-@Controller('activities')
+@Controller('bundles')
 export class ActivitiesController {
 
   constructor(

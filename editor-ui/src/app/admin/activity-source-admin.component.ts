@@ -817,7 +817,7 @@ export class ActivitySourceAdminComponent {
       : getPreviewLink(
           '?load=' +
             encodeURIComponent(
-              `${environment.apiUrl}/activities/${row.id}/preview?type=activity&_t=${new Date().getTime()}`,
+              `${environment.apiUrl}/bundles/${row.id}/preview?type=activity&_t=${new Date().getTime()}`,
             ),
         );
     window.open(href, '_blank', 'noopener');

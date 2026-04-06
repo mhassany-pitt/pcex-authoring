@@ -2,21 +2,22 @@
   <app-navbar />
 
   <div class="container mx-auto max-w-5xl mt-24 mb-16 border shadow-md z-0">
-    <p-table #table [value]="activities" [globalFilterFields]="['name', '_filter_idnamedescription']"
+    <p-table #table [value]="activities" [globalFilterFields]="['_filter_details']"
      [scrollable]="true" [scrollHeight]="'calc(100vh - 11.5rem)'">
       <ng-template pTemplate="caption">
         <div class="flex items-center gap-2">
-          <p-checkbox name="archived" label="Include Archived Bundles" [binary]="true" [(ngModel)]="archived"
+          <p-checkbox name="archived" label="Include Archived Bundles" class="uppercase" [binary]="true" [(ngModel)]="archived"
             (ngModelChange)="reload()"></p-checkbox>
 
           <span class="flex-grow"></span>
 
-          <button pButton type="button" label="New Bundle" icon="pi pi-plus" class="p-button-sm"
+          <button pButton type="button" label="New Bundle" icon="pi pi-plus" class="p-button-sm uppercase"
             (click)="create = true"></button>
 
           <span class="p-input-icon-right">
             <i class="pi pi-search"></i>
-            <input pInputText type="text" (input)="filter(table, $event)" placeholder="Filter" class="p-inputtext-sm" />
+            <input pInputText type="text" (input)="filter(table, $event)" 
+              placeholder="Filter ..." class="p-inputtext-sm uppercase" />
           </span>
         </div>
         <ng-container *ngIf="create">
@@ -29,8 +30,8 @@
       </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th class="w-16" style="text-align: center;">Actions</th>
-          <th>Name</th>
+          <th class="w-16 uppercase" style="text-align: center;">Actions</th>
+          <th class="uppercase">Bundle Name</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-$activity let-rowIndex="rowIndex">
@@ -101,7 +102,7 @@
                       <span class="uppercase text-xs text-gray-400">
                         [{{ (item.details.iso_language_code ? getLanguageName(item.details.iso_language_code) + ' ' : '') 
                           + (item.details.language ? item.details.language + ' ' : '') 
-                          + item.type }}]
+                          + getItemTypeLabel(item.type) }}]
                       </span>
                     </div>
                     

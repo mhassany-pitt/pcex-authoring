@@ -29,37 +29,37 @@ export class ActivitiesService {
   }
 
   activities({ archived, allUsers }: any) {
-    return this.http.get(`${environment.apiUrl}/activities${this.buildQueryString({ archived, allUsers })}`, { withCredentials: true });
+    return this.http.get(`${environment.apiUrl}/bundles${this.buildQueryString({ archived, allUsers })}`, { withCredentials: true });
   }
 
   create(activity: any) {
-    return this.http.post(`${environment.apiUrl}/activities`, activity, { withCredentials: true });
+    return this.http.post(`${environment.apiUrl}/bundles`, activity, { withCredentials: true });
   }
 
   read(id: string, { allUsers }: any = {}) {
-    return this.http.get(`${environment.apiUrl}/activities/${id}${this.buildQueryString({ allUsers })}`, { withCredentials: true });
+    return this.http.get(`${environment.apiUrl}/bundles/${id}${this.buildQueryString({ allUsers })}`, { withCredentials: true });
   }
 
   update(activity: any, { allUsers }: any = {}) {
-    return this.http.patch(`${environment.apiUrl}/activities/${activity.id}${this.buildQueryString({ allUsers })}`, activity, { withCredentials: true });
+    return this.http.patch(`${environment.apiUrl}/bundles/${activity.id}${this.buildQueryString({ allUsers })}`, activity, { withCredentials: true });
   }
 
   genPreviewJson(activity: any, type: string) {
-    return this.http.patch(`${environment.apiUrl}/activities/${activity.id}/preview?type=${type}`, activity, { withCredentials: true });
+    return this.http.patch(`${environment.apiUrl}/bundles/${activity.id}/preview?type=${type}`, activity, { withCredentials: true });
   }
 
   sync(id: string, { allUsers }: any = {}) {
-    return this.http.post(`${environment.apiUrl}/activities/${id}/sync${this.buildQueryString({ allUsers })}`, {}, { withCredentials: true });
+    return this.http.post(`${environment.apiUrl}/bundles/${id}/sync${this.buildQueryString({ allUsers })}`, {}, { withCredentials: true });
   }
 
   previewJsonLink(activity: any, type: string) {
     return this.sanitizer.bypassSecurityTrustResourceUrl(getPreviewLink(
-      '?load=' + encodeURIComponent(`${environment.apiUrl}/activities/${activity.id}/preview?type=${type}&_t=${new Date().getTime()}`)
+      '?load=' + encodeURIComponent(`${environment.apiUrl}/bundles/${activity.id}/preview?type=${type}&_t=${new Date().getTime()}`)
     ));
   }
 
   download(activity: any) {
-    this.http.get(`${environment.apiUrl}/activities/${activity.id}/download`, {
+    this.http.get(`${environment.apiUrl}/bundles/${activity.id}/download`, {
       responseType: 'blob',
       withCredentials: true
     }).subscribe((blob: Blob) => {
@@ -73,6 +73,6 @@ export class ActivitiesService {
   }
 
   clone(activity: any) {
-    return this.http.post(`${environment.apiUrl}/activities/${activity.id}/clone`, {}, { withCredentials: true });
+    return this.http.post(`${environment.apiUrl}/bundles/${activity.id}/clone`, {}, { withCredentials: true });
   }
 }

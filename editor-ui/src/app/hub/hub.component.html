@@ -5,7 +5,7 @@
     <!-- Hub Header -->
     <div class="flex flex-col gap-1">
       <div class="flex items-baseline gap-2">
-        <h1 class="text-2xl font-black text-slate-800 m-0">Worked-Example Authoring Tool</h1>
+        <h1 class="text-2xl font-black text-slate-800 m-0 uppercase">Worked-Example Authoring Tool</h1>
         <span class="text-slate-500 font-bold text-lg">({{ activities.length }} Bundles)</span>
       </div>
       <p class="text-slate-400 text-sm max-w-2xl leading-relaxed my-2">
@@ -43,7 +43,7 @@
               <button type="button"
                 class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
                 (click)="toggleQuickFilterSection('progLang')">
-                Programming Languages:
+                <span class="uppercase">Programming Languages:</span>
                 <i class="pi" [class.pi-angle-down]="quickFilterSections['progLang']"
                   [class.pi-angle-right]="!quickFilterSections['progLang']"></i>
               </button>
@@ -66,7 +66,7 @@
               <button type="button"
                 class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
                 (click)="toggleQuickFilterSection('actLang')">
-                Natural Languages:
+                <span class="uppercase">Natural Languages:</span>
                 <i class="pi" [class.pi-angle-down]="quickFilterSections['actLang']"
                   [class.pi-angle-right]="!quickFilterSections['actLang']"></i>
               </button>
@@ -89,7 +89,7 @@
               <button type="button"
                 class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
                 (click)="toggleQuickFilterSection('author')">
-                Authors:
+                <span class="uppercase">Authors:</span>
                 <i class="pi" [class.pi-angle-down]="quickFilterSections['author']"
                   [class.pi-angle-right]="!quickFilterSections['author']"></i>
               </button>
@@ -130,7 +130,7 @@
                         class="integration-options" (onChange)="selectIntegrationLink(rowEl)">
                       </p-selectButton>
                       <button *ngIf="isLoggedIn" pButton type="button" icon="pi pi-clone" label="Clone"
-                        class="p-button-outlined p-button-sm p-button-plain p-0 text-xs"
+                        class="p-button-outlined p-button-sm p-button-plain p-0 text-xs uppercase"
                         style="padding: 0.0625rem 0.25rem;" (click)="selectActivity2Clone(activity)">
                       </button>
                     </div>
@@ -168,7 +168,7 @@
                           <span class="uppercase text-gray-400">
                             [{{ (item.details.iso_language_code ? getLanguageName(item.details.iso_language_code) + ' ' : '') 
                               + (item.details.language ? item.details.language + ' ' : '') 
-                              + item.type }}]
+                              + getItemTypeLabel(item.type) }}]
                           </span>
                         </div>
                         <div class="text-gray-600 break-words my-1">
@@ -207,10 +207,10 @@
 </p-dialog>
 
 <p-dialog *ngIf="cloningActivity" [(visible)]="cloningActivity" [modal]="true"
-  [header]="'Clone: ' + cloningActivity.name" [style]="{'max-width': '60vw'}" (onHide)="cloningActivity = null"
+  [header]="'CLONE: ' + cloningActivity.name" [style]="{'max-width': '60vw'}" (onHide)="cloningActivity = null"
   [closable]="!cloning" [closeOnEscape]="false">
   <form #form="ngForm" class="flex flex-col gap-2" (ngSubmit)="submitClone()">
-    <input type="text" name="activity-name" pInputText [(ngModel)]="cloningActivity.name" placeholder="*Bundle Name"
+    <input type="text" name="activity-name" pInputText [(ngModel)]="cloningActivity.name" placeholder="*BUNDLE NAME"
       class="text-xl" required />
     <span class="text-xs text-gray-600">
       Created by: {{ cloningActivity.author.fullname }} ({{ cloningActivity.author.email }})
@@ -223,7 +223,7 @@
           <p-checkbox [(ngModel)]="item.cloneItem" [binary]="true" [name]="'clone-source-' + item.id" />
           <input type="text" [name]="'source-name' + item.id" pInputText [(ngModel)]="item.details.name"
             placeholder="*Source Name" class="flex-grow" required />
-          <span class="uppercase text-gray-400">[{{ item.details.language || '' }} {{ item.type }}]</span>
+          <span class="uppercase text-gray-400">[{{ item.details.language || '' }} {{ getItemTypeLabel(item.type) }}]</span>
         </div>
         <div class="text-xs mt-1 break-words">{{ item.details.description }}</div>
       </li>
@@ -246,10 +246,10 @@
       <b>Note:</b> Depending on the number of challenges in the bundle, cloning may take a few seconds or minutes.
     </span>
     <div class="flex items-center justify-end">
-      <button pButton label="Cancel" icon="pi pi-chevron-left" class="p-button-sm p-button-secondary p-button-text"
+      <button pButton label="Cancel" icon="pi pi-chevron-left" class="p-button-sm p-button-secondary p-button-text uppercase"
         (click)="cloningActivity = null;" [disabled]="cloning">
       </button>
-      <button pButton type="submit" [label]="cloning ? 'Cloning' : 'Clone'" icon="pi pi-clone" class="p-button-sm"
+      <button pButton type="submit" [label]="cloning ? 'Cloning' : 'Clone'" icon="pi pi-clone" class="p-button-sm uppercase"
         [loading]="cloning">
       </button>
     </div>

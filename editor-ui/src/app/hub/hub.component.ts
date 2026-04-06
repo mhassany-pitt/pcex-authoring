@@ -25,7 +25,7 @@ export class HubComponent implements OnInit {
   searchTimeout: any;
 
   integrationToggles: any = {};
-  integrationOptions = [{ label: 'View link', value: 'html' }];
+  integrationOptions = [{ label: 'VIEW LINK', value: 'html' }];
 
   cloningActivity: any = null;
   cloning: boolean = false;
@@ -64,6 +64,14 @@ export class HubComponent implements OnInit {
       return this.languageNames?.of(code) || code;
     } catch (e) {
       return isoLanguageCode;
+    }
+  }
+
+  getItemTypeLabel(type: string) {
+    switch (type) {
+      case 'example': return 'Worked-Example';
+      case 'challenge': return 'Code-Completion Problem';
+      default: return type;
     }
   }
 

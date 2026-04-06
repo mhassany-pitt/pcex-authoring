@@ -52,12 +52,12 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void { 
     this.userMenuItems = [
       {
-        label: 'Administration',
+        label: 'ADMINISTRATION',
         icon: 'pi pi-cog',
         command: () => this.router.navigate(['/admin'])
       },
       {
-        label: 'Log out',
+        label: 'LOG OUT',
         icon: 'pi pi-sign-out',
         styleClass: 'logout-item',
         command: () => this.logout()
