@@ -256,9 +256,10 @@ export class HubComponent implements OnInit {
             activity.iso_language_code_name = actLang;
             activity.author_name = activity.author?.fullname || 'Unknown';
             
-            activity._filter_idnamedescription = `${activity.id} ${activity.name} ${actLang} ` + activity.items.map((item: any) => {
+            activity._filter_idnamedescription = `${activity.id} ${activity.name} ${actLang} ${activity.author_name} ${activity.author?.email || ''} ` + activity.items.map((item: any) => {
               const itemLang = item.details.iso_language_code ? this.getLanguageName(item.details.iso_language_code) : 'Unknown';
-              return `${item.item} ${item.details.name} ${item.details.description} ${itemLang} `;
+              const tags = item.details.tags?.join(' ') || '';
+              return `${item.item} ${item.details.name} ${item.details.description} ${itemLang} ${tags} `;
             }).join(' ');
             return activity;
           });

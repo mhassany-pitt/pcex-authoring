@@ -2,10 +2,11 @@
   <app-navbar />
 
   <div class="container mx-auto max-w-5xl mt-24 mb-16 border shadow-md z-0">
-    <p-table #table [value]="sources" [globalFilterFields]="['name','description']">
+    <p-table #table [value]="sources" [globalFilterFields]="['name','description']"
+     [scrollable]="true" [scrollHeight]="'calc(100vh - 11.5rem)'">
       <ng-template pTemplate="caption">
         <div class="flex items-center gap-2">
-          <p-checkbox name="archived" label="Include Archives" [binary]="true" [(ngModel)]="archived"
+          <p-checkbox name="archived" label="Include Archived Sources" [binary]="true" [(ngModel)]="archived"
             (ngModelChange)="reload()"></p-checkbox>
 
           <span class="flex-grow"></span>
@@ -26,7 +27,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-$source>
-        <tr>
+        <tr [id]="$source.id" [class.highlighted-row]="$source.id === highlightedId">
           <td>
             <div class="flex flex-col items-center justify-center gap-1">
               <button pButton type="button" icon="pi pi-briefcase"
@@ -46,29 +47,34 @@
             </div>
           </td>
           <td>
-            <div class="flex flex-col gap-2" [ngClass]="{ 'line-through': $source.archived }">
-              <span [routerLink]="['/editor', $source.id]" class="font-bold cursor-pointer text-blue-700">
+            <div class="flex flex-col" [ngClass]="{ 'line-through': $source.archived }">
+              <span [routerLink]="['/editor', $source.id]" class="font-bold cursor-pointer text-blue-700 mb-1">
                 {{$source.iso_language_code ? getLanguageName($source.iso_language_code) + ' ' : ''}}
                 {{$source.language ? $source.language + ' | ' : ''}}{{$source.name || '[name not specified]'}}
               </span>
-              <span class="text-xs ml-2">{{$source.description}}</span>
-              <span *ngIf="$source.tags?.length" class="text-xs ml-2">
-                <p-tag *ngFor="let tag of $source.tags" [value]="tag" severity="success" class="mr-1" />
-              </span>
-              <span class="text-xs -mb-1">
+              
+              <span class="text-gray-500 text-xs">
                 Created by: {{ $source.user }} 
                 <span *ngIf="$source.user == app.user?.email" class="font-bold">(you)</span>
               </span>
-              <span *ngIf="$source.collaborator_emails?.length" class="text-xs -mt-1">
+              <span *ngIf="$source.collaborator_emails?.length" class="text-gray-500 text-xs">
                 Collaborators: {{ $source.collaborator_emails.join(', ') }}
               </span>
-              <span *ngIf="$source.translations && ($source.translations | keyvalue)?.length" class="text-xs -mt-1">
-                Translations: 
+
+              <span *ngIf="$source.translations && ($source.translations | keyvalue)?.length" class="text-xs">
+                <span class="text-gray-500">Translated versions: </span>
                 <ng-container *ngFor="let entry of $source.translations | keyvalue; let last = last">
-                  <a [routerLink]="['/editor', entry.value]" 
-                    class="text-blue-500 no-underline hover:underline">{{ getLanguageName($any(entry.key)) }}</a>
-                  <span *ngIf="!last">, </span>
+                  <span (click)="highlightAndScroll($any(entry).value)" 
+                    class="text-blue-500 hover:underline cursor-pointer">
+                    {{ getLanguageName($any(entry.key)) + (last ? '' : ', ') }}
+                  </span>
                 </ng-container>
+              </span>
+
+              <span class="my-1 text-xs text-gray-500">{{$source.description}}</span>
+
+              <span *ngIf="$source.tags?.length" class="text-xs text-gray-500">
+                <p-tag *ngFor="let tag of $source.tags" [value]="tag" severity="success" class="mr-1" />
               </span>
             </div>
           </td>

@@ -18,29 +18,6 @@ import { MenuModule } from 'primeng/menu';
       display: block;
       width: 100%;
     }
-    :host ::ng-deep .user-menu .p-menu {
-      border-radius: 0.25rem;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-      margin-top: 0.5rem;
-    }
-    :host ::ng-deep .user-menu .p-menuitem-link .p-menuitem-text {
-      font-weight: 700;
-      font-size: 0.875rem;
-    }
-    :host ::ng-deep .user-menu .logout-item .p-menuitem-link span,
-    :host ::ng-deep .user-menu .logout-item .p-menuitem-link i,
-    :host ::ng-deep .user-menu .logout-item .p-menuitem-link .p-menuitem-text,
-    :host ::ng-deep .user-menu .logout-item .p-menuitem-link .p-menuitem-icon {
-      color: #ef4444 !important;
-    }
-    :host ::ng-deep .user-menu .logout-item .p-menuitem-link:hover {
-      background: #fef2f2 !important;
-    }
-    :host ::ng-deep .user-menu .logout-item .p-menuitem-link:hover span,
-    :host ::ng-deep .user-menu .logout-item .p-menuitem-link:hover i {
-      color: #dc2626 !important;
-    }
   `]
 })
 export class NavbarComponent implements OnInit {
@@ -92,9 +69,10 @@ export class NavbarComponent implements OnInit {
     switch (label) {
       case 'Hub': return 'pi-home';
       case 'Sources': return 'pi-file';
-      case 'Activities': return 'pi-list-check';
+      case 'Bundles': return 'pi-box';
       case 'Admin': return 'pi-cog';
       default: return 'pi-list';
     }
   }
 }
+ 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivitiesService } from '../activities.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '../app.service';
 import { getNavMenuBar } from '../utilities';
 import { ConfirmationService } from 'primeng/api';
@@ -40,15 +40,40 @@ export class ActivitiesComponent implements OnInit {
   previewLink: any;
   showPreview = false;
 
+  highlightedId: string | null = null;
+  highlightTimeout: any;
+
   constructor(
     public api: ActivitiesService,
     public router: Router,
+    public route: ActivatedRoute,
     public app: AppService,
     private confirm: ConfirmationService,
   ) { }
 
   ngOnInit(): void {
-    this.reload();
+    this.reload(() => {
+      this.route.queryParams.subscribe(params => {
+        const id = params['id'];
+        if (id) {
+          this.highlightAndScroll(id);
+        }
+      });
+    });
+  }
+
+  highlightAndScroll(id: string) {
+    this.highlightedId = id;
+    if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 500);
+    this.highlightTimeout = setTimeout(() => {
+      this.highlightedId = null;
+    }, 3000);
   }
 
   filter(table: any, $event: any) {
@@ -158,4 +183,3 @@ export class ActivitiesComponent implements OnInit {
     this.activity = this.activities.find((a: any) => a.id == id);
   }
 }
-

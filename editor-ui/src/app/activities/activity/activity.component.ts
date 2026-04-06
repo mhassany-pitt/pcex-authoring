@@ -146,7 +146,7 @@ export class ActivityComponent implements OnInit {
   }
 
   openActivity(id: string) {
-    window.open(`${location.origin}${location.pathname}#/activities/activity/${id}`, '_blank');
+    window.open(`${location.origin}${location.pathname}#/activities?id=${id}`, '_blank');
   }
 
   getAvailableActivities(currentRow: any) {

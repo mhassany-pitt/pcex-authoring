@@ -2,15 +2,16 @@
   <app-navbar />
 
   <div class="container mx-auto max-w-5xl mt-24 mb-16 border shadow-md z-0">
-    <p-table #table [value]="activities" [globalFilterFields]="['name', '_filter_idnamedescription']">
+    <p-table #table [value]="activities" [globalFilterFields]="['name', '_filter_idnamedescription']"
+     [scrollable]="true" [scrollHeight]="'calc(100vh - 11.5rem)'">
       <ng-template pTemplate="caption">
         <div class="flex items-center gap-2">
-          <p-checkbox name="archived" label="Include Archives" [binary]="true" [(ngModel)]="archived"
+          <p-checkbox name="archived" label="Include Archived Bundles" [binary]="true" [(ngModel)]="archived"
             (ngModelChange)="reload()"></p-checkbox>
 
           <span class="flex-grow"></span>
 
-          <button pButton type="button" label="New Activity" icon="pi pi-plus" class="p-button-sm"
+          <button pButton type="button" label="New Bundle" icon="pi pi-plus" class="p-button-sm"
             (click)="create = true"></button>
 
           <span class="p-input-icon-right">
@@ -33,11 +34,11 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-$activity let-rowIndex="rowIndex">
-        <tr>
+        <tr [id]="$activity.id" [class.highlighted-row]="$activity.id === highlightedId">
           <td>
             <div class="flex flex-col items-center justify-center gap-1">
               <button pButton type="button" icon="pi pi-briefcase"
-                [title]="$activity.archived ? 'Unarchive activity' : 'Archive activity'"
+                [title]="$activity.archived ? 'Unarchive bundle' : 'Archive bundle'"
                 class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': $activity.archived }"
                 (click)="toggleArchive($activity)">
               </button>
@@ -66,7 +67,7 @@
             <ng-container *ngIf="activity != $activity; else activityForm">
               <div class="flex flex-col" [ngClass]="{ 'line-through': $activity.archived }">
                 <div class="flex items-center gap-1 mb-1" (click)="activity = $activity">
-                  <span class="font-bold text-blue-700 cursor-pointer" (click)="preview($activity)">
+                  <span class="font-bold text-blue-700 cursor-pointer">
                     {{ $activity.name || '[name not specified]' }}
                   </span>
                   <span *ngIf="$activity.iso_language_code" class="uppercase text-xs text-gray-400">
@@ -84,12 +85,12 @@
                 </span>
 
                 <span *ngIf="$activity.translations && ($activity.translations | keyvalue)?.length" class="text-xs">
-                  <span class="text-gray-500">Translated versions:</span>
+                  <span class="text-gray-500">Translated versions: </span>
                    <ng-container *ngFor="let entry of $activity.translations | keyvalue; let last = last">
-                    <span (click)="$event.stopPropagation(); selectActivityById($any(entry).value)" 
+                    <span (click)="highlightAndScroll($any(entry).value)" 
                     class="text-blue-500 hover:underline cursor-pointer">
-                      {{ getLanguageName($any(entry).key) }}
-                    </span><span *ngIf="!last">, </span>
+                      {{ getLanguageName($any(entry).key) + (last ? '' : ', ') }}
+                    </span>
                   </ng-container>
                 </span>
 
@@ -103,11 +104,13 @@
                           + item.type }}]
                       </span>
                     </div>
-                    <div class="text-xs text-gray-600">
+                    
+                    <div class="text-xs text-gray-600 my-1">
                       {{ item.details.description?.substring(0, 512) }}
                       {{ item.details.description?.length > 512 ? '...' : '' }}
                     </div>
-                    <span *ngIf="item.details.tags?.length" class="text-xs ml-4 -mt-1">
+
+                    <span *ngIf="item.details.tags?.length" class="text-xs">
                       <p-tag *ngFor="let tag of item.details.tags" [value]="tag" severity="success" class="mr-1" />
                     </span>
                   </li>

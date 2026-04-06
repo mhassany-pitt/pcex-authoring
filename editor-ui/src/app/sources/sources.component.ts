@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { SourcesService } from '../sources.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitiesService } from '../activities.service';
 import { AppService } from '../app.service';
 import { getNavMenuBar } from '../utilities';
@@ -39,25 +39,53 @@ export class SourcesComponent implements OnInit {
   previewLink: any;
   showPreview = false;
 
+  highlightedId: string | null = null;
+  highlightTimeout: any;
+
   constructor(
     public api: SourcesService,
     private activities: ActivitiesService,
     public router: Router,
+    public route: ActivatedRoute,
     public app: AppService,
     private confirm: ConfirmationService,
   ) { }
 
   ngOnInit(): void {
-    this.reload();
+    this.reload(() => {
+      this.route.queryParams.subscribe(params => {
+        const id = params['id'];
+        if (id) {
+          this.highlightAndScroll(id);
+        }
+      });
+    });
+  }
+
+  highlightAndScroll(id: string) {
+    this.highlightedId = id;
+    if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 500);
+    this.highlightTimeout = setTimeout(() => {
+      this.highlightedId = null;
+    }, 3000);
   }
 
   filter(table: any, $event: any) {
     table.filterGlobal($event.target.value, 'contains');
   }
 
-  reload() {
+  reload(then?: () => void) {
     this.api.sources({ archived: this.archived }).subscribe(
-      (sources: any) => this.sources = sources,
+      (sources: any) => {
+        this.sources = sources;
+        then?.();
+      },
       (error: any) => console.log(error)
     )
   }
