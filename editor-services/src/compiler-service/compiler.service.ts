@@ -13,7 +13,7 @@ import {
   writeFileSync,
 } from 'fs-extra';
 import { v4 as uuid4 } from 'uuid';
-import { exec } from 'shelljs';
+import { execSync } from 'child_process';
 import { SourcesService } from '../sources-service/sources.service';
 import { ActivitiesService } from '../activities-service/activities.service';
 import { create } from 'archiver';
@@ -201,22 +201,26 @@ export class CompilerService {
       const outputs = `${workspace}/outputs/`;
       if (existsSync(outputs)) rmSync(outputs, { recursive: true });
 
-      const PcExParserRunner = exec(
-        `cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
-          `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.PcExParserRunner "../${inputs}" "../${outputs}" "../${extrafiles}"`,
-      );
+      const compilerWorkspace = this.config.get('COMPILER_WORKSPACE');
+      const compilerJarName = this.config.get('COMPILER_JAR_NAME');
 
-      resp.PcExParserRunner = {
-        code: PcExParserRunner.code,
-        stdout: PcExParserRunner.stdout,
-        stderr: PcExParserRunner.stderr,
-      };
-      if (PcExParserRunner.code !== 0) {
+      let pcExStdout = '';
+      let pcExStderr = '';
+      try {
+        pcExStdout = execSync(
+          `java -cp ${compilerJarName} application.PcExParserRunner "../${inputs}" "../${outputs}" "../${extrafiles}"`,
+          { cwd: compilerWorkspace, encoding: 'utf8' },
+        );
+      } catch (execErr: any) {
+        pcExStderr = execErr?.stderr || execErr?.message || String(execErr);
+        resp.PcExParserRunner = { code: execErr?.status ?? 1, stdout: execErr?.stdout || '', stderr: pcExStderr };
         throw this.createCompileError(
           `PcExParserRunner failed for activity "${activity.name}" (${activity.id}).`,
-          this.formatError(PcExParserRunner),
+          this.formatError({ message: pcExStderr, stdout: execErr?.stdout }),
         );
       }
+
+      resp.PcExParserRunner = { code: 0, stdout: pcExStdout, stderr: '' };
       if (!existsSync(outputs) || readdirSync(outputs).length < 1) {
         throw this.createCompileError(
           `Preview generation produced no output for activity "${activity.name}" (${activity.id}).`,
@@ -227,10 +231,23 @@ export class CompilerService {
       const queries = `${workspace}/queries/`;
       if (existsSync(queries)) rmSync(queries, { recursive: true });
 
-      const UMActivityQueryGenerator = exec(
-        `cd ${await this.config.get('COMPILER_WORKSPACE')} && ` +
-          `java -cp ${await this.config.get('COMPILER_JAR_NAME')} application.UMActivityQueryGenerator "../${outputs}" "../${queries}"`,
-      );
+      let umStdout = '';
+      let umStderr = '';
+      try {
+        umStdout = execSync(
+          `java -cp ${compilerJarName} application.UMActivityQueryGenerator "../${outputs}" "../${queries}"`,
+          { cwd: compilerWorkspace, encoding: 'utf8' },
+        );
+      } catch (execErr: any) {
+        umStderr = execErr?.stderr || execErr?.message || String(execErr);
+        resp.UMActivityQueryGenerator = { code: execErr?.status ?? 1, stdout: execErr?.stdout || '', stderr: umStderr };
+        throw this.createCompileError(
+          `UMActivityQueryGenerator failed for activity "${activity.name}" (${activity.id}).`,
+          this.formatError({ message: umStderr, stdout: execErr?.stdout }),
+        );
+      }
+
+      resp.UMActivityQueryGenerator = { code: 0, stdout: umStdout, stderr: '' };
 
       // temporary append .sql extension to all files
       readdirSync(queries).forEach((dir) =>
@@ -243,18 +260,6 @@ export class CompilerService {
             ),
           ),
       );
-
-      resp.UMActivityQueryGenerator = {
-        code: UMActivityQueryGenerator.code,
-        stdout: UMActivityQueryGenerator.stdout,
-        stderr: UMActivityQueryGenerator.stderr,
-      };
-      if (UMActivityQueryGenerator.code !== 0) {
-        throw this.createCompileError(
-          `UMActivityQueryGenerator failed for activity "${activity.name}" (${activity.id}).`,
-          this.formatError(UMActivityQueryGenerator),
-        );
-      }
       if (!existsSync(queries)) {
         throw this.createCompileError(
           `Query generation produced no query directory for activity "${activity.name}" (${activity.id}).`,
