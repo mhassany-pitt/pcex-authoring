@@ -501,7 +501,7 @@ const sourceToCatalogItem = async (source: any, activity: any, index: number, ty
     "tags": source.tags || [],
     "identity": {
         "id": cleanName(`${slugify(source.name, { separator: '_' })}__${activity.id}-${source.id}-${index}`),
-        "type": type == 'example' ? 'CodeConstruction' : 'CodeCompletion',
+        "type": type == 'example' ? 'CodeConstruction' : 'CodeCompletionProblem',
         "title": source.name,
     },
     "links": { "demo_url": prepURL(activity, 'html') + `?index=${index}` },
