@@ -12,6 +12,7 @@ async function runWorkerThread() {
         parentPort.postMessage(result);
     } finally {
         await app.close().catch(() => undefined);
+        process.exit(0);
     }
 }
 
