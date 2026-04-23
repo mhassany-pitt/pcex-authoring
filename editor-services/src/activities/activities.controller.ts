@@ -209,10 +209,19 @@ export class ActivitiesController {
   async genPreview(@Req() req: Request, @Res() res: Response, @Param('id') id: string, @Body() activity: any) {
     // await this.authorizePreview(req, id, type);
     // await this.compiler.compile({ ...activity, id });
+    console.log('[activities controller] starting preview worker', {
+      id,
+      name: activity?.name,
+      user: this.getUserEmail(req),
+    });
     const worker = new Worker(`${__dirname}/compile.js`, {
       workerData: { ...activity, id },
     });
+    worker.on('online', () => {
+      console.log('[activities controller] preview worker online', { id });
+    });
     worker.on('message', (result) => {
+      console.log('[activities controller] preview worker finished', { id });
       console.log(result);
       const resp: any = {};
       if (this.isAppAdmin(req)) {
@@ -225,12 +234,16 @@ export class ActivitiesController {
       res.json(resp);
     });
     worker.on('error', (error) => {
+      console.error('[activities controller] preview worker error', { id, error: error.message });
       console.error(error);
       const resp: any = { error: 'Failed to generate preview JSON.' };
       if (this.isAppAdmin(req)) {
         resp.error_log = this.getDetailedErrorLog(error);
       }
       res.status(500).json(resp);
+    });
+    worker.on('exit', (code) => {
+      console.log('[activities controller] preview worker exited', { id, code });
     });
   }
 

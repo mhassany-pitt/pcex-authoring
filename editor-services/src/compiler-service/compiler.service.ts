@@ -13,7 +13,7 @@ import {
   writeFileSync,
 } from 'fs-extra';
 import { v4 as uuid4 } from 'uuid';
-import { execSync } from 'child_process';
+import { spawn } from 'child_process';
 import { SourcesService } from '../sources-service/sources.service';
 import { ActivitiesService } from '../activities-service/activities.service';
 import { create } from 'archiver';
@@ -22,6 +22,8 @@ import { renameSync } from 'fs';
 
 @Injectable()
 export class CompilerService {
+  private readonly maxLoggedOutput = 64 * 1024;
+
   constructor(
     private sources: SourcesService,
     private activities: ActivitiesService,
@@ -60,6 +62,44 @@ export class CompilerService {
 
   private createCompileError(message: string, details?: string) {
     return new Error([message, details].filter(Boolean).join('\n\n'));
+  }
+
+  private appendLogTail(current: string, chunk: string) {
+    const next = `${current}${chunk}`;
+    return next.length > this.maxLoggedOutput
+      ? next.slice(-this.maxLoggedOutput)
+      : next;
+  }
+
+  private async runJava(
+    mainClass: string,
+    args: string[],
+    options: { cwd: string },
+  ) {
+    return await new Promise<{ code: number; stdout: string; stderr: string }>((resolve, reject) => {
+      const child = spawn('java', ['-cp', this.config.get('COMPILER_JAR_NAME'), mainClass, ...args], {
+        cwd: options.cwd,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
+
+      let stdout = '';
+      let stderr = '';
+
+      child.stdout?.on('data', (chunk: Buffer) => {
+        const text = chunk.toString('utf8');
+        process.stdout.write(text);
+        stdout = this.appendLogTail(stdout, text);
+      });
+
+      child.stderr?.on('data', (chunk: Buffer) => {
+        const text = chunk.toString('utf8');
+        process.stderr.write(text);
+        stderr = this.appendLogTail(stderr, text);
+      });
+
+      child.on('error', (error) => reject(error));
+      child.on('close', (code) => resolve({ code: code ?? 1, stdout, stderr }));
+    });
   }
 
   exists(id: string) {
@@ -202,25 +242,29 @@ export class CompilerService {
       if (existsSync(outputs)) rmSync(outputs, { recursive: true });
 
       const compilerWorkspace = this.config.get('COMPILER_WORKSPACE');
-      const compilerJarName = this.config.get('COMPILER_JAR_NAME');
 
-      let pcExStdout = '';
-      let pcExStderr = '';
       try {
-        pcExStdout = execSync(
-          `java -cp ${compilerJarName} application.PcExParserRunner "../${inputs}" "../${outputs}" "../${extrafiles}"`,
-          { cwd: compilerWorkspace, encoding: 'utf8' },
+        const parserResult = await this.runJava(
+          'application.PcExParserRunner',
+          [`../${inputs}`, `../${outputs}`, `../${extrafiles}`],
+          { cwd: compilerWorkspace },
         );
+        resp.PcExParserRunner = parserResult;
+        if (parserResult.code !== 0) {
+          throw this.createCompileError(
+            `PcExParserRunner failed for activity "${activity.name}" (${activity.id}).`,
+            this.formatError({ message: parserResult.stderr, stdout: parserResult.stdout }),
+          );
+        }
       } catch (execErr: any) {
-        pcExStderr = execErr?.stderr || execErr?.message || String(execErr);
-        resp.PcExParserRunner = { code: execErr?.status ?? 1, stdout: execErr?.stdout || '', stderr: pcExStderr };
+        const details = execErr?.message || String(execErr);
+        resp.PcExParserRunner = { code: 1, stdout: '', stderr: details };
         throw this.createCompileError(
           `PcExParserRunner failed for activity "${activity.name}" (${activity.id}).`,
-          this.formatError({ message: pcExStderr, stdout: execErr?.stdout }),
+          this.formatError({ message: details }),
         );
       }
 
-      resp.PcExParserRunner = { code: 0, stdout: pcExStdout, stderr: '' };
       if (!existsSync(outputs) || readdirSync(outputs).length < 1) {
         throw this.createCompileError(
           `Preview generation produced no output for activity "${activity.name}" (${activity.id}).`,
@@ -231,23 +275,27 @@ export class CompilerService {
       const queries = `${workspace}/queries/`;
       if (existsSync(queries)) rmSync(queries, { recursive: true });
 
-      let umStdout = '';
-      let umStderr = '';
       try {
-        umStdout = execSync(
-          `java -cp ${compilerJarName} application.UMActivityQueryGenerator "../${outputs}" "../${queries}"`,
-          { cwd: compilerWorkspace, encoding: 'utf8' },
+        const queryResult = await this.runJava(
+          'application.UMActivityQueryGenerator',
+          [`../${outputs}`, `../${queries}`],
+          { cwd: compilerWorkspace },
         );
+        resp.UMActivityQueryGenerator = queryResult;
+        if (queryResult.code !== 0) {
+          throw this.createCompileError(
+            `UMActivityQueryGenerator failed for activity "${activity.name}" (${activity.id}).`,
+            this.formatError({ message: queryResult.stderr, stdout: queryResult.stdout }),
+          );
+        }
       } catch (execErr: any) {
-        umStderr = execErr?.stderr || execErr?.message || String(execErr);
-        resp.UMActivityQueryGenerator = { code: execErr?.status ?? 1, stdout: execErr?.stdout || '', stderr: umStderr };
+        const details = execErr?.message || String(execErr);
+        resp.UMActivityQueryGenerator = { code: 1, stdout: '', stderr: details };
         throw this.createCompileError(
           `UMActivityQueryGenerator failed for activity "${activity.name}" (${activity.id}).`,
-          this.formatError({ message: umStderr, stdout: execErr?.stdout }),
+          this.formatError({ message: details }),
         );
       }
-
-      resp.UMActivityQueryGenerator = { code: 0, stdout: umStdout, stderr: '' };
 
       // temporary append .sql extension to all files
       readdirSync(queries).forEach((dir) =>

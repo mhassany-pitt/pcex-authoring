@@ -60,14 +60,31 @@ export class HubController {
   @UseGuards(AuthenticatedGuard)
   async clone(@Body() activity: any, @Req() req: any, @Res() res: Response) {
     try {
+      console.log('[hub controller] starting clone worker', {
+        id: activity?.id,
+        name: activity?.name,
+        user: req.user?.email,
+      });
       const worker = new Worker(`${__dirname}/clone.js`, {
         workerData: {
           user: req.user.email,
           ...activity
         },
       });
-      worker.on('message', (result) => res.json(result));
-      worker.on('error', (error) => res.status(422).json({ message: error.message }));
+      worker.on('online', () => {
+        console.log('[hub controller] clone worker online', { id: activity?.id });
+      });
+      worker.on('message', (result) => {
+        console.log('[hub controller] clone worker finished', { id: activity?.id });
+        res.json(result);
+      });
+      worker.on('error', (error) => {
+        console.error('[hub controller] clone worker error', { id: activity?.id, error: error.message });
+        res.status(422).json({ message: error.message });
+      });
+      worker.on('exit', (code) => {
+        console.log('[hub controller] clone worker exited', { id: activity?.id, code });
+      });
     } catch (error) {
       return res.status(422).json({ message: error.message });
     }
