@@ -31,8 +31,8 @@ async function bootstrap() {
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
   app.use(session({
     secret: config.get('SESSION_SECRET'),
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     name: 'pcex-authoring-session',
     store: new (FileStore(session))({ path: config.get('STORAGE_PATH') + '/sessions' }),
     cookie: {
