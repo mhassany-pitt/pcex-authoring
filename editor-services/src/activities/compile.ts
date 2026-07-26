@@ -14,6 +14,8 @@ async function runWorkerThread() {
         const result = await compiler.compile(activity);
         console.log('[compile worker] compile finished, posting result');
         parentPort.postMessage(result);
+    } catch (error) {
+        console.error('[compile worker] ERROR during compile:', error);
     } finally {
         console.log('[compile worker] closing application context');
         await app.close().catch(() => undefined);

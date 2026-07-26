@@ -14,6 +14,8 @@ async function runWorkerThread() {
         const result = await genai.clone(inputs);
         console.log('[clone worker] clone finished, posting result');
         parentPort.postMessage(result);
+    } catch (error) {
+        console.error('[clone worker] ERROR during clone:', error);
     } finally {
         console.log('[clone worker] closing application context');
         await app.close().catch(() => undefined);

@@ -14,6 +14,8 @@ async function runWorkerThread() {
         const result = await genai.generate(inputs);
         console.log('[gpt-genai worker] generation finished, posting result');
         parentPort.postMessage(result);
+    } catch (error) {
+        console.error('[gpt-genai worker] ERROR during generation:', error);
     } finally {
         console.log('[gpt-genai worker] closing application context');
         await app.close().catch(() => undefined);
