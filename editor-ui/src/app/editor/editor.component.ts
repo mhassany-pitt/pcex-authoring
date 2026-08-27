@@ -898,11 +898,11 @@ export class EditorComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.blankLineCount > 3) {
+    if (this.blankLineCount > 4) {
       this.messages.add({
         severity: 'error',
         summary: 'Validation Error',
-        detail: `A source cannot have more than 3 blank lines (currently ${this.blankLineCount}). Please unmask the extra lines before saving.`
+        detail: `A source cannot have more than 4 blank lines (currently ${this.blankLineCount}). Please unmask the extra lines before saving.`
       });
       return;
     }

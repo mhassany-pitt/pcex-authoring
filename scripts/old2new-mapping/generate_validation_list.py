@@ -48,16 +48,18 @@ def main():
     with open(md_out, "w", encoding="utf-8") as f:
         f.write("# 📝 PCEX Sources Validation Checklist\n\n")
         
-        f.write("> **Instructions:**\n")
-        f.write("> 1. Click lines with **`?`** in editor to review line explanations.\n")
-        f.write("> 2. For challenges, click lines with blue **`[ ]`** in gutter to review distractors & explanation feedback.\n")
-        f.write("> 3. **⚠️ Max 3 Distractors**: The editor requires $\\le 3$ distractors. Please **keep the best 3 and delete the rest** to save.\n")
-        f.write("> 4. Check off (`- [x]`) items as you finish validating.\n\n")
+        f.write("> **Instructions for Reviewers:**\n")
+        f.write("> 1. **Line Explanations**: Click lines with **`?`** in the editor to inspect and edit explanation steps.\n")
+        f.write("> 2. **Distractors & Challenges**: Click lines with blue **`[ ]`** in the gutter to review distractors and misconception explanations.\n")
+        f.write(">    - *Tip:* If distractors are not shown for a specific line, check **\"Show All\"** in the distractors tab (legacy PCEX did not bind distractors to line numbers, so \"Show All\" reveals all of them).\n")
+        f.write("> 3. **⚠️ Distractor Limit (Max 3)**: The editor requires $\\le 3$ distractors per source. Please **review all generated options, keep the best 3, and delete the rest** so the source can be saved.\n")
+        f.write("> 4. **⚠️ Blank Lines Limit (Max 4)**: A source cannot have more than 4 blank challenge lines.\n")
+        f.write("> 5. **Mark Validated**: Once you finish reviewing and saving a source, **remove the `validation-pending` tag** from its tag list and check off (`- [x]`) the box below.\n\n")
 
         f.write(f"**Quick Filters:** [🔍 All Pending Sources]({BASE_SOURCES_FILTER}) &nbsp;•&nbsp; [📦 All Pending Bundles]({BASE_BUNDLES_FILTER})\n\n")
 
         # Summary Table
-        f.write("### 📊 Distribution Summary\n\n")
+        f.write("### 📊 Distribution Summary (Click email to jump to your section)\n\n")
         f.write("| Collaborator | Assigned Bundles | Assigned Sources |\n")
         f.write("| :--- | :---: | :---: |\n")
         
@@ -69,7 +71,8 @@ def main():
                     data = json.load(bf)
                 b_obj = data.get("bundle", data)
                 c_sources += len(b_obj.get("items", []))
-            f.write(f"| **`{c}`** | {len(b_list)} bundles | {c_sources} sources |\n")
+            anchor = c.replace("@", "-").replace(".", "-")
+            f.write(f"| [**`{c}`**](#{anchor}) | {len(b_list)} bundles | {c_sources} sources |\n")
 
         f.write("\n---\n\n")
 
@@ -78,7 +81,9 @@ def main():
         for c in COLLABORATORS:
             b_list = assignments[c]
             c_sources_count = sum(len(json.load(open(bp)).get("bundle", json.load(open(bp))).get("items", [])) for bp in b_list)
+            anchor = c.replace("@", "-").replace(".", "-")
             
+            f.write(f'<a id="{anchor}"></a>\n\n')
             f.write(f"## 👤 Assigned to: `{c}` ({len(b_list)} bundles · {c_sources_count} sources)\n\n")
 
             for b_path in b_list:
@@ -134,7 +139,7 @@ def main():
 
                 f.write("\n")
 
-            f.write("---\n\n")
+            f.write("[⬆ Back to Top](#-pcex-sources-validation-checklist)\n\n---\n\n")
 
     with open(csv_out, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)

@@ -1,24 +1,28 @@
 # 📝 PCEX Sources Validation Checklist
 
-> **Instructions:**
-> 1. Click lines with **`?`** in editor to review line explanations.
-> 2. For challenges, click lines with blue **`[ ]`** in gutter to review distractors & explanation feedback.
-> 3. **⚠️ Max 3 Distractors**: The editor requires $\le 3$ distractors. Please **keep the best 3 and delete the rest** to save.
-> 4. Check off (`- [x]`) items as you finish validating.
+> **Instructions for Reviewers:**
+> 1. **Line Explanations**: Click lines with **`?`** in the editor to inspect and edit explanation steps.
+> 2. **Distractors & Challenges**: Click lines with blue **`[ ]`** in the gutter to review distractors and misconception explanations.
+>    - *Tip:* If distractors are not shown for a specific line, check **"Show All"** in the distractors tab (legacy PCEX did not bind distractors to line numbers, so "Show All" reveals all of them).
+> 3. **⚠️ Distractor Limit (Max 3)**: The editor requires $\le 3$ distractors per source. Please **review all generated options, keep the best 3, and delete the rest** so the source can be saved.
+> 4. **⚠️ Blank Lines Limit (Max 4)**: A source cannot have more than 4 blank challenge lines.
+> 5. **Mark Validated**: Once you finish reviewing and saving a source, **remove the `validation-pending` tag** from its tag list and check off (`- [x]`) the box below.
 
 **Quick Filters:** [🔍 All Pending Sources](https://adapt2.sis.pitt.edu/pcex-authoring/#/sources?tags=validation-pending,llm_expl%2Bdist%26expl,gpt5mini) &nbsp;•&nbsp; [📦 All Pending Bundles](https://adapt2.sis.pitt.edu/pcex-authoring/#/bundles?tags=gpt5mini,llm_expl%2Bdist%26expl,validation-pending)
 
-### 📊 Distribution Summary
+### 📊 Distribution Summary (Click email to jump to your section)
 
 | Collaborator | Assigned Bundles | Assigned Sources |
 | :--- | :---: | :---: |
-| **`moh70@pitt.edu`** | 11 bundles | 28 sources |
-| **`rah225@pitt.edu`** | 11 bundles | 29 sources |
-| **`arl122@pitt.edu`** | 10 bundles | 22 sources |
-| **`quinnkwolter@pitt.edu`** | 10 bundles | 22 sources |
-| **`hua1007.yu@connect.polyu.hk`** | 10 bundles | 22 sources |
+| [**`moh70@pitt.edu`**](#moh70-pitt-edu) | 11 bundles | 28 sources |
+| [**`rah225@pitt.edu`**](#rah225-pitt-edu) | 11 bundles | 29 sources |
+| [**`arl122@pitt.edu`**](#arl122-pitt-edu) | 10 bundles | 22 sources |
+| [**`quinnkwolter@pitt.edu`**](#quinnkwolter-pitt-edu) | 10 bundles | 22 sources |
+| [**`hua1007.yu@connect.polyu.hk`**](#hua1007-yu-connect-polyu-hk) | 10 bundles | 22 sources |
 
 ---
+
+<a id="moh70-pitt-edu"></a>
 
 ## 👤 Assigned to: `moh70@pitt.edu` (11 bundles · 28 sources)
 
@@ -72,7 +76,11 @@
   - [ ] #27 [**The Digit Sum of an Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac9) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
   - [ ] #28 [**Reversing the Digits of an Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638acb) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 9→3 distr.
 
+[⬆ Back to Top](#-pcex-sources-validation-checklist)
+
 ---
+
+<a id="rah225-pitt-edu"></a>
 
 ## 👤 Assigned to: `rah225@pitt.edu` (11 bundles · 29 sources)
 
@@ -127,7 +135,11 @@
   - [ ] #56 [**Finding Adjacent Consecutive Numbers in a Sequence of Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b63) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
   - [ ] #57 [**Finding Adjacent Numbers in Ascending Order in a Sequence of Numbers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b65) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 11→3 distr.
 
+[⬆ Back to Top](#-pcex-sources-validation-checklist)
+
 ---
+
+<a id="arl122-pitt-edu"></a>
 
 ## 👤 Assigned to: `arl122@pitt.edu` (10 bundles · 22 sources)
 
@@ -173,7 +185,11 @@
   - [ ] #78 [**Determining the Sign of an Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af7) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 5→3 distr.
   - [ ] #79 [**Determining Whether an Integer is Even or Odd**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af9) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 8→3 distr.
 
+[⬆ Back to Top](#-pcex-sources-validation-checklist)
+
 ---
+
+<a id="quinnkwolter-pitt-edu"></a>
 
 ## 👤 Assigned to: `quinnkwolter@pitt.edu` (10 bundles · 22 sources)
 
@@ -219,7 +235,11 @@
   - [ ] #100 [**Determining When to Buy a New Phone (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b87) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
   - [ ] #101 [**Determining When to Buy a New Phone (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b89) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
 
+[⬆ Back to Top](#-pcex-sources-validation-checklist)
+
 ---
+
+<a id="hua1007-yu-connect-polyu-hk"></a>
 
 ## 👤 Assigned to: `hua1007.yu@connect.polyu.hk` (10 bundles · 22 sources)
 
@@ -264,6 +284,8 @@
 - [ ] **`py_time_conversion`** (`6a9060d5cbc5a3f2aa638b9d`)
   - [ ] #122 [**Seconds to Minutes Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aa9) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
   - [ ] #123 [**Converting Milliseconds to Hours-Minutes- and Seconds**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aab) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 9→3 distr.
+
+[⬆ Back to Top](#-pcex-sources-validation-checklist)
 
 ---
 
