@@ -18,6 +18,7 @@ import { TagModule } from 'primeng/tag';
 import { ChipsModule } from 'primeng/chips';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { NavbarComponent } from '../navbar/navbar.component';
 
 @NgModule({
@@ -30,6 +31,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     ActivitiesRoutingModule,
     TableModule, ButtonModule,
     DialogModule, DropdownModule,
+    MultiSelectModule,
     SelectButtonModule,
     InputTextModule, CheckboxModule,
     ConfirmDialogModule, TagModule,

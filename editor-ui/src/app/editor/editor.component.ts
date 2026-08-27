@@ -73,6 +73,15 @@ export class EditorComponent implements OnInit, OnDestroy {
   translationRows: any[] = [];
   allSources: any[] = [];
 
+  get blankLineCount(): number {
+    if (!this.model?.lines) return 0;
+    return Object.keys(this.model.lines).filter(ln => this.model.lines[ln]?.blank).length;
+  }
+
+  get distractorCount(): number {
+    return this.model?.distractors?.length || 0;
+  }
+
   get titleDescCollapsed() { return localStorage.getItem('pcex.prefs.titleDescCollapsed') == 'true'; }
   set titleDescCollapsed(value) { localStorage.setItem('pcex.prefs.titleDescCollapsed', `${value}`); }
 
@@ -876,6 +885,24 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   update() {
+    if (this.distractorCount > 3) {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Validation Error',
+        detail: `A source cannot have more than 3 distractors (currently ${this.distractorCount}). Please remove the extra distractors before saving.`
+      });
+      return;
+    }
+
+    if (this.blankLineCount > 3) {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Validation Error',
+        detail: `A source cannot have more than 3 blank lines (currently ${this.blankLineCount}). Please unmask the extra lines before saving.`
+      });
+      return;
+    }
+
     this.model.translations = {};
     for (const t of this.translationRows) {
       if (t.iso && t.id) this.model.translations[t.iso] = t.id;

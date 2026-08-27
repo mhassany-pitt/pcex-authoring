@@ -13,6 +13,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { TagModule } from 'primeng/tag';
 import { ChipsModule } from 'primeng/chips';
 import { MenuModule } from 'primeng/menu';
@@ -29,7 +30,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     InputTextModule, TableModule,
     DropdownModule, SelectButtonModule,
     CheckboxModule, ToastModule,
-    ChipsModule,
+    ChipsModule, MultiSelectModule,
     MenuModule, NavbarComponent,
   ],
   providers: [

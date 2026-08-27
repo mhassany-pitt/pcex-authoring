@@ -27,10 +27,11 @@ export class SourcesController {
     })).map(source => {
       const { _id: id, archived, name, description, tags, 
         iso_language_code, language, user, collaborator_emails, 
-        translations, created_at, updated_at } = source;
+        translations, created_at, updated_at, lines } = source;
+      const blank_lines_count = Object.values(lines || {}).filter((l: any) => l?.blank).length;
       return { id, archived, name, description, tags, 
         iso_language_code, language, user, collaborator_emails, 
-        translations, created_at, updated_at };
+        translations, created_at, updated_at, blank_lines_count };
     }).sort((a, b) => b.id.toString().localeCompare(a.id.toString()));
   }
 

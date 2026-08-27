@@ -13,6 +13,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { NavbarComponent } from '../navbar/navbar.component';
 
 @NgModule({
@@ -26,6 +28,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     InputTextModule, ButtonModule,
     CheckboxModule, DropdownModule,
     ConfirmDialogModule, TagModule,
+    MultiSelectModule, SelectButtonModule,
     NavbarComponent,
   ],
   providers: [

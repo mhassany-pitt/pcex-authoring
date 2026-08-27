@@ -6,14 +6,15 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { readFile } from 'fs/promises';
-import { ActivitiesService } from 'src/activities-service/activities.service';
-import { CompilerService } from 'src/compiler-service/compiler.service';
-import { SourcesService } from 'src/sources-service/sources.service';
-import { toObject, useId } from 'src/utils';
+import { ActivitiesService } from '../activities-service/activities.service';
+import { CompilerService } from '../compiler-service/compiler.service';
+import { SourcesService } from '../sources-service/sources.service';
+import { toObject, useId } from '../utils';
 
 @Controller('bulk')
 export class BulkController {
@@ -36,12 +37,31 @@ export class BulkController {
     return tokens.includes(req.headers['api-token']);
   }
 
+  private shouldSkipCompile(req: any, body: any): boolean {
+    const q = req.query || {};
+    if (q.compile === 'false' || q.compile === '0') {
+      return true;
+    }
+    if (body && (body.compile === false || body.compile === 'false')) {
+      return true;
+    }
+    return false;
+  }
+
   @Post('sources')
-  async createSource(@Request() req: any, @Body() body: any) {
+  async createSource(
+    @Request() req: any,
+    @Body() body: any,
+    @Query('compile') compile?: string,
+  ) {
     if (!(await this.validate(req)))
       throw new HttpException('Unauthorized', 401);
+    const skip = this.shouldSkipCompile(req, body);
+    delete body.compile;
     const resp = await this.sources.create(body);
-    return this.compileSource(toObject(resp)._id, body.user);
+    const id = toObject(resp)._id;
+    if (skip) return { id };
+    return this.compileSource(id, body.user);
   }
 
   @Patch('sources/:id')
@@ -49,12 +69,16 @@ export class BulkController {
     @Request() req: any,
     @Body() body: any,
     @Param('id') id: string,
+    @Query('compile') compile?: string,
   ) {
     if (!(await this.validate(req)))
       throw new HttpException('Unauthorized', 401);
     const source = await this.sources.read({ id, user: body.user });
     if (!source) throw new HttpException('Source not found', 404);
+    const skip = this.shouldSkipCompile(req, body);
+    delete body.compile;
     await this.sources.update({ ...body, _id: id });
+    if (skip) return { id };
     return this.compileSource(id, body.user);
   }
 
@@ -90,11 +114,19 @@ export class BulkController {
   }
 
   @Post('activities')
-  async createActivity(@Request() req: any, @Body() body: any) {
+  async createActivity(
+    @Request() req: any,
+    @Body() body: any,
+    @Query('compile') compile?: string,
+  ) {
     if (!(await this.validate(req)))
       throw new HttpException('Unauthorized', 401);
+    const skip = this.shouldSkipCompile(req, body);
+    delete body.compile;
     const resp = await this.activities.create(body);
-    return this.compileActivity(toObject(resp)._id, body.user);
+    const id = toObject(resp)._id;
+    if (skip) return { id };
+    return this.compileActivity(id, body.user);
   }
 
   @Patch('activities/:id')
@@ -102,12 +134,16 @@ export class BulkController {
     @Request() req: any,
     @Body() body: any,
     @Param('id') id: string,
+    @Query('compile') compile?: string,
   ) {
     if (!(await this.validate(req)))
       throw new HttpException('Unauthorized', 401);
     const activity = await this.activities.read({ id, user: body.user });
     if (!activity) throw new HttpException('Activity not found', 404);
+    const skip = this.shouldSkipCompile(req, body);
+    delete body.compile;
     await this.activities.update({ ...body, id });
+    if (skip) return { id };
     return this.compileActivity(id, body.user);
   }
 

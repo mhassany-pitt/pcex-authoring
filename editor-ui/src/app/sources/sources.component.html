@@ -1,101 +1,269 @@
 <div class="flex flex-col">
   <app-navbar />
 
-  <div class="container mx-auto max-w-5xl mt-24 mb-16 border shadow-md z-0">
-    <p-table #table [value]="sources" [globalFilterFields]="['_filter_details']"
-     [scrollable]="true" [scrollHeight]="'calc(100vh - 11.5rem)'">
-      <ng-template pTemplate="caption">
-        <div class="flex items-center gap-2">
-          <p-checkbox name="archived" label="Include Archived Sources" class="uppercase" [binary]="true" [(ngModel)]="archived"
-            (ngModelChange)="reload()"></p-checkbox>
-
-          <span class="flex-grow"></span>
-
-          <button pButton type="button" label="New Source" icon="pi pi-plus" class="p-button-sm uppercase"
-            (click)="create()"></button>
-
-          <span class="p-input-icon-right">
-            <i class="pi pi-search"></i>
-            <input pInputText type="text" (input)="filter(table, $event)" placeholder="Filter ..." class="p-inputtext-sm uppercase" />
+  <div class="container mx-auto max-w-7xl mt-24 mb-16 px-4">
+    <!-- 2-Column Responsive Layout: Left Sidebar + Right Main Content -->
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
+      <!-- LEFT SIDEBAR -->
+      <aside class="w-full lg:w-72 flex-shrink-0 bg-white border border-gray-300 rounded shadow-sm p-4 space-y-4 lg:sticky lg:top-24 max-h-[calc(100vh-7.5rem)] overflow-y-auto">
+        <!-- Sidebar Header -->
+        <div class="flex items-center justify-between pb-2 border-b border-gray-200">
+          <span class="font-bold text-sm text-gray-700 uppercase tracking-tight flex items-center gap-1.5">
+            <i class="pi pi-filter text-blue-600"></i> Filters
           </span>
+          <button *ngIf="hasActiveFilters" (click)="clearFilters()" pButton type="button"
+            label="Reset All" class="p-button-text p-button-sm p-button-danger p-0 text-xs hover:underline">
+          </button>
         </div>
-      </ng-template>
-      <ng-template pTemplate="header">
-        <tr>
-          <th class="w-16 uppercase" style="text-align: center;">Actions</th>
-          <th class="uppercase">Source Name & Description</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-$source>
-        <tr [id]="$source.id" [class.highlighted-row]="$source.id === highlightedId">
-          <td>
-            <div class="flex flex-col items-center justify-center gap-1">
-              <button pButton type="button" icon="pi pi-briefcase"
-                [title]="$source.archived ? 'Unarchive source' : 'Archive source'"
-                class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': $source.archived }"
-                (click)="toggleArchive($source)">
-              </button>
-              <button pButton type="button"
-                [title]="api.isGeneratingPreviewJson($source.id) ? 'Generating Preview' : 'Preview'"
-                icon="pi {{ api.isGeneratingPreviewJson($source.id) ? 'pi-spin pi-spinner' : 'pi-eye' }}"
-                class="p-button-text p-button-sm p-button-secondary preview-btn" (click)="preview($source)"
-                [disabled]="api.isGeneratingPreviewJson($source.id)">
-              </button>
-              <button pButton type="button" icon="pi pi-clone" title="Clone Source"
-                class="p-button-text p-button-sm p-button-plain clone-btn" (click)="clone($source)">
-              </button>
-            </div>
-          </td>
-          <td>
-            <div class="flex flex-col" [ngClass]="{ 'line-through': $source.archived }">
-              <span [routerLink]="['/editor', $source.id]" class="font-bold cursor-pointer text-blue-700 mb-1">
-                {{$source.iso_language_code ? getLanguageName($source.iso_language_code) + ' ' : ''}}
-                {{$source.language ? $source.language + ' | ' : ''}}{{$source.name || '[name not specified]'}}
-              </span>
-              
-              <span class="text-gray-500 text-xs">
-                Created by: {{ $source.user }} 
-                <span *ngIf="$source.user == app.user?.email" class="font-bold">(you)</span>
-              </span>
-              <span *ngIf="$source.collaborator_emails?.length" class="text-gray-500 text-xs">
-                Collaborators: {{ $source.collaborator_emails.join(', ') }}
+
+        <!-- 1. Search Box -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Search</label>
+          <div class="relative w-full">
+            <i class="pi pi-search absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+            <input pInputText type="text" [(ngModel)]="searchQuery" (input)="onSearchInput()"
+              placeholder="Search sources, tags, author..." class="p-inputtext-sm w-full pl-8 pr-7 text-xs" />
+            <i *ngIf="searchQuery" class="pi pi-times absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer text-xs"
+              (click)="clearSearch()"></i>
+          </div>
+        </div>
+
+        <!-- 2. Ownership -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Ownership</label>
+          <p-selectButton [options]="ownerOptions" [(ngModel)]="selectedOwner" (ngModelChange)="onFilterChange()"
+            styleClass="ownership-select-button w-full"></p-selectButton>
+        </div>
+
+        <!-- 3. Creator -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Creators</label>
+          <p-multiSelect [options]="availableAuthors" [(ngModel)]="selectedAuthors" (ngModelChange)="onFilterChange()"
+            placeholder="All Creators" [filter]="true" filterBy="label" styleClass="w-full p-inputtext-sm text-xs"
+            [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+        </div>
+
+        <!-- 4. Problem Role -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Problem Role</label>
+          <p-multiSelect [options]="roleOptions" [(ngModel)]="selectedRoles" (ngModelChange)="onFilterChange()"
+            placeholder="All Roles" styleClass="w-full p-inputtext-sm text-xs"
+            [maxSelectedLabels]="1" selectedItemsLabel="{0} selected" appendTo="body" />
+        </div>
+
+        <!-- 5. Programming Language -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Programming Language</label>
+          <p-multiSelect [options]="progLangOptions" [(ngModel)]="selectedProgLangs" (ngModelChange)="onFilterChange()"
+            placeholder="All Code Languages" [filter]="true" filterBy="label" styleClass="w-full p-inputtext-sm text-xs"
+            [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+        </div>
+
+        <!-- 6. Natural Language -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Natural Language</label>
+          <p-multiSelect [options]="availableLanguages" [(ngModel)]="selectedLanguages" (ngModelChange)="onFilterChange()"
+            placeholder="All Languages" [filter]="true" filterBy="label" styleClass="w-full p-inputtext-sm text-xs"
+            [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+        </div>
+
+        <!-- 7. Status & Options -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Options</label>
+          <div class="space-y-1.5 pt-1">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-gray-700">
+              <p-checkbox name="trans" [binary]="true" [(ngModel)]="hasTranslationsFilter"
+                (ngModelChange)="onFilterChange()" class="p-checkbox-sm"></p-checkbox>
+              <span>Has Translations</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-gray-700">
+              <p-checkbox name="archived" [binary]="true" [(ngModel)]="archived"
+                (ngModelChange)="toggleArchiveFilter()" class="p-checkbox-sm"></p-checkbox>
+              <span>Include Archived</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 8. Tags -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Tags</label>
+          <p-multiSelect [options]="availableTags" [(ngModel)]="selectedTags" (ngModelChange)="onFilterChange()"
+            placeholder="All Tags" [filter]="true" filterBy="label" styleClass="w-full p-inputtext-sm text-xs"
+            [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+        </div>
+
+        <!-- Sidebar Bottom Action -->
+        <div class="pt-2 border-t border-gray-200">
+          <button *ngIf="hasActiveFilters" (click)="clearFilters()" pButton type="button"
+            label="Reset All Filters ({{ activeFiltersCount }})" icon="pi pi-filter-slash"
+            class="p-button-outlined p-button-danger p-button-sm w-full text-xs sidebar-reset-btn">
+          </button>
+          <div *ngIf="!hasActiveFilters" class="text-center text-xs text-gray-400 py-1">
+            Showing all sources
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT MAIN CONTENT -->
+      <main class="flex-1 min-w-0 w-full">
+        <div class="border shadow-md bg-white rounded overflow-hidden">
+          <!-- Top Toolbar -->
+          <div class="p-3 bg-gray-50 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3">
+            <!-- Left: Count & Filter Chips -->
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold text-gray-700 uppercase tracking-tight">
+                Showing {{ filteredSources.length }} of {{ sources.length }} sources
               </span>
 
-              <span *ngIf="$source.translations && ($source.translations | keyvalue)?.length" class="text-xs">
-                <span class="text-gray-500">Translated versions: </span>
-                <ng-container *ngFor="let entry of $source.translations | keyvalue; let last = last">
-                  <span (click)="highlightAndScroll($any(entry).value)" 
-                    class="text-blue-500 hover:underline cursor-pointer">
-                    {{ getLanguageName($any(entry.key)) + (last ? '' : ', ') }}
-                  </span>
-                </ng-container>
-              </span>
-
-              <span class="my-1 text-xs text-gray-500">{{$source.description}}</span>
-
-              <span *ngIf="$source.tags?.length" class="text-xs text-gray-500">
-                <p-tag *ngFor="let tag of $source.tags" [value]="tag" severity="success" class="mr-1" />
-              </span>
+              <!-- Filter Chips with (x) -->
+              <ng-container *ngIf="hasActiveFilters">
+                <span *ngIf="searchQuery?.trim()"
+                  class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2 py-0.5 rounded">
+                  "{{ searchQuery }}" <i class="pi pi-times cursor-pointer text-[10px]" (click)="clearSearch()"></i>
+                </span>
+                <span *ngIf="selectedOwner !== 'all'"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  {{ selectedOwnerLabel }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="clearOwnerFilter()"></i>
+                </span>
+                <span *ngFor="let author of selectedAuthors"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Creator: {{ author === app.user?.email ? author + ' (you)' : author }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeAuthor(author)"></i>
+                </span>
+                <span *ngFor="let role of selectedRoles"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Role: {{ getRoleLabel(role) }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeRole(role)"></i>
+                </span>
+                <span *ngFor="let codeLang of selectedProgLangs"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Code: {{ codeLang }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeProgLang(codeLang)"></i>
+                </span>
+                <span *ngFor="let lang of selectedLanguages"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Lang: {{ getLanguageName(lang) || lang }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeLanguage(lang)"></i>
+                </span>
+                <span *ngIf="hasTranslationsFilter"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Has Translations <i class="pi pi-times cursor-pointer text-[10px]" (click)="clearTranslationsFilter()"></i>
+                </span>
+                <span *ngFor="let tag of selectedTags"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Tag: {{ tag }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeTag(tag)"></i>
+                </span>
+                <button pButton type="button" label="Clear all" (click)="clearFilters()"
+                  class="p-button-text p-button-danger p-button-sm text-xs py-0.5 px-1.5 h-auto font-semibold">
+                </button>
+              </ng-container>
             </div>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="2">
-            <div class="text-xs text-center text-gray-400 w-full">
-              no record matched, revise your filter keyword
+
+            <!-- Right: Sort & New Source -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-500 font-semibold uppercase">Sort:</span>
+              <p-dropdown [options]="sortOptions" [(ngModel)]="selectedSort" (ngModelChange)="onFilterChange()"
+                styleClass="p-inputtext-sm text-xs" appendTo="body" />
+              <button pButton type="button" label="New Source" icon="pi pi-plus" class="p-button-sm uppercase"
+                (click)="create()"></button>
             </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+          </div>
+
+          <!-- List of Sources -->
+          <div *ngIf="filteredSources.length > 0" class="divide-y divide-gray-200">
+            <div *ngFor="let $source of filteredSources" [id]="$source.id"
+              class="p-4 hover:bg-gray-50/80 transition-colors"
+              [class.highlighted-row]="$source.id === highlightedId">
+
+              <div class="flex flex-col" [ngClass]="{ 'line-through': $source.archived }">
+                <!-- Top row: Name, Badges, and Action Buttons -->
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span [routerLink]="['/editor', $source.id]"
+                      class="font-bold text-blue-700 hover:text-blue-900 cursor-pointer text-base">
+                      {{ $source.name || '[name not specified]' }}
+                    </span>
+                    <span *ngIf="$source.iso_language_code" class="uppercase text-xs text-gray-400 font-normal">
+                      [{{ getLanguageName($source.iso_language_code) }}]
+                    </span>
+                    <span *ngIf="$source.language" class="text-xs text-gray-500 font-mono font-bold uppercase">
+                      [{{ $source.language }}]
+                    </span>
+                    <span *ngIf="($source.blank_lines_count || 0) > 0"
+                      class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-1.5 py-0.5 rounded font-medium">
+                      <i class="pi pi-check-circle text-[10px]"></i> {{ $source.blank_lines_count }} {{ $source.blank_lines_count === 1 ? 'blank' : 'blanks' }} (Challenge)
+                    </span>
+                    <span *ngIf="($source.blank_lines_count || 0) === 0"
+                      class="inline-flex items-center gap-1 bg-gray-100 text-gray-600 border border-gray-200 text-xs px-1.5 py-0.5 rounded font-medium">
+                      0 blanks (Example)
+                    </span>
+                    <p-tag *ngIf="$source.archived" value="Archived" severity="warning" class="text-xs ml-1" />
+                  </div>
+
+                  <!-- Clean Borderless PrimeNG Action Buttons -->
+                  <div class="flex items-center gap-0.5">
+                    <button [routerLink]="['/editor', $source.id]" pButton type="button" icon="pi pi-pencil" title="Edit source"
+                      class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600"></button>
+                    <button pButton type="button"
+                      [icon]="api.isGeneratingPreviewJson($source.id) ? 'pi pi-spin pi-spinner' : 'pi pi-eye'"
+                      [title]="api.isGeneratingPreviewJson($source.id) ? 'Generating Preview' : 'Preview'"
+                      class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600"
+                      (click)="preview($source)" [disabled]="api.isGeneratingPreviewJson($source.id)"></button>
+                    <button pButton type="button" icon="pi pi-clone" title="Clone source"
+                      class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600"
+                      (click)="clone($source)"></button>
+                    <button pButton type="button" icon="pi pi-briefcase"
+                      [title]="$source.archived ? 'Unarchive source' : 'Archive source'"
+                      class="p-button-text p-button-sm w-7 h-7 p-0"
+                      [ngClass]="{ 'text-amber-600': $source.archived, 'p-button-plain': !$source.archived }"
+                      (click)="toggleArchive($source)"></button>
+                  </div>
+                </div>
+
+                <!-- Metadata -->
+                <div class="text-xs text-gray-500 mb-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <span>Created by: <strong>{{ $source.user }}</strong> <span *ngIf="$source.user == app.user?.email" class="font-bold text-blue-600">(you)</span></span>
+                  <span *ngIf="getCreationDate($source)">Created: <strong>{{ getCreationDate($source) | date:'MMM d, y, h:mm a' }}</strong></span>
+                  <span *ngIf="getUpdatedDate($source)">Updated: <strong>{{ getUpdatedDate($source) | date:'MMM d, y, h:mm a' }}</strong></span>
+                  <span *ngIf="$source.collaborator_emails?.length">Collaborators: {{ $source.collaborator_emails.join(', ') }}</span>
+                </div>
+
+                <!-- Translations -->
+                <div *ngIf="$source.translations && ($source.translations | keyvalue)?.length" class="text-xs text-gray-500 mb-1">
+                  <span>Translated versions: </span>
+                  <ng-container *ngFor="let entry of $source.translations | keyvalue; let last = last">
+                    <span (click)="highlightAndScroll($any(entry).value)" class="text-blue-500 hover:underline cursor-pointer">
+                      {{ getLanguageName($any(entry.key)) + (last ? '' : ', ') }}
+                    </span>
+                  </ng-container>
+                </div>
+
+                <!-- Description -->
+                <div *ngIf="$source.description" class="text-xs text-gray-600 my-1">
+                  {{ $source.description }}
+                </div>
+
+                <!-- Tags -->
+                <div *ngIf="$source.tags?.length" class="flex flex-wrap gap-1 mt-1">
+                  <p-tag *ngFor="let tag of $source.tags" [value]="tag" severity="success" class="text-xs mr-1" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="filteredSources.length === 0" class="p-8 text-center text-gray-400">
+            <div class="text-sm">No problem sources matched your filter criteria</div>
+            <button pButton type="button" label="Reset all filters" (click)="clearFilters()"
+              class="p-button-text p-button-sm text-xs mt-2"></button>
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
 </div>
 
+<!-- Preview Dialog -->
 <p-dialog [(visible)]="showPreview" [modal]="true" class="preview-dialog" [style]="{width: '85vw', height: '85vh'}"
   (onHide)="previewLink = null">
   <iframe *ngIf="previewLink" [src]="previewLink" class="border-none" style="width: 100%; height: 100%"></iframe>
 </p-dialog>
 
-<p-confirmDialog />
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

@@ -1,141 +1,340 @@
 <div class="flex flex-col">
   <app-navbar />
 
-  <div class="container mx-auto max-w-5xl mt-24 mb-16 border shadow-md z-0">
-    <p-table #table [value]="activities" [globalFilterFields]="['_filter_details']"
-     [scrollable]="true" [scrollHeight]="'calc(100vh - 11.5rem)'">
-      <ng-template pTemplate="caption">
-        <div class="flex items-center gap-2">
-          <p-checkbox name="archived" label="Include Archived Bundles" class="uppercase" [binary]="true" [(ngModel)]="archived"
-            (ngModelChange)="reload()"></p-checkbox>
-
-          <span class="flex-grow"></span>
-
-          <button pButton type="button" label="New Bundle" icon="pi pi-plus" class="p-button-sm uppercase"
-            (click)="create = true"></button>
-
-          <span class="p-input-icon-right">
-            <i class="pi pi-search"></i>
-            <input pInputText type="text" (input)="filter(table, $event)" 
-              placeholder="Filter ..." class="p-inputtext-sm uppercase" />
+  <div class="container mx-auto max-w-7xl mt-24 mb-16 px-4">
+    <!-- 2-Column Responsive Layout: Left Sidebar + Right Main Content -->
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
+      <!-- LEFT SIDEBAR -->
+      <aside class="w-full lg:w-72 flex-shrink-0 bg-white border border-gray-300 rounded shadow-sm p-4 space-y-4 lg:sticky lg:top-24 max-h-[calc(100vh-7.5rem)] overflow-y-auto">
+        <!-- Sidebar Header -->
+        <div class="flex items-center justify-between pb-2 border-b border-gray-200">
+          <span class="font-bold text-sm text-gray-700 uppercase tracking-tight flex items-center gap-1.5">
+            <i class="pi pi-filter text-blue-600"></i> Filters
           </span>
+          <button *ngIf="hasActiveFilters" (click)="clearFilters()" pButton type="button"
+            label="Reset All" class="p-button-text p-button-sm p-button-danger p-0 text-xs hover:underline">
+          </button>
         </div>
-        <ng-container *ngIf="create">
-          <hr class="my-4" />
 
-          <div class="bg-gray-100 -m-2 p-2">
-            <app-activity (completed)="update($event)" [activity]="{ items: [{}] }"></app-activity>
+        <!-- 1. Search Box -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Search</label>
+          <div class="relative w-full">
+            <i class="pi pi-search absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+            <input pInputText type="text" [(ngModel)]="searchQuery" (input)="onSearchInput()"
+              placeholder="Search bundles, items, tags..." class="p-inputtext-sm w-full pl-8 pr-7 text-xs" />
+            <i *ngIf="searchQuery" class="pi pi-times absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer text-xs"
+              (click)="clearSearch()"></i>
           </div>
-        </ng-container>
-      </ng-template>
-      <ng-template pTemplate="header">
-        <tr>
-          <th class="w-16 uppercase" style="text-align: center;">Actions</th>
-          <th class="uppercase">Bundle Name</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-$activity let-rowIndex="rowIndex">
-        <tr [id]="$activity.id" [class.highlighted-row]="$activity.id === highlightedId">
-          <td>
-            <div class="flex flex-col items-center justify-center gap-1">
-              <button pButton type="button" icon="pi pi-briefcase"
-                [title]="$activity.archived ? 'Unarchive bundle' : 'Archive bundle'"
-                class="p-button-text p-button-sm archive-btn" [ngClass]="{ 'p-button-plain': $activity.archived }"
-                (click)="toggleArchive($activity)">
-              </button>
-              <button pButton type="button"
-                icon="pi {{ api.isGeneratingPreviewJson($activity.id) ? 'pi-spin pi-spinner' : 'pi-eye' }}"
-                [title]="api.isGeneratingPreviewJson($activity.id) ? 'Generating Preview' : 'Preview'"
-                class="p-button-text p-button-sm p-button-secondary preview-btn" (click)="preview($activity)"
-                [disabled]="api.isGeneratingPreviewJson($activity.id)">
-              </button>
-              <!-- <button pButton *ngIf="$activity.stat" type="button"
-                [title]="'Download compiled.json (generated on ' + ($activity.stat.lastTimeModified | date:'medium') + ')'"
-                icon="pi pi-download" class="p-button-text p-button-sm p-button-success download-btn"
-                (click)="download($activity)">
-              </button> -->
-              <button pButton *ngIf="$activity.stat" type="button"
-                [title]="$activity.published ? 'Unpublish from Hub' : 'Publish on Hub'" icon="pi pi-globe"
-                class="p-button-text p-button-sm toggle-publish-btn"
-                [ngClass]="{ 'p-button-plain': !$activity.published }" (click)="togglePublish($activity)">
-              </button>
-              <button pButton type="button" icon="pi pi-clone" title="Clone Source"
-                class="p-button-text p-button-sm p-button-plain clone-btn" (click)="clone($activity)">
-              </button>
+        </div>
+
+        <!-- 2. Ownership -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Ownership</label>
+          <p-selectButton [options]="ownerOptions" [(ngModel)]="selectedOwner" (ngModelChange)="onFilterChange()"
+            styleClass="ownership-select-button w-full"></p-selectButton>
+        </div>
+
+        <!-- 3. Creator -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Creators</label>
+          <p-multiSelect [options]="availableAuthors" [(ngModel)]="selectedAuthors" (ngModelChange)="onFilterChange()"
+            placeholder="All Creators" [filter]="true" filterBy="label" styleClass="w-full p-inputtext-sm text-xs"
+            [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+        </div>
+
+        <!-- 4. Problem Composition -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Bundle Item Composition</label>
+          <p-multiSelect [options]="itemTypeOptions" [(ngModel)]="selectedItemTypes" (ngModelChange)="onFilterChange()"
+            placeholder="All Types" styleClass="w-full p-inputtext-sm text-xs"
+            [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+        </div>
+
+        <!-- 5. Programming Language -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Programming Language</label>
+          <p-multiSelect [options]="availableCodeLanguages" [(ngModel)]="selectedCodeLanguages" (ngModelChange)="onFilterChange()"
+            placeholder="All Code Languages" [filter]="true" filterBy="label" styleClass="w-full p-inputtext-sm text-xs"
+            [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+        </div>
+
+        <!-- 6. Spoken / Natural Language -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Natural Language</label>
+          <p-multiSelect [options]="availableLanguages" [(ngModel)]="selectedLanguages" (ngModelChange)="onFilterChange()"
+            placeholder="All Languages" [filter]="true" filterBy="label" styleClass="w-full p-inputtext-sm text-xs"
+            [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+        </div>
+
+        <!-- 7. Status & Integrations -->
+        <div class="space-y-1">
+          <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Status</label>
+          <p-multiSelect [options]="statusOptions" [(ngModel)]="selectedStatuses" (ngModelChange)="onFilterChange()"
+            placeholder="All Statuses" styleClass="w-full p-inputtext-sm text-xs"
+            [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+          <div class="space-y-1.5 pt-2">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-gray-700">
+              <p-checkbox name="trans" [binary]="true" [(ngModel)]="hasTranslationsFilter"
+                (ngModelChange)="onFilterChange()" class="p-checkbox-sm"></p-checkbox>
+              <span>Has Translations</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer select-none text-xs text-gray-700">
+              <p-checkbox name="archived" [binary]="true" [(ngModel)]="archived"
+                (ngModelChange)="toggleArchiveFilter()" class="p-checkbox-sm"></p-checkbox>
+              <span>Include Archived</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 8. Bundle Item Count & Tags -->
+        <div class="space-y-2">
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Bundle Item Count</label>
+            <p-multiSelect [options]="itemCountOptions" [(ngModel)]="selectedItemCounts" (ngModelChange)="onFilterChange()"
+              placeholder="Any Count" styleClass="w-full p-inputtext-sm text-xs"
+              [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase tracking-tight block">Tags</label>
+            <p-multiSelect [options]="availableTags" [(ngModel)]="selectedTags" (ngModelChange)="onFilterChange()"
+              placeholder="All Tags" [filter]="true" filterBy="label" styleClass="w-full p-inputtext-sm text-xs"
+              [maxSelectedLabels]="2" selectedItemsLabel="{0} selected" appendTo="body" />
+          </div>
+        </div>
+
+        <!-- Sidebar Bottom Action -->
+        <div class="pt-2 border-t border-gray-200">
+          <button *ngIf="hasActiveFilters" (click)="clearFilters()" pButton type="button"
+            label="Reset All Filters ({{ activeFiltersCount }})" icon="pi pi-filter-slash"
+            class="p-button-outlined p-button-danger p-button-sm w-full text-xs sidebar-reset-btn">
+          </button>
+          <div *ngIf="!hasActiveFilters" class="text-center text-xs text-gray-400 py-1">
+            Showing all bundles
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT MAIN CONTENT -->
+      <main class="flex-1 min-w-0 w-full">
+        <div class="border shadow-md bg-white rounded overflow-hidden">
+          <!-- Top Toolbar -->
+          <div class="p-3 bg-gray-50 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3">
+            <!-- Left: Count & Filter Chips -->
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold text-gray-700 uppercase tracking-tight">
+                Showing {{ filteredActivities.length }} of {{ activities.length }} bundles
+              </span>
+
+              <!-- Filter Chips with (x) -->
+              <ng-container *ngIf="hasActiveFilters">
+                <span *ngIf="searchQuery?.trim()"
+                  class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs px-2 py-0.5 rounded">
+                  "{{ searchQuery }}" <i class="pi pi-times cursor-pointer text-[10px]" (click)="clearSearch()"></i>
+                </span>
+                <span *ngIf="selectedOwner !== 'all'"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  {{ selectedOwnerLabel }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="clearOwnerFilter()"></i>
+                </span>
+                <span *ngFor="let author of selectedAuthors"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Creator: {{ author === app.user?.email ? author + ' (you)' : author }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeAuthor(author)"></i>
+                </span>
+                <span *ngFor="let type of selectedItemTypes"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  {{ getItemTypeLabel(type) }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeItemType(type)"></i>
+                </span>
+                <span *ngFor="let codeLang of selectedCodeLanguages"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Code: {{ codeLang }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeCodeLanguage(codeLang)"></i>
+                </span>
+                <span *ngFor="let lang of selectedLanguages"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Lang: {{ getLanguageName(lang) || lang }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeLanguage(lang)"></i>
+                </span>
+                <span *ngFor="let status of selectedStatuses"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  {{ getStatusLabel(status) }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeStatus(status)"></i>
+                </span>
+                <span *ngIf="hasTranslationsFilter"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Has Translations <i class="pi pi-times cursor-pointer text-[10px]" (click)="clearTranslationsFilter()"></i>
+                </span>
+                <span *ngFor="let count of selectedItemCounts"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  {{ getItemCountLabel(count) }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeItemCount(count)"></i>
+                </span>
+                <span *ngFor="let tag of selectedTags"
+                  class="inline-flex items-center gap-1 bg-gray-100 text-gray-700 border border-gray-300 text-xs px-2 py-0.5 rounded">
+                  Tag: {{ tag }} <i class="pi pi-times cursor-pointer text-[10px]" (click)="removeTag(tag)"></i>
+                </span>
+                <button pButton type="button" label="Clear all" (click)="clearFilters()"
+                  class="p-button-text p-button-danger p-button-sm text-xs py-0.5 px-1.5 h-auto font-semibold">
+                </button>
+              </ng-container>
             </div>
-          </td>
-          <td>
-            <ng-container *ngIf="activity != $activity; else activityForm">
+
+            <!-- Right: Sort & New Bundle -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-500 font-semibold uppercase">Sort:</span>
+              <p-dropdown [options]="sortOptions" [(ngModel)]="selectedSort" (ngModelChange)="onFilterChange()"
+                styleClass="p-inputtext-sm text-xs" appendTo="body" />
+              <button pButton type="button" label="New Bundle" icon="pi pi-plus" class="p-button-sm uppercase"
+                (click)="openCreate()"></button>
+            </div>
+          </div>
+
+          <!-- List of Bundles -->
+          <div *ngIf="filteredActivities.length > 0" class="divide-y divide-gray-200">
+            <div *ngFor="let $activity of filteredActivities" [id]="$activity.id"
+              class="p-4 hover:bg-gray-50/80 transition-colors"
+              [class.highlighted-row]="$activity.id === highlightedId">
+
               <div class="flex flex-col" [ngClass]="{ 'line-through': $activity.archived }">
-                <div class="flex items-center gap-1 mb-1" (click)="activity = $activity">
-                  <span class="font-bold text-blue-700 cursor-pointer">
-                    {{ $activity.name || '[name not specified]' }}
-                  </span>
-                  <span *ngIf="$activity.iso_language_code" class="uppercase text-xs text-gray-400">
-                    [{{ getLanguageName($activity.iso_language_code) }}]
-                  </span>
-                  <img *ngIf="$activity.linkings" class="synced-with-paws" title="Synced to PAWS" />
-                </div>
-
-                <span class="text-gray-500 text-xs">
-                  Created by: {{ $activity.user }} 
-                  <span *ngIf="$activity.user == app.user?.email" class="font-bold">(you)</span>
-                </span>
-                <span *ngIf="$activity.collaborator_emails?.length" class="text-gray-500 text-xs">
-                  Collaborators: {{ $activity.collaborator_emails.join(', ') }}
-                </span>
-
-                <span *ngIf="$activity.translations && ($activity.translations | keyvalue)?.length" class="text-xs">
-                  <span class="text-gray-500">Translated versions: </span>
-                   <ng-container *ngFor="let entry of $activity.translations | keyvalue; let last = last">
-                    <span (click)="highlightAndScroll($any(entry).value)" 
-                    class="text-blue-500 hover:underline cursor-pointer">
-                      {{ getLanguageName($any(entry).key) + (last ? '' : ', ') }}
-                    </span>
-                  </ng-container>
-                </span>
-
-                <ul class="m-0 mt-1 pl-4">
-                  <li *ngFor="let item of $activity.items; let last = last" [class.mb-1]="!last">
-                    <div class="font-semibold">
-                      <span>{{ item.details.name }}</span>
-                      <span class="uppercase text-xs text-gray-400">
-                        [{{ (item.details.iso_language_code ? getLanguageName(item.details.iso_language_code) + ' ' : '') 
-                          + (item.details.language ? item.details.language + ' ' : '') 
-                          + getItemTypeLabel(item.type) }}]
+                  <!-- Top row: Name, Badges, and Action Buttons -->
+                  <div class="flex items-center justify-between gap-2 mb-1">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                      <span (click)="openEdit($activity)"
+                        class="font-bold text-blue-700 hover:text-blue-900 cursor-pointer text-base">
+                        {{ $activity.name || '[name not specified]' }}
                       </span>
-                    </div>
-                    
-                    <div class="text-xs text-gray-600 my-1">
-                      {{ item.details.description?.substring(0, 512) }}
-                      {{ item.details.description?.length > 512 ? '...' : '' }}
+                      <span *ngIf="$activity.iso_language_code" class="uppercase text-xs text-gray-400 font-normal">
+                        [{{ getLanguageName($activity.iso_language_code) }}]
+                      </span>
+                      <p-tag *ngIf="$activity.published" value="Published" severity="success" class="text-xs ml-1" />
+                      <img *ngIf="$activity.linkings" class="synced-with-paws ml-1" title="Synced to PAWS" />
+                      <p-tag *ngIf="$activity.archived" value="Archived" severity="warning" class="text-xs ml-1" />
                     </div>
 
-                    <span *ngIf="item.details.tags?.length" class="text-xs">
-                      <p-tag *ngFor="let tag of item.details.tags" [value]="tag" severity="success" class="mr-1" />
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </ng-container>
-            <ng-template #activityForm>
-              <app-activity [id]="activity.id" [activity]="activity" (completed)="update($event)"></app-activity>
-            </ng-template>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="2">
-            <div class="text-xs text-center text-gray-400 w-full">
-              no record matched, revise your filter keyword
+                    <!-- Clean Borderless PrimeNG Action Buttons -->
+                    <div class="flex items-center gap-0.5">
+                      <button pButton type="button" icon="pi pi-pencil" title="Edit bundle"
+                        class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600" (click)="openEdit($activity)"></button>
+                      <button pButton type="button"
+                        icon="pi {{ api.isGeneratingPreviewJson($activity.id) ? 'pi-spin pi-spinner' : 'pi-eye' }}"
+                        [title]="api.isGeneratingPreviewJson($activity.id) ? 'Generating Preview' : 'Preview'"
+                        class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600" (click)="preview($activity)"
+                        [disabled]="api.isGeneratingPreviewJson($activity.id)"></button>
+                      <button pButton *ngIf="$activity.stat" type="button"
+                        [title]="$activity.published ? 'Unpublish from Hub' : 'Publish on Hub'"
+                        icon="pi pi-globe"
+                        class="p-button-text p-button-sm w-7 h-7 p-0"
+                        [ngClass]="{ 'text-emerald-600': $activity.published, 'p-button-plain': !$activity.published }"
+                        (click)="togglePublish($activity)"></button>
+                      <button pButton type="button" icon="pi pi-briefcase"
+                        [title]="$activity.archived ? 'Unarchive bundle' : 'Archive bundle'"
+                        class="p-button-text p-button-sm w-7 h-7 p-0"
+                        [ngClass]="{ 'text-amber-600': $activity.archived, 'p-button-plain': !$activity.archived }"
+                        (click)="toggleArchive($activity)"></button>
+                      <button pButton type="button" icon="pi pi-clone" title="Clone bundle"
+                        class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0" (click)="clone($activity)"></button>
+                    </div>
+                  </div>
+
+                  <!-- Metadata -->
+                  <div class="text-xs text-gray-500 mb-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span>Created by: <strong>{{ $activity.user }}</strong> <span *ngIf="$activity.user == app.user?.email" class="font-bold text-blue-600">(you)</span></span>
+                    <span *ngIf="getCreationDate($activity)">Created: <strong>{{ getCreationDate($activity) | date:'MMM d, y, h:mm a' }}</strong></span>
+                    <span *ngIf="$activity.collaborator_emails?.length">Collaborators: {{ $activity.collaborator_emails.join(', ') }}</span>
+                    <span>{{ $activity.items?.length || 0 }} bundle item(s)</span>
+                  </div>
+
+                  <!-- Translations -->
+                  <div *ngIf="$activity.translations && ($activity.translations | keyvalue)?.length" class="text-xs text-gray-500 mb-1">
+                    <span>Translated versions: </span>
+                    <ng-container *ngFor="let entry of $activity.translations | keyvalue; let last = last">
+                      <span (click)="highlightAndScroll($any(entry).value)" class="text-blue-500 hover:underline cursor-pointer">
+                        {{ getLanguageName($any(entry.key)) + (last ? '' : ', ') }}
+                      </span>
+                    </ng-container>
+                  </div>
+
+                  <!-- Bundle items: Clean numbered list matching the Hub style -->
+                  <div *ngIf="$activity.items?.length" class="mt-2 space-y-1.5 pl-2 border-l-2 border-gray-200">
+                    <div *ngFor="let item of (isItemsExpanded($activity.id) ? $activity.items : ($activity.items | slice:0:2)); let i = index" class="text-xs">
+                      <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="text-gray-400 font-mono text-[11px] font-bold">#{{ i + 1 }}</span>
+                        <span class="font-semibold text-gray-800">{{ item.details?.name || '[unnamed item]' }}</span>
+                        <span *ngIf="item.details?.iso_language_code" class="uppercase text-[10px] text-gray-400 font-normal">
+                          [{{ getLanguageName(item.details.iso_language_code) }}]
+                        </span>
+                        <span *ngIf="item.details?.language" class="text-[10px] text-gray-500 font-mono font-bold uppercase">
+                          [{{ item.details.language }}]
+                        </span>
+                        <span [ngClass]="item.type === 'challenge' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-gray-100 text-gray-600 border-gray-200'"
+                          class="text-[10px] px-1.5 py-0.2 rounded border font-medium">
+                          {{ getItemTypeLabel(item.type) }}
+                        </span>
+                        <span *ngIf="item.details?.tags?.length" class="flex flex-wrap gap-1">
+                          <p-tag *ngFor="let tag of item.details.tags" [value]="tag" severity="success" class="text-[10px]" />
+                        </span>
+                      </div>
+
+                      <div *ngIf="item.details?.description" class="text-gray-600 text-[11px] mt-0.5 pl-4">
+                        {{ cleanDescription(item.details?.description).substring(0, 300) }}
+                        {{ cleanDescription(item.details?.description).length > 300 ? '...' : '' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Expand / Collapse items -->
+                  <div *ngIf="$activity.items?.length > 2" class="mt-1 pl-2">
+                    <button pButton type="button" (click)="toggleExpandItems($activity.id, $event)"
+                      [label]="isItemsExpanded($activity.id) ? 'Show fewer items' : ('+ Show ' + ($activity.items.length - 2) + ' more bundle items...')"
+                      [icon]="isItemsExpanded($activity.id) ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+                      class="p-button-text p-button-sm text-xs text-blue-600 hover:text-blue-800 p-0 h-auto font-medium">
+                    </button>
+                  </div>
+                </div>
             </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="filteredActivities.length === 0" class="p-8 text-center text-xs text-gray-400">
+            No record matched, revise your filter criteria.
+            <div *ngIf="hasActiveFilters" class="mt-2">
+              <button pButton type="button" label="Reset All Filters" icon="pi pi-filter-slash"
+                class="p-button-outlined p-button-sm text-xs" (click)="clearFilters()"></button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
 </div>
+
+<!-- Bundle Authoring Modal Dialog with Backdrop -->
+<p-dialog [(visible)]="showBundleDialog" [modal]="true" [dismissableMask]="false"
+  [draggable]="false" [resizable]="false"
+  styleClass="bundle-dialog"
+  [style]="{ width: '94vw', maxWidth: '1050px' }"
+  (onHide)="onDialogHide()">
+  
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+        <i class="pi pi-box text-base"></i>
+      </div>
+      <div>
+        <h3 class="font-bold text-base text-gray-800 leading-tight">
+          {{ isNewBundle ? 'Create New Bundle' : ('Edit Bundle: ' + (activity?.name || '[Loading...]')) }}
+        </h3>
+        <p class="text-xs text-gray-500 font-normal m-0 mt-0.5">
+          {{ isNewBundle ? 'Configure bundle details, bundle items, and roles' : 'Modify bundle contents, bundle items, and language variations' }}
+        </p>
+      </div>
+    </div>
+  </ng-template>
+
+  <div *ngIf="showBundleDialog && !isNewBundle && !activity?.name && !activity?.items" class="py-16 text-center text-gray-400">
+    <i class="pi pi-spin pi-spinner text-3xl text-blue-600 mb-2 block"></i>
+    <p class="text-xs font-semibold text-gray-500">Loading bundle details...</p>
+  </div>
+
+  <app-activity *ngIf="showBundleDialog && (isNewBundle || activity?.items || activity?.name || activity?.id)" [id]="activity?.id" [activity]="activity"
+    (completed)="update($event)">
+  </app-activity>
+</p-dialog>
 
 <p-dialog [(visible)]="showPreview" [modal]="true" class="preview-dialog" [style]="{width: '85vw', height: '85vh'}"
   (onHide)="previewLink = null">

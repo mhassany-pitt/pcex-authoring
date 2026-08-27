@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, Title } from '@angular/platform-browser';
-import { environment } from '../../environments/environment';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '../app.service';
 import { getNavMenuBar, getPreviewLink, getPublishedLink } from '../utilities';
-import { MessageService, FilterService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-hub',
@@ -21,36 +21,48 @@ export class HubComponent implements OnInit {
   showPreview = false;
 
   activities: any[] = [];
-  globalQuery: string = '';
+  filteredActivities: any[] = [];
+  isLoading = false;
+
+  // Filter models
+  searchQuery: string = '';
+  selectedAuthors: string[] = [];
+  selectedProgLangs: string[] = [];
+  selectedLanguages: string[] = [];
+  selectedRoles: string[] = [];
+  hasTranslationsFilter: boolean = false;
+  selectedTags: string[] = [];
+  selectedSort: string = 'date_desc';
+
   searchTimeout: any;
 
-  integrationToggles: any = {};
-  integrationOptions = [{ label: 'VIEW LINK', value: 'html' }];
+  // Filter option lists
+  availableAuthors: { label: string; value: string }[] = [];
+  progLangOptions: { label: string; value: string }[] = [];
+  availableLanguages: { label: string; value: string }[] = [];
+  availableTags: { label: string; value: string }[] = [];
+
+  roleOptions = [
+    { label: 'Worked-Example', value: 'example' },
+    { label: 'Challenge', value: 'challenge' }
+  ];
+
+  sortOptions = [
+    { label: 'Date Created (Newest)', value: 'date_desc' },
+    { label: 'Date Created (Oldest)', value: 'date_asc' },
+    { label: 'Name (A – Z)', value: 'name_asc' },
+    { label: 'Name (Z – A)', value: 'name_desc' },
+    { label: 'Most Bundle Items', value: 'items_desc' },
+    { label: 'Fewest Bundle Items', value: 'items_asc' }
+  ];
+
+  integrationToggles: { [key: string]: boolean } = {};
+  expandedItems: { [key: string]: boolean } = {};
 
   cloningActivity: any = null;
   cloning: boolean = false;
 
-  selectedKVs: { [key: string]: any } = {};
-  langKVs: any[] = [];
-  authorKVs: any[] = [];
-  progLangKVs: any[] = [];
-  availableFacetLabels: { [key: string]: Set<string> } = {};
-  facetCounts: { [key: string]: Map<string, number> } = {};
-  collapsedFacets: { [key: string]: boolean } = {};
-
-  quickFilterSections: { [key: string]: boolean } = {
-    actLang: true,
-    author: true,
-    progLang: true,
-  };
-
   get isLoggedIn() { return !!this.app.user; }
-
-  get quickFiltersExpanded() { return true; }
-
-  toggleQuickFilterSection(section: string) {
-    this.quickFilterSections[section] = !this.quickFilterSections[section];
-  }
 
   private readonly languageNames =
     typeof Intl !== 'undefined' && 'DisplayNames' in Intl
@@ -70,178 +82,298 @@ export class HubComponent implements OnInit {
   getItemTypeLabel(type: string) {
     switch (type) {
       case 'example': return 'Worked-Example';
-      case 'challenge': return 'Code-Completion Problem';
+      case 'challenge': return 'Challenge';
       default: return type;
     }
+  }
+
+  get hasActiveFilters(): boolean {
+    return !!(
+      this.searchQuery?.trim() ||
+      this.selectedAuthors?.length ||
+      this.selectedProgLangs?.length ||
+      this.selectedLanguages?.length ||
+      this.selectedRoles?.length ||
+      this.hasTranslationsFilter ||
+      this.selectedTags?.length
+    );
+  }
+
+  get activeFiltersCount(): number {
+    let count = 0;
+    if (this.searchQuery?.trim()) count++;
+    if (this.selectedAuthors?.length) count += this.selectedAuthors.length;
+    if (this.selectedProgLangs?.length) count += this.selectedProgLangs.length;
+    if (this.selectedLanguages?.length) count += this.selectedLanguages.length;
+    if (this.selectedRoles?.length) count += this.selectedRoles.length;
+    if (this.hasTranslationsFilter) count++;
+    if (this.selectedTags?.length) count += this.selectedTags.length;
+    return count;
+  }
+
+  getRoleLabel(role: string): string {
+    const found = this.roleOptions.find(o => o.value === role);
+    return found ? found.label : role;
+  }
+
+  getAuthorLabel(email: string): string {
+    const found = this.availableAuthors.find(a => a.value === email);
+    return found ? found.label : email;
   }
 
   constructor(
     private http: HttpClient,
     public router: Router,
+    private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
     private title: Title,
     public app: AppService,
     private messages: MessageService,
-    private filterService: FilterService,
   ) { }
-
-  getCurrentRoute() {
-    return this.router.url.split('?')[0];
-  }
 
   ngOnInit(): void {
     this.title.setTitle('WEAT Hub');
-
-    this.filterService.register('sourceProgLangMatch', (value: any, filters: string[]) => {
-      if (!filters || !filters.length) return true;
-      const itemProgs = (value || []).map((i: any) => i.details?.language).filter((l: string) => !!l);
-      return filters.some(f => itemProgs.includes(f));
-    });
-
-    this.search('');
+    this.fetchActivities();
   }
 
-  reloadFilterKVs(activities: any[]) {
-    // Basic lists extraction
-    const actLangs = new Set<string>();
-    const authors = new Set<string>();
-    const progLangs = new Set<string>();
+  fetchActivities() {
+    this.isLoading = true;
+    this.http.get(`${environment.apiUrl}/hub`).subscribe({
+      next: (activities: any) => {
+        this.activities = (activities || []).map((activity: any) => {
+          const actLang = activity.iso_language_code ? this.getLanguageName(activity.iso_language_code) : '';
+          activity.iso_language_code_name = actLang;
+          activity.author_name = activity.author?.fullname || activity.author?.email || 'Unknown';
+          
+          const itemsText = (activity.items || []).map((item: any) => {
+            const itemLang = item.details?.iso_language_code ? this.getLanguageName(item.details.iso_language_code) : '';
+            const itemProg = item.details?.language || '';
+            const tags = (item.details?.tags || []).join(' ');
+            return `${item.details?.name || ''} ${item.details?.description || ''} ${itemProg} ${itemLang} ${tags}`;
+          }).join(' ');
 
-    activities.forEach(activity => {
-      actLangs.add(activity.iso_language_code_name);
-      authors.add(activity.author_name);
-      activity.items.forEach((item: any) => {
-        if (item.details?.language) progLangs.add(item.details.language);
-      });
-    });
+          const collabs = (activity.collaborators || []).join(' ');
 
-    this.langKVs = Array.from(actLangs).map(label => ({ label }));
-    this.authorKVs = Array.from(authors).map(label => ({ label }));
-    this.progLangKVs = Array.from(progLangs).map(label => ({ label }));
+          activity._filter_details = `${activity.id} ${activity.name || ''} ${actLang} ${activity.author_name} ${activity.author?.email || ''} ${collabs} ${itemsText}`.toLowerCase();
+          return activity;
+        });
 
-    this.refreshAvailableFacetLabels(activities);
-  }
-
-  private matchesFilters(activity: any, excludeField?: string) {
-    if (this.globalQuery) {
-      const q = this.globalQuery.toLowerCase();
-      if (!activity._filter_idnamedescription?.toLowerCase().includes(q)) return false;
-    }
-
-    for (const field of Object.keys(this.selectedKVs)) {
-      if (field === 'count' || field === excludeField) continue;
-      const selected = this.selectedKVs[field];
-      if (!selected || !selected.length) continue;
-      const labels = selected.map((s: any) => s.label);
-
-      if (field === 'iso_language_code_name') {
-        if (!labels.includes(activity.iso_language_code_name)) return false;
-      } else if (field === 'author_name') {
-        if (!labels.includes(activity.author_name)) return false;
-      } else if (field === 'item_prog_lang') {
-        const itemProgs = activity.items.map((i: any) => i.details?.language).filter((l: string) => !!l);
-        if (!labels.some((l: string) => itemProgs.includes(l))) return false;
-      }
-    }
-    return true;
-  }
-
-  getFacetCount(field: string, label: string) {
-    const list = this.activities.filter(a => this.matchesFilters(a, field));
-    let count = 0;
-    list.forEach(activity => {
-      if (field === 'iso_language_code_name') {
-        if (activity.iso_language_code_name === label) count++;
-      } else if (field === 'author_name') {
-        if (activity.author_name === label) count++;
-      } else if (field === 'item_prog_lang') {
-        const itemProgs = activity.items.map((i: any) => i.details?.language).filter((l: string) => !!l);
-        if (itemProgs.includes(label)) count++;
+        this.populateFilterOptions();
+        this.applyFilters();
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        console.error('Failed to load hub activities', error);
+        this.isLoading = false;
       }
     });
-    return count;
   }
 
-  refreshAvailableFacetLabels(filteredActivities: any[]) {
-    // We don't just use filteredActivities because we need to know what WOULD be available
-    // if we changed a selection in one specific facet.
-    
-    const fields = ['iso_language_code_name', 'author_name', 'item_prog_lang'];
-    const availability: { [key: string]: Set<string> } = {};
-    
-    fields.forEach(field => {
-      const availableSet = new Set<string>();
-      const potentialMatches = this.activities.filter(a => this.matchesFilters(a, field));
-      
-      potentialMatches.forEach(activity => {
-        if (field === 'iso_language_code_name') availableSet.add(activity.iso_language_code_name);
-        if (field === 'author_name') availableSet.add(activity.author_name);
-        
-        activity.items.forEach((item: any) => {
-          if (field === 'item_prog_lang' && item.details?.language) availableSet.add(item.details.language);
+  populateFilterOptions() {
+    const authorsMap = new Map<string, string>();
+    const progLangsSet = new Set<string>();
+    const languagesSet = new Set<string>();
+    const tagsSet = new Set<string>();
+
+    this.activities.forEach(activity => {
+      if (activity.author?.email) {
+        const label = activity.author.fullname
+          ? `${activity.author.fullname} (${activity.author.email})`
+          : activity.author.email;
+        authorsMap.set(activity.author.email, label);
+      }
+
+      if (activity.iso_language_code) {
+        languagesSet.add(activity.iso_language_code);
+      }
+
+      (activity.items || []).forEach((item: any) => {
+        if (item.details?.language) {
+          progLangsSet.add(item.details.language);
+        }
+        if (item.details?.iso_language_code) {
+          languagesSet.add(item.details.iso_language_code);
+        }
+        (item.details?.tags || []).forEach((tag: string) => {
+          if (tag?.trim()) tagsSet.add(tag.trim());
         });
       });
-      availability[field] = availableSet;
     });
 
-    this.availableFacetLabels = availability;
+    this.availableAuthors = Array.from(authorsMap.entries())
+      .map(([value, label]) => ({ label, value }))
+      .sort((a, b) => a.label.localeCompare(b.label));
 
-    this.langKVs.forEach(kv => kv.count = this.getFacetCount('iso_language_code_name', kv.label));
-    this.authorKVs.forEach(kv => kv.count = this.getFacetCount('author_name', kv.label));
-    this.progLangKVs.forEach(kv => kv.count = this.getFacetCount('item_prog_lang', kv.label));
+    this.progLangOptions = Array.from(progLangsSet)
+      .map(lang => ({ label: lang, value: lang }))
+      .sort((a, b) => a.label.localeCompare(b.label));
 
-    this.langKVs.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
-    this.authorKVs.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
-    this.progLangKVs.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+    this.availableLanguages = Array.from(languagesSet)
+      .map(iso => ({ label: this.getLanguageName(iso) || iso, value: iso }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+
+    this.availableTags = Array.from(tagsSet)
+      .map(tag => ({ label: tag, value: tag }))
+      .sort((a, b) => a.label.localeCompare(b.label));
   }
 
-  toggleQuickFilter(table: any, field: string, facet: any) {
-    const selected = this.selectedKVs[field] || [];
-    const index = selected.findIndex((s: any) => s.label === facet.label);
-    if (index >= 0) {
-      selected.splice(index, 1);
-    } else {
-      selected.push(facet);
-    }
-    this.selectedKVs[field] = [...selected];
-    this.selectedKVs['count'] = Object.keys(this.selectedKVs).filter(k => k !== 'count').reduce((sum, key) => sum + this.selectedKVs[key].length, 0);
+  applyFilters() {
+    const query = (this.searchQuery || '').trim().toLowerCase();
 
-    this.applyFilters(table);
-  }
+    this.filteredActivities = this.activities.filter(activity => {
+      // 1. Authors filter
+      if (this.selectedAuthors?.length) {
+        if (!activity.author?.email || !this.selectedAuthors.includes(activity.author.email)) {
+          return false;
+        }
+      }
 
-  applyFilters(table: any) {
-    Object.keys(this.selectedKVs).forEach(field => {
-      if (field === 'count') return;
-      const values = this.selectedKVs[field].map((f: any) => f.label);
-      
-      switch (field) {
-        case 'item_prog_lang':
-          table.filter(values.length ? values : null, 'items', 'sourceProgLangMatch');
-          break;
-        case 'iso_language_code_name':
-          table.filter(values.length ? values : null, 'iso_language_code_name', 'in');
-          break;
-        case 'author_name':
-          table.filter(values.length ? values : null, 'author_name', 'in');
-          break;
+      // 2. Programming Languages filter
+      if (this.selectedProgLangs?.length) {
+        const hasMatchingProgLang = (activity.items || []).some((item: any) =>
+          item.details?.language && this.selectedProgLangs.includes(item.details.language)
+        );
+        if (!hasMatchingProgLang) return false;
+      }
+
+      // 3. Natural Languages filter
+      if (this.selectedLanguages?.length) {
+        const bundleLangMatch = activity.iso_language_code && this.selectedLanguages.includes(activity.iso_language_code);
+        const itemLangMatch = (activity.items || []).some((item: any) =>
+          item.details?.iso_language_code && this.selectedLanguages.includes(item.details.iso_language_code)
+        );
+        if (!bundleLangMatch && !itemLangMatch) return false;
+      }
+
+      // 4. Role filter
+      if (this.selectedRoles?.length) {
+        const hasMatchingRole = (activity.items || []).some((item: any) =>
+          this.selectedRoles.includes(item.type)
+        );
+        if (!hasMatchingRole) return false;
+      }
+
+      // 5. Translations filter
+      if (this.hasTranslationsFilter) {
+        const hasTrans = activity.translations && Object.keys(activity.translations).length > 0;
+        if (!hasTrans) return false;
+      }
+
+      // 6. Tags filter
+      if (this.selectedTags?.length) {
+        const bundleTags = new Set<string>();
+        (activity.items || []).forEach((item: any) => {
+          (item.details?.tags || []).forEach((t: string) => bundleTags.add(t));
+        });
+        const hasTagMatch = this.selectedTags.some(t => bundleTags.has(t));
+        if (!hasTagMatch) return false;
+      }
+
+      // 7. Search query filter
+      if (query) {
+        if (!activity._filter_details?.includes(query)) return false;
+      }
+
+      return true;
+    });
+
+    // Sorting
+    this.filteredActivities.sort((a, b) => {
+      switch (this.selectedSort) {
+        case 'date_asc':
+          return this.getCreationTime(a) - this.getCreationTime(b);
+        case 'name_desc':
+          return (b.name || '').localeCompare(a.name || '');
+        case 'name_asc':
+          return (a.name || '').localeCompare(b.name || '');
+        case 'items_desc':
+          return (b.items?.length || 0) - (a.items?.length || 0);
+        case 'items_asc':
+          return (a.items?.length || 0) - (b.items?.length || 0);
+        case 'date_desc':
+        default:
+          return this.getCreationTime(b) - this.getCreationTime(a);
       }
     });
-    this.refreshAvailableFacetLabels(table.filteredValue || this.activities);
   }
 
-  isQuickFilterSelected(field: string, label: string) {
-    return (this.selectedKVs[field] || []).some((s: any) => s.label === label);
+  getCreationDate(activity: any): Date | null {
+    if (activity.created_at) return new Date(activity.created_at);
+    if (activity.id && typeof activity.id === 'string' && activity.id.length === 24) {
+      const timestamp = parseInt(activity.id.substring(0, 8), 16) * 1000;
+      if (!isNaN(timestamp)) return new Date(timestamp);
+    }
+    return null;
   }
 
-  isQuickFilterAvailable(field: string, label: string) {
-    return (this.availableFacetLabels[field] || new Set()).has(label);
+  getCreationTime(activity: any): number {
+    const d = this.getCreationDate(activity);
+    return d ? d.getTime() : 0;
   }
 
-  clearQuickFilters(table: any) {
-    this.selectedKVs = {};
-    table.reset();
-    this.activities.forEach(a => table.filter(null, 'name', 'contains')); // trigger reset
-    this.reloadFilterKVs(this.activities);
+  onSearchInput() {
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.applyFilters();
+    }, 200);
+  }
+
+  onFilterChange() {
+    this.applyFilters();
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
+    this.applyFilters();
+  }
+
+  clearFilters() {
+    this.searchQuery = '';
+    this.selectedAuthors = [];
+    this.selectedProgLangs = [];
+    this.selectedLanguages = [];
+    this.selectedRoles = [];
+    this.hasTranslationsFilter = false;
+    this.selectedTags = [];
+    this.applyFilters();
+  }
+
+  removeAuthor(author: string) {
+    this.selectedAuthors = (this.selectedAuthors || []).filter(a => a !== author);
+    this.applyFilters();
+  }
+
+  removeProgLang(lang: string) {
+    this.selectedProgLangs = (this.selectedProgLangs || []).filter(l => l !== lang);
+    this.applyFilters();
+  }
+
+  removeLanguage(lang: string) {
+    this.selectedLanguages = (this.selectedLanguages || []).filter(l => l !== lang);
+    this.applyFilters();
+  }
+
+  removeRole(role: string) {
+    this.selectedRoles = (this.selectedRoles || []).filter(r => r !== role);
+    this.applyFilters();
+  }
+
+  clearTranslationsFilter() {
+    this.hasTranslationsFilter = false;
+    this.applyFilters();
+  }
+
+  removeTag(tag: string) {
+    this.selectedTags = (this.selectedTags || []).filter(t => t !== tag);
+    this.applyFilters();
+  }
+
+  toggleIntegration(activityId: string) {
+    this.integrationToggles[activityId] = !this.integrationToggles[activityId];
+  }
+
+  toggleExpandedItems(activityId: string) {
+    this.expandedItems[activityId] = !this.expandedItems[activityId];
   }
 
   async preview(activity: any) {
@@ -251,47 +383,19 @@ export class HubComponent implements OnInit {
     this.showPreview = true;
   }
 
-  search(value: string) {
-    if (this.searchTimeout)
-      clearTimeout(this.searchTimeout);
-
-    this.searchTimeout = setTimeout(() => {
-      this.http.get(`${environment.apiUrl}/hub?key=${value}`).subscribe(
-        (activities: any) => {
-          this.activities = activities.map((activity: any) => {
-            // activity.id + activity.items.*.id/name/description + activity.iso + items.iso
-            const actLang = activity.iso_language_code ? this.getLanguageName(activity.iso_language_code) : 'Unknown';
-            activity.iso_language_code_name = actLang;
-            activity.author_name = activity.author?.fullname || 'Unknown';
-            
-            activity._filter_idnamedescription = `${activity.id} ${activity.name} ${actLang} ${activity.author_name} ${activity.author?.email || ''} ` + activity.items.map((item: any) => {
-              const itemLang = item.details.iso_language_code ? this.getLanguageName(item.details.iso_language_code) : 'Unknown';
-              const tags = item.details.tags?.join(' ') || '';
-              return `${item.item} ${item.details.name} ${item.details.description} ${itemLang} ${tags} `;
-            }).join(' ');
-            return activity;
-          });
-          this.reloadFilterKVs(this.activities);
-        },
-        (error: any) => console.log(error),
-      );
-    }, 300);
-  }
-
-  filter(table: any, $event: any) {
-    this.globalQuery = $event.target.value;
-    table.filterGlobal(this.globalQuery, 'contains');
-    this.refreshAvailableFacetLabels(table.filteredValue || this.activities);
-  }
-
-  selectIntegrationLink(el: any) {
-    setTimeout(() => el.querySelector('input.integration-link')?.select(), 0);
+  copyLink(activity: any) {
+    const link = this.getPublishedLink(activity, 'html');
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(link).then(() => {
+        this.messages.add({ severity: 'info', summary: 'Copied', detail: 'Embed link copied to clipboard!' });
+      });
+    }
   }
 
   selectActivity2Clone(activity: any) {
     this.cloningActivity = JSON.parse(JSON.stringify(activity));
-    delete this.cloningActivity._filter_idnamedescription;
-    this.cloningActivity.items.forEach((i: any) => i.cloneItem = true);
+    delete this.cloningActivity._filter_details;
+    (this.cloningActivity.items || []).forEach((i: any) => i.cloneItem = true);
   }
 
   submitClone() {
@@ -299,9 +403,12 @@ export class HubComponent implements OnInit {
     this.http.post(`${environment.apiUrl}/hub/clone`, this.cloningActivity, { withCredentials: true }).subscribe({
       next: (response: any) => {
         this.cloningActivity = null;
-        this.messages.add({ severity: 'success', summary: 'Success', detail: 'Activity cloned successfully!' });
+        this.messages.add({ severity: 'success', summary: 'Success', detail: 'Bundle cloned successfully!' });
       },
-      error: (error: any) => console.error(error),
+      error: (error: any) => {
+        console.error(error);
+        this.messages.add({ severity: 'error', summary: 'Error', detail: 'Failed to clone bundle.' });
+      },
       complete: () => this.cloning = false,
     });
   }

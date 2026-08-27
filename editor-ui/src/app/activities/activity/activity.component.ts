@@ -28,9 +28,16 @@ export class ActivityComponent implements OnInit {
       : null;
 
   getLanguageName(isoLanguageCode: string) {
-    const code = isoLanguageCode?.trim().toLowerCase();
-    if (!code) return '';
-    return this.languageNames?.of(code) || code;
+    try {
+      return new Intl.DisplayNames(['en'], { type: 'language' }).of(isoLanguageCode);
+    } catch (e) {
+      return '';
+    }
+  }
+
+  getLanguageLabel(isoLanguageCode: string): string {
+    const lang = this.isoLanguages.find(l => l.value === isoLanguageCode);
+    return (lang ? lang.label : (this.getLanguageName(isoLanguageCode) || isoLanguageCode)) || '';
   }
 
   _v: any = {};
@@ -62,16 +69,20 @@ export class ActivityComponent implements OnInit {
       (error: any) => console.log(error)
     )
 
-    if (this.activity.id) {
+    if (this.activity?.id) {
       this.api.read(this.activity.id).subscribe(
         (activity: any) => {
           this.model = activity;
+          if (!this.model.collaborator_emails) this.model.collaborator_emails = [];
           this.translationRows = Object.entries(activity.translations || {}).map(([iso, id]) => ({ iso, id }));
         },
         (error: any) => console.log(error)
-      )
+      );
     } else {
-      this.model = this.activity;
+      this.model = this.activity ? { ...this.activity } : {};
+      if (!this.model.items || !this.model.items.length) this.model.items = [{ type: 'example' }];
+      if (!this.model.collaborator_emails) this.model.collaborator_emails = [];
+      this.translationRows = [];
     }
 
     this.api.activities({}).subscribe(
@@ -85,14 +96,61 @@ export class ActivityComponent implements OnInit {
     );
   }
 
+  getItemSource(item: any): any {
+    if (!item?.item) return null;
+    return this.sources_org.find((s: any) => s.id === item.item);
+  }
+
+  getItemTypeOptions(item: any): any[] {
+    const source = this.getItemSource(item);
+    const cannotBeChallenge = source && (source.blank_lines_count === 0);
+
+    if (cannotBeChallenge && item.type === 'challenge') {
+      item.type = 'example';
+    }
+
+    return [
+      { label: 'Worked-Example', value: 'example' },
+      {
+        label: 'Challenge',
+        value: 'challenge',
+        disabled: cannotBeChallenge,
+        title: cannotBeChallenge ? 'Source has 0 blank lines and cannot be a Challenge.' : ''
+      },
+    ];
+  }
+
+  onSourceSelected(item: any) {
+    const source = this.getItemSource(item);
+    if (source && (source.blank_lines_count === 0) && item.type === 'challenge') {
+      item.type = 'example';
+    }
+  }
+
+  getPawsConflictMessage(): string {
+    if (!this.app.paws_sync_allowed) return '';
+    const items: any[] = this.model?.items || [];
+    const itemIds = items.filter((i: any) => i.item).map((i: any) => i.item);
+    if (new Set(itemIds).size !== itemIds.length) {
+      return 'Duplicate sources detected: Each bundle item source can only be added once in the bundle.';
+    }
+    const exampleCount = items.filter((i: any) => i.type === 'example').length;
+    if (exampleCount !== 1) {
+      return `PAWS requirement: Each bundle must include exactly 1 Worked-Example (currently has ${exampleCount}).`;
+    }
+    return '';
+  }
+
   addItem() {
     if (!this.model.items)
       this.model.items = [];
-    this.model.items.push({});
+    const hasExample = this.model.items.some((i: any) => i.type === 'example');
+    this.model.items.push({ type: hasExample ? 'challenge' : 'example' });
   }
 
   removeItem(item: any) {
-    this.model.items.splice(this.model.items.indexOf(item), 1);
+    const idx = this.model.items.indexOf(item);
+    if (idx >= 0) this.model.items.splice(idx, 1);
   }
 
   update() {
