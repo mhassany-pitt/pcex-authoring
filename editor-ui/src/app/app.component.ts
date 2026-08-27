@@ -16,6 +16,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AccordionModule } from 'primeng/accordion';
 import { CommonModule } from '@angular/common';
+import { TutorialOverlayComponent } from './tutorial/tutorial-overlay.component';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,7 @@ import { CommonModule } from '@angular/common';
     FormsModule, ButtonModule, AccordionModule, TableModule,
     InputTextModule, DialogModule, InputTextareaModule,
     CheckboxModule, DropdownModule, SelectButtonModule,
-    AutoCompleteModule,
+    AutoCompleteModule, TutorialOverlayComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.less'

@@ -5,7 +5,7 @@
     <!-- 2-Column Responsive Layout: Left Sidebar + Right Main Content -->
     <div class="flex flex-col lg:flex-row gap-6 items-start">
       <!-- LEFT SIDEBAR -->
-      <aside class="w-full lg:w-72 flex-shrink-0 bg-white border border-gray-300 rounded shadow-sm p-4 space-y-4 lg:sticky lg:top-24 max-h-[calc(100vh-7.5rem)] overflow-y-auto">
+      <aside id="sources-sidebar" class="w-full lg:w-72 flex-shrink-0 bg-white border border-gray-300 rounded shadow-sm p-4 space-y-4 lg:sticky lg:top-24 max-h-[calc(100vh-7.5rem)] overflow-y-auto">
         <!-- Sidebar Header -->
         <div class="flex items-center justify-between pb-2 border-b border-gray-200">
           <span class="font-bold text-sm text-gray-700 uppercase tracking-tight flex items-center gap-1.5">
@@ -108,7 +108,7 @@
       <main class="flex-1 min-w-0 w-full">
         <div class="border shadow-md bg-white rounded overflow-hidden">
           <!-- Top Toolbar -->
-          <div class="p-3 bg-gray-50 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3">
+          <div id="sources-toolbar" class="p-3 bg-gray-50 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3">
             <!-- Left: Count & Filter Chips -->
             <div class="flex flex-wrap items-center gap-2">
               <span class="text-xs font-bold text-gray-700 uppercase tracking-tight">
@@ -168,7 +168,7 @@
           <!-- List of Sources -->
           <div *ngIf="filteredSources.length > 0" class="divide-y divide-gray-200">
             <div *ngFor="let $source of filteredSources" [id]="$source.id"
-              class="p-4 hover:bg-gray-50/80 transition-colors"
+              class="p-4 hover:bg-gray-50/80 transition-colors sources-row"
               [class.highlighted-row]="$source.id === highlightedId">
 
               <div class="flex flex-col" [ngClass]="{ 'line-through': $source.archived }">
@@ -197,7 +197,7 @@
                   </div>
 
                   <!-- Clean Borderless PrimeNG Action Buttons -->
-                  <div class="flex items-center gap-0.5">
+                  <div class="sources-row-actions flex items-center gap-0.5">
                     <button [routerLink]="['/editor', $source.id]" pButton type="button" icon="pi pi-pencil" title="Edit source"
                       class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600"></button>
                     <button pButton type="button"
@@ -249,7 +249,7 @@
 
           <!-- Empty State -->
           <div *ngIf="filteredSources.length === 0" class="p-8 text-center text-gray-400">
-            <div class="text-sm">No problem sources matched your filter criteria</div>
+            <div class="text-sm">No sources matched your filter criteria</div>
             <button pButton type="button" label="Reset all filters" (click)="clearFilters()"
               class="p-button-text p-button-sm text-xs mt-2"></button>
           </div>
