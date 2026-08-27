@@ -299,15 +299,37 @@ export class GptGenaiService {
   }
 
   async validate(config: any) {
-    config.model = config.model || 'gpt-5-mini';
-    if (config.model != 'gpt-5-mini' && !config.api_key)
-      throw new Error('API key is required if you are usign a model other than gpt-5-mini.');
-    config.api_key = config.api_key || this.config.get('OPENAI_API_KEY');
+    const defaultModel = this.config.get('OPENAI_MODEL') || 'qwen3.5:397b-cloud';
+    const defaultBaseURL = this.config.get('OPENAI_BASE_URL') || 'http://localhost:11434/v1';
+    const serverApiKey = this.config.get('OPENAI_API_KEY');
+
+    const userModel = config.model;
+    const userBaseURL = config.baseURL || config.baseUrl;
+    const userApiKey = config.apiKey || config.api_key;
+
+    config.model = userModel || defaultModel;
+    config.baseURL = userBaseURL || defaultBaseURL;
+
+    const isDefaultModel = (!userModel || userModel === defaultModel);
+    const isDefaultBaseURL = (!userBaseURL || userBaseURL === defaultBaseURL);
+    const isDefaultSetup = isDefaultModel && isDefaultBaseURL;
+
+    if (!isDefaultSetup && !userApiKey) {
+      if (!isDefaultModel && !isDefaultBaseURL) {
+        throw new Error(`API key is required if you are using a model other than '${defaultModel}' or a custom baseURL.`);
+      } else if (!isDefaultModel) {
+        throw new Error(`API key is required if you are using a model other than '${defaultModel}'.`);
+      } else {
+        throw new Error(`API key is required if you are using a custom baseURL other than '${defaultBaseURL}'.`);
+      }
+    }
+
+    config.apiKey = userApiKey || serverApiKey || 'ollama';
     // config.organization = config.organization || this.config.get('OPENAI_ORG_ID');
     return config;
   }
 
-  private async promptGPT({ input, config, format }) {
+  private async promptGPT({ input, config, format }): Promise<any> {
     const {
       // IGNORE these params
       // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -319,15 +341,62 @@ export class GptGenaiService {
       translate_comments,
       // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
       // pass the rest to GPT
-      api_key, organization,
-      model, text, ...params
+      apiKey: explicitApiKey, api_key: legacyApiKey,
+      baseURL: explicitBaseUrl, baseUrl: altBaseUrl,
+      organization, model, text, ...params
     } = config;
-    const payload = { ...params, model, text: { ...text, format }, input };
-    const openai = new OpenAI({ apiKey: api_key, organization: organization });
-    return await openai.responses.create(payload);
-  }
+
+    const apiKey = explicitApiKey || legacyApiKey || this.config.get('OPENAI_API_KEY') || 'ollama';
+    const baseUrl = explicitBaseUrl || altBaseUrl || this.config.get('OPENAI_BASE_URL') || undefined;
+    const orgId = organization || this.config.get('OPENAI_ORG_ID') || undefined;
+
+    const openai = new OpenAI({
+      apiKey,
+      baseURL: baseUrl,
+      organization: orgId,
+    });
+
+    const isCustomOrOllama = !!baseUrl;
+
+    if (!isCustomOrOllama && (openai as any).responses?.create) {
+      try {
+        const payload = { ...params, model, text: { ...text, format }, input };
+        return await (openai as any).responses.create(payload);
+      } catch (e) {
+        console.warn('[gpt-genai] responses.create failed, falling back to chat.completions:', e?.message || e);
+      }
+    }
+
+    // Standard OpenAI-compliant Chat Completions (Ollama, vLLM, LiteLLM, OpenAI)
+    const messages = input.map((m: any) => ({
+      role: m.role,
+      content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content)
+    }));
+
+    const chatPayload: any = {
+      model,
+      messages,
+      ...params
+    };
+
+    if (format?.type === 'json_schema' || format?.schema) {
+      chatPayload.response_format = {
+        type: 'json_object'
+      };
+    }
+
+    const completion = await openai.chat.completions.create(chatPayload);
+    const outputText = completion.choices[0]?.message?.content || '';
+
+    return {
+      output_text: outputText,
+      choices: completion.choices,
+      ...completion
+    };
+  } 
 
   private removeJsonQuotes(resp: string) {
+    if (!resp) return '';
     for (const quote of ['"""', "'''", '```']) {
       if (resp.startsWith(quote + 'json')) resp = resp.substring(7);
       if (resp.endsWith(quote)) resp = resp.substring(0, resp.length - 3);

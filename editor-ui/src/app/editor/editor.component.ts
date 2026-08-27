@@ -96,8 +96,9 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   GPT_CONF_PLACEHOLDER = JSON.stringify({
-    model: "gpt-5-mini",
-    api_key: "<<YOUR_API_KEY>>",
+    model: "qwen3.5:397b-cloud",
+    baseURL: "http://localhost:11434/v1",
+    // apiKey: "<<YOUR_API_KEY>>",
     // organization: "<<YOUR_ORGANIZATION>>",
   }, null, 2);
 
@@ -931,7 +932,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   resetOpenAIGPTConfig() {
-    this.openAIGPTConfig = this.GPT_CONF_PLACEHOLDER.replace('<<YOUR_API_KEY>>', ''); // .replace('<<YOUR_ORGANIZATION>>', '');
+    this.openAIGPTConfig = this.GPT_CONF_PLACEHOLDER;
   }
 
   loadOpenAIGPTConfig(then?: () => void) {
@@ -953,7 +954,9 @@ export class EditorComponent implements OnInit, OnDestroy {
         delete config.translate_variables;
         delete config.translate_strings;
         delete config.translate_comments;
-        this.openAIGPTConfig = JSON.stringify(config, null, 2);
+        if (Object.keys(config).length > 0) {
+          this.openAIGPTConfig = JSON.stringify(config, null, 2);
+        }
         if (then) then();
         else this._v['show-gpt-config'] = true;
       },
