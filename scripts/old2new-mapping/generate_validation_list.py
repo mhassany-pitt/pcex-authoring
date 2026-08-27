@@ -80,8 +80,6 @@ def main():
             c_sources_count = sum(len(json.load(open(bp)).get("bundle", json.load(open(bp))).get("items", [])) for bp in b_list)
             
             f.write(f"## 👤 Assigned to: `{c}` ({len(b_list)} bundles · {c_sources_count} sources)\n\n")
-            f.write("| Status | # | Bundle | Source Name (Click to Open) | Role | Blanks | Distr. (Keep ≤ 3) |\n")
-            f.write("| :---: | :-: | :--- | :--- | :---: | :-: | :---: |\n")
 
             for b_path in b_list:
                 old_bid = os.path.splitext(os.path.basename(b_path))[0]
@@ -92,6 +90,8 @@ def main():
                 bundle = wrapper.get("bundle", wrapper)
                 bundle_name = bundle.get("name", "Untitled Bundle")
                 items = bundle.get("items", [])
+
+                f.write(f"- [ ] **`{bundle_name}`** (`{new_bid}`)\n")
 
                 for item in items:
                     old_sid = item.get("item")
@@ -111,9 +111,10 @@ def main():
                         distractors_count = len(s_data.get("distractors", []))
 
                     editor_link = f"{BASE_EDITOR_URL}/{new_sid}"
-                    dist_label = f"{distractors_count} → 3" if distractors_count > 3 else str(distractors_count)
+                    dist_label = f"{distractors_count}→3 distr." if distractors_count > 3 else f"{distractors_count} distr."
+                    blank_label = f"{blanks_count} blanks" if blanks_count != 1 else "1 blank"
 
-                    f.write(f"| [ ] | {global_idx} | `{bundle_name}` | [**{source_name}**]({editor_link}) | {role} | {blanks_count} | {dist_label} |\n")
+                    f.write(f"  - [ ] #{global_idx} [**{source_name}**]({editor_link}) &nbsp;•&nbsp; `{role}` &nbsp;•&nbsp; {blank_label} &nbsp;•&nbsp; {dist_label}\n")
 
                     csv_rows.append([
                         "Pending",
@@ -131,13 +132,15 @@ def main():
                     ])
                     global_idx += 1
 
-            f.write("\n---\n\n")
+                f.write("\n")
+
+            f.write("---\n\n")
 
     with open(csv_out, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerows(csv_rows)
 
-    print(f"Generated compact validation list in {md_out} and {csv_out}.")
+    print(f"Generated task list in {md_out} and {csv_out}.")
 
 if __name__ == "__main__":
     main()

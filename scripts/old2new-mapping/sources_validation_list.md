@@ -22,159 +22,248 @@
 
 ## 👤 Assigned to: `moh70@pitt.edu` (11 bundles · 28 sources)
 
-| Status | # | Bundle | Source Name (Click to Open) | Role | Blanks | Distr. (Keep ≤ 3) |
-| :---: | :-: | :--- | :--- | :---: | :-: | :---: |
-| [ ] | 1 | `py_check_product_code` | [**Counting the Number of Valid and Banned Product Codes (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad1) | ex | 4 | 16 → 3 |
-| [ ] | 2 | `py_check_product_code` | [**Counting the Number of Valid and Banned Product Codes (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad3) | ch | 3 | 12 → 3 |
-| [ ] | 3 | `py_bmi_calculator` | [**Calculating Body Mass Index (BMI)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d0cbc5a3f2aa638b59) | ex | 1 | 7 → 3 |
-| [ ] | 4 | `py_bmi_calculator` | [**Calculating and Rounding Up Body Mass Index (BMI) To the Nearest Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d0cbc5a3f2aa638b5b) | ch | 1 | 6 → 3 |
-| [ ] | 5 | `py_list_change` | [**Modifying a List (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b83) | ex | 2 | 11 → 3 |
-| [ ] | 6 | `py_list_change` | [**Modifying a List (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b85) | ch | 3 | 9 → 3 |
-| [ ] | 7 | `py_hot_dry` | [**Determining the Weather Condition (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b71) | ex | 1 | 7 → 3 |
-| [ ] | 8 | `py_hot_dry` | [**Determining the Weather Condition (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b73) | ch | 1 | 6 → 3 |
-| [ ] | 9 | `py_hot_dry` | [**Determining the Weather Condition (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b75) | ch | 1 | 6 → 3 |
-| [ ] | 10 | `py_hot_dry` | [**Determining the Weather Condition (Case 4)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b77) | ch | 1 | 7 → 3 |
-| [ ] | 11 | `py_input` | [**Receiving Input Integers Until a Certain Condition is Met (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b4d) | ex | 1 | 6 → 3 |
-| [ ] | 12 | `py_input` | [**Receiving Input Integers Until a Certain Condition is Met (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b4f) | ch | 1 | 5 → 3 |
-| [ ] | 13 | `py_input` | [**Receiving Input Integers Until a Certain Condition is Met (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b51) | ch | 1 | 5 → 3 |
-| [ ] | 14 | `py_input` | [**Receiving Input Integers Until a Certain Condition is Met (Case 4)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b53) | ch | 1 | 5 → 3 |
-| [ ] | 15 | `py_list_min_max` | [**Finding the Maximum Value in a List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b93) | ex | 2 | 9 → 3 |
-| [ ] | 16 | `py_list_min_max` | [**Finding the Minimum Value in a List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d5cbc5a3f2aa638b95) | ch | 2 | 8 → 3 |
-| [ ] | 17 | `objects_classes_account` | [**The Class for Representing a Bank Account (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b0d) | ex | 3 | 12 → 3 |
-| [ ] | 18 | `objects_classes_account` | [**The Class for Representing a Bank Account (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b0f) | ch | 2 | 11 → 3 |
-| [ ] | 19 | `objects_classes_point` | [**The Class for Representing a Point in the Euclidean Plane (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638ae1) | ex | 3 | 10 → 3 |
-| [ ] | 20 | `objects_classes_point` | [**The Class for Representing a Point in the Euclidean Plane (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638ae3) | ch | 2 | 10 → 3 |
-| [ ] | 21 | `py_nested_if_temperature` | [**Warning the User about the Changes in the Temperature**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d0cbc5a3f2aa638b55) | ex | 1 | 7 → 3 |
-| [ ] | 22 | `py_nested_if_temperature` | [**Warning the User about the Changes in the Temperature and Humidity**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d0cbc5a3f2aa638b57) | ch | 1 | 6 → 3 |
-| [ ] | 23 | `py_list_basic` | [**Updating an Element in the List (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638ae5) | ex | 1 | 5 → 3 |
-| [ ] | 24 | `py_list_basic` | [**Updating an Element in the List (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638ae7) | ch | 1 | 6 → 3 |
-| [ ] | 25 | `py_list_basic` | [**Updating an Element in the List (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638ae9) | ch | 1 | 6 → 3 |
-| [ ] | 26 | `py_digits` | [**Printing Digits of an Integer from Right to Left**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac7) | ex | 1 | 4 → 3 |
-| [ ] | 27 | `py_digits` | [**The Digit Sum of an Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac9) | ch | 2 | 10 → 3 |
-| [ ] | 28 | `py_digits` | [**Reversing the Digits of an Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638acb) | ch | 2 | 9 → 3 |
+- [ ] **`py_check_product_code`** (`6a9060d6cbc5a3f2aa638bad`)
+  - [ ] #1 [**Counting the Number of Valid and Banned Product Codes (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad1) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 16→3 distr.
+  - [ ] #2 [**Counting the Number of Valid and Banned Product Codes (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad3) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 12→3 distr.
+
+- [ ] **`py_bmi_calculator`** (`6a9060d9cbc5a3f2aa638be7`)
+  - [ ] #3 [**Calculating Body Mass Index (BMI)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d0cbc5a3f2aa638b59) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+  - [ ] #4 [**Calculating and Rounding Up Body Mass Index (BMI) To the Nearest Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d0cbc5a3f2aa638b5b) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+
+- [ ] **`py_list_change`** (`6a9060dacbc5a3f2aa638bf7`)
+  - [ ] #5 [**Modifying a List (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b83) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 11→3 distr.
+  - [ ] #6 [**Modifying a List (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b85) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 9→3 distr.
+
+- [ ] **`py_hot_dry`** (`6a9060dacbc5a3f2aa638bf1`)
+  - [ ] #7 [**Determining the Weather Condition (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b71) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+  - [ ] #8 [**Determining the Weather Condition (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b73) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #9 [**Determining the Weather Condition (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b75) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #10 [**Determining the Weather Condition (Case 4)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b77) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+
+- [ ] **`py_input`** (`6a9060d9cbc5a3f2aa638be3`)
+  - [ ] #11 [**Receiving Input Integers Until a Certain Condition is Met (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b4d) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #12 [**Receiving Input Integers Until a Certain Condition is Met (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b4f) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 5→3 distr.
+  - [ ] #13 [**Receiving Input Integers Until a Certain Condition is Met (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b51) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 5→3 distr.
+  - [ ] #14 [**Receiving Input Integers Until a Certain Condition is Met (Case 4)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b53) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 5→3 distr.
+
+- [ ] **`py_list_min_max`** (`6a9060dacbc5a3f2aa638bff`)
+  - [ ] #15 [**Finding the Maximum Value in a List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b93) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 9→3 distr.
+  - [ ] #16 [**Finding the Minimum Value in a List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d5cbc5a3f2aa638b95) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 8→3 distr.
+
+- [ ] **`objects_classes_account`** (`6a9060d7cbc5a3f2aa638bc7`)
+  - [ ] #17 [**The Class for Representing a Bank Account (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b0d) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 12→3 distr.
+  - [ ] #18 [**The Class for Representing a Bank Account (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b0f) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 11→3 distr.
+
+- [ ] **`objects_classes_point`** (`6a9060d6cbc5a3f2aa638bb5`)
+  - [ ] #19 [**The Class for Representing a Point in the Euclidean Plane (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638ae1) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #20 [**The Class for Representing a Point in the Euclidean Plane (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638ae3) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+
+- [ ] **`py_nested_if_temperature`** (`6a9060d9cbc5a3f2aa638be5`)
+  - [ ] #21 [**Warning the User about the Changes in the Temperature**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d0cbc5a3f2aa638b55) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+  - [ ] #22 [**Warning the User about the Changes in the Temperature and Humidity**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d0cbc5a3f2aa638b57) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+
+- [ ] **`py_list_basic`** (`6a9060d7cbc5a3f2aa638bb7`)
+  - [ ] #23 [**Updating an Element in the List (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638ae5) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 5→3 distr.
+  - [ ] #24 [**Updating an Element in the List (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638ae7) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #25 [**Updating an Element in the List (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638ae9) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+
+- [ ] **`py_digits`** (`6a9060d6cbc5a3f2aa638ba9`)
+  - [ ] #26 [**Printing Digits of an Integer from Right to Left**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac7) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 4→3 distr.
+  - [ ] #27 [**The Digit Sum of an Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac9) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #28 [**Reversing the Digits of an Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638acb) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 9→3 distr.
 
 ---
 
 ## 👤 Assigned to: `rah225@pitt.edu` (11 bundles · 29 sources)
 
-| Status | # | Bundle | Source Name (Click to Open) | Role | Blanks | Distr. (Keep ≤ 3) |
-| :---: | :-: | :--- | :--- | :---: | :-: | :---: |
-| [ ] | 29 | `py_file_input_stat` | [**Reporting File Information (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b11) | ex | 4 | 13 → 3 |
-| [ ] | 30 | `py_file_input_stat` | [**Reporting File Information (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b13) | ch | 3 | 12 → 3 |
-| [ ] | 31 | `py_str_repeat_chars` | [**Repeating Characters of a String (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af3) | ex | 2 | 9 → 3 |
-| [ ] | 32 | `py_str_repeat_chars` | [**Repeating Characters of a String (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af5) | ch | 2 | 11 → 3 |
-| [ ] | 33 | `py_win_percentage` | [**Calculating the Winning Percentage of a Sports Team (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b15) | ex | 2 | 8 → 3 |
-| [ ] | 34 | `py_win_percentage` | [**Calculating the Winning Percentage of a Sports Team (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b17) | ch | 1 | 8 → 3 |
-| [ ] | 35 | `py_win_percentage` | [**Calculating the Winning Percentage of a Sports Team (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b19) | ch | 2 | 10 → 3 |
-| [ ] | 36 | `py_list2d_basic` | [**Updating Two-Dimensional List (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab7) | ex | 2 | 10 → 3 |
-| [ ] | 37 | `py_list2d_basic` | [**Updating Two-Dimensional List (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab9) | ch | 2 | 9 → 3 |
-| [ ] | 38 | `py_list2d_basic` | [**Updating Two-Dimensional List (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638abb) | ch | 2 | 10 → 3 |
-| [ ] | 39 | `py_pythagorean_theorem` | [**Pythagorean Theorem (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aa5) | ex | 1 | 6 → 3 |
-| [ ] | 40 | `py_pythagorean_theorem` | [**Pythagorean Theorem (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aa7) | ch | 1 | 7 → 3 |
-| [ ] | 41 | `py_print_medals` | [**Printing Table of Medal Counts with Row Totals**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b49) | ex | 4 | 16 → 3 |
-| [ ] | 42 | `py_print_medals` | [**Printing Table of Medal Winner Counts with Row and Column Totals**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b4b) | ch | 2 | 11 → 3 |
-| [ ] | 43 | `py_star_patterns` | [**Printing A Right Triangle Star Pattern**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638add) | ex | 1 | 6 → 3 |
-| [ ] | 44 | `py_star_patterns` | [**Printing an Inverted Right Triangle Star Pattern**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638adf) | ch | 1 | 7 → 3 |
-| [ ] | 45 | `py_fail_course` | [**Determining When a Student Fails a Course (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b67) | ex | 1 | 6 → 3 |
-| [ ] | 46 | `py_fail_course` | [**Determining When a Student Fails a Course (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b69) | ch | 1 | 5 → 3 |
-| [ ] | 47 | `py_fail_course` | [**Determining When a Student Fails a Course (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b6b) | ch | 1 | 7 → 3 |
-| [ ] | 48 | `py_search_list` | [**Printing Common Elements in Two Lists**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638abd) | ex | 2 | 7 → 3 |
-| [ ] | 49 | `py_search_list` | [**Printing the Total Number of Times Elements of One List Appear in Another List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638abf) | ch | 3 | 10 → 3 |
-| [ ] | 50 | `py_search_list` | [**Creating a List that Contains the Numbers of Times Each Element of One List Appears in Another List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac1) | ch | 2 | 8 → 3 |
-| [ ] | 51 | `py_list_rotate` | [**Rotating the List Values to the Left by One Position**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638aeb) | ex | 2 | 8 → 3 |
-| [ ] | 52 | `py_list_rotate` | [**Rotating the List Values to the Left by Two Position**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638aed) | ch | 3 | 10 → 3 |
-| [ ] | 53 | `py_list_rotate` | [**Rotating the List Values to the Right by One Position**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638aef) | ch | 2 | 8 → 3 |
-| [ ] | 54 | `py_list_rotate` | [**Rotating the List Values to the Right by Two Position**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af1) | ch | 2 | 10 → 3 |
-| [ ] | 55 | `py_check_adjacent` | [**Finding Adjacent Duplicates in a Sequence of Numbers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b61) | ex | 2 | 10 → 3 |
-| [ ] | 56 | `py_check_adjacent` | [**Finding Adjacent Consecutive Numbers in a Sequence of Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b63) | ch | 1 | 7 → 3 |
-| [ ] | 57 | `py_check_adjacent` | [**Finding Adjacent Numbers in Ascending Order in a Sequence of Numbers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b65) | ch | 2 | 11 → 3 |
+- [ ] **`py_file_input_stat`** (`6a9060d8cbc5a3f2aa638bc9`)
+  - [ ] #29 [**Reporting File Information (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b11) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 13→3 distr.
+  - [ ] #30 [**Reporting File Information (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b13) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 12→3 distr.
+
+- [ ] **`py_str_repeat_chars`** (`6a9060d7cbc5a3f2aa638bbb`)
+  - [ ] #31 [**Repeating Characters of a String (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af3) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 9→3 distr.
+  - [ ] #32 [**Repeating Characters of a String (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af5) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 11→3 distr.
+
+- [ ] **`py_win_percentage`** (`6a9060d8cbc5a3f2aa638bcb`)
+  - [ ] #33 [**Calculating the Winning Percentage of a Sports Team (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b15) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 8→3 distr.
+  - [ ] #34 [**Calculating the Winning Percentage of a Sports Team (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b17) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 8→3 distr.
+  - [ ] #35 [**Calculating the Winning Percentage of a Sports Team (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b19) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+
+- [ ] **`py_list2d_basic`** (`6a9060d5cbc5a3f2aa638ba3`)
+  - [ ] #36 [**Updating Two-Dimensional List (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab7) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #37 [**Updating Two-Dimensional List (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab9) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 9→3 distr.
+  - [ ] #38 [**Updating Two-Dimensional List (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638abb) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+
+- [ ] **`py_pythagorean_theorem`** (`6a9060d5cbc5a3f2aa638b9b`)
+  - [ ] #39 [**Pythagorean Theorem (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aa5) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #40 [**Pythagorean Theorem (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aa7) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+
+- [ ] **`py_print_medals`** (`6a9060d9cbc5a3f2aa638be1`)
+  - [ ] #41 [**Printing Table of Medal Counts with Row Totals**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b49) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 16→3 distr.
+  - [ ] #42 [**Printing Table of Medal Winner Counts with Row and Column Totals**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b4b) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 11→3 distr.
+
+- [ ] **`py_star_patterns`** (`6a9060d6cbc5a3f2aa638bb3`)
+  - [ ] #43 [**Printing A Right Triangle Star Pattern**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638add) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #44 [**Printing an Inverted Right Triangle Star Pattern**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638adf) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+
+- [ ] **`py_fail_course`** (`6a9060d9cbc5a3f2aa638bed`)
+  - [ ] #45 [**Determining When a Student Fails a Course (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b67) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #46 [**Determining When a Student Fails a Course (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b69) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 5→3 distr.
+  - [ ] #47 [**Determining When a Student Fails a Course (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b6b) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+
+- [ ] **`py_search_list`** (`6a9060d5cbc5a3f2aa638ba5`)
+  - [ ] #48 [**Printing Common Elements in Two Lists**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638abd) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 7→3 distr.
+  - [ ] #49 [**Printing the Total Number of Times Elements of One List Appear in Another List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638abf) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #50 [**Creating a List that Contains the Numbers of Times Each Element of One List Appears in Another List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac1) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 8→3 distr.
+
+- [ ] **`py_list_rotate`** (`6a9060d7cbc5a3f2aa638bb9`)
+  - [ ] #51 [**Rotating the List Values to the Left by One Position**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638aeb) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 8→3 distr.
+  - [ ] #52 [**Rotating the List Values to the Left by Two Position**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638aed) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #53 [**Rotating the List Values to the Right by One Position**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638aef) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 8→3 distr.
+  - [ ] #54 [**Rotating the List Values to the Right by Two Position**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af1) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+
+- [ ] **`py_check_adjacent`** (`6a9060d9cbc5a3f2aa638beb`)
+  - [ ] #55 [**Finding Adjacent Duplicates in a Sequence of Numbers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b61) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #56 [**Finding Adjacent Consecutive Numbers in a Sequence of Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b63) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+  - [ ] #57 [**Finding Adjacent Numbers in Ascending Order in a Sequence of Numbers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b65) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 11→3 distr.
 
 ---
 
 ## 👤 Assigned to: `arl122@pitt.edu` (10 bundles · 22 sources)
 
-| Status | # | Bundle | Source Name (Click to Open) | Role | Blanks | Distr. (Keep ≤ 3) |
-| :---: | :-: | :--- | :--- | :---: | :-: | :---: |
-| [ ] | 58 | `py_find_average` | [**Calculating the Average of Input Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b1b) | ex | 2 | 8 → 3 |
-| [ ] | 59 | `py_find_average` | [**Calculating the Average of the Input Integers that are an Even Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b1d) | ch | 3 | 12 → 3 |
-| [ ] | 60 | `py_find_average` | [**Calculating the Average of Floating-Point Numbers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b1f) | ch | 2 | 10 → 3 |
-| [ ] | 61 | `py_list_fill` | [**Add Values to an Empty List (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b5d) | ex | 1 | 7 → 3 |
-| [ ] | 62 | `py_list_fill` | [**Add Values to an Empty List (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b5f) | ch | 1 | 7 → 3 |
-| [ ] | 63 | `py_nested_if_min_max` | [**Determining the Smallest of the Three Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b41) | ex | 2 | 10 → 3 |
-| [ ] | 64 | `py_nested_if_min_max` | [**Determining the Largest of the Three Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b43) | ch | 1 | 6 → 3 |
-| [ ] | 65 | `py_student_score` | [**Creating a Dictionary of Student-Scores Pairs (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b2b) | ex | 4 | 14 → 3 |
-| [ ] | 66 | `py_student_score` | [**Creating a Dictionary of Student-Scores Pairs (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b2d) | ch | 3 | 13 → 3 |
-| [ ] | 67 | `py_squares` | [**Printing the Squares of Numbers Within a Specified Range (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b79) | ex | 1 | 7 → 3 |
-| [ ] | 68 | `py_squares` | [**Printing the Squares of Numbers Within a Specified Range (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b7b) | ch | 1 | 7 → 3 |
-| [ ] | 69 | `py_squares` | [**Printing the Squares of Numbers Within a Specified Range (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b7d) | ch | 1 | 6 → 3 |
-| [ ] | 70 | `py_char_dict` | [**Creating a Dictionary of Character-Count Pairs**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b8b) | ex | 3 | 13 → 3 |
-| [ ] | 71 | `py_char_dict` | [**Creating a Dictionary of Character-Words Pairs**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b8d) | ch | 2 | 9 → 3 |
-| [ ] | 72 | `py_if_else_wage` | [**Calculating the Employee's Wage Based on the Hours That the Employee Has Worked and an Hourly Pay Rate**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d5cbc5a3f2aa638b97) | ex | 1 | 6 → 3 |
-| [ ] | 73 | `py_if_else_wage` | [**Calculating the Wage of an Employee at the Customer Service Call Center**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d5cbc5a3f2aa638b99) | ch | 2 | 9 → 3 |
-| [ ] | 74 | `py_f_to_c_conversion` | [**Celsius To Fahrenheit Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b8f) | ex | 2 | 8 → 3 |
-| [ ] | 75 | `py_f_to_c_conversion` | [**Fahrenheit to Celsius Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b91) | ch | 2 | 10 → 3 |
-| [ ] | 76 | `py_divisor` | [**Finding the Smallest Divisor of a Positive Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b45) | ex | 1 | 5 → 3 |
-| [ ] | 77 | `py_divisor` | [**Finding the Largest Divisor of a Positive Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b47) | ch | 2 | 7 → 3 |
-| [ ] | 78 | `py_if_else_num` | [**Determining the Sign of an Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af7) | ex | 1 | 5 → 3 |
-| [ ] | 79 | `py_if_else_num` | [**Determining Whether an Integer is Even or Odd**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af9) | ch | 1 | 8 → 3 |
+- [ ] **`py_find_average`** (`6a9060d8cbc5a3f2aa638bcd`)
+  - [ ] #58 [**Calculating the Average of Input Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cbcbc5a3f2aa638b1b) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 8→3 distr.
+  - [ ] #59 [**Calculating the Average of the Input Integers that are an Even Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b1d) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 12→3 distr.
+  - [ ] #60 [**Calculating the Average of Floating-Point Numbers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b1f) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+
+- [ ] **`py_list_fill`** (`6a9060d9cbc5a3f2aa638be9`)
+  - [ ] #61 [**Add Values to an Empty List (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b5d) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+  - [ ] #62 [**Add Values to an Empty List (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d1cbc5a3f2aa638b5f) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+
+- [ ] **`py_nested_if_min_max`** (`6a9060d9cbc5a3f2aa638bdd`)
+  - [ ] #63 [**Determining the Smallest of the Three Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b41) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #64 [**Determining the Largest of the Three Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b43) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+
+- [ ] **`py_student_score`** (`6a9060d8cbc5a3f2aa638bd3`)
+  - [ ] #65 [**Creating a Dictionary of Student-Scores Pairs (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b2b) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 14→3 distr.
+  - [ ] #66 [**Creating a Dictionary of Student-Scores Pairs (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b2d) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 13→3 distr.
+
+- [ ] **`py_squares`** (`6a9060dacbc5a3f2aa638bf3`)
+  - [ ] #67 [**Printing the Squares of Numbers Within a Specified Range (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b79) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+  - [ ] #68 [**Printing the Squares of Numbers Within a Specified Range (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b7b) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+  - [ ] #69 [**Printing the Squares of Numbers Within a Specified Range (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b7d) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+
+- [ ] **`py_char_dict`** (`6a9060dacbc5a3f2aa638bfb`)
+  - [ ] #70 [**Creating a Dictionary of Character-Count Pairs**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b8b) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 13→3 distr.
+  - [ ] #71 [**Creating a Dictionary of Character-Words Pairs**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b8d) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 9→3 distr.
+
+- [ ] **`py_if_else_wage`** (`6a9060dacbc5a3f2aa638c01`)
+  - [ ] #72 [**Calculating the Employee's Wage Based on the Hours That the Employee Has Worked and an Hourly Pay Rate**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d5cbc5a3f2aa638b97) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #73 [**Calculating the Wage of an Employee at the Customer Service Call Center**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d5cbc5a3f2aa638b99) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 9→3 distr.
+
+- [ ] **`py_f_to_c_conversion`** (`6a9060dacbc5a3f2aa638bfd`)
+  - [ ] #74 [**Celsius To Fahrenheit Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b8f) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 8→3 distr.
+  - [ ] #75 [**Fahrenheit to Celsius Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b91) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+
+- [ ] **`py_divisor`** (`6a9060d9cbc5a3f2aa638bdf`)
+  - [ ] #76 [**Finding the Smallest Divisor of a Positive Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b45) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 5→3 distr.
+  - [ ] #77 [**Finding the Largest Divisor of a Positive Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cfcbc5a3f2aa638b47) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 7→3 distr.
+
+- [ ] **`py_if_else_num`** (`6a9060d7cbc5a3f2aa638bbd`)
+  - [ ] #78 [**Determining the Sign of an Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af7) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 5→3 distr.
+  - [ ] #79 [**Determining Whether an Integer is Even or Odd**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638af9) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 8→3 distr.
 
 ---
 
 ## 👤 Assigned to: `quinnkwolter@pitt.edu` (10 bundles · 22 sources)
 
-| Status | # | Bundle | Source Name (Click to Open) | Role | Blanks | Distr. (Keep ≤ 3) |
-| :---: | :-: | :--- | :--- | :---: | :-: | :---: |
-| [ ] | 80 | `py_vending_machine` | [**Vending Machine With Dollars and Quarters**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab3) | ex | 2 | 8 → 3 |
-| [ ] | 81 | `py_vending_machine` | [**Vending Machine With Quarters-Dimes- and Nickels**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab5) | ch | 2 | 8 → 3 |
-| [ ] | 82 | `py_range_three` | [**Printing Sequence of Numbers with a Gap Between Adjacent Values (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638aff) | ex | 1 | 7 → 3 |
-| [ ] | 83 | `py_range_three` | [**Printing Sequence of Numbers with a Gap Between Adjacent Values (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b01) | ch | 1 | 6 → 3 |
-| [ ] | 84 | `py_rent_car` | [**Determining When a Customer Could Rent a Car (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b2f) | ex | 1 | 6 → 3 |
-| [ ] | 85 | `py_rent_car` | [**Determining When a Customer Could Rent a Car (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b31) | ch | 1 | 6 → 3 |
-| [ ] | 86 | `py_rent_car` | [**Determining When a Customer Could Rent a Car (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b33) | ch | 1 | 7 → 3 |
-| [ ] | 87 | `py_repeated_sequence` | [**Printing A Sequence of Repeated Numbers (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad5) | ex | 1 | 6 → 3 |
-| [ ] | 88 | `py_repeated_sequence` | [**Printing A Sequence of Repeated Numbers (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad7) | ch | 1 | 5 → 3 |
-| [ ] | 89 | `py_if_else_grade` | [**Determining the Letter Grade Of a Student**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638afb) | ex | 2 | 10 → 3 |
-| [ ] | 90 | `py_if_else_grade` | [**Converting the Letter Grade of a Student to It's Numeric Range**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638afd) | ch | 2 | 10 → 3 |
-| [ ] | 91 | `py_str_count` | [**Counting the Occurrences of One String in Another (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b35) | ex | 2 | 10 → 3 |
-| [ ] | 92 | `py_str_count` | [**Counting the Occurrences of One String in Another (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b37) | ch | 2 | 12 → 3 |
-| [ ] | 93 | `py_range_one` | [**Printing Consecutive Numbers Starting from Zero (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b3d) | ex | 1 | 6 → 3 |
-| [ ] | 94 | `py_range_one` | [**Printing Consecutive Numbers Starting from Zero (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b3f) | ch | 1 | 6 → 3 |
-| [ ] | 95 | `py_soda_survey` | [**Determining the Maximum Rating for Each Soda in The Survey**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638aad) | ex | 3 | 12 → 3 |
-| [ ] | 96 | `py_soda_survey` | [**Determining the Average Rating for Each Soda in The Survey**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638aaf) | ch | 4 | 13 → 3 |
-| [ ] | 97 | `py_soda_survey` | [**Determining the Average Ratings of each Respondent and Average Ratings Given to Each Soda in the Survey**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab1) | ch | 2 | 7 → 3 |
-| [ ] | 98 | `py_concat_char_two_str` | [**Concatenating Characters of Two Strings (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac3) | ex | 1 | 8 → 3 |
-| [ ] | 99 | `py_concat_char_two_str` | [**Concatenating Characters of Two Strings (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac5) | ch | 2 | 6 → 3 |
-| [ ] | 100 | `py_phone_age` | [**Determining When to Buy a New Phone (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b87) | ex | 1 | 7 → 3 |
-| [ ] | 101 | `py_phone_age` | [**Determining When to Buy a New Phone (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b89) | ch | 1 | 7 → 3 |
+- [ ] **`py_vending_machine`** (`6a9060d5cbc5a3f2aa638ba1`)
+  - [ ] #80 [**Vending Machine With Dollars and Quarters**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab3) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 8→3 distr.
+  - [ ] #81 [**Vending Machine With Quarters-Dimes- and Nickels**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab5) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 8→3 distr.
+
+- [ ] **`py_range_three`** (`6a9060d7cbc5a3f2aa638bc1`)
+  - [ ] #82 [**Printing Sequence of Numbers with a Gap Between Adjacent Values (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638aff) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+  - [ ] #83 [**Printing Sequence of Numbers with a Gap Between Adjacent Values (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b01) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+
+- [ ] **`py_rent_car`** (`6a9060d8cbc5a3f2aa638bd5`)
+  - [ ] #84 [**Determining When a Customer Could Rent a Car (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b2f) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #85 [**Determining When a Customer Could Rent a Car (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b31) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #86 [**Determining When a Customer Could Rent a Car (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b33) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+
+- [ ] **`py_repeated_sequence`** (`6a9060d6cbc5a3f2aa638baf`)
+  - [ ] #87 [**Printing A Sequence of Repeated Numbers (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad5) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #88 [**Printing A Sequence of Repeated Numbers (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad7) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 5→3 distr.
+
+- [ ] **`py_if_else_grade`** (`6a9060d7cbc5a3f2aa638bbf`)
+  - [ ] #89 [**Determining the Letter Grade Of a Student**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638afb) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #90 [**Converting the Letter Grade of a Student to It's Numeric Range**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c9cbc5a3f2aa638afd) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+
+- [ ] **`py_str_count`** (`6a9060d8cbc5a3f2aa638bd7`)
+  - [ ] #91 [**Counting the Occurrences of One String in Another (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b35) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #92 [**Counting the Occurrences of One String in Another (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cdcbc5a3f2aa638b37) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 12→3 distr.
+
+- [ ] **`py_range_one`** (`6a9060d8cbc5a3f2aa638bdb`)
+  - [ ] #93 [**Printing Consecutive Numbers Starting from Zero (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b3d) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #94 [**Printing Consecutive Numbers Starting from Zero (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b3f) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+
+- [ ] **`py_soda_survey`** (`6a9060d5cbc5a3f2aa638b9f`)
+  - [ ] #95 [**Determining the Maximum Rating for Each Soda in The Survey**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638aad) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 12→3 distr.
+  - [ ] #96 [**Determining the Average Rating for Each Soda in The Survey**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638aaf) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 13→3 distr.
+  - [ ] #97 [**Determining the Average Ratings of each Respondent and Average Ratings Given to Each Soda in the Survey**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab1) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 7→3 distr.
+
+- [ ] **`py_concat_char_two_str`** (`6a9060d6cbc5a3f2aa638ba7`)
+  - [ ] #98 [**Concatenating Characters of Two Strings (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac3) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 8→3 distr.
+  - [ ] #99 [**Concatenating Characters of Two Strings (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac5) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 6→3 distr.
+
+- [ ] **`py_phone_age`** (`6a9060dacbc5a3f2aa638bf9`)
+  - [ ] #100 [**Determining When to Buy a New Phone (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b87) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+  - [ ] #101 [**Determining When to Buy a New Phone (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d4cbc5a3f2aa638b89) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
 
 ---
 
 ## 👤 Assigned to: `hua1007.yu@connect.polyu.hk` (10 bundles · 22 sources)
 
-| Status | # | Bundle | Source Name (Click to Open) | Role | Blanks | Distr. (Keep ≤ 3) |
-| :---: | :-: | :--- | :--- | :---: | :-: | :---: |
-| [ ] | 102 | `py_three_booleans` | [**Determining When at Least One of the Three Boolean Variables is True**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b07) | ex | 1 | 6 → 3 |
-| [ ] | 103 | `py_three_booleans` | [**Determining When at Least One of the Three Boolean Variables is False**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b09) | ch | 1 | 6 → 3 |
-| [ ] | 104 | `py_three_booleans` | [**Determining When All Three Boolean Variables Are Equal**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b0b) | ch | 1 | 7 → 3 |
-| [ ] | 105 | `py_list_process_elements` | [**Calculating the Sum of the Values in the List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad9) | ex | 3 | 12 → 3 |
-| [ ] | 106 | `py_list_process_elements` | [**Calculating the Average of the Values in the List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638adb) | ch | 4 | 15 → 3 |
-| [ ] | 107 | `objects_classes_tv` | [**The Class for Representing a TV (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b39) | ex | 3 | 11 → 3 |
-| [ ] | 108 | `objects_classes_tv` | [**The Class for Representing a TV (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b3b) | ch | 3 | 14 → 3 |
-| [ ] | 109 | `py_work_hours` | [**Reporting the Total Hours Each Employee Worked (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b21) | ex | 4 | 14 → 3 |
-| [ ] | 110 | `py_work_hours` | [**Reporting the Total Hours Each Employee Worked (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b23) | ch | 4 | 14 → 3 |
-| [ ] | 111 | `objects_classes_loan` | [**The Class for Representing a Loan (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b6d) | ex | 4 | 17 → 3 |
-| [ ] | 112 | `objects_classes_loan` | [**The Class for Representing a Loan (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b6f) | ch | 3 | 12 → 3 |
-| [ ] | 113 | `py_range_two` | [**Printing Consecutive Numbers Within a Specified Range (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b03) | ex | 1 | 6 → 3 |
-| [ ] | 114 | `py_range_two` | [**Printing Consecutive Numbers Within a Specified Range (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b05) | ch | 1 | 7 → 3 |
-| [ ] | 115 | `py_temperature` | [**Finding the Number of Days Above the Average Temperature**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b7f) | ex | 4 | 15 → 3 |
-| [ ] | 116 | `py_temperature` | [**Displaying the Days That are Above 32 Degrees Fahrenheit**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b81) | ch | 4 | 16 → 3 |
-| [ ] | 117 | `py_concat_str_num` | [**Concatenating Strings and Numbers (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b25) | ex | 2 | 9 → 3 |
-| [ ] | 118 | `py_concat_str_num` | [**Concatenating Strings and Numbers (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b27) | ch | 2 | 10 → 3 |
-| [ ] | 119 | `py_concat_str_num` | [**Concatenating Strings and Numbers (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b29) | ch | 2 | 10 → 3 |
-| [ ] | 120 | `py_check_age` | [**Determining Whether One is a Teenager (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638acd) | ex | 4 | 13 → 3 |
-| [ ] | 121 | `py_check_age` | [**Determining Whether One is a Teenager (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638acf) | ch | 3 | 12 → 3 |
-| [ ] | 122 | `py_time_conversion` | [**Seconds to Minutes Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aa9) | ex | 2 | 10 → 3 |
-| [ ] | 123 | `py_time_conversion` | [**Converting Milliseconds to Hours-Minutes- and Seconds**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aab) | ch | 2 | 9 → 3 |
+- [ ] **`py_three_booleans`** (`6a9060d7cbc5a3f2aa638bc5`)
+  - [ ] #102 [**Determining When at Least One of the Three Boolean Variables is True**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b07) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #103 [**Determining When at Least One of the Three Boolean Variables is False**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b09) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #104 [**Determining When All Three Boolean Variables Are Equal**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b0b) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+
+- [ ] **`py_list_process_elements`** (`6a9060d6cbc5a3f2aa638bb1`)
+  - [ ] #105 [**Calculating the Sum of the Values in the List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad9) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 12→3 distr.
+  - [ ] #106 [**Calculating the Average of the Values in the List**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638adb) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 15→3 distr.
+
+- [ ] **`objects_classes_tv`** (`6a9060d8cbc5a3f2aa638bd9`)
+  - [ ] #107 [**The Class for Representing a TV (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b39) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 11→3 distr.
+  - [ ] #108 [**The Class for Representing a TV (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cecbc5a3f2aa638b3b) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 14→3 distr.
+
+- [ ] **`py_work_hours`** (`6a9060d8cbc5a3f2aa638bcf`)
+  - [ ] #109 [**Reporting the Total Hours Each Employee Worked (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b21) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 14→3 distr.
+  - [ ] #110 [**Reporting the Total Hours Each Employee Worked (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b23) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 14→3 distr.
+
+- [ ] **`objects_classes_loan`** (`6a9060d9cbc5a3f2aa638bef`)
+  - [ ] #111 [**The Class for Representing a Loan (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b6d) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 17→3 distr.
+  - [ ] #112 [**The Class for Representing a Loan (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d2cbc5a3f2aa638b6f) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 12→3 distr.
+
+- [ ] **`py_range_two`** (`6a9060d7cbc5a3f2aa638bc3`)
+  - [ ] #113 [**Printing Consecutive Numbers Within a Specified Range (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b03) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 6→3 distr.
+  - [ ] #114 [**Printing Consecutive Numbers Within a Specified Range (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cacbc5a3f2aa638b05) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 7→3 distr.
+
+- [ ] **`py_temperature`** (`6a9060dacbc5a3f2aa638bf5`)
+  - [ ] #115 [**Finding the Number of Days Above the Average Temperature**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b7f) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 15→3 distr.
+  - [ ] #116 [**Displaying the Days That are Above 32 Degrees Fahrenheit**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060d3cbc5a3f2aa638b81) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 16→3 distr.
+
+- [ ] **`py_concat_str_num`** (`6a9060d8cbc5a3f2aa638bd1`)
+  - [ ] #117 [**Concatenating Strings and Numbers (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b25) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 9→3 distr.
+  - [ ] #118 [**Concatenating Strings and Numbers (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b27) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #119 [**Concatenating Strings and Numbers (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060cccbc5a3f2aa638b29) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+
+- [ ] **`py_check_age`** (`6a9060d6cbc5a3f2aa638bab`)
+  - [ ] #120 [**Determining Whether One is a Teenager (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638acd) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 13→3 distr.
+  - [ ] #121 [**Determining Whether One is a Teenager (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638acf) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 12→3 distr.
+
+- [ ] **`py_time_conversion`** (`6a9060d5cbc5a3f2aa638b9d`)
+  - [ ] #122 [**Seconds to Minutes Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aa9) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 10→3 distr.
+  - [ ] #123 [**Converting Milliseconds to Hours-Minutes- and Seconds**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aab) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 9→3 distr.
 
 ---
 
