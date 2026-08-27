@@ -300,7 +300,7 @@ export class GptGenaiService {
 
   async validate(config: any) {
     const defaultModel = this.config.get('OPENAI_MODEL') || 'qwen3.5:397b-cloud';
-    const defaultBaseURL = this.config.get('OPENAI_BASE_URL') || 'http://localhost:11434/v1';
+    const defaultBaseURL = this.config.get('OPENAI_BASE_URL') || 'https://ollama.com/v1';
     const serverApiKey = this.config.get('OPENAI_API_KEY');
 
     const userModel = config.model;

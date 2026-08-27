@@ -97,7 +97,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   GPT_CONF_PLACEHOLDER = JSON.stringify({
     model: "qwen3.5:397b-cloud",
-    baseURL: "http://localhost:11434/v1",
+    baseURL: "https://ollama.com/v1",
     // apiKey: "<<YOUR_API_KEY>>",
     // organization: "<<YOUR_ORGANIZATION>>",
   }, null, 2);
