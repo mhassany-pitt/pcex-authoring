@@ -325,7 +325,6 @@ export class GptGenaiService {
     }
 
     config.apiKey = userApiKey || serverApiKey || 'ollama';
-    // config.organization = config.organization || this.config.get('OPENAI_ORG_ID');
     return config;
   }
 
@@ -348,7 +347,7 @@ export class GptGenaiService {
 
     const apiKey = explicitApiKey || legacyApiKey || this.config.get('OPENAI_API_KEY') || 'ollama';
     const baseUrl = explicitBaseUrl || altBaseUrl || this.config.get('OPENAI_BASE_URL') || undefined;
-    const orgId = organization || this.config.get('OPENAI_ORG_ID') || undefined;
+    const orgId = organization || undefined;
 
     const openai = new OpenAI({
       apiKey,
