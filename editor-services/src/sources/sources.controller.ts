@@ -3,6 +3,7 @@ import {
   Param, Patch, Post, Query, Req, UseGuards
 } from '@nestjs/common';
 import { SourcesService } from '../sources-service/sources.service';
+import { CompilerService } from 'src/compiler-service/compiler.service';
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
 import { toObject, useId } from 'src/utils';
 import { Request } from 'express';
@@ -12,6 +13,7 @@ export class SourcesController {
 
   constructor(
     private sources: SourcesService,
+    private compiler: CompilerService,
   ) { }
 
   private getUserEmail(req: any) { return req.user.email; }
@@ -31,7 +33,8 @@ export class SourcesController {
       const blank_lines_count = Object.values(lines || {}).filter((l: any) => l?.blank).length;
       return { id, archived, name, description, tags, 
         iso_language_code, language, user, collaborator_emails, 
-        translations, created_at, updated_at, blank_lines_count };
+        translations, created_at, updated_at, blank_lines_count,
+        stat: this.compiler.getSizeLastModified(id.toString()) };
     }).sort((a, b) => b.id.toString().localeCompare(a.id.toString()));
   }
 
@@ -53,7 +56,9 @@ export class SourcesController {
       id
     });
     if (!source) throw new NotFoundException();
-    return useId(source);
+    const res: any = useId(source);
+    res.stat = this.compiler.getSizeLastModified(id);
+    return res;
   }
 
   @Patch(':id')

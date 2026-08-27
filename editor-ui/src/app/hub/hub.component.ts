@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '../app.service';
-import { getNavMenuBar, getPreviewLink, getPublishedLink } from '../utilities';
+import { getNavMenuBar, getPreviewLink, getPublishedLink, getTagLabel, getTagClass, getTagStyle } from '../utilities';
 import { MessageService } from 'primeng/api';
 import { environment } from '../../environments/environment';
 
@@ -16,6 +16,9 @@ export class HubComponent implements OnInit {
 
   getNavMenuBar = getNavMenuBar;
   getPublishedLink = getPublishedLink;
+  getTagLabel = getTagLabel;
+  getTagClass = getTagClass;
+  getTagStyle = getTagStyle;
 
   previewLink: any;
   showPreview = false;
@@ -195,7 +198,8 @@ export class HubComponent implements OnInit {
           languagesSet.add(item.details.iso_language_code);
         }
         (item.details?.tags || []).forEach((tag: string) => {
-          if (tag?.trim()) tagsSet.add(tag.trim());
+          const clean = getTagLabel(tag);
+          if (clean) tagsSet.add(clean);
         });
       });
     });
@@ -238,32 +242,33 @@ export class HubComponent implements OnInit {
 
       // 3. Natural Languages filter
       if (this.selectedLanguages?.length) {
-        const bundleLangMatch = activity.iso_language_code && this.selectedLanguages.includes(activity.iso_language_code);
-        const itemLangMatch = (activity.items || []).some((item: any) =>
+        const hasMatchingLanguage = (activity.items || []).some((item: any) =>
           item.details?.iso_language_code && this.selectedLanguages.includes(item.details.iso_language_code)
         );
-        if (!bundleLangMatch && !itemLangMatch) return false;
+        if (!hasMatchingLanguage) return false;
       }
 
       // 4. Role filter
       if (this.selectedRoles?.length) {
         const hasMatchingRole = (activity.items || []).some((item: any) =>
-          this.selectedRoles.includes(item.type)
+          item.type && this.selectedRoles.includes(item.type)
         );
         if (!hasMatchingRole) return false;
       }
 
       // 5. Translations filter
       if (this.hasTranslationsFilter) {
-        const hasTrans = activity.translations && Object.keys(activity.translations).length > 0;
-        if (!hasTrans) return false;
+        const hasTranslations = (activity.items || []).some((item: any) =>
+          item.details?.translations && Object.keys(item.details.translations).length > 0
+        );
+        if (!hasTranslations) return false;
       }
 
       // 6. Tags filter
       if (this.selectedTags?.length) {
         const bundleTags = new Set<string>();
         (activity.items || []).forEach((item: any) => {
-          (item.details?.tags || []).forEach((t: string) => bundleTags.add(t));
+          (item.details?.tags || []).forEach((t: string) => bundleTags.add(getTagLabel(t)));
         });
         const hasTagMatch = this.selectedTags.some(t => bundleTags.has(t));
         if (!hasTagMatch) return false;

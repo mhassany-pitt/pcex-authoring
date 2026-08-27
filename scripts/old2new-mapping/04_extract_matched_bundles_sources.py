@@ -2,6 +2,14 @@ import os
 import json
 import re
 
+COLLABORATOR_EMAILS = [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+]
+
 def goal_to_source_schema(goal, item_detail, author_info, source_id):
     """
     Transforms an activityGoal object from preview/Hub into a complete Source JSON structure
@@ -50,9 +58,10 @@ def goal_to_source_schema(goal, item_detail, author_info, source_id):
             "helpList": d.get("helpList", [])
         })
         
-    # Existing tags + new requested tags
-    existing_tags = item_detail.get("tags", [])
-    new_tags = list(dict.fromkeys(existing_tags + ["gpt-5-mini", "llm_expl+dist&expl"]))
+    # Existing tags + new requested tags with color-coding
+    existing_tags = [t for t in item_detail.get("tags", []) if not t.startswith("gpt5mini") and not t.startswith("llm_expl") and not t.startswith("validation-pending")]
+    color_tags = ["gpt5mini;color=purple", "llm_expl+dist&expl;color=blue", "validation-pending;color=orange"]
+    new_tags = list(dict.fromkeys(existing_tags + color_tags))
 
     return {
         "id": source_id,
@@ -68,7 +77,8 @@ def goal_to_source_schema(goal, item_detail, author_info, source_id):
         "distractors": distractors_list,
         "programInput": goal.get("userInput", "") or ("\n".join(goal.get("userInputList", []))),
         "user": author_info.get("email", ""),
-        "author": author_info
+        "author": author_info,
+        "collaborator_emails": COLLABORATOR_EMAILS
     }
 
 def main():
@@ -128,6 +138,8 @@ def main():
             goals_list = hub_goals_data.get("activityGoals", [])
             
         author_info = bundle_entry.get("author", {})
+        bundle_entry.pop("collaborators", None)
+        bundle_entry["collaborator_emails"] = COLLABORATOR_EMAILS
         
         # 1. Save Bundle Details JSON
         bundle_out_path = os.path.join(out_bundles_dir, f"{hub_id}.json")

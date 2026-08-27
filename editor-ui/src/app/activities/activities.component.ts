@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivitiesService } from '../activities.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '../app.service';
-import { getNavMenuBar } from '../utilities';
+import { getNavMenuBar, getTagLabel, getTagClass, getTagStyle } from '../utilities';
 import { ConfirmationService } from 'primeng/api';
 
 @Component({
@@ -11,6 +11,10 @@ import { ConfirmationService } from 'primeng/api';
   styleUrls: ['./activities.component.less']
 })
 export class ActivitiesComponent implements OnInit {
+
+  getTagLabel = getTagLabel;
+  getTagClass = getTagClass;
+  getTagStyle = getTagStyle;
 
   private readonly languageNames =
     typeof Intl !== 'undefined' && 'DisplayNames' in Intl
@@ -170,9 +174,9 @@ export class ActivitiesComponent implements OnInit {
   get availableTags(): { label: string; value: string }[] {
     const tags = new Set<string>();
     for (const a of this.activities || []) {
-      for (const t of a.tags || []) if (t) tags.add(t);
+      for (const t of a.tags || []) if (t) tags.add(getTagLabel(t));
       for (const it of a.items || []) {
-        for (const t of it.details?.tags || []) if (t) tags.add(t);
+        for (const t of it.details?.tags || []) if (t) tags.add(getTagLabel(t));
       }
     }
     return Array.from(tags)
@@ -499,8 +503,8 @@ export class ActivitiesComponent implements OnInit {
 
       // 9. Tag filter
       if (this.selectedTags?.length) {
-        const bundleTags = activity.tags || [];
-        const itemTags = (activity.items || []).flatMap((it: any) => it.details?.tags || []);
+        const bundleTags = (activity.tags || []).map((t: string) => getTagLabel(t));
+        const itemTags = (activity.items || []).flatMap((it: any) => (it.details?.tags || []).map((t: string) => getTagLabel(t)));
         const allTags = new Set([...bundleTags, ...itemTags]);
         const hasTagMatch = this.selectedTags.some((t) => allTags.has(t));
         if (!hasTagMatch) return false;

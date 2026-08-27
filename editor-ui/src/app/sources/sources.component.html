@@ -202,9 +202,10 @@
                       class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600"></button>
                     <button pButton type="button"
                       [icon]="api.isGeneratingPreviewJson($source.id) ? 'pi pi-spin pi-spinner' : 'pi pi-eye'"
-                      [title]="api.isGeneratingPreviewJson($source.id) ? 'Generating Preview' : 'Preview'"
-                      class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600"
-                      (click)="preview($source)" [disabled]="api.isGeneratingPreviewJson($source.id)"></button>
+                      [title]="!$source.stat ? 'Preview unavailable (source not compiled)' : (api.isGeneratingPreviewJson($source.id) ? 'Generating Preview' : 'Preview')"
+                      class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0"
+                      [ngClass]="{ 'text-slate-600 hover:text-blue-600': $source.stat, 'text-gray-300 opacity-40 cursor-not-allowed': !$source.stat }"
+                      (click)="preview($source)" [disabled]="!$source.stat || api.isGeneratingPreviewJson($source.id)"></button>
                     <button pButton type="button" icon="pi pi-clone" title="Clone source"
                       class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600"
                       (click)="clone($source)"></button>
@@ -241,7 +242,7 @@
 
                 <!-- Tags -->
                 <div *ngIf="$source.tags?.length" class="flex flex-wrap gap-1 mt-1">
-                  <p-tag *ngFor="let tag of $source.tags" [value]="tag" severity="success" class="text-xs mr-1" />
+                  <p-tag *ngFor="let tag of $source.tags" [value]="getTagLabel(tag)" [styleClass]="getTagClass(tag)" [style]="getTagStyle(tag)" class="text-xs mr-1" />
                 </div>
               </div>
             </div>

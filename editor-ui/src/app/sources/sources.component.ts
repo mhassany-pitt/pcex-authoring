@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitiesService } from '../activities.service';
 import { AppService } from '../app.service';
 import { ConfirmationService } from 'primeng/api';
+import { getTagLabel, getTagClass, getTagStyle } from '../utilities';
 
 @Component({
   selector: 'app-sources',
@@ -11,6 +12,10 @@ import { ConfirmationService } from 'primeng/api';
   styleUrls: ['./sources.component.less']
 })
 export class SourcesComponent implements OnInit {
+
+  getTagLabel = getTagLabel;
+  getTagClass = getTagClass;
+  getTagStyle = getTagStyle;
 
   private readonly languageNames =
     typeof Intl !== 'undefined' && 'DisplayNames' in Intl
@@ -205,7 +210,8 @@ export class SourcesComponent implements OnInit {
     for (const s of this.sources || []) {
       if (Array.isArray(s.tags)) {
         for (const t of s.tags) {
-          if (t?.trim()) tags.add(t.trim());
+          const clean = getTagLabel(t);
+          if (clean) tags.add(clean);
         }
       }
     }
@@ -352,7 +358,7 @@ export class SourcesComponent implements OnInit {
 
       // 7. Tags filter
       if (this.selectedTags?.length) {
-        const sourceTags = new Set(source.tags || []);
+        const sourceTags = new Set((source.tags || []).map((t: string) => getTagLabel(t)));
         const hasTagMatch = this.selectedTags.some(t => sourceTags.has(t));
         if (!hasTagMatch) return false;
       }
@@ -427,6 +433,7 @@ export class SourcesComponent implements OnInit {
             source.description,
             source.language,
             this.getLanguageName(source.iso_language_code),
+            ...(source.tags || []).map((t: string) => getTagLabel(t)),
             ...(source.tags || []),
             source.user,
             ...(source.collaborator_emails || [])

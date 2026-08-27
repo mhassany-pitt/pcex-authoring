@@ -212,9 +212,11 @@
                         class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600" (click)="openEdit($activity)"></button>
                       <button pButton type="button"
                         icon="pi {{ api.isGeneratingPreviewJson($activity.id) ? 'pi-spin pi-spinner' : 'pi-eye' }}"
-                        [title]="api.isGeneratingPreviewJson($activity.id) ? 'Generating Preview' : 'Preview'"
-                        class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0 text-slate-600 hover:text-blue-600" (click)="preview($activity)"
-                        [disabled]="api.isGeneratingPreviewJson($activity.id)"></button>
+                        [title]="!$activity.stat ? 'Preview unavailable (bundle not compiled)' : (api.isGeneratingPreviewJson($activity.id) ? 'Generating Preview' : 'Preview')"
+                        class="p-button-text p-button-sm p-button-plain w-7 h-7 p-0"
+                        [ngClass]="{ 'text-slate-600 hover:text-blue-600': $activity.stat, 'text-gray-300 opacity-40 cursor-not-allowed': !$activity.stat }"
+                        (click)="preview($activity)"
+                        [disabled]="!$activity.stat || api.isGeneratingPreviewJson($activity.id)"></button>
                       <button pButton *ngIf="$activity.stat" type="button"
                         [title]="$activity.published ? 'Unpublish from Hub' : 'Publish on Hub'"
                         icon="pi pi-globe"
@@ -266,7 +268,7 @@
                           {{ getItemTypeLabel(item.type) }}
                         </span>
                         <span *ngIf="item.details?.tags?.length" class="flex flex-wrap gap-1">
-                          <p-tag *ngFor="let tag of item.details.tags" [value]="tag" severity="success" class="text-[10px]" />
+                          <p-tag *ngFor="let tag of item.details.tags" [value]="getTagLabel(tag)" [styleClass]="getTagClass(tag)" [style]="getTagStyle(tag)" class="text-[10px]" />
                         </span>
                       </div>
 

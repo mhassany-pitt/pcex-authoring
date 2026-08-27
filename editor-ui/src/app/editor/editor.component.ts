@@ -4,7 +4,7 @@ import { arrayMoveMutable } from 'array-move';
 import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { environment } from '../../environments/environment';
-import { getNavMenuBar } from '../utilities';
+import { getNavMenuBar, getTagLabel, getTagClass, getTagStyle } from '../utilities';
 import { HttpClient } from '@angular/common/http';
 import { Range } from 'monaco-editor';
 import { SourcesService } from '../sources.service';
@@ -21,6 +21,9 @@ import { isoLanguages } from '../iso-languages';
 export class EditorComponent implements OnInit, OnDestroy {
 
   getNavMenuBar = getNavMenuBar;
+  getTagLabel = getTagLabel;
+  getTagClass = getTagClass;
+  getTagStyle = getTagStyle;
   isoLanguages = isoLanguages;
 
   @Input() language = 'java';
