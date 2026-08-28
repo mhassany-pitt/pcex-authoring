@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AppService } from '../app.service';
 import { getNavMenuBar, getPreviewLink, getPublishedLink, getTagLabel, getTagClass, getTagStyle } from '../utilities';
 import { MessageService } from 'primeng/api';
@@ -12,7 +13,7 @@ import { environment } from '../../environments/environment';
   templateUrl: './hub.component.html',
   styleUrls: ['./hub.component.less']
 })
-export class HubComponent implements OnInit {
+export class HubComponent implements OnInit, OnDestroy {
 
   getNavMenuBar = getNavMenuBar;
   getPublishedLink = getPublishedLink;
@@ -38,6 +39,9 @@ export class HubComponent implements OnInit {
   selectedSort: string = 'date_desc';
 
   searchTimeout: any;
+  highlightedId: string | null = null;
+  highlightTimeout: any;
+  private queryParamsSub?: Subscription;
 
   // Filter option lists
   availableAuthors: { label: string; value: string }[] = [];
@@ -136,7 +140,126 @@ export class HubComponent implements OnInit {
 
   ngOnInit(): void {
     this.title.setTitle('WEAT Hub');
+    this.parseQueryParams(this.route.snapshot.queryParams);
     this.fetchActivities();
+
+    this.queryParamsSub = this.route.queryParams.subscribe(params => {
+      const changed = this.parseQueryParams(params);
+      if (changed) {
+        this.applyFilters();
+      }
+      const id = params['id'];
+      if (id && id !== this.highlightedId) {
+        this.highlightAndScroll(id);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
+    this.queryParamsSub?.unsubscribe();
+  }
+
+  parseQueryParams(params: any): boolean {
+    let changed = false;
+
+    const arraysEqual = (a: string[], b: string[]) => {
+      const aArr = a || [];
+      const bArr = b || [];
+      if (aArr.length !== bArr.length) return false;
+      return aArr.every((val, idx) => val === bArr[idx]);
+    };
+
+    const parseArray = (pluralKey: string, singularKey: string, aliasPlural?: string, aliasSingular?: string): string[] => {
+      if (params[pluralKey]) return params[pluralKey].split(',').filter(Boolean);
+      if (aliasPlural && params[aliasPlural]) return params[aliasPlural].split(',').filter(Boolean);
+      if (params[singularKey] && params[singularKey] !== 'all') return [params[singularKey]];
+      if (aliasSingular && params[aliasSingular] && params[aliasSingular] !== 'all') return [params[aliasSingular]];
+      return [];
+    };
+
+    const newQuery = (params['q'] || '').trim();
+    if (newQuery !== this.searchQuery) {
+      this.searchQuery = newQuery;
+      changed = true;
+    }
+
+    const newAuthors = parseArray('authors', 'author');
+    if (!arraysEqual(newAuthors, this.selectedAuthors)) {
+      this.selectedAuthors = newAuthors;
+      changed = true;
+    }
+
+    const newRoles = parseArray('roles', 'role', 'types', 'type');
+    if (!arraysEqual(newRoles, this.selectedRoles)) {
+      this.selectedRoles = newRoles;
+      changed = true;
+    }
+
+    const newCodeLangs = parseArray('codeLangs', 'codeLang');
+    if (!arraysEqual(newCodeLangs, this.selectedProgLangs)) {
+      this.selectedProgLangs = newCodeLangs;
+      changed = true;
+    }
+
+    const newLangs = parseArray('langs', 'lang');
+    if (!arraysEqual(newLangs, this.selectedLanguages)) {
+      this.selectedLanguages = newLangs;
+      changed = true;
+    }
+
+    const newTrans = params['trans'] === 'true';
+    if (newTrans !== this.hasTranslationsFilter) {
+      this.hasTranslationsFilter = newTrans;
+      changed = true;
+    }
+
+    const newTags = parseArray('tags', 'tag');
+    if (!arraysEqual(newTags, this.selectedTags)) {
+      this.selectedTags = newTags;
+      changed = true;
+    }
+
+    const newSort = params['sort'] || 'date_desc';
+    if (newSort !== this.selectedSort) {
+      this.selectedSort = newSort;
+      changed = true;
+    }
+
+    return changed;
+  }
+
+  updateUrlParams(replace = true) {
+    const queryParams: any = {};
+    if (this.searchQuery?.trim()) queryParams.q = this.searchQuery.trim();
+    if (this.selectedAuthors?.length) queryParams.authors = this.selectedAuthors.join(',');
+    if (this.selectedRoles?.length) queryParams.roles = this.selectedRoles.join(',');
+    if (this.selectedProgLangs?.length) queryParams.codeLangs = this.selectedProgLangs.join(',');
+    if (this.selectedLanguages?.length) queryParams.langs = this.selectedLanguages.join(',');
+    if (this.hasTranslationsFilter) queryParams.trans = 'true';
+    if (this.selectedTags?.length) queryParams.tags = this.selectedTags.join(',');
+    if (this.selectedSort && this.selectedSort !== 'date_desc') queryParams.sort = this.selectedSort;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      replaceUrl: replace,
+    });
+  }
+
+  highlightAndScroll(id: string) {
+    this.highlightedId = id;
+    if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 500);
+    this.highlightTimeout = setTimeout(() => {
+      this.highlightedId = null;
+    }, 3000);
   }
 
   fetchActivities() {
@@ -164,6 +287,11 @@ export class HubComponent implements OnInit {
         this.populateFilterOptions();
         this.applyFilters();
         this.isLoading = false;
+
+        const id = this.route.snapshot.queryParams['id'];
+        if (id) {
+          this.highlightAndScroll(id);
+        }
       },
       error: (error: any) => {
         console.error('Failed to load hub activities', error);
@@ -317,22 +445,26 @@ export class HubComponent implements OnInit {
   }
 
   onSearchInput() {
+    this.applyFilters();
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
-      this.applyFilters();
+      this.updateUrlParams(true);
     }, 200);
   }
 
   onFilterChange() {
     this.applyFilters();
+    this.updateUrlParams(false);
   }
 
   clearSearch() {
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchQuery = '';
-    this.applyFilters();
+    this.onFilterChange();
   }
 
   clearFilters() {
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchQuery = '';
     this.selectedAuthors = [];
     this.selectedProgLangs = [];
@@ -340,37 +472,38 @@ export class HubComponent implements OnInit {
     this.selectedRoles = [];
     this.hasTranslationsFilter = false;
     this.selectedTags = [];
-    this.applyFilters();
+    this.selectedSort = 'date_desc';
+    this.onFilterChange();
   }
 
   removeAuthor(author: string) {
     this.selectedAuthors = (this.selectedAuthors || []).filter(a => a !== author);
-    this.applyFilters();
+    this.onFilterChange();
   }
 
   removeProgLang(lang: string) {
     this.selectedProgLangs = (this.selectedProgLangs || []).filter(l => l !== lang);
-    this.applyFilters();
+    this.onFilterChange();
   }
 
   removeLanguage(lang: string) {
     this.selectedLanguages = (this.selectedLanguages || []).filter(l => l !== lang);
-    this.applyFilters();
+    this.onFilterChange();
   }
 
   removeRole(role: string) {
     this.selectedRoles = (this.selectedRoles || []).filter(r => r !== role);
-    this.applyFilters();
+    this.onFilterChange();
   }
 
   clearTranslationsFilter() {
     this.hasTranslationsFilter = false;
-    this.applyFilters();
+    this.onFilterChange();
   }
 
   removeTag(tag: string) {
     this.selectedTags = (this.selectedTags || []).filter(t => t !== tag);
-    this.applyFilters();
+    this.onFilterChange();
   }
 
   toggleIntegration(activityId: string) {

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivitiesService } from '../activities.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AppService } from '../app.service';
 import { getNavMenuBar, getTagLabel, getTagClass, getTagStyle } from '../utilities';
 import { ConfirmationService } from 'primeng/api';
@@ -10,7 +11,7 @@ import { ConfirmationService } from 'primeng/api';
   templateUrl: './activities.component.html',
   styleUrls: ['./activities.component.less']
 })
-export class ActivitiesComponent implements OnInit {
+export class ActivitiesComponent implements OnInit, OnDestroy {
 
   getTagLabel = getTagLabel;
   getTagClass = getTagClass;
@@ -210,6 +211,8 @@ export class ActivitiesComponent implements OnInit {
 
   highlightedId: string | null = null;
   highlightTimeout: any;
+  searchTimeout: any;
+  private queryParamsSub?: Subscription;
 
   constructor(
     public api: ActivitiesService,
@@ -221,48 +224,7 @@ export class ActivitiesComponent implements OnInit {
 
   ngOnInit(): void {
     const qParams = this.route.snapshot.queryParams;
-    if (qParams['archived'] !== undefined) {
-      this._archived = qParams['archived'] === 'true';
-    }
-    if (qParams['q']) this.searchQuery = qParams['q'];
-    if (qParams['owner']) this.selectedOwner = qParams['owner'];
-    if (qParams['authors']) {
-      this.selectedAuthors = qParams['authors'].split(',').filter(Boolean);
-    } else if (qParams['author'] && qParams['author'] !== 'all') {
-      this.selectedAuthors = [qParams['author']];
-    }
-    if (qParams['types']) {
-      this.selectedItemTypes = qParams['types'].split(',').filter(Boolean);
-    } else if (qParams['type'] && qParams['type'] !== 'all') {
-      this.selectedItemTypes = [qParams['type']];
-    }
-    if (qParams['codeLangs']) {
-      this.selectedCodeLanguages = qParams['codeLangs'].split(',').filter(Boolean);
-    } else if (qParams['codeLang'] && qParams['codeLang'] !== 'all') {
-      this.selectedCodeLanguages = [qParams['codeLang']];
-    }
-    if (qParams['langs']) {
-      this.selectedLanguages = qParams['langs'].split(',').filter(Boolean);
-    } else if (qParams['lang'] && qParams['lang'] !== 'all') {
-      this.selectedLanguages = [qParams['lang']];
-    }
-    if (qParams['statuses']) {
-      this.selectedStatuses = qParams['statuses'].split(',').filter(Boolean);
-    } else if (qParams['status'] && qParams['status'] !== 'all') {
-      this.selectedStatuses = [qParams['status']];
-    }
-    if (qParams['trans']) this.hasTranslationsFilter = qParams['trans'] === 'true';
-    if (qParams['counts']) {
-      this.selectedItemCounts = qParams['counts'].split(',').filter(Boolean);
-    } else if (qParams['count'] && qParams['count'] !== 'all') {
-      this.selectedItemCounts = [qParams['count']];
-    }
-    if (qParams['tags']) {
-      this.selectedTags = qParams['tags'].split(',').filter(Boolean);
-    } else if (qParams['tag'] && qParams['tag'] !== 'all') {
-      this.selectedTags = [qParams['tag']];
-    }
-    if (qParams['sort']) this.selectedSort = qParams['sort'];
+    this.parseQueryParams(qParams);
 
     const initialEdit = qParams['edit'];
     if (initialEdit) {
@@ -286,117 +248,20 @@ export class ActivitiesComponent implements OnInit {
     }
 
     this.reload(() => {
-      this.route.queryParams.subscribe((params) => {
-        let changed = false;
+      const id = this.route.snapshot.queryParams['id'];
+      if (id) {
+        this.highlightAndScroll(id);
+      }
 
-        const parseArrayParam = (paramName: string, singularName: string): string[] => {
-          if (params[paramName] !== undefined) {
-            return params[paramName] ? params[paramName].split(',').filter(Boolean) : [];
-          }
-          if (params[singularName] !== undefined && params[singularName] !== 'all') {
-            return [params[singularName]];
-          }
-          return [];
-        };
+      this.queryParamsSub = this.route.queryParams.subscribe((params) => {
+        const changed = this.parseQueryParams(params);
 
-        const arraysEqual = (a: string[], b: string[]) => {
-          const aArr = a || [];
-          const bArr = b || [];
-          if (aArr.length !== bArr.length) return false;
-          return aArr.every((val, idx) => val === bArr[idx]);
-        };
-
-        if (params['q'] !== undefined && params['q'] !== this.searchQuery) {
-          this.searchQuery = params['q'] || '';
-          changed = true;
-        }
-        if (params['owner'] !== undefined && params['owner'] !== this.selectedOwner) {
-          this.selectedOwner = params['owner'] || 'all';
-          changed = true;
-        }
-
-        const newAuthors = parseArrayParam('authors', 'author');
-        if (params['authors'] !== undefined || params['author'] !== undefined) {
-          if (!arraysEqual(newAuthors, this.selectedAuthors)) {
-            this.selectedAuthors = newAuthors;
-            changed = true;
-          }
-        }
-
-        const newTypes = parseArrayParam('types', 'type');
-        if (params['types'] !== undefined || params['type'] !== undefined) {
-          if (!arraysEqual(newTypes, this.selectedItemTypes)) {
-            this.selectedItemTypes = newTypes;
-            changed = true;
-          }
-        }
-
-        const newCodeLangs = parseArrayParam('codeLangs', 'codeLang');
-        if (params['codeLangs'] !== undefined || params['codeLang'] !== undefined) {
-          if (!arraysEqual(newCodeLangs, this.selectedCodeLanguages)) {
-            this.selectedCodeLanguages = newCodeLangs;
-            changed = true;
-          }
-        }
-
-        const newLangs = parseArrayParam('langs', 'lang');
-        if (params['langs'] !== undefined || params['lang'] !== undefined) {
-          if (!arraysEqual(newLangs, this.selectedLanguages)) {
-            this.selectedLanguages = newLangs;
-            changed = true;
-          }
-        }
-
-        const newStatuses = parseArrayParam('statuses', 'status');
-        if (params['statuses'] !== undefined || params['status'] !== undefined) {
-          if (!arraysEqual(newStatuses, this.selectedStatuses)) {
-            this.selectedStatuses = newStatuses;
-            changed = true;
-          }
-        }
-
-        if (params['trans'] !== undefined) {
-          const hasTrans = params['trans'] === 'true';
-          if (hasTrans !== this.hasTranslationsFilter) {
-            this.hasTranslationsFilter = hasTrans;
-            changed = true;
-          }
-        }
-
-        const newCounts = parseArrayParam('counts', 'count');
-        if (params['counts'] !== undefined || params['count'] !== undefined) {
-          if (!arraysEqual(newCounts, this.selectedItemCounts)) {
-            this.selectedItemCounts = newCounts;
-            changed = true;
-          }
-        }
-
-        const newTags = parseArrayParam('tags', 'tag');
-        if (params['tags'] !== undefined || params['tag'] !== undefined) {
-          if (!arraysEqual(newTags, this.selectedTags)) {
-            this.selectedTags = newTags;
-            changed = true;
-          }
-        }
-
-        if (params['sort'] !== undefined && params['sort'] !== this.selectedSort) {
-          this.selectedSort = params['sort'] || 'date_desc';
-          changed = true;
-        }
-        if (params['archived'] !== undefined) {
-          const isArchived = params['archived'] === 'true';
-          if (isArchived !== this.archived) {
-            this._archived = isArchived;
-            this.reload();
-            return;
-          }
-        }
         if (params['edit']) {
           this.selectActivityById(params['edit']);
         } else if (!params['edit'] && this.isDialogOpen) {
           this.closeEdit();
         }
-        if (params['id']) {
+        if (params['id'] && params['id'] !== this.highlightedId) {
           this.highlightAndScroll(params['id']);
         }
 
@@ -405,6 +270,107 @@ export class ActivitiesComponent implements OnInit {
         }
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
+    this.queryParamsSub?.unsubscribe();
+  }
+
+  parseQueryParams(params: any): boolean {
+    let changed = false;
+
+    const parseArrayParam = (paramName: string, singularName: string, aliasPlural?: string, aliasSingular?: string): string[] => {
+      if (params[paramName]) return params[paramName].split(',').filter(Boolean);
+      if (aliasPlural && params[aliasPlural]) return params[aliasPlural].split(',').filter(Boolean);
+      if (params[singularName] && params[singularName] !== 'all') return [params[singularName]];
+      if (aliasSingular && params[aliasSingular] && params[aliasSingular] !== 'all') return [params[aliasSingular]];
+      return [];
+    };
+
+    const arraysEqual = (a: string[], b: string[]) => {
+      const aArr = a || [];
+      const bArr = b || [];
+      if (aArr.length !== bArr.length) return false;
+      return aArr.every((val, idx) => val === bArr[idx]);
+    };
+
+    const newQuery = (params['q'] || '').trim();
+    if (newQuery !== this.searchQuery) {
+      this.searchQuery = newQuery;
+      changed = true;
+    }
+
+    const newOwner = (params['owner'] && ['all', 'mine', 'shared'].includes(params['owner'])) ? params['owner'] : 'all';
+    if (newOwner !== this.selectedOwner) {
+      this.selectedOwner = newOwner;
+      changed = true;
+    }
+
+    const newAuthors = parseArrayParam('authors', 'author');
+    if (!arraysEqual(newAuthors, this.selectedAuthors)) {
+      this.selectedAuthors = newAuthors;
+      changed = true;
+    }
+
+    const newTypes = parseArrayParam('types', 'type', 'roles', 'role');
+    if (!arraysEqual(newTypes, this.selectedItemTypes)) {
+      this.selectedItemTypes = newTypes;
+      changed = true;
+    }
+
+    const newCodeLangs = parseArrayParam('codeLangs', 'codeLang');
+    if (!arraysEqual(newCodeLangs, this.selectedCodeLanguages)) {
+      this.selectedCodeLanguages = newCodeLangs;
+      changed = true;
+    }
+
+    const newLangs = parseArrayParam('langs', 'lang');
+    if (!arraysEqual(newLangs, this.selectedLanguages)) {
+      this.selectedLanguages = newLangs;
+      changed = true;
+    }
+
+    const newStatuses = parseArrayParam('statuses', 'status');
+    if (!arraysEqual(newStatuses, this.selectedStatuses)) {
+      this.selectedStatuses = newStatuses;
+      changed = true;
+    }
+
+    const newTrans = params['trans'] === 'true';
+    if (newTrans !== this.hasTranslationsFilter) {
+      this.hasTranslationsFilter = newTrans;
+      changed = true;
+    }
+
+    const newCounts = parseArrayParam('counts', 'count');
+    if (!arraysEqual(newCounts, this.selectedItemCounts)) {
+      this.selectedItemCounts = newCounts;
+      changed = true;
+    }
+
+    const newTags = parseArrayParam('tags', 'tag');
+    if (!arraysEqual(newTags, this.selectedTags)) {
+      this.selectedTags = newTags;
+      changed = true;
+    }
+
+    const newSort = params['sort'] || 'date_desc';
+    if (newSort !== this.selectedSort) {
+      this.selectedSort = newSort;
+      changed = true;
+    }
+
+    if (params['archived'] !== undefined) {
+      const isArchived = params['archived'] === 'true';
+      if (isArchived !== this.archived) {
+        this._archived = isArchived;
+        this.reload();
+      }
+    }
+
+    return changed;
   }
 
   highlightAndScroll(id: string) {
@@ -572,7 +538,10 @@ export class ActivitiesComponent implements OnInit {
 
   onSearchInput() {
     this.applyFilters();
-    this.updateUrlParams(true);
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.updateUrlParams(true);
+    }, 200);
   }
 
   onFilterChange() {
@@ -581,6 +550,7 @@ export class ActivitiesComponent implements OnInit {
   }
 
   clearFilters() {
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchQuery = '';
     this.selectedOwner = 'all';
     this.selectedAuthors = [];
@@ -597,7 +567,10 @@ export class ActivitiesComponent implements OnInit {
   }
 
   clearSearch() {
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchQuery = '';
+    this.applyFilters();
+    this.updateUrlParams(false);
   }
 
   clearOwnerFilter() {

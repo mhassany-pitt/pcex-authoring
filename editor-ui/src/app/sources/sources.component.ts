@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SourcesService } from '../sources.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ActivitiesService } from '../activities.service';
 import { AppService } from '../app.service';
 import { ConfirmationService } from 'primeng/api';
@@ -11,7 +12,7 @@ import { getTagLabel, getTagClass, getTagStyle } from '../utilities';
   templateUrl: './sources.component.html',
   styleUrls: ['./sources.component.less']
 })
-export class SourcesComponent implements OnInit {
+export class SourcesComponent implements OnInit, OnDestroy {
 
   getTagLabel = getTagLabel;
   getTagClass = getTagClass;
@@ -66,6 +67,8 @@ export class SourcesComponent implements OnInit {
   // Sorting
   selectedSort: string = 'date_desc';
 
+  searchTimeout: any;
+
   // Preview Dialog
   previewLink: any;
   showPreview = false;
@@ -73,6 +76,7 @@ export class SourcesComponent implements OnInit {
   // Row Highlight
   highlightedId: string | null = null;
   highlightTimeout: any;
+  private queryParamsSub?: Subscription;
 
   // Options Definitions
   ownerOptions = [
@@ -106,31 +110,114 @@ export class SourcesComponent implements OnInit {
 
   ngOnInit(): void {
     // Read query params on initial load
-    const params = this.route.snapshot.queryParams;
-    if (params['q']) this.searchQuery = params['q'];
-    if (params['owner'] && ['all', 'mine', 'shared'].includes(params['owner'])) this.selectedOwner = params['owner'];
-    if (params['authors']) this.selectedAuthors = params['authors'].split(',').filter(Boolean);
-    if (params['codeLangs']) this.selectedProgLangs = params['codeLangs'].split(',').filter(Boolean);
-    if (params['langs']) this.selectedLanguages = params['langs'].split(',').filter(Boolean);
-    if (params['roles']) this.selectedRoles = params['roles'].split(',').filter(Boolean);
-    if (params['trans'] === 'true') this.hasTranslationsFilter = true;
-    if (params['tags']) this.selectedTags = params['tags'].split(',').filter(Boolean);
-    if (params['sort']) this.selectedSort = params['sort'];
-    if (params['archived'] === 'true') this.archived = true;
+    this.parseQueryParams(this.route.snapshot.queryParams);
 
     this.reload(() => {
       const id = this.route.snapshot.queryParams['id'];
       if (id) {
         this.highlightAndScroll(id);
       }
-    });
 
-    this.route.queryParams.subscribe(p => {
-      const id = p['id'];
-      if (id && id !== this.highlightedId) {
-        this.highlightAndScroll(id);
-      }
+      this.queryParamsSub = this.route.queryParams.subscribe(p => {
+        const changed = this.parseQueryParams(p);
+        if (changed) {
+          this.applyFilters();
+        }
+        const id = p['id'];
+        if (id && id !== this.highlightedId) {
+          this.highlightAndScroll(id);
+        }
+      });
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
+    this.queryParamsSub?.unsubscribe();
+  }
+
+  parseQueryParams(params: any): boolean {
+    let changed = false;
+
+    const arraysEqual = (a: string[], b: string[]) => {
+      const aArr = a || [];
+      const bArr = b || [];
+      if (aArr.length !== bArr.length) return false;
+      return aArr.every((val, idx) => val === bArr[idx]);
+    };
+
+    const parseArray = (pluralKey: string, singularKey: string, aliasPlural?: string, aliasSingular?: string): string[] => {
+      if (params[pluralKey]) return params[pluralKey].split(',').filter(Boolean);
+      if (aliasPlural && params[aliasPlural]) return params[aliasPlural].split(',').filter(Boolean);
+      if (params[singularKey] && params[singularKey] !== 'all') return [params[singularKey]];
+      if (aliasSingular && params[aliasSingular] && params[aliasSingular] !== 'all') return [params[aliasSingular]];
+      return [];
+    };
+
+    const newQuery = (params['q'] || '').trim();
+    if (newQuery !== this.searchQuery) {
+      this.searchQuery = newQuery;
+      changed = true;
+    }
+
+    const newOwner = (params['owner'] && ['all', 'mine', 'shared'].includes(params['owner'])) ? params['owner'] : 'all';
+    if (newOwner !== this.selectedOwner) {
+      this.selectedOwner = newOwner;
+      changed = true;
+    }
+
+    const newAuthors = parseArray('authors', 'author');
+    if (!arraysEqual(newAuthors, this.selectedAuthors)) {
+      this.selectedAuthors = newAuthors;
+      changed = true;
+    }
+
+    const newCodeLangs = parseArray('codeLangs', 'codeLang');
+    if (!arraysEqual(newCodeLangs, this.selectedProgLangs)) {
+      this.selectedProgLangs = newCodeLangs;
+      changed = true;
+    }
+
+    const newLangs = parseArray('langs', 'lang');
+    if (!arraysEqual(newLangs, this.selectedLanguages)) {
+      this.selectedLanguages = newLangs;
+      changed = true;
+    }
+
+    const newRoles = parseArray('roles', 'role', 'types', 'type');
+    if (!arraysEqual(newRoles, this.selectedRoles)) {
+      this.selectedRoles = newRoles;
+      changed = true;
+    }
+
+    const newTrans = params['trans'] === 'true';
+    if (newTrans !== this.hasTranslationsFilter) {
+      this.hasTranslationsFilter = newTrans;
+      changed = true;
+    }
+
+    const newTags = parseArray('tags', 'tag');
+    if (!arraysEqual(newTags, this.selectedTags)) {
+      this.selectedTags = newTags;
+      changed = true;
+    }
+
+    const newSort = params['sort'] || 'date_desc';
+    if (newSort !== this.selectedSort) {
+      this.selectedSort = newSort;
+      changed = true;
+    }
+
+    if (params['archived'] !== undefined) {
+      const isArchived = params['archived'] === 'true';
+      if (isArchived !== this.archived) {
+        this.archived = isArchived;
+        this.reload();
+      }
+    }
+
+    return changed;
   }
 
   // Active Filters Getters
@@ -222,6 +309,7 @@ export class SourcesComponent implements OnInit {
 
   // Filter Removal Helpers
   clearFilters() {
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchQuery = '';
     this.selectedOwner = 'all';
     this.selectedAuthors = [];
@@ -235,8 +323,9 @@ export class SourcesComponent implements OnInit {
   }
 
   clearSearch() {
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchQuery = '';
-    this.onSearchInput();
+    this.onFilterChange();
   }
 
   clearOwnerFilter() {
@@ -275,7 +364,9 @@ export class SourcesComponent implements OnInit {
   }
 
   toggleArchiveFilter() {
-    this.reload();
+    this.reload(() => {
+      this.updateUrlParams(false);
+    });
   }
 
   // Date Parsing Helpers
@@ -414,7 +505,10 @@ export class SourcesComponent implements OnInit {
 
   onSearchInput() {
     this.applyFilters();
-    this.updateUrlParams(true);
+    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.updateUrlParams(true);
+    }, 200);
   }
 
   onFilterChange() {
