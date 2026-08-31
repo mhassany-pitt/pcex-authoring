@@ -145,8 +145,8 @@
 
 - [x] **`py_find_average`** (`6a91ae6f32e78ede45c11743`)
   - [x] #58 [**Calculating the Average of Input Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6632e78ede45c116ab) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 6→3 distr.
-  - [x] #59 [**Calculating the Average of the Input Integers that are an Even Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6632e78ede45c116ad) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 9→3 distr.
-  - [x] #60 [**Calculating the Average of Floating-Point Numbers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6632e78ede45c116af) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 6→3 distr.
+  - [x] #59 [**Calculating the Average of the Input Integers that are an Even Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6632e78ede45c116ad) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 3 distr.
+  - [x] #60 [**Calculating the Average of Floating-Point Numbers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6632e78ede45c116af) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 3 distr.
 
 - [x] **`py_list_fill`** (`6a91ae7132e78ede45c1175f`)
   - [x] #61 [**Add Values to an Empty List (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6a32e78ede45c116ed) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 3 distr.
@@ -157,8 +157,8 @@
   - [x] #64 [**Determining the Largest of the Three Integers**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6932e78ede45c116d3) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 3 distr.
 
 - [x] **`py_student_score`** (`6a91ae7032e78ede45c11749`)
-  - [x] #65 [**Creating a Dictionary of Student-Scores Pairs (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6732e78ede45c116bb) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 4 blanks &nbsp;•&nbsp; 12→3 distr.
-  - [x] #66 [**Creating a Dictionary of Student-Scores Pairs (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6732e78ede45c116bd) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 9→3 distr.
+  - [x] #65 [**Creating a Dictionary of Student-Scores Pairs (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6732e78ede45c116bb) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 3 distr.
+  - [x] #66 [**Creating a Dictionary of Student-Scores Pairs (Case 2)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6732e78ede45c116bd) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 3 distr.
 
 - [x] **`py_squares`** (`6a91ae7132e78ede45c11769`)
   - [x] #67 [**Printing the Squares of Numbers Within a Specified Range (Case 1)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6c32e78ede45c11709) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 3 distr.
@@ -166,20 +166,20 @@
   - [x] #69 [**Printing the Squares of Numbers Within a Specified Range (Case 3)**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6c32e78ede45c1170d) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 3 distr.
 
 - [x] **`py_char_dict`** (`6a91ae7132e78ede45c11771`)
-  - [x] #70 [**Creating a Dictionary of Character-Count Pairs**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6d32e78ede45c1171b) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 3 blanks &nbsp;•&nbsp; 9→3 distr.
-  - [x] #71 [**Creating a Dictionary of Character-Words Pairs**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6d32e78ede45c1171d) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 6→3 distr.
+  - [x] #70 [**Creating a Dictionary of Character-Count Pairs**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6d32e78ede45c1171b) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 3 distr.
+  - [x] #71 [**Creating a Dictionary of Character-Words Pairs**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6d32e78ede45c1171d) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 3 distr.
 
 - [x] **`py_if_else_wage`** (`6a91ae7232e78ede45c11777`)
   - [x] #72 [**Calculating the Employee's Wage Based on the Hours That the Employee Has Worked and an Hourly Pay Rate**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6e32e78ede45c11727) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 3 distr.
-  - [x] #73 [**Calculating the Wage of an Employee at the Customer Service Call Center**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6e32e78ede45c11729) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 6→3 distr.
+  - [x] #73 [**Calculating the Wage of an Employee at the Customer Service Call Center**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6e32e78ede45c11729) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 3 distr.
 
 - [x] **`py_f_to_c_conversion`** (`6a91ae7132e78ede45c11773`)
-  - [x] #74 [**Celsius To Fahrenheit Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6d32e78ede45c1171f) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 6→3 distr.
-  - [x] #75 [**Fahrenheit to Celsius Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6e32e78ede45c11721) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 6→3 distr.
+  - [x] #74 [**Celsius To Fahrenheit Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6d32e78ede45c1171f) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 3 distr.
+  - [x] #75 [**Fahrenheit to Celsius Conversion**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6e32e78ede45c11721) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 3 distr.
 
 - [x] **`py_divisor`** (`6a91ae7032e78ede45c11755`)
   - [x] #76 [**Finding the Smallest Divisor of a Positive Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6932e78ede45c116d5) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 3 distr.
-  - [x] #77 [**Finding the Largest Divisor of a Positive Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6932e78ede45c116d7) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 6→3 distr.
+  - [x] #77 [**Finding the Largest Divisor of a Positive Number**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6932e78ede45c116d7) &nbsp;•&nbsp; `ch` &nbsp;•&nbsp; 2 blanks &nbsp;•&nbsp; 3 distr.
 
 - [x] **`py_if_else_num`** (`6a91ae6f32e78ede45c11733`)
   - [x] #78 [**Determining the Sign of an Integer**](https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6432e78ede45c11687) &nbsp;•&nbsp; `ex` &nbsp;•&nbsp; 1 blank &nbsp;•&nbsp; 3 distr.
