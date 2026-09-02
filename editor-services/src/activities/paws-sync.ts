@@ -137,6 +137,77 @@ const syncToAggUM2 = async (params: Params) => {
         activity.linkings.um2['activity-id'] = um2ParentActivityInsert.insertId;
       ids.um2.add(activity.linkings.um2['activity-id']);
 
+      // If bundle is not yet linked in agg, but an example source was previously used as the bundle linking, migrate it:
+      if (!activity.linkings.agg['activity-id']) {
+        const firstExample = activity.items.find((item: any) => item.type === 'example');
+        if (firstExample && activity.linkings.agg[`content__${firstExample.item}`]) {
+          activity.linkings.agg['activity-id'] = activity.linkings.agg[`content__${firstExample.item}`];
+          delete activity.linkings.agg[`content__${firstExample.item}`];
+        }
+      }
+
+      // Read first source to determine bundle language/domain
+      const firstSource = activity.items.length
+        ? useId(
+            await params.sources.read({
+              isadmin: params.isadmin,
+              user: params.request.user.email,
+              id: activity.items[0].item,
+            }),
+          )
+        : null;
+      const firstSourceLang = (firstSource?.language || 'python').toLowerCase();
+      const bundleDomain = firstSourceLang === 'python' ? 'py' : firstSourceLang;
+
+      // insert/update bundle in ent_content (aggregate)
+      const aggBundleInsert = await exec_query(
+        agg_qr,
+        `INSERT INTO ent_content (content_id, content_name, content_type, display_name, \`desc\`, url, domain, provider_id, creator_id, privacy, visible, author_name) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE content_name = ?, display_name = ?, url = ?, domain = ?, privacy = ?, visible = ?`,
+        [
+          activity.linkings.agg['activity-id'],
+          activityName,
+          'pcex_set',
+          activity.name,
+          'Program Construction Examples',
+          acosPittUrl,
+          bundleDomain,
+          'pcex',
+          params.request.user.email,
+          activity.published ? 'public' : 'private',
+          activity.published ? 1 : 0,
+          params.request.user.fullname,
+          // update if exists >>>
+          activityName,
+          activity.name,
+          acosPittUrl,
+          bundleDomain,
+          activity.published ? 'public' : 'private',
+          activity.published ? 1 : 0,
+        ],
+      );
+      if (aggBundleInsert.insertId)
+        activity.linkings.agg['activity-id'] = aggBundleInsert.insertId;
+      ids.agg.add(activity.linkings.agg['activity-id']);
+
+      // bundle preview url and attributes in ent_content_attrs
+      await exec_query(
+        agg_qr,
+        'DELETE FROM ent_content_attrs WHERE content_id = ?',
+        [activity.linkings.agg['activity-id']],
+      );
+      await exec_query(
+        agg_qr,
+        `INSERT INTO ent_content_attrs (content_id, description, code, preview_url, metadata) VALUES (?, ?, ?, ?, ?)`,
+        [
+          activity.linkings.agg['activity-id'],
+          activity.description || '',
+          firstSource?.code || '',
+          acosPittUrl,
+          '',
+        ],
+      );
+
       for (let index = 0; index < activity.items.length; index++) {
         const source = useId(
           await params.sources.read({ 
@@ -189,24 +260,50 @@ const syncToAggUM2 = async (params: Params) => {
           ],
         );
 
-        // -----------------
-        // IMPORTANT-NOTE:
-        // for pcex_example, activity_name must be used as the content_name!
-        // so, there can only be one example per activity (for now).
-        // in um2 when calculating the progress of an activity, for pcex_example, activity_name is used.
-        // -----------------
+        if (isTypeExample) {
+          const um2ExampleSetInsert = await exec_query(
+            um2_qr,
+            `INSERT INTO ent_activity (ActivityID, AppID, URI, Activity, Description, active) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE URI = ?, Activity = ?, active = ?`,
+            [
+              activity.linkings.um2[`activity-set__${source.id}`],
+              45,
+              `${acosPittUrl}&index=${index}`,
+              contentName,
+              'PCEX Set',
+              activity.published ? 1 : 0,
+              // update if exists >>>
+              `${acosPittUrl}&index=${index}`,
+              contentName,
+              activity.published ? 1 : 0,
+            ],
+          );
+          if (um2ExampleSetInsert.insertId)
+            activity.linkings.um2[`activity-set__${source.id}`] =
+              um2ExampleSetInsert.insertId;
+          ids.um2.add(activity.linkings.um2[`activity-set__${source.id}`]);
+
+          await exec_query(
+            um2_qr,
+            `INSERT IGNORE INTO rel_pcex_set_component (ParentActivityID, ChildActivityID, AppID) VALUES (?, ?, ?)`,
+            [
+              activity.linkings.um2[`activity-set__${source.id}`],
+              activity.linkings.um2[`activity__${source.id}`],
+              45,
+            ],
+          );
+        }
 
         const lang = source.language.toLowerCase();
         const domain = lang == 'python' ? 'py' : lang;
 
-        // 3. insert/update ent_content (aggregate)
+        // 3. insert/update ent_content (aggregate) for each source
         const aggContentInsert = await exec_query(
           agg_qr,
           `INSERT INTO ent_content (content_id, content_name, content_type, display_name, \`desc\`, url, domain, provider_id, creator_id, privacy, visible, author_name) 
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE content_name = ?, display_name = ?, url = ?, domain = ?, privacy = ?, visible = ?`,
           [
             activity.linkings.agg[`content__${source.id}`],
-            isTypeExample ? activityName : contentName,
+            contentName,
             isTypeExample ? 'pcex_set' : 'pcex_challenge',
             source.name,
             isTypeExample
@@ -220,7 +317,7 @@ const syncToAggUM2 = async (params: Params) => {
             activity.published ? 1 : 0,
             params.request.user.fullname,
             // update if exists >>>
-            isTypeExample ? activityName : contentName,
+            contentName,
             source.name,
             `${acosPittUrl}&index=${index}`,
             domain,
