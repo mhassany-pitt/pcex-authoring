@@ -107,9 +107,9 @@ const syncToAggUM2 = async (params: Params) => {
       if (!activity.linkings.um2) activity.linkings.um2 = {};
       if (!activity.linkings.agg) activity.linkings.agg = {};
 
-      const acosHtmlUrl = prepURL(activity, 'html');
+      const acosPittUrl = prepURL(activity, 'pitt');
       console.log('--------------------------------');
-      console.log('Prepared URL for PAWS:', acosHtmlUrl);
+      console.log('Prepared URL for PAWS:', acosPittUrl);
       console.log('--------------------------------');
       const ids = { um2: new Set<number>(), agg: new Set<number>() };
 
@@ -120,12 +120,12 @@ const syncToAggUM2 = async (params: Params) => {
         [
           activity.linkings.um2['activity-id'],
           45,
-          acosHtmlUrl,
+          acosPittUrl,
           activityName,
           'PCEX Set',
           activity.published ? 1 : 0,
           // update if exists >>>
-          acosHtmlUrl,
+          acosPittUrl,
           activityName,
           activity.published ? 1 : 0,
         ],
@@ -209,7 +209,7 @@ const syncToAggUM2 = async (params: Params) => {
             isTypeExample
               ? 'Program Construction Examples'
               : 'Program Construction Challenges',
-            `${acosHtmlUrl}?index=${index}`,
+            `${acosPittUrl}&index=${index}`,
             domain,
             isTypeExample ? 'pcex' : 'pcex_ch',
             params.request.user.email,
@@ -219,7 +219,7 @@ const syncToAggUM2 = async (params: Params) => {
             // update if exists >>>
             isTypeExample ? activityName : contentName,
             source.name,
-            `${acosHtmlUrl}?index=${index}`,
+            `${acosPittUrl}&index=${index}`,
             domain,
             activity.published ? 'public' : 'private',
             activity.published ? 1 : 0,
@@ -243,7 +243,7 @@ const syncToAggUM2 = async (params: Params) => {
             activity.linkings.agg[`content__${source.id}`],
             source.description,
             source.code,
-            `${acosHtmlUrl}?index=${index}`,
+            `${acosPittUrl}&index=${index}`,
             isTypeExample
               ? ''
               : JSON.stringify({
