@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PCEX Sources Review Dashboard</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; padding: 2rem; }
+    h1 { color: #38bdf8; margin-bottom: 0.5rem; }
+    .subtitle { color: #94a3b8; margin-bottom: 1.5rem; }
+    .btn { background: #2563eb; color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: 600; margin-bottom: 2rem; }
+    .btn:hover { background: #1d4ed8; }
+    table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #334155; }
+    th { background: #0f172a; color: #94a3b8; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+    tr:hover { background: #334155; }
+    a { color: #38bdf8; text-decoration: none; font-weight: 500; }
+    a:hover { text-decoration: underline; }
+    .badge-blank { background: #7c2d12; color: #fdba74; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+    .badge-backfill { background: #581c87; color: #d8b4fe; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .badge-both { background: #831843; color: #f472b6; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>📝 PCEX Evaluation Queue (46 Sources)</h1>
+  <p class="subtitle">Click the button below to open all 46 sources in tabs, or click any individual link to open directly in the editor.</p>
+  <button class="btn" onclick="openAll()">🚀 Open All 46 Tabs in New Windows/Tabs</button>
+
+  <script>
+    const urls = [
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aa5",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c4cbc5a3f2aa638aa9",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638aad",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638aaf",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab1",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab3",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab7",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638ab9",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c5cbc5a3f2aa638abb",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638abd",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638abf",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac1",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac3",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638ac9",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638acb",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c6cbc5a3f2aa638acd",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638acf",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad1",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad3",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad5",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad7",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638ad9",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638adb",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c7cbc5a3f2aa638add",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a9060c8cbc5a3f2aa638adf",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6232e78ede45c11671",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6332e78ede45c1167d",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6332e78ede45c11683",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6432e78ede45c11685",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6532e78ede45c1169d",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6532e78ede45c1169f",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6532e78ede45c116a1",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6532e78ede45c116a3",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6632e78ede45c116a5",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6632e78ede45c116a9",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6632e78ede45c116b1",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6632e78ede45c116b3",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6832e78ede45c116c9",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6832e78ede45c116cb",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6932e78ede45c116d9",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6932e78ede45c116db",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6b32e78ede45c116fd",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6c32e78ede45c116ff",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6c32e78ede45c1170f",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6d32e78ede45c11711",
+      "https://adapt2.sis.pitt.edu/pcex-authoring/#/editor/6a91ae6d32e78ede45c11715"
+    ];
+
+    function openAll() {
+      urls.forEach((url, i) => {
+        setTimeout(() => {
+          window.open(url, '_blank');
+        }, i * 150);
+      });
+    }
+  </script>
+</body>
+</html>
