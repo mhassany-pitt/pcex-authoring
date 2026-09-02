@@ -187,6 +187,16 @@ def main():
             payload["id"] = server_bid
             payload["user"] = "moh70@pitt.edu"
 
+            # Ensure all bundle items point to the current cloned server source IDs
+            remapped_items = []
+            for itm in bundle_obj.get("items", []):
+                old_sid = itm.get("item")
+                new_sid = sources_map.get(old_sid, old_sid)
+                ritm = dict(itm)
+                ritm["item"] = new_sid
+                remapped_items.append(ritm)
+            payload["items"] = remapped_items
+
             name = payload.get("name", "Untitled")
 
             patch_url = f"{api_url}/bulk/activities/{server_bid}?compile=true"

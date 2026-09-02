@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PCEX Authoring Live Server Auditor</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 30px; background: #0f172a; color: #f8fafc; }
+    h1 { color: #38bdf8; margin-bottom: 5px; }
+    .card { background: #1e293b; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
+    .btn { background: #0284c7; color: #fff; border: none; padding: 10px 20px; font-size: 15px; font-weight: 600; border-radius: 6px; cursor: pointer; }
+    .btn:hover { background: #0369a1; }
+    .btn:disabled { background: #475569; cursor: not-allowed; }
+    .progress-container { margin: 15px 0; background: #334155; border-radius: 6px; overflow: hidden; height: 18px; }
+    .progress-bar { height: 100%; width: 0%; background: #10b981; transition: width 0.2s; }
+    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 13px; }
+    .badge-pass { background: #065f46; color: #34d399; }
+    .badge-fail { background: #881337; color: #fda4af; }
+    pre { background: #090d16; padding: 15px; border-radius: 6px; overflow-x: auto; max-height: 400px; font-size: 13px; color: #cbd5e1; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #334155; font-size: 14px; }
+    th { color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <h1>🔍 PCEX Authoring: Live Server Verification Suite</h1>
+  <p style="color: #94a3b8;">Performs comprehensive, byte-by-byte and field-by-field verification of all 123 sources and 52 bundles directly against the remote production database.</p>
+
+  <div class="card">
+    <button id="startBtn" class="btn" onclick="startAudit()">🚀 Start Live Server Audit</button>
+    <div id="statusText" style="margin-top: 10px; color: #cbd5e1;">Click the button above to begin auditing live server state.</div>
+    <div class="progress-container">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+  </div>
+
+  <div class="card" id="resultsCard" style="display: none;">
+    <h2>📊 Audit Results Summary</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Verified Fields</th>
+          <th>Expected Spec</th>
+          <th>Live Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Sources (123 total)</strong></td>
+          <td>Code, Explanations, Distractors + Descriptions, Blank Lines, Stat</td>
+          <td>3 Distractors (with explanations), &le;3 Blanks</td>
+          <td id="sourceStatus"><span class="status-badge badge-pass">Pending</span></td>
+        </tr>
+        <tr>
+          <td><strong>Bundles (52 total)</strong></td>
+          <td>Items Remapping, Worked-Examples + Challenges, PAWS Sync, Compilation</td>
+          <td>Points to Cloned Server Source IDs, linkings: true, stat: true</td>
+          <td id="bundleStatus"><span class="status-badge badge-pass">Pending</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>📝 Live Execution Log</h3>
+    <pre id="logArea">Ready to start.</pre>
+  </div>
+
+  <script src="deep_server_verification.js"></script>
+</body>
+</html>
