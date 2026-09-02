@@ -54,7 +54,10 @@ export const syncToPAWS = async (params: Params) => {
       console.info(
         `[${email}] sync activity (${params.activity.name}) with PAWS aggregate/um2.`,
       );
-      await syncToAggUM2(params); // IMPORTANT: /aggregateUMServices and /cbum needs restart to reflect the changes
+      // NOTE: Syncing to PAWS requires restarting these two docker containers:
+      //   docker restart docker-output-aggregateumservices-1 docker-output-cbum-1
+      // It can no longer be done through /manager/html/...
+      await syncToAggUM2(params);
       console.info(
         `[${email}] sync activity (${params.activity.name}) with PAWS catalog v2.`,
       );
