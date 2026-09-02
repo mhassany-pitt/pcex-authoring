@@ -63,8 +63,8 @@ def main():
     parser = argparse.ArgumentParser(description="Compile all PCEX sources and activity bundles on the server.")
     parser.add_argument("--skip-sources", action="store_true", help="Skip source compilation (useful if sources already compiled)")
     parser.add_argument("--skip-bundles", action="store_true", help="Skip bundle compilation")
-    parser.add_argument("--delay", type=float, default=5.0, help="Delay in seconds between source compilations (default: 5.0s)")
-    parser.add_argument("--bundle-delay", type=float, default=10.0, help="Delay in seconds between bundle compilations (default: 10.0s)")
+    parser.add_argument("--delay", type=float, default=1.0, help="Delay in seconds after each source finishes compiling (default: 1.0s)")
+    parser.add_argument("--bundle-delay", type=float, default=1.0, help="Delay in seconds after each bundle finishes compiling (default: 1.0s)")
     parser.add_argument("--sources-dir", default=None, help="Sources directory (default: backups/2026-09-01_reviewed/sources)")
     parser.add_argument("--bundles-dir", default=None, help="Bundles directory (default: augmented_bundles)")
     args = parser.parse_args()
@@ -190,14 +190,16 @@ def main():
             name = payload.get("name", "Untitled")
 
             patch_url = f"{api_url}/bulk/activities/{server_bid}?compile=true"
+            t0 = time.time()
             status, resp = send_json_patch_with_retry(patch_url, headers, payload, ssl_ctx)
+            item_dur = time.time() - t0
 
             if status in (200, 201):
                 bundle_success += 1
-                print(f"  [{idx:2d}/{len(bundle_files)}] ✓ Bundle compiled: {server_bid} - {name[:40]}")
+                print(f"  [{idx:2d}/{len(bundle_files)}] ✓ Bundle compiled ({item_dur:.1f}s): {server_bid} - {name[:40]}")
             else:
                 bundle_fail += 1
-                print(f"  [{idx:2d}/{len(bundle_files)}] ✗ FAILED Bundle: {server_bid} ({status}): {resp}")
+                print(f"  [{idx:2d}/{len(bundle_files)}] ✗ FAILED Bundle ({item_dur:.1f}s): {server_bid} ({status}): {resp}")
 
             if args.bundle_delay > 0:
                 time.sleep(args.bundle_delay)
