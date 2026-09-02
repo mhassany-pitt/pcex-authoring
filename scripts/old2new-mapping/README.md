@@ -20,6 +20,7 @@ This directory contains scripts to map old PCEX activities to Hub bundles, extra
 | **10** | `10_clean_rebuild_and_validate.py` | **All-in-one master script**: Deletes old clones on server, regenerates Spanish items in English, re-inserts clean copies, and updates `sources_validation_list.md`. |
 | **Backup** | `backup_sources.py` | Downloads the latest state of all cloned sources from the server into `backups/<YYYY-MM-DD>/sources/` as a local backup. |
 | **Backfill** | `backfill_sources.py` | Filters human-only distractors and backfills the 33 deficit sources with `[backfilled]` LLM options into `backfilled_sources/`. |
+| **Compile** | `compile_all.py` | Live-fetches each source and bundle from the server and triggers fresh compilation sequentially without modifying contents. |
 
 ---
 

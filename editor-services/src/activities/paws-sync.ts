@@ -403,13 +403,18 @@ const syncToCatalog = async ({ activity, users, sources, config, isadmin }: Para
 };
 
 const readFromCatalog = async (id: string, config: ConfigService) => {
-  const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
-  const response = await axios.get(
-    `${config.get('PAWS_CATALOG_API')}/api/slc-items-api/${id}`,
-    { headers: { 'api-token': apiToken } }
-  );
-  return response.data;
-}
+  if (!id || id === 'undefined') return null;
+  try {
+    const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
+    const response = await axios.get(
+      `${config.get('PAWS_CATALOG_API')}/api/slc-items-api/${id}`,
+      { headers: { 'api-token': apiToken } }
+    );
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+};
 
 const postToCatalog = async (item: any, config: ConfigService) => {
   const apiToken = config.get('PAWS_CATALOG_API_TOKEN');
