@@ -18,6 +18,8 @@ This directory contains scripts to map old PCEX activities to Hub bundles, extra
 | **08** | `08_bulk_delete_augmented_items.py` | Rollback/reset script that bulk deletes all previously imported augmented bundles and sources via the bulk API (`DELETE /bulk/activities` and `DELETE /bulk/sources`). |
 | **09** | `09_regenerate_spanish_sources.py` | Regenerates English line explanations and distractors for Spanish sources (supports `-w / --workers` parallelism). |
 | **10** | `10_clean_rebuild_and_validate.py` | **All-in-one master script**: Deletes old clones on server, regenerates Spanish items in English, re-inserts clean copies, and updates `sources_validation_list.md`. |
+| **Backup** | `backup_sources.py` | Downloads the latest state of all cloned sources from the server into `backups/<YYYY-MM-DD>/sources/` as a local backup. |
+| **Backfill** | `backfill_sources.py` | Filters human-only distractors and backfills the 33 deficit sources with `[backfilled]` LLM options into `backfilled_sources/`. |
 
 ---
 
