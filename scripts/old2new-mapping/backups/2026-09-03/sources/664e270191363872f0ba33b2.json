@@ -1,0 +1,298 @@
+{
+  "id": "6a9060c6cbc5a3f2aa638acb",
+  "user": "moh70@pitt.edu",
+  "name": "Reversing the Digits of an Integer",
+  "description": "Construct a program that reverses the digits of an integer mathematically.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_reverse_number.py",
+  "code": "#Step 1: Assign initial values to the variables which we need for this program\nnum = 1234\nreverse = 0\n#Step 2: Reverse the digits of the integer mathematically\nwhile num > 0 :\n    #Step 2.1: Get the last digit in the integer\n    last_digit = num % 10\n    #Step 2.2:?Append the last digit to reverse\n    reverse = (reverse * 10) + last_digit\n    #Step 2.3: Remove the last digit from the integer\n    num = num // 10\n    print(\"last digit:\", last_digit, \", reverse:\", reverse, \", integer:\", num)\nprint(\"The reversed integer is:\", reverse)",
+  "lines": {
+    "2": {
+      "content": "num = 1234",
+      "commentList": [
+        "Purpose: You assign the starting integer to the variable num so the algorithm has a value to work on; this is the number whose digits you will reverse.",
+        "Syntax and semantics: You use the assignment operator '=' to bind the integer literal 1234 to the name num. In Python this makes num refer to the int value 1234, which you later modify in the loop.",
+        "Potential errors and misconceptions: Hardcoding 1234 makes the program non\u2011reusable. If you expect negative inputs, note that the loop uses 'num > 0' so a negative num would skip the loop; also remember that reversing an integer discards any leading zeros in the result (e.g., 1200 becomes 21 because integers don't preserve leading zeros).",
+        "Best practices: Instead of hardcoding, you should get input from the user (e.g., num = int(input(...))) and validate it. If you must keep the original number for later use, store a copy (original = num) because you will modify num in the loop. To handle negatives, record the sign and work with abs(num) before reversing."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: You assign the starting integer to the variable num so the algorithm has a value to work on; this is the number whose digits you will reverse."
+        },
+        {
+          "content": "Syntax and semantics: You use the assignment operator '=' to bind the integer literal 1234 to the name num. In Python this makes num refer to the int value 1234, which you later modify in the loop."
+        },
+        {
+          "content": "Potential errors and misconceptions: Hardcoding 1234 makes the program non\u2011reusable. If you expect negative inputs, note that the loop uses 'num > 0' so a negative num would skip the loop; also remember that reversing an integer discards any leading zeros in the result (e.g., 1200 becomes 21 because integers don't preserve leading zeros)."
+        },
+        {
+          "content": "Best practices: Instead of hardcoding, you should get input from the user (e.g., num = int(input(...))) and validate it. If you must keep the original number for later use, store a copy (original = num) because you will modify num in the loop. To handle negatives, record the sign and work with abs(num) before reversing."
+        }
+      ]
+    },
+    "3": {
+      "content": "reverse = 0",
+      "commentList": [
+        "You initialize the accumulator variable reverse to 0 so you have a starting value that will hold the reversed number as you build it digit by digit inside the loop.",
+        "This line is a simple assignment: it stores the integer 0 in reverse. Later you update reverse with arithmetic (reverse = (reverse * 10) + last_digit) to append digits.",
+        "If you forget to initialize reverse before the loop, you'll get a NameError/UnboundLocalError when you first try to use it, because the variable would not have a defined value.",
+        "Keeping reverse as an integer is important because the algorithm uses integer operations (% and //). If reverse were a string you would need different logic (string concatenation and conversions).",
+        "A common misconception is to start with an empty string ('') and concatenate digits; that works differently and requires extra conversion. Initializing to 0 keeps the solution purely mathematical.",
+        "As a best practice, choose a clearer name like reversed_num to make your intent explicit, and remember to handle negative inputs (store the sign and work with abs(num)) so your initialization still makes sense."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You initialize the accumulator variable reverse to 0 so you have a starting value that will hold the reversed number as you build it digit by digit inside the loop."
+        },
+        {
+          "content": "This line is a simple assignment: it stores the integer 0 in reverse. Later you update reverse with arithmetic (reverse = (reverse * 10) + last_digit) to append digits."
+        },
+        {
+          "content": "If you forget to initialize reverse before the loop, you'll get a NameError/UnboundLocalError when you first try to use it, because the variable would not have a defined value."
+        },
+        {
+          "content": "Keeping reverse as an integer is important because the algorithm uses integer operations (% and //). If reverse were a string you would need different logic (string concatenation and conversions)."
+        },
+        {
+          "content": "A common misconception is to start with an empty string ('') and concatenate digits; that works differently and requires extra conversion. Initializing to 0 keeps the solution purely mathematical."
+        },
+        {
+          "content": "As a best practice, choose a clearer name like reversed_num to make your intent explicit, and remember to handle negative inputs (store the sign and work with abs(num)) so your initialization still makes sense."
+        }
+      ]
+    },
+    "5": {
+      "content": "while num > 0 :",
+      "commentList": [
+        "Purpose: This while line makes the program repeat the digit-extraction steps until there are no digits left, so you keep building the reversed number one digit at a time.",
+        "Syntax: 'while num > 0 :' is a loop header \u2014 the condition (num > 0) is checked before each iteration and the colon tells Python that the indented lines that follow are the loop body.",
+        "Semantics: Using 'num > 0' means the loop runs only for positive integers (and will run 0 times for num == 0); for an initial num of 1234 the loop will run once per digit until num becomes 0.",
+        "Common error to watch for: If you forget to reduce num inside the loop (for example by removing the last digit), the condition will stay true and you will get an infinite loop. Make sure you have the 'num = num // 10' step inside the loop.",
+        "Common misconception: The loop assumes num is an integer. If num is negative or a float, modulo (%) and integer division (//) behave differently; if you want to support negative numbers, handle the sign before entering this loop.",
+        "Best practice: Validate or convert your input to an int before the loop, consider saving the original value if you need it later (e.g., original_num = num), and you can use the in-place shorthand 'num //= 10' to make the intent clearer.",
+        "Stylistic note: Keep the colon and proper indentation \u2014 the loop body must be indented under this line. Consider clearer variable names like original_num and reversed_num to help readers (and you) understand the code."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This while line makes the program repeat the digit-extraction steps until there are no digits left, so you keep building the reversed number one digit at a time."
+        },
+        {
+          "content": "Syntax: 'while num > 0 :' is a loop header \u2014 the condition (num > 0) is checked before each iteration and the colon tells Python that the indented lines that follow are the loop body."
+        },
+        {
+          "content": "Semantics: Using 'num > 0' means the loop runs only for positive integers (and will run 0 times for num == 0); for an initial num of 1234 the loop will run once per digit until num becomes 0."
+        },
+        {
+          "content": "Common error to watch for: If you forget to reduce num inside the loop (for example by removing the last digit), the condition will stay true and you will get an infinite loop. Make sure you have the 'num = num // 10' step inside the loop."
+        },
+        {
+          "content": "Common misconception: The loop assumes num is an integer. If num is negative or a float, modulo (%) and integer division (//) behave differently; if you want to support negative numbers, handle the sign before entering this loop."
+        },
+        {
+          "content": "Best practice: Validate or convert your input to an int before the loop, consider saving the original value if you need it later (e.g., original_num = num), and you can use the in-place shorthand 'num //= 10' to make the intent clearer."
+        },
+        {
+          "content": "Stylistic note: Keep the colon and proper indentation \u2014 the loop body must be indented under this line. Consider clearer variable names like original_num and reversed_num to help readers (and you) understand the code."
+        }
+      ]
+    },
+    "7": {
+      "content": "    last_digit = num % 10",
+      "commentList": [
+        "You extract the last digit of num by computing num % 10 and store that single digit in the variable last_digit; this is the core step that pulls off the units place so you can append it to the reversed number.",
+        "The % operator returns the remainder after dividing num by 10. For a positive integer num this yields a value from 0 to 9 (the units digit). The whole expression last_digit = num % 10 assigns that remainder to last_digit.",
+        "Be careful if num is not a plain positive integer: if num is negative, Python's % returns a non\u2011negative remainder (e.g., -123 % 10 == 7), which may surprise you. The while num > 0 guard here avoids that, but if you want to support negative numbers handle the sign separately (for example, work with abs(num)).",
+        "A common beginner mistake is to use / instead of %, which gives a float quotient instead of the last digit. Also avoid using this on non\u2011integers without converting to int first, since types can lead to unexpected results or errors.",
+        "For best practice, ensure you work on a copy of the original number if you need it later (e.g., temp = num), and add a short comment so you or others know this line extracts the units digit.",
+        "Choose clear variable names like last_digit (as used here) and make sure num is validated as an integer before the loop to prevent subtle bugs."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You extract the last digit of num by computing num % 10 and store that single digit in the variable last_digit; this is the core step that pulls off the units place so you can append it to the reversed number."
+        },
+        {
+          "content": "The % operator returns the remainder after dividing num by 10. For a positive integer num this yields a value from 0 to 9 (the units digit). The whole expression last_digit = num % 10 assigns that remainder to last_digit."
+        },
+        {
+          "content": "Be careful if num is not a plain positive integer: if num is negative, Python's % returns a non\u2011negative remainder (e.g., -123 % 10 == 7), which may surprise you. The while num > 0 guard here avoids that, but if you want to support negative numbers handle the sign separately (for example, work with abs(num))."
+        },
+        {
+          "content": "A common beginner mistake is to use / instead of %, which gives a float quotient instead of the last digit. Also avoid using this on non\u2011integers without converting to int first, since types can lead to unexpected results or errors."
+        },
+        {
+          "content": "For best practice, ensure you work on a copy of the original number if you need it later (e.g., temp = num), and add a short comment so you or others know this line extracts the units digit."
+        },
+        {
+          "content": "Choose clear variable names like last_digit (as used here) and make sure num is validated as an integer before the loop to prevent subtle bugs."
+        }
+      ]
+    },
+    "9": {
+      "content": "    reverse = (reverse * 10) + last_digit",
+      "commentList": [
+        "You update the variable reverse to include the new last digit at the end of the number you are building; mathematically you shift the existing digits left by one place (multiply by 10) and then add the extracted last_digit.",
+        "You are using the assignment operator '=' to store the result of the expression (reverse * 10) + last_digit back into reverse; the parentheses make the intended order of operations clear (multiply first, then add).",
+        "You should understand that this uses integer arithmetic: reverse * 10 moves every digit one place to the left, and adding last_digit places that digit in the ones place of the new number.",
+        "You might mistakenly try string operations to reverse digits; in this mathematical approach you must use multiplication and addition, not string concatenation. Also note that if num can be negative, this line alone does not handle the sign \u2014 the loop condition prevents negative handling in the current program.",
+        "Watch out for subtle bugs: if last_digit is not an integer (e.g., if previous steps used floating-point division by mistake) the result may be wrong. In this program you ensure integers by using modulus (%) and floor division (//).",
+        "Best practice: keep this line simple and readable (the parentheses are fine for clarity). Consider handling negative inputs explicitly before this loop and use clear variable names so you (and others) immediately see that reverse accumulates the reversed number."
+      ],
+      "indentLevel": 1,
+      "blank": true,
+      "comments": [
+        {
+          "content": "You update the variable reverse to include the new last digit at the end of the number you are building; mathematically you shift the existing digits left by one place (multiply by 10) and then add the extracted last_digit."
+        },
+        {
+          "content": "You are using the assignment operator '=' to store the result of the expression (reverse * 10) + last_digit back into reverse; the parentheses make the intended order of operations clear (multiply first, then add)."
+        },
+        {
+          "content": "You should understand that this uses integer arithmetic: reverse * 10 moves every digit one place to the left, and adding last_digit places that digit in the ones place of the new number."
+        },
+        {
+          "content": "You might mistakenly try string operations to reverse digits; in this mathematical approach you must use multiplication and addition, not string concatenation. Also note that if num can be negative, this line alone does not handle the sign \u2014 the loop condition prevents negative handling in the current program."
+        },
+        {
+          "content": "Watch out for subtle bugs: if last_digit is not an integer (e.g., if previous steps used floating-point division by mistake) the result may be wrong. In this program you ensure integers by using modulus (%) and floor division (//)."
+        },
+        {
+          "content": "Best practice: keep this line simple and readable (the parentheses are fine for clarity). Consider handling negative inputs explicitly before this loop and use clear variable names so you (and others) immediately see that reverse accumulates the reversed number."
+        }
+      ]
+    },
+    "11": {
+      "content": "    num = num // 10",
+      "commentList": [
+        "you update num by assigning it the integer result of dividing by 10 so the last digit is removed; this lets the while loop progress toward termination.",
+        "you are using the '//' operator which performs integer (floor) division in Python; num // 10 drops the remainder and returns an int, and that int is stored back into num.",
+        "you must not use '/' here because that yields a float (e.g., 123.0) and can break the loop condition or later calculations; also forgetting to update num would cause an infinite loop.",
+        "you should be aware that '//' floors toward negative infinity for negative numbers (e.g., -123 // 10 == -13), so handle negative inputs explicitly (for example by using abs(num) or managing the sign) if you want symmetric behavior.",
+        "best practice: if you need the original value later, save it in another variable before this line, and ensure num is an integer to avoid surprising results."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "you update num by assigning it the integer result of dividing by 10 so the last digit is removed; this lets the while loop progress toward termination."
+        },
+        {
+          "content": "you are using the '//' operator which performs integer (floor) division in Python; num // 10 drops the remainder and returns an int, and that int is stored back into num."
+        },
+        {
+          "content": "you must not use '/' here because that yields a float (e.g., 123.0) and can break the loop condition or later calculations; also forgetting to update num would cause an infinite loop."
+        },
+        {
+          "content": "you should be aware that '//' floors toward negative infinity for negative numbers (e.g., -123 // 10 == -13), so handle negative inputs explicitly (for example by using abs(num) or managing the sign) if you want symmetric behavior."
+        },
+        {
+          "content": "best practice: if you need the original value later, save it in another variable before this line, and ensure num is an integer to avoid surprising results."
+        }
+      ]
+    },
+    "12": {
+      "content": "    print(\"last digit:\", last_digit, \", reverse:\", reverse, \", integer:\", num)",
+      "commentList": [
+        "You use this line to print the last digit extracted, the reversed number built so far, and the remaining integer after removing the digit; this helps you trace the algorithm step by step.",
+        "In the print call you pass several arguments separated by commas: the quoted text like 'last digit:' prints exactly as written, and each variable (last_digit, reverse, num) is converted to text and printed; Python inserts a space between each printed argument, so you will see spaces between items.",
+        "Don't confuse commas inside the quoted text with the commas separating print arguments: the comma inside a string becomes a literal character in the output, while commas between arguments just separate items and add spaces \u2014 this can make the output look like it has duplicated punctuation.",
+        "Watch for errors: if any variable (last_digit, reverse, or num) is undefined you'll get a NameError; also if you run this with a negative number the loop behavior and floor division '//' may be surprising, so you should handle negative inputs before the loop if you need to support them.",
+        "For clearer output you should use a formatted string, for example f'last digit: {last_digit}, reverse: {reverse}, integer: {num}', which gives you precise control over spacing and punctuation; and remember to remove or disable these step prints in production code.",
+        "Note the position of this print: because it comes after num = num // 10, you are showing the integer value after removing the last digit; if you want to display the value before removal you should print earlier in the loop."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You use this line to print the last digit extracted, the reversed number built so far, and the remaining integer after removing the digit; this helps you trace the algorithm step by step."
+        },
+        {
+          "content": "In the print call you pass several arguments separated by commas: the quoted text like 'last digit:' prints exactly as written, and each variable (last_digit, reverse, num) is converted to text and printed; Python inserts a space between each printed argument, so you will see spaces between items."
+        },
+        {
+          "content": "Don't confuse commas inside the quoted text with the commas separating print arguments: the comma inside a string becomes a literal character in the output, while commas between arguments just separate items and add spaces \u2014 this can make the output look like it has duplicated punctuation."
+        },
+        {
+          "content": "Watch for errors: if any variable (last_digit, reverse, or num) is undefined you'll get a NameError; also if you run this with a negative number the loop behavior and floor division '//' may be surprising, so you should handle negative inputs before the loop if you need to support them."
+        },
+        {
+          "content": "For clearer output you should use a formatted string, for example f'last digit: {last_digit}, reverse: {reverse}, integer: {num}', which gives you precise control over spacing and punctuation; and remember to remove or disable these step prints in production code."
+        },
+        {
+          "content": "Note the position of this print: because it comes after num = num // 10, you are showing the integer value after removing the last digit; if you want to display the value before removal you should print earlier in the loop."
+        }
+      ]
+    },
+    "13": {
+      "content": "print(\"The reversed integer is:\", reverse)",
+      "commentList": [
+        "This line prints the final result to the screen so you see the reversed integer after the loop finishes; because it is not indented, it runs once when all digits have been processed.",
+        "Syntax-wise, print(...) is a function call with two arguments here: a string literal \"The reversed integer is:\" and the variable reverse; Python will convert reverse to text and separate the two arguments with a space when displaying them.",
+        "Semantically, reverse holds the integer built in the loop (reverse = (reverse * 10) + last_digit), so this line shows the numeric reversal and not the original number; if you needed the original, you should have saved it before the loop because num was changed.",
+        "Common misconceptions and errors: you might expect this to show leading zeros from the original number (e.g., reversing 120 -> '021'), but as an integer those zeros are lost and you'll see 21; also this code doesn't handle negative numbers correctly \u2014 you would need extra logic to preserve a sign.",
+        "Best practices: if you want tighter control over formatting, use an f-string like print(f\"The reversed integer is: {reverse}\"); if you need the original value later, store it in another variable before the loop; and keep this print outside the loop so you only print the final result."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line prints the final result to the screen so you see the reversed integer after the loop finishes; because it is not indented, it runs once when all digits have been processed."
+        },
+        {
+          "content": "Syntax-wise, print(...) is a function call with two arguments here: a string literal \"The reversed integer is:\" and the variable reverse; Python will convert reverse to text and separate the two arguments with a space when displaying them."
+        },
+        {
+          "content": "Semantically, reverse holds the integer built in the loop (reverse = (reverse * 10) + last_digit), so this line shows the numeric reversal and not the original number; if you needed the original, you should have saved it before the loop because num was changed."
+        },
+        {
+          "content": "Common misconceptions and errors: you might expect this to show leading zeros from the original number (e.g., reversing 120 -> '021'), but as an integer those zeros are lost and you'll see 21; also this code doesn't handle negative numbers correctly \u2014 you would need extra logic to preserve a sign."
+        },
+        {
+          "content": "Best practices: if you want tighter control over formatting, use an f-string like print(f\"The reversed integer is: {reverse}\"); if you need the original value later, store it in another variable before the loop; and keep this print outside the loop so you only print the final result."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "while num >= 0 :",
+      "description": "You might pick this because you think the loop should run while the number is non\u2011negative, so you include zero as well. Step by step, you expect the loop to stop after processing all digits, but what actually happens is different: when num becomes 0 after removing digits, the condition num >= 0 is still true. Then num = num // 10 keeps num at 0, so the condition never becomes false and the loop never ends. In short, the loop becomes infinite. This line fails because it allows the loop to continue when num has been reduced to 0; that missing stop condition is what breaks the program. The intended loop should terminate once there are no more digits to process, but this variant keeps running because it treats 0 as a value that still requires processing.",
+      "line_number": 0
+    },
+    {
+      "code": "reverse = (reverse * 10) + num",
+      "description": "You might choose this if you confuse num (the whole remaining integer) with last_digit. Walkthrough: start with num = 1234, last_digit = 4; the line gives reverse = 0*10 + 1234 = 1234. Then num becomes 123 and the next step makes reverse = 1234*10 + 123 = 12353, and so on. The program still runs but produces a nonsensical, rapidly growing number that mixes chunks of the original number instead of single digits. Using this line means you are inserting the entire remaining integer each iteration rather than just the single extracted digit, so you fail to assemble the reversed digits correctly. This error is a variable-mixup: the logic that must append only the last digit is misimplemented by using the wrong operand.",
+      "line_number": 0
+    },
+    {
+      "code": "reverse = reverse + last_digit",
+      "description": "You might pick this because adding feels simpler and you expect the new digit to 'join' the old digits by just summing. Step-by-step, with num = 1234: first last_digit = 4 gives reverse = 0 + 4 = 4; next last_digit = 3 gives reverse = 4 + 3 = 7; and so on. Using this line makes your program compute the sum of extracted digits (or a running total), not a digit-by-digit reversal. The program runs without syntax errors, but the final value is wrong (it becomes a small number like 10 for 1234 instead of a reversed digit sequence). Compared with the intended operation, this line omits the crucial step that shifts previously collected digits into higher decimal places before adding the new digit, so digits are not moved to the correct positions and you do not build the reversed integer correctly.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-27T16:07:34.827Z",
+  "updated_at": "2026-09-02T02:50:58.426Z",
+  "stat": null
+}

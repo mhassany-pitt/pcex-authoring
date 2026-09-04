@@ -1,0 +1,390 @@
+{
+  "id": "664e248d91363872f0ba331a",
+  "_id": "664e248d91363872f0ba331a",
+  "name": "Determining the Average Rating for Each Soda in The Survey",
+  "description": "Suppose a soda manufacturer held a taste test for four new flavors to determine if people liked them. The manufacturer got 10 people to try each new flavor and give it a score from 1 to 5, where 1 equals poor and 5 equals excellent. The results of that survey is stored in a matrix. Each row of the matrix holds the responses that all testers gave for one particular soda flavor, and each column holds the responses of one person for all sodas.\\nConstruct a program that determines the average ratings that respondents provided to four new flavors of soda.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_soda_survey_soda_avg.py",
+  "code": "#Step 1: Define a 4x10 two-dimensional list\nratings_data = [[3, 4, 5, 2, 1, 4, 3, 2, 4, 4],\n                [2, 4, 3, 4, 3, 3, 2, 1, 2, 2],\n                [3, 5, 4, 5, 5, 3, 2, 5, 5, 5],\n                [1, 1, 1, 3, 1, 2, 1, 3, 2, 4]]\n#Step 2: Get the dimensions of the list that stores the ratings data\nnum_sodas = len(ratings_data)\nnum_respondents = len(ratings_data[0])\n#Step 3: Create a list to store the sum of rating of each soda flavor\nsoda_sum = [0] * num_sodas\n#Step 4: Iterate through the sodas \nfor i in range(num_sodas):\n    #Step 4.1: Calculate the sum of the ratings for the soda i+1    \n    for j in range(num_respondents):\n        soda_sum[i] += ratings_data[i][j]\n#Step 5: Calculate and print the average rating for each soda\nprint(\"Averages:\")   \nfor i in range(num_sodas):\n    print(\"Soda # {:d} : {:.2f}\".format((i+1), soda_sum[i]/num_respondents))",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Define a 4x10 two-dimensional list",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "ratings_data = [[3, 4, 5, 2, 1, 4, 3, 2, 4, 4],",
+      "commentList": [
+        "Purpose: This line creates and assigns the 2\u2011dimensional list that stores all survey responses; you will use this structure later to compute each soda's average rating.",
+        "Syntax/structure: You use = to assign a list literal. The outer [ ... ] contains four inner lists (rows). Each inner list like [3, 4, 5, ...] is a row of ten numeric ratings. Python allows you to spread this literal across multiple lines because the outer brackets are open.",
+        "Semantic meaning: Each inner list represents one soda flavor (a row) and each number in that inner list is one respondent's score (a column). In this example you have 4 rows and 10 columns, so len(ratings_data) == 4 and len(ratings_data[0]) == 10.",
+        "Potential errors and misconceptions: If you forget a comma between inner lists or a closing bracket, Python raises a SyntaxError. If the inner lists have different lengths, later code that assumes a rectangular matrix (like len(ratings_data[0])) can give wrong results or cause indexing mistakes. Also remember this is a list of lists (not a special 2D array type).",
+        "Data issues to watch for: If any values are missing, non-numeric, or outside the expected 1\u20135 range, your averages will be incorrect; you should validate the data before using it.",
+        "Best practices: Give the variable a descriptive name (ratings_data is good), keep the matrix rectangular (all rows same length), and consider validating shape and value ranges in code. For larger or dynamic datasets, load the data from a file or use a library (e.g., pandas or numpy) instead of hardcoding values."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "                [2, 4, 3, 4, 3, 3, 2, 1, 2, 2],",
+      "commentList": [],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "4": {
+      "content": "                [3, 5, 4, 5, 5, 3, 2, 5, 5, 5],",
+      "commentList": [],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "5": {
+      "content": "                [1, 1, 1, 3, 1, 2, 1, 3, 2, 4]]",
+      "commentList": [],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "6": {
+      "content": "#Step 2: Get the dimensions of the list that stores the ratings data",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "7": {
+      "content": "num_sodas = len(ratings_data)",
+      "commentList": [
+        "You assign num_sodas = len(ratings_data) to capture how many soda flavors (rows) are in the outer list; this number is then used to control the loops that process each flavor (lines 12 and 18).",
+        "You call the built-in len function, which returns an integer count of the top-level elements of ratings_data; each top-level element is a sublist of ratings for one soda, and that integer is stored in num_sodas.",
+        "Be careful: len(ratings_data) counts rows (sodas), not respondents or total scores. If your matrix were transposed or ratings_data were empty, this value would be incorrect and could cause later loops or indexing to fail.",
+        "You should validate the data before relying on this value\u2014for example assert num_sodas > 0 or check for an empty ratings_data to avoid an IndexError when the code later reads ratings_data[0] to get num_respondents.",
+        "As a best practice, you should keep descriptive variable names (num_sodas is good) and consider verifying that each row has the same length if the program assumes a rectangular matrix; otherwise compute respondents per row or handle uneven rows explicitly."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "8": {
+      "content": "num_respondents = len(ratings_data[0])",
+      "commentList": [
+        "You set num_respondents to the number of responses per soda by taking the length of the first row (ratings_data[0]); this value is later used to divide the total score and to loop over each respondent.",
+        "ratings_data[0] selects the first inner list (the scores for soda #1) and len(...) returns how many elements are in that list; the result is then assigned to the variable num_respondents.",
+        "Watch out for errors: if ratings_data is empty you'll get an IndexError because ratings_data[0] does not exist. Also, if different rows have different lengths, using the first row's length can give the wrong number of respondents and produce incorrect averages or out-of-range indexing.",
+        "Best practice: before this line, check that ratings_data is not empty and that every row has the same length (for example, verify all(len(row) == len(ratings_data[0]) for row in ratings_data)). This validation makes your program safer and your averages reliable."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "9": {
+      "content": "#Step 3: Create a list to store the sum of rating of each soda flavor",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "10": {
+      "content": "soda_sum = [0] * num_sodas",
+      "commentList": [
+        "You are creating a list named soda_sum that will hold the running total of ratings for each soda; starting every sum at 0 lets you add each respondent's score into the correct slot later.",
+        "You use the expression [0] * num_sodas to make a list with num_sodas entries, each entry equal to the integer 0. The variable soda_sum is then bound to that list (for example, if num_sodas is 4 you get [0, 0, 0, 0]).",
+        "Be careful: num_sodas must be an integer (typically computed from your data). If num_sodas is 0 or negative you'll get an empty list; if it's not an int you'll get a TypeError. Also note a common misconception: replicating mutable objects with * can create multiple references to the same object, but using 0 (an immutable int) here is safe.",
+        "As a best practice you can write the initialization with a list comprehension for clarity: soda_sum = [0 for _ in range(num_sodas)]. Also make sure you've verified the shape of ratings_data before this line so you know num_sodas is correct."
+      ],
+      "indentLevel": 0,
+      "blank": true
+    },
+    "11": {
+      "content": "#Step 4: Iterate through the sodas ",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "12": {
+      "content": "for i in range(num_sodas):",
+      "commentList": [
+        "Purpose: This line starts a loop that makes you process each soda flavor one by one. The variable i will hold the index of the current soda row so you can sum its ratings inside the loop body.",
+        "Syntax and semantics: range(num_sodas) produces the sequence 0, 1, ..., num_sodas-1. for i in range(num_sodas): means \u201crepeat the indented block with i taking each of those values in turn.\u201d The trailing colon and correct indentation are required for the loop body to belong to this for statement.",
+        "Common errors and misconceptions: A frequent mistake is using the wrong variable (for example range(num_respondents) instead of range(num_sodas)), which would make you iterate over people instead of soda flavors. Also remember that i is zero-based, so you should use i+1 when printing a human-friendly soda number. If num_sodas is 0, the loop body will not run at all.",
+        "Potential runtime issues: If num_sodas was computed incorrectly earlier (for example if ratings_data was empty or mis-sized), you might iterate the wrong number of times and later index errors could occur when accessing ratings_data[i].",
+        "Best practices: Use a clear name for the loop variable if you prefer readability (e.g., for soda_index in range(num_sodas):). Alternatively, you can loop directly over rows with for i, soda_row in enumerate(ratings_data): to get both the index and the row in a single, clearer statement.",
+        "Why this line is essential: Without this outer loop you would not visit each soda flavor and therefore could not accumulate the sums needed to compute each flavor's average."
+      ],
+      "indentLevel": 0,
+      "blank": true
+    },
+    "13": {
+      "content": "    #Step 4.1: Calculate the sum of the ratings for the soda i+1    ",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "14": {
+      "content": "    for j in range(num_respondents):",
+      "commentList": [
+        "You start a loop that runs once for each respondent so you can visit every rating for the current soda (row i).",
+        "You are creating a loop variable j with values produced by range(num_respondents), which yields 0, 1, ..., num_respondents-1; the colon and indentation indicate the loop block that follows.",
+        "You use j as the column index so that inside the loop you can access the j-th respondent's score for soda i via ratings_data[i][j], allowing you to add each score to soda_sum[i].",
+        "Be careful: if num_respondents does not match the actual number of columns in ratings_data (for example rows of differing lengths) you'll get an IndexError when you try to access ratings_data[i][j].",
+        "Also watch out for num_respondents being zero: this loop will do nothing, and later dividing by num_respondents will cause a ZeroDivisionError unless you check for that case first.",
+        "A common misconception is to think j holds a rating value; it is just an index. If you prefer, you can iterate directly over values with 'for rating in ratings_data[i]:' which is clearer for summing values.",
+        "Best practice suggestions: use a clearer name like respondent_idx for j, validate your matrix shape before looping, or simply use soda_sum[i] = sum(ratings_data[i]) to compute the row total in one step for readability and fewer errors."
+      ],
+      "indentLevel": 1,
+      "blank": true
+    },
+    "15": {
+      "content": "        soda_sum[i] += ratings_data[i][j]",
+      "commentList": [
+        "Purpose: This line adds the j-th respondent's rating for soda i to soda_sum[i], so you accumulate the total score for that soda across all respondents.",
+        "Syntax and meaning: soda_sum[i] += ratings_data[i][j] is shorthand for soda_sum[i] = soda_sum[i] + ratings_data[i][j]. ratings_data[i][j] accesses the element in row i (the i-th soda) and column j (the j-th respondent). The += updates the running sum stored at index i.",
+        "Possible errors and misconceptions: If the rows of ratings_data have different lengths, you may get an IndexError when you access ratings_data[i][j]; you assume num_respondents (taken from the first row) applies to every row. Also watch for num_respondents being zero (which would cause a later division by zero). Remember indices start at 0, so i and j range from 0 to length-1, not 1 to length.",
+        "Best practices: You can avoid the inner loop by using sum(ratings_data[i]) to get the row total in one step, which is clearer and less error-prone. Also validate the input shape before the loops (check every row length) and use clear variable names or comments so you (and others) understand what each index represents."
+      ],
+      "indentLevel": 2,
+      "blank": true
+    },
+    "16": {
+      "content": "#Step 5: Calculate and print the average rating for each soda",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "17": {
+      "content": "print(\"Averages:\")   ",
+      "commentList": [
+        "Purpose: This line prints the heading Averages: so you and anyone running the program know the values that follow are the average ratings for each soda.",
+        "Syntax & semantics: print(\"Averages:\") calls Python's print function with a string literal; in Python 3 you must use the parentheses and the quotes denote the text to be printed.",
+        "Behavior detail: By default this prints the text followed by a newline (end=\"\\n\"), so the subsequent average lines appear on the next lines.",
+        "Common errors & misconceptions: If you forget the quotes (for example writing print(Averages:)) you'll get a syntax or name error; if you write print \"Averages:\" (no parentheses) in Python 3 you'll get a syntax error \u2014 use the Python 3 form shown.",
+        "Best practice: Use a clear, descriptive header like this before output so the results are easy to read; you can add an extra print() for blank lines or a different end= value if you want tighter formatting."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "18": {
+      "content": "for i in range(num_sodas):",
+      "commentList": [
+        "Purpose: This line starts a loop that visits each soda flavor by index so you can print its average rating. The loop variable i will take one index for every soda (0, 1, ..., num_sodas-1).",
+        "Syntax and semantics: for i in range(num_sodas): uses range(num_sodas) to produce a sequence of integers from 0 up to num_sodas-1. The colon (:) begins the indented block that runs once for each value of i. Inside that block you use i to access soda_sum[i] and format the output.",
+        "Common misconception / error (off-by-one): People sometimes expect range(num_sodas) to give 1..num_sodas. It does not \u2014 it is zero-based. That is why the print uses (i+1) when showing the human-friendly soda number.",
+        "Common error (wrong variable or indentation): If you accidentally write range(num_respondents) instead, you'll loop the wrong number of times. Also make sure the print line is indented under this for line; wrong indentation means the print won't be repeated for each soda.",
+        "Edge cases to watch: If num_sodas is 0 the loop body will never run (no output). Also make sure soda_sum and num_sodas are consistent (soda_sum should have length num_sodas) to avoid IndexError.",
+        "Best practice: Use a clearer loop or names to make intent obvious, for example use for soda_index in range(num_sodas): or use enumerate(soda_sum, start=1) to get both index and value and avoid manual i+1. You might also prefer f-strings (Python 3.6+) for clearer formatting."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "19": {
+      "content": "    print(\"Soda # {:d} : {:.2f}\".format((i+1), soda_sum[i]/num_respondents))",
+      "commentList": [
+        "This line prints the average rating for the current soda (the i-th row) in a human-friendly way, labeling it as 'Soda # n' and showing the average with two decimal places so you can read the result clearly.",
+        "The string uses format placeholders: {:d} expects an integer (you pass (i+1) so sodas are numbered starting at 1 instead of 0), and {:.2f} formats the average as a floating-point number with exactly two digits after the decimal point. The .format(...) call fills these placeholders in order.",
+        "The expression soda_sum[i]/num_respondents computes the average for soda i by dividing the total sum by the number of respondents. In Python 3 this produces a float; be careful that num_respondents is not zero or you'll get a ZeroDivisionError.",
+        "Common pitfalls: {:d} requires an integer \u2014 if you accidentally pass a float there you'll get a formatting error; in older Python versions, integer division could truncate the result, so ensure you have float division (e.g., one operand is a float) if you expect a fractional average.",
+        "Best practices: consider computing the average in a separate variable (avg = soda_sum[i] / num_respondents) to improve clarity and reuse, or use an f-string for readability (e.g., f\"Soda # {i+1} : {avg:.2f}\"). Also validate num_respondents before dividing to avoid runtime errors."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "0eaa6fbc-b07e-4c7b-b3b3-9ecf463b5026",
+      "line": {
+        "number": 0,
+        "content": "soda_sum = [0] * num_respondents",
+        "commentList": [
+          "You might choose this because the variable name num_respondents looks relevant and you think a list sized by respondents will work. What this line does is create a list with one element for each respondent (10 elements), not one element for each soda flavor (4 elements). The loop that updates sums still runs once per soda, so the first four entries get correct totals and the extra six entries are simply unused \u2014 so the program may still run without crashing but its setup is semantically wrong. Using this line means you have allocated the wrong number of slots for the thing you intend to sum; it hides the conceptual bug (you're summing by soda, not by respondent). Because the list size doesn't match the data structure you're summarizing, you may later get confusing results or maintain unused data. This line is therefore incorrect for initializing per-soda totals."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might choose this because the variable name num_respondents looks relevant and you think a list sized by respondents will work. What this line does is create a list with one element for each respondent (10 elements), not one element for each soda flavor (4 elements). The loop that updates sums still runs once per soda, so the first four entries get correct totals and the extra six entries are simply unused \u2014 so the program may still run without crashing but its setup is semantically wrong. Using this line means you have allocated the wrong number of slots for the thing you intend to sum; it hides the conceptual bug (you're summing by soda, not by respondent). Because the list size doesn't match the data structure you're summarizing, you may later get confusing results or maintain unused data. This line is therefore incorrect for initializing per-soda totals."
+      ]
+    },
+    {
+      "id": "9e930b89-1ff2-460f-ad6e-f862e21b5c4f",
+      "line": {
+        "number": 0,
+        "content": "for i in range(num_respondents):",
+        "commentList": [
+          "You might choose this because you see two dimensions (sodas and respondents) and think either one can be the outer loop. It looks reasonable if you misunderstand which dimension corresponds to the outer aggregation. If you use this line, the loop will run 10 times (the number of respondents) while the list soda_sum only has 4 slots (one per soda). When the loop index becomes 4 or greater, the program will try to access soda_sum[i] where i is out of range and raise an IndexError. In other words, the program will crash when it attempts to store sums for indices that don't exist. This distractor fails because it iterates by the wrong dimension: you should iterate over the number of soda entries when accumulating per-soda sums, not over the number of respondents."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might choose this because you see two dimensions (sodas and respondents) and think either one can be the outer loop. It looks reasonable if you misunderstand which dimension corresponds to the outer aggregation. If you use this line, the loop will run 10 times (the number of respondents) while the list soda_sum only has 4 slots (one per soda). When the loop index becomes 4 or greater, the program will try to access soda_sum[i] where i is out of range and raise an IndexError. In other words, the program will crash when it attempts to store sums for indices that don't exist. This distractor fails because it iterates by the wrong dimension: you should iterate over the number of soda entries when accumulating per-soda sums, not over the number of respondents."
+      ]
+    },
+    {
+      "id": "ba9cb87e-0d97-4550-8b5e-066ecab03fdc",
+      "line": {
+        "number": 0,
+        "content": "for j in range(num_sodas):",
+        "commentList": [
+          "You might pick this because you confuse the two dimensions of the matrix and think both loops should use the same limit. If you use this line, the inner loop runs only num_sodas times (4) instead of once per respondent (10). That means you only add the first four responses for each soda rather than all ten, producing wrong (typically too-small) sums and averages. The program will usually run without crashing, which makes this subtle but incorrect: it silently computes wrong averages because it doesn't iterate through every respondent. This line fails to iterate over every person's rating for a given soda, so the aggregation is incomplete."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this because you confuse the two dimensions of the matrix and think both loops should use the same limit. If you use this line, the inner loop runs only num_sodas times (4) instead of once per respondent (10). That means you only add the first four responses for each soda rather than all ten, producing wrong (typically too-small) sums and averages. The program will usually run without crashing, which makes this subtle but incorrect: it silently computes wrong averages because it doesn't iterate through every respondent. This line fails to iterate over every person's rating for a given soda, so the aggregation is incomplete."
+      ]
+    },
+    {
+      "id": "51ee1ead-7d77-4f78-8995-2823ffde53c8",
+      "line": {
+        "number": 0,
+        "content": "soda_sum[i] = ratings_data[i][j]",
+        "commentList": [
+          "You might pick this because you understand you need to store a rating in the soda_sum list and think assignment will build the total over time. If you use this line, each time the inner loop runs you replace the current stored value with the current respondent's rating instead of adding to it. That means after the inner loop finishes for a given soda, soda_sum[i] will hold only the last respondent's score rather than the total of all respondents. The program will still run without a runtime error, but the calculated averages will be wrong (they will be the last score divided by the number of respondents). The key aspect missing here is accumulation of values across iterations: this line overwrites rather than combines values, so it does not produce the intended running total."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this because you understand you need to store a rating in the soda_sum list and think assignment will build the total over time. If you use this line, each time the inner loop runs you replace the current stored value with the current respondent's rating instead of adding to it. That means after the inner loop finishes for a given soda, soda_sum[i] will hold only the last respondent's score rather than the total of all respondents. The program will still run without a runtime error, but the calculated averages will be wrong (they will be the last score divided by the number of respondents). The key aspect missing here is accumulation of values across iterations: this line overwrites rather than combines values, so it does not produce the intended running total."
+      ]
+    },
+    {
+      "id": "953e32d9-5138-42c0-b271-659e9dae5a3d",
+      "line": {
+        "number": 0,
+        "content": "soda_sum[j] = ratings_data[i][j]",
+        "commentList": [
+          "You might pick this distractor if you confuse the roles of the two indices (thinking j should index the sums) or if you mistakenly believe you should store each respondent\u2019s rating directly instead of accumulating them. Using soda_sum[j] is wrong because soda_sum is sized by sodas (not respondents), so indexing it with j (which runs over respondents) will either overwrite the wrong entries or cause an index error when j >= number of sodas. Also, the distractor uses assignment (=) rather than accumulation, so it would replace any previous total instead of adding to it, producing incorrect averages even if no index error occurs. In short, this option mixes up which axis to aggregate and fails to accumulate values, so it\u2019s a plausible but incorrect choice."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this distractor if you confuse the roles of the two indices (thinking j should index the sums) or if you mistakenly believe you should store each respondent\u2019s rating directly instead of accumulating them. Using soda_sum[j] is wrong because soda_sum is sized by sodas (not respondents), so indexing it with j (which runs over respondents) will either overwrite the wrong entries or cause an index error when j >= number of sodas. Also, the distractor uses assignment (=) rather than accumulation, so it would replace any previous total instead of adding to it, producing incorrect averages even if no index error occurs. In short, this option mixes up which axis to aggregate and fails to accumulate values, so it\u2019s a plausible but incorrect choice."
+      ]
+    },
+    {
+      "id": "bc0f273e-044f-4592-8064-bc5c8d082458",
+      "line": {
+        "number": 0,
+        "content": "soda_sum = []",
+        "commentList": [
+          "You might pick an empty list because you think you'll fill it as you go. However, when the code reaches soda_sum[i] += ratings_data[i][j], it expects soda_sum[i] to already exist. With an empty list there are no indices to update, so you'll get an IndexError the first time the code tries to access soda_sum[0]. In other words, you can't increment a position that hasn't been created. To use this approach correctly you'd need to append values or otherwise ensure each index exists before updating it. As written, this line leaves the list with no slots and causes the program to fail when it tries to accumulate ratings."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick an empty list because you think you'll fill it as you go. However, when the code reaches soda_sum[i] += ratings_data[i][j], it expects soda_sum[i] to already exist. With an empty list there are no indices to update, so you'll get an IndexError the first time the code tries to access soda_sum[0]. In other words, you can't increment a position that hasn't been created. To use this approach correctly you'd need to append values or otherwise ensure each index exists before updating it. As written, this line leaves the list with no slots and causes the program to fail when it tries to accumulate ratings."
+      ]
+    },
+    {
+      "id": "c5db33a6-12bc-4ccb-9a97-9a4456b77ffa",
+      "line": {
+        "number": 0,
+        "content": "soda_sum = [None] * num_sodas",
+        "commentList": [
+          "You might use None because you want a distinct placeholder for 'not yet set'. But when the code attempts soda_sum[i] += ratings_data[i][j], Python will try to add an integer to None and raise a TypeError (unsupported operand types). The None values are not numeric zeros and cannot participate in arithmetic operations. This mistake is easy to make if you think None is just an empty slot that will automatically become a number when updated. In reality you must initialize the storage with a numeric value to accumulate sums; otherwise the first arithmetic operation fails."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might use None because you want a distinct placeholder for 'not yet set'. But when the code attempts soda_sum[i] += ratings_data[i][j], Python will try to add an integer to None and raise a TypeError (unsupported operand types). The None values are not numeric zeros and cannot participate in arithmetic operations. This mistake is easy to make if you think None is just an empty slot that will automatically become a number when updated. In reality you must initialize the storage with a numeric value to accumulate sums; otherwise the first arithmetic operation fails."
+      ]
+    },
+    {
+      "id": "37911c36-5972-40c0-bd9c-b76efc092b7e",
+      "line": {
+        "number": 0,
+        "content": "for i in range(len(ratings_data[0])):",
+        "commentList": [
+          "You might pick this because you recognize len(ratings_data[0]) gives a length and think it's appropriate to use explicit expressions instead of the named variable. However, this expression equals the number of respondents, not the number of sodas. Using it causes the outer loop to iterate over respondent indices rather than soda indices. As with the previous distractor, that will try to update soda_sum at indices that don't exist once the index exceeds the number of sodas, causing an IndexError. The core mistake is iterating over the wrong dimension: you're using the length of a single row (respondents) where you should be iterating by the count of soda rows."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this because you recognize len(ratings_data[0]) gives a length and think it's appropriate to use explicit expressions instead of the named variable. However, this expression equals the number of respondents, not the number of sodas. Using it causes the outer loop to iterate over respondent indices rather than soda indices. As with the previous distractor, that will try to update soda_sum at indices that don't exist once the index exceeds the number of sodas, causing an IndexError. The core mistake is iterating over the wrong dimension: you're using the length of a single row (respondents) where you should be iterating by the count of soda rows."
+      ]
+    },
+    {
+      "id": "a14d45ce-c082-4484-a346-e928b6f69fa7",
+      "line": {
+        "number": 0,
+        "content": "for i in ratings_data:",
+        "commentList": [
+          "You might choose this because iterating directly over the list of rows is a common Python pattern, and it feels natural to 'visit' each soda row. The problem is that this form sets i to each row (a list of ratings), not to an integer index. Later code expects i to be an integer (used to index soda_sum and ratings_data), so when the program reaches soda_sum[i] or ratings_data[i][j] it will raise a TypeError because list indices must be integers, not lists. In short, this distractor confuses iterating over row values with iterating over row indices: you need an integer index to update the separate soda_sum list and to index into the matrix as the existing code does."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might choose this because iterating directly over the list of rows is a common Python pattern, and it feels natural to 'visit' each soda row. The problem is that this form sets i to each row (a list of ratings), not to an integer index. Later code expects i to be an integer (used to index soda_sum and ratings_data), so when the program reaches soda_sum[i] or ratings_data[i][j] it will raise a TypeError because list indices must be integers, not lists. In short, this distractor confuses iterating over row values with iterating over row indices: you need an integer index to update the separate soda_sum list and to index into the matrix as the existing code does."
+      ]
+    },
+    {
+      "id": "574116fd-7dc8-42c9-ae39-3ad9f59e554d",
+      "line": {
+        "number": 0,
+        "content": "for j in range(num_respondents + 1):",
+        "commentList": [
+          "You might choose this because you think you need to add 1 to include the last respondent. If you use this line, the loop will try to access an index equal to num_respondents (for example, ratings_data[i][10]), but valid indices go from 0 to num_respondents-1. That causes an IndexError at runtime and the program will crash before producing any averages. This error is a classic off-by-one mistake: the loop goes one step too far and attempts to access a non-existent respondent."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might choose this because you think you need to add 1 to include the last respondent. If you use this line, the loop will try to access an index equal to num_respondents (for example, ratings_data[i][10]), but valid indices go from 0 to num_respondents-1. That causes an IndexError at runtime and the program will crash before producing any averages. This error is a classic off-by-one mistake: the loop goes one step too far and attempts to access a non-existent respondent."
+      ]
+    },
+    {
+      "id": "bd448a29-3ad0-430c-be26-fc49079d0fb1",
+      "line": {
+        "number": 0,
+        "content": "for j in ratings_data[i]:",
+        "commentList": [
+          "You might think this is shorter or clearer because it directly walks through the row, but here j will be a rating value (like 3 or 5), not an index. The next line then does ratings_data[i][j], which uses that rating as an index into the same row. That will pick elements at positions equal to the rating values instead of summing the actual ratings themselves. The result is an incorrect and hard-to-detect aggregation (you'll sum entries at positions determined by ratings, not the ratings), producing wrong averages. While it may not always crash, it will produce incorrect results because you treated values as indices."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might think this is shorter or clearer because it directly walks through the row, but here j will be a rating value (like 3 or 5), not an index. The next line then does ratings_data[i][j], which uses that rating as an index into the same row. That will pick elements at positions equal to the rating values instead of summing the actual ratings themselves. The result is an incorrect and hard-to-detect aggregation (you'll sum entries at positions determined by ratings, not the ratings), producing wrong averages. While it may not always crash, it will produce incorrect results because you treated values as indices."
+      ]
+    },
+    {
+      "id": "b80b1eb2-61b6-43d9-a10d-58d86b56d6d8",
+      "line": {
+        "number": 0,
+        "content": "soda_sum[j] += ratings_data[i][j]",
+        "commentList": [
+          "You might choose this because you see two indices and assume the inner-loop index (j) should index the accumulator list as well. However, soda_sum is indexed by soda flavor (the outer loop variable), not by respondent. Using this line will try to add ratings to soda_sum positions indexed by j (the respondent index). Since there are more respondents than sodas, when j becomes larger than the number of soda flavors minus one you will get an index error at runtime. Even if sizes matched, the sums would go into the wrong slots so averages would be computed for the wrong sodas. The mistake here is swapping which index identifies the soda vs which identifies the respondent, so you lose the correct mapping between the 2D ratings data and the accumulator."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might choose this because you see two indices and assume the inner-loop index (j) should index the accumulator list as well. However, soda_sum is indexed by soda flavor (the outer loop variable), not by respondent. Using this line will try to add ratings to soda_sum positions indexed by j (the respondent index). Since there are more respondents than sodas, when j becomes larger than the number of soda flavors minus one you will get an index error at runtime. Even if sizes matched, the sums would go into the wrong slots so averages would be computed for the wrong sodas. The mistake here is swapping which index identifies the soda vs which identifies the respondent, so you lose the correct mapping between the 2D ratings data and the accumulator."
+      ]
+    },
+    {
+      "id": "05ed0a09-614b-41b3-886a-3cf9786af88e",
+      "line": {
+        "number": 0,
+        "content": "soda_sum[i] += ratings_data[i]",
+        "commentList": [
+          "You might pick this because you see ratings_data[i] as 'all ratings for soda i' and expect Python to handle adding that to the running total each iteration. In reality, ratings_data[i] is the whole row (a list) and you cannot directly add a list to an integer accumulator. Using this line will raise a type error at runtime when the program tries to add a list to an integer, stopping execution. Conceptually, this line also doesn't use the inner-loop index at all, so even if it were type-compatible it wouldn't be adding a single respondent's rating per iteration. The core problem is treating a row (a collection) as if it were a single numeric element and neglecting the need to access the individual rating within that row."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might pick this because you see ratings_data[i] as 'all ratings for soda i' and expect Python to handle adding that to the running total each iteration. In reality, ratings_data[i] is the whole row (a list) and you cannot directly add a list to an integer accumulator. Using this line will raise a type error at runtime when the program tries to add a list to an integer, stopping execution. Conceptually, this line also doesn't use the inner-loop index at all, so even if it were type-compatible it wouldn't be adding a single respondent's rating per iteration. The core problem is treating a row (a collection) as if it were a single numeric element and neglecting the need to access the individual rating within that row."
+      ]
+    }
+  ],
+  "programInput": "",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

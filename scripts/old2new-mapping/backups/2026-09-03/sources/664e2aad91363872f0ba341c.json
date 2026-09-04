@@ -1,0 +1,612 @@
+{
+  "id": "6a9060c7cbc5a3f2aa638ad3",
+  "user": "moh70@pitt.edu",
+  "name": "Counting the Number of Valid and Banned Product Codes (Case 2) ",
+  "description": "Suppose a hypothetical company uses codes to represent its various products. A product code includes, among other information, a character in the tenth position that represents the zone from which that product was made, and a four-digit integer representing the district in which it will be sold. This four-digit integer begins at the 4th character and extends to the 7th character in the input code (inclusive). Due to some reorganization, products from zone R are banned from being sold in districts with a designation of 2000 or higher.\\nConstruct a program that reads product codes from the user and counts the number of valid and banned codes entered. Make sure that the program handles all possible exceptions.\\nThe program must ask the user for an input until the user enters STOP.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_check_product_code2.py",
+  "code": "#Step 1: Define the function\ndef check_product_code():\n    #Step 1.1: Assign initial values to the variables that we need for counts\n    valid = 0\n    banned = 0\n    #Step 1.2: Ask for a valid input as long as the user does'nt enter STOP; otherwise stop\n    code = input(\"Enter product code: \")\n    while ( code != \"STOP\") :\n        #Step 1.2.1: Enclose the code that might throw an exception within the try block\n        try : \n            zone = code[9]\n            district = int(code[3:7])\n            valid += 1\n            if zone == \"R\" and district >= 2000:\n                banned += 1\n        #Step 1.2.2: Handle all possible exceptions that may be thrown in the try block \n        except IndexError :\n            print(\"Improper code length.\")\n        except ValueError :\n            print(\"Error! District is not numeric.\")\n        code = input(\"Enter product code: \")\n    #Step 1.3: Print the result\n    print(\"# of valid codes entered:\", valid)\n    print(\"# of banned codes entered:\", banned)\n#Step 2: Call the function\ncheck_product_code()",
+  "lines": {
+    "2": {
+      "content": "def check_product_code():",
+      "commentList": [
+        "Purpose: This line starts the definition of a function named check_product_code so you can group the program's logic into a reusable unit instead of running it at the top level.",
+        "Syntax: def is the keyword to define a function, check_product_code is the function name, () denotes the parameter list (empty here because the function takes no arguments), and : begins the indented function body that follows.",
+        "Semantics: When Python reaches this line it creates a function object and binds it to the name check_product_code but it does NOT execute the code inside the function until you later call check_product_code().",
+        "Common errors and misconceptions: If you omit the parentheses or the trailing colon you get a SyntaxError; incorrect indentation of the following lines will raise an IndentationError; trying to call the function before this line runs will raise a NameError because the name does not yet exist.",
+        "Best practices: Use a clear, descriptive function name like this and consider adding a one-line docstring immediately under the def to explain what the function does; also prefer calling the function inside a if __name__ == '__main__': guard so importing this file won't run the input loop unexpectedly."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line starts the definition of a function named check_product_code so you can group the program's logic into a reusable unit instead of running it at the top level."
+        },
+        {
+          "content": "Syntax: def is the keyword to define a function, check_product_code is the function name, () denotes the parameter list (empty here because the function takes no arguments), and : begins the indented function body that follows."
+        },
+        {
+          "content": "Semantics: When Python reaches this line it creates a function object and binds it to the name check_product_code but it does NOT execute the code inside the function until you later call check_product_code()."
+        },
+        {
+          "content": "Common errors and misconceptions: If you omit the parentheses or the trailing colon you get a SyntaxError; incorrect indentation of the following lines will raise an IndentationError; trying to call the function before this line runs will raise a NameError because the name does not yet exist."
+        },
+        {
+          "content": "Best practices: Use a clear, descriptive function name like this and consider adding a one-line docstring immediately under the def to explain what the function does; also prefer calling the function inside a if __name__ == '__main__': guard so importing this file won't run the input loop unexpectedly."
+        }
+      ]
+    },
+    "4": {
+      "content": "    valid = 0",
+      "commentList": [
+        "You create a counter named valid and set it to 0 so you have a starting value to count how many product codes are considered valid.",
+        "You use the assignment operator '=' to bind the name valid to the integer 0; in Python this makes valid an int so you can later do valid += 1 to increment it.",
+        "You place this initialization before the input loop so the value is kept across iterations; if you put it inside the loop you would reset the count on each new input.",
+        "If you omitted this line and then tried to do valid += 1, you would get an error because valid would not be defined (UnboundLocalError). Initializing prevents that problem.",
+        "Don't confuse '=' (assignment) with '==' (comparison). Also avoid initializing as a string like '0' \u2014 it must be an integer so numeric increments and comparisons behave correctly.",
+        "As a best practice, you might prefer a more descriptive name such as valid_count and add a short comment; in larger programs you could also use collections.Counter for multiple counters."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You create a counter named valid and set it to 0 so you have a starting value to count how many product codes are considered valid."
+        },
+        {
+          "content": "You use the assignment operator '=' to bind the name valid to the integer 0; in Python this makes valid an int so you can later do valid += 1 to increment it."
+        },
+        {
+          "content": "You place this initialization before the input loop so the value is kept across iterations; if you put it inside the loop you would reset the count on each new input."
+        },
+        {
+          "content": "If you omitted this line and then tried to do valid += 1, you would get an error because valid would not be defined (UnboundLocalError). Initializing prevents that problem."
+        },
+        {
+          "content": "Don't confuse '=' (assignment) with '==' (comparison). Also avoid initializing as a string like '0' \u2014 it must be an integer so numeric increments and comparisons behave correctly."
+        },
+        {
+          "content": "As a best practice, you might prefer a more descriptive name such as valid_count and add a short comment; in larger programs you could also use collections.Counter for multiple counters."
+        }
+      ]
+    },
+    "5": {
+      "content": "    banned = 0",
+      "commentList": [
+        "Purpose: This line creates a counter named 'banned' and sets it to 0 so you can count how many product codes are later classified as banned.",
+        "Syntax and semantics: It's an assignment statement\u2014the name banned is bound to the integer literal 0. Later the program does banned += 1 to increase this value when a banned code is found.",
+        "Why it matters: If you don't initialize banned before you try to increment it, Python will raise a runtime error (NameError or UnboundLocalError) because the name doesn't exist yet.",
+        "Common pitfalls: If you put this initialization inside the input loop, you'll reset the count on every iteration and lose previous results. Also avoid initializing it as a string like '0'\u2014that would cause a TypeError when you try to add 1.",
+        "Best practices: Give clear, descriptive names (like banned) and initialize counters outside the loop that uses them. If you want, you can add an explanatory comment or a type hint (e.g., banned: int = 0) to make your intent clearer to readers and tools."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line creates a counter named 'banned' and sets it to 0 so you can count how many product codes are later classified as banned."
+        },
+        {
+          "content": "Syntax and semantics: It's an assignment statement\u2014the name banned is bound to the integer literal 0. Later the program does banned += 1 to increase this value when a banned code is found."
+        },
+        {
+          "content": "Why it matters: If you don't initialize banned before you try to increment it, Python will raise a runtime error (NameError or UnboundLocalError) because the name doesn't exist yet."
+        },
+        {
+          "content": "Common pitfalls: If you put this initialization inside the input loop, you'll reset the count on every iteration and lose previous results. Also avoid initializing it as a string like '0'\u2014that would cause a TypeError when you try to add 1."
+        },
+        {
+          "content": "Best practices: Give clear, descriptive names (like banned) and initialize counters outside the loop that uses them. If you want, you can add an explanatory comment or a type hint (e.g., banned: int = 0) to make your intent clearer to readers and tools."
+        }
+      ]
+    },
+    "7": {
+      "content": "    code = input(\"Enter product code: \")",
+      "commentList": [
+        "Purpose: This line prompts you with \"Enter product code: \" and reads the first code the user types into the variable code. That initial value is what the while loop tests to decide whether to start processing or stop immediately if the user entered STOP.",
+        "Syntax and meaning: input(\"Enter product code: \") displays the prompt and returns what you type as a Python string; that returned string is assigned to the name code. input never converts the entry to a number \u2014 it always gives you a str.",
+        "Possible errors and misunderstandings: calling input can raise EOFError (end of input) or KeyboardInterrupt (user cancels). The later comparison code != \"STOP\" is exact and case-sensitive, so \"stop\" or extra spaces will not match. Also, if the entered string is shorter than expected, later code[9] will raise IndexError (this line itself just stores the string).",
+        "Best practices: you should normalize and clean the raw text here, for example code = input(...).strip() and compare code.upper() == 'STOP' to ignore extra spaces and case. Also consider wrapping this input call in try/except to handle EOFError/KeyboardInterrupt and give the user a friendly message. Use a clear name (e.g., product_code) if you want the purpose to be more explicit."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line prompts you with \"Enter product code: \" and reads the first code the user types into the variable code. That initial value is what the while loop tests to decide whether to start processing or stop immediately if the user entered STOP."
+        },
+        {
+          "content": "Syntax and meaning: input(\"Enter product code: \") displays the prompt and returns what you type as a Python string; that returned string is assigned to the name code. input never converts the entry to a number \u2014 it always gives you a str."
+        },
+        {
+          "content": "Possible errors and misunderstandings: calling input can raise EOFError (end of input) or KeyboardInterrupt (user cancels). The later comparison code != \"STOP\" is exact and case-sensitive, so \"stop\" or extra spaces will not match. Also, if the entered string is shorter than expected, later code[9] will raise IndexError (this line itself just stores the string)."
+        },
+        {
+          "content": "Best practices: you should normalize and clean the raw text here, for example code = input(...).strip() and compare code.upper() == 'STOP' to ignore extra spaces and case. Also consider wrapping this input call in try/except to handle EOFError/KeyboardInterrupt and give the user a friendly message. Use a clear name (e.g., product_code) if you want the purpose to be more explicit."
+        }
+      ]
+    },
+    "8": {
+      "content": "    while ( code != \"STOP\") :",
+      "commentList": [
+        "Purpose: This line starts a loop that keeps processing product codes as long as the variable code is not exactly 'STOP'. It makes the program repeatedly check and classify each input until you tell it to stop.",
+        "Syntax and semantics: 'while' begins a loop, the condition code != 'STOP' is evaluated before each iteration (a pre-test loop), the parentheses are optional in Python, and the trailing colon ':' begins the indented block that runs when the condition is True.",
+        "Initialization requirement: Because the condition is checked before the loop body runs, you must have set code before this line (line 7 does that). If code already equals 'STOP', the loop body will be skipped entirely.",
+        "Common mistakes and errors to watch for: the comparison is case-sensitive and sensitive to whitespace (so 'stop' or 'STOP ' will not match); forgetting to update code inside the loop leads to an infinite loop; don't use 'is' for string equality\u2014use != or ==. Note that IndexError and ValueError from code processing are handled later in the try/except, but they won't stop an infinite loop if you never reassign code.",
+        "Best practices: normalize the input before comparing (for example do code = code.strip() and compare code.upper() to 'STOP' for a case-insensitive match), ensure you read a new value for code inside the loop so it can end, and avoid unnecessary parentheses in the while header for cleaner code."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line starts a loop that keeps processing product codes as long as the variable code is not exactly 'STOP'. It makes the program repeatedly check and classify each input until you tell it to stop."
+        },
+        {
+          "content": "Syntax and semantics: 'while' begins a loop, the condition code != 'STOP' is evaluated before each iteration (a pre-test loop), the parentheses are optional in Python, and the trailing colon ':' begins the indented block that runs when the condition is True."
+        },
+        {
+          "content": "Initialization requirement: Because the condition is checked before the loop body runs, you must have set code before this line (line 7 does that). If code already equals 'STOP', the loop body will be skipped entirely."
+        },
+        {
+          "content": "Common mistakes and errors to watch for: the comparison is case-sensitive and sensitive to whitespace (so 'stop' or 'STOP ' will not match); forgetting to update code inside the loop leads to an infinite loop; don't use 'is' for string equality\u2014use != or ==. Note that IndexError and ValueError from code processing are handled later in the try/except, but they won't stop an infinite loop if you never reassign code."
+        },
+        {
+          "content": "Best practices: normalize the input before comparing (for example do code = code.strip() and compare code.upper() to 'STOP' for a case-insensitive match), ensure you read a new value for code inside the loop so it can end, and avoid unnecessary parentheses in the while header for cleaner code."
+        }
+      ]
+    },
+    "10": {
+      "content": "        try : ",
+      "commentList": [
+        "Purpose: This line starts a try block so that you can run code that might raise an error (for example, indexing or int conversion) without crashing the whole program.",
+        "Syntax & semantics: In Python you write try: followed by an indented block. The colon marks the start of the block; any exception raised inside that indented block will jump to a matching except clause below.",
+        "Common misconceptions / errors: Don't assume try will catch every problem \u2014 it only catches exceptions that have matching except handlers. Also avoid putting too much code inside try, because that can hide the real source of an error.",
+        "Best practice: Use try to protect only the specific statements that can fail (as done here for indexing and int conversion) and pair it with specific except clauses (IndexError, ValueError) so you handle known problems cleanly and let unexpected bugs surface."
+      ],
+      "indentLevel": 2,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line starts a try block so that you can run code that might raise an error (for example, indexing or int conversion) without crashing the whole program."
+        },
+        {
+          "content": "Syntax & semantics: In Python you write try: followed by an indented block. The colon marks the start of the block; any exception raised inside that indented block will jump to a matching except clause below."
+        },
+        {
+          "content": "Common misconceptions / errors: Don't assume try will catch every problem \u2014 it only catches exceptions that have matching except handlers. Also avoid putting too much code inside try, because that can hide the real source of an error."
+        },
+        {
+          "content": "Best practice: Use try to protect only the specific statements that can fail (as done here for indexing and int conversion) and pair it with specific except clauses (IndexError, ValueError) so you handle known problems cleanly and let unexpected bugs surface."
+        }
+      ]
+    },
+    "11": {
+      "content": "            zone = code[9]",
+      "commentList": [
+        "Purpose: This line extracts the tenth character of the input string and saves it as the variable zone so you can test which zone the product came from.",
+        "Syntax & semantics: code[9] uses 0-based indexing (the first character is code[0]), so index 9 is the tenth character. The result is a one-character Python string (type str).",
+        "Possible errors & misconceptions: if the input is shorter than ten characters, this indexing raises IndexError. A common mistake is to use code[10] thinking indexes are 1-based (that would give the 11th character).",
+        "How the program handles the error: the surrounding try/except block will catch an IndexError and print \"Improper code length.\" so the program can continue asking for input.",
+        "Best practices you can apply: strip surrounding whitespace (code = code.strip()) before indexing, or check len(code) >= 10 before accessing code[9]. You might also use code[9:10] if you prefer a slice (it returns '' instead of raising an error when out of range) but then you must handle the empty-string case.",
+        "Comparison note: since zone is a string, when you later test zone == \"R\" consider normalizing case (zone = zone.upper()) so you don't miss lowercase 'r'."
+      ],
+      "indentLevel": 3,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line extracts the tenth character of the input string and saves it as the variable zone so you can test which zone the product came from."
+        },
+        {
+          "content": "Syntax & semantics: code[9] uses 0-based indexing (the first character is code[0]), so index 9 is the tenth character. The result is a one-character Python string (type str)."
+        },
+        {
+          "content": "Possible errors & misconceptions: if the input is shorter than ten characters, this indexing raises IndexError. A common mistake is to use code[10] thinking indexes are 1-based (that would give the 11th character)."
+        },
+        {
+          "content": "How the program handles the error: the surrounding try/except block will catch an IndexError and print \"Improper code length.\" so the program can continue asking for input."
+        },
+        {
+          "content": "Best practices you can apply: strip surrounding whitespace (code = code.strip()) before indexing, or check len(code) >= 10 before accessing code[9]. You might also use code[9:10] if you prefer a slice (it returns '' instead of raising an error when out of range) but then you must handle the empty-string case."
+        },
+        {
+          "content": "Comparison note: since zone is a string, when you later test zone == \"R\" consider normalizing case (zone = zone.upper()) so you don't miss lowercase 'r'."
+        }
+      ]
+    },
+    "12": {
+      "content": "            district = int(code[3:7])",
+      "commentList": [
+        "Purpose: You extract the four characters that represent the district (positions 4 through 7 in human terms) and convert them into an integer so you can test numeric conditions later (e.g., whether the district is >= 2000).",
+        "Syntax and semantics: code[3:7] uses Python slicing with 0-based indexes \u2014 it starts at index 3 (the 4th character) and goes up to but does not include index 7, giving you the four characters you need. int(...) converts that substring from text to an integer value.",
+        "How it fits the program: By producing a numeric district value, this line makes it possible for the following lines to count the code as valid and to check whether a product from zone 'R' is banned for that district.",
+        "Possible errors and misconceptions: Slicing itself will not raise IndexError if the string is short; it will return a shorter string (possibly empty). The conversion int(...) will raise ValueError if the slice is empty or contains non-digit characters (e.g., letters or punctuation). A common misconception is thinking code[3:7] includes the character at index 7 \u2014 it does not.",
+        "Edge cases to watch: If the substring contains spaces or a sign (like ' 1234' or '-123'), int will still convert but the value may be invalid for your domain (districts should be four positive digits). If the input is shorter than expected you may get an empty string and then ValueError on int(...).",
+        "Best practices: Before converting, you can make the intent clearer and safer by trimming the input (code = code.strip()), checking length (len(code) >= 7) or checking the slice with .isdigit() and len(code[3:7]) == 4. That way you avoid relying solely on exceptions and ensure the district is exactly four numeric digits."
+      ],
+      "indentLevel": 3,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: You extract the four characters that represent the district (positions 4 through 7 in human terms) and convert them into an integer so you can test numeric conditions later (e.g., whether the district is >= 2000)."
+        },
+        {
+          "content": "Syntax and semantics: code[3:7] uses Python slicing with 0-based indexes \u2014 it starts at index 3 (the 4th character) and goes up to but does not include index 7, giving you the four characters you need. int(...) converts that substring from text to an integer value."
+        },
+        {
+          "content": "How it fits the program: By producing a numeric district value, this line makes it possible for the following lines to count the code as valid and to check whether a product from zone 'R' is banned for that district."
+        },
+        {
+          "content": "Possible errors and misconceptions: Slicing itself will not raise IndexError if the string is short; it will return a shorter string (possibly empty). The conversion int(...) will raise ValueError if the slice is empty or contains non-digit characters (e.g., letters or punctuation). A common misconception is thinking code[3:7] includes the character at index 7 \u2014 it does not."
+        },
+        {
+          "content": "Edge cases to watch: If the substring contains spaces or a sign (like ' 1234' or '-123'), int will still convert but the value may be invalid for your domain (districts should be four positive digits). If the input is shorter than expected you may get an empty string and then ValueError on int(...)."
+        },
+        {
+          "content": "Best practices: Before converting, you can make the intent clearer and safer by trimming the input (code = code.strip()), checking length (len(code) >= 7) or checking the slice with .isdigit() and len(code[3:7]) == 4. That way you avoid relying solely on exceptions and ensure the district is exactly four numeric digits."
+        }
+      ]
+    },
+    "13": {
+      "content": "            valid += 1",
+      "commentList": [
+        "Purpose: This line increases the counter of valid codes by one so you record that the current input was successfully parsed (no exceptions were raised) and treated as a syntactically acceptable product code.",
+        "Syntax & semantics: valid += 1 is shorthand for valid = valid + 1 \u2014 Python reads the current value of the local variable valid, adds 1, and stores the result back into valid. Because it is inside the try block, it runs only if the previous extractions (zone and district) succeeded.",
+        "Potential errors & misconceptions: A common misunderstanding is to think this means the product is allowed for sale. In this program valid means the input was well-formed (parsed) \u2014 a code can be both valid and banned because you increment before checking the ban. Also, if valid had not been initialized earlier you would get a NameError/UnboundLocalError.",
+        "Best practices: Make your intent explicit. If you want valid to mean \"allowed for sale,\" move this increment after the banned check. Otherwise rename the variable to something like parsed_count or formatted_count to avoid confusion, and keep a short comment explaining what \"valid\" counts. Using += is concise and recommended over manual reassignment."
+      ],
+      "indentLevel": 3,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line increases the counter of valid codes by one so you record that the current input was successfully parsed (no exceptions were raised) and treated as a syntactically acceptable product code."
+        },
+        {
+          "content": "Syntax & semantics: valid += 1 is shorthand for valid = valid + 1 \u2014 Python reads the current value of the local variable valid, adds 1, and stores the result back into valid. Because it is inside the try block, it runs only if the previous extractions (zone and district) succeeded."
+        },
+        {
+          "content": "Potential errors & misconceptions: A common misunderstanding is to think this means the product is allowed for sale. In this program valid means the input was well-formed (parsed) \u2014 a code can be both valid and banned because you increment before checking the ban. Also, if valid had not been initialized earlier you would get a NameError/UnboundLocalError."
+        },
+        {
+          "content": "Best practices: Make your intent explicit. If you want valid to mean \"allowed for sale,\" move this increment after the banned check. Otherwise rename the variable to something like parsed_count or formatted_count to avoid confusion, and keep a short comment explaining what \"valid\" counts. Using += is concise and recommended over manual reassignment."
+        }
+      ]
+    },
+    "14": {
+      "content": "            if zone == \"R\" and district >= 2000:",
+      "commentList": [
+        "You use this if-statement to decide whether the current product code should be counted as banned: it checks that the zone is 'R' and that the district number is 2000 or greater, and only then the indented block (banned += 1) runs.",
+        "Breakdown for you: 'if' begins a conditional; zone == 'R' is a string equality check; 'and' is a logical operator requiring both sides to be true; district >= 2000 is a numeric comparison; the trailing ':' starts the indented block that executes when the whole condition is true.",
+        "Be careful about case sensitivity: this compares exactly 'R' (uppercase). If a user types 'r' your check will fail \u2014 consider using zone = zone.upper() earlier so you don't miss lowercase input.",
+        "Note the boundary and counting behavior for you: district >= 2000 includes 2000 itself. Also, because valid was incremented before this if, any banned code will also be counted as valid; if you want banned codes excluded from the valid count, move the valid increment to after this check.",
+        "A helpful detail: 'and' short-circuits, so if zone != 'R' Python will not evaluate district >= 2000. That can avoid unnecessary work, but here both zone and district are already obtained inside the try block.",
+        "Best practices you should follow: strip input whitespace, normalize the zone character, explicitly validate that district is within the expected 4-digit range, and keep the condition simple and well-commented for readability."
+      ],
+      "indentLevel": 3,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You use this if-statement to decide whether the current product code should be counted as banned: it checks that the zone is 'R' and that the district number is 2000 or greater, and only then the indented block (banned += 1) runs."
+        },
+        {
+          "content": "Breakdown for you: 'if' begins a conditional; zone == 'R' is a string equality check; 'and' is a logical operator requiring both sides to be true; district >= 2000 is a numeric comparison; the trailing ':' starts the indented block that executes when the whole condition is true."
+        },
+        {
+          "content": "Be careful about case sensitivity: this compares exactly 'R' (uppercase). If a user types 'r' your check will fail \u2014 consider using zone = zone.upper() earlier so you don't miss lowercase input."
+        },
+        {
+          "content": "Note the boundary and counting behavior for you: district >= 2000 includes 2000 itself. Also, because valid was incremented before this if, any banned code will also be counted as valid; if you want banned codes excluded from the valid count, move the valid increment to after this check."
+        },
+        {
+          "content": "A helpful detail: 'and' short-circuits, so if zone != 'R' Python will not evaluate district >= 2000. That can avoid unnecessary work, but here both zone and district are already obtained inside the try block."
+        },
+        {
+          "content": "Best practices you should follow: strip input whitespace, normalize the zone character, explicitly validate that district is within the expected 4-digit range, and keep the condition simple and well-commented for readability."
+        }
+      ]
+    },
+    "15": {
+      "content": "                banned += 1",
+      "commentList": [
+        "Purpose: this line increases the banned count by one when the preceding if condition is true, so you record that this code is banned.",
+        "Syntax: 'banned += 1' is a shorthand for 'banned = banned + 1' \u2014 it takes the current value of the variable banned and adds one to it.",
+        "When it runs: this line only runs if the code was parsed successfully (no exception) and the condition 'zone == \"R\" and district >= 2000' is met. That means every banned code is also counted as a successfully parsed (valid) code in this program.",
+        "Common misconceptions / errors to watch for: if you forget to initialize banned before the loop you will get an error; if you intended 'valid' to mean non-banned codes, incrementing valid before checking for banned will give you the wrong counts. Also note the zone comparison is case-sensitive \u2014 'r' will not match 'R' unless you normalize the case.",
+        "Best practices: make sure banned is initialized (it is on Line 5). Consider normalizing the zone with zone = zone.upper() before the check to avoid case issues. If you want 'valid' to count only non-banned codes, move the valid += 1 after this if-block (or use separate counters like valid_total and valid_non_banned for clarity).",
+        "Indentation and placement matter: this line must be inside the if-block (as shown) so it only runs when the condition is true. If it is misindented, it could run for every successfully parsed code."
+      ],
+      "indentLevel": 4,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: this line increases the banned count by one when the preceding if condition is true, so you record that this code is banned."
+        },
+        {
+          "content": "Syntax: 'banned += 1' is a shorthand for 'banned = banned + 1' \u2014 it takes the current value of the variable banned and adds one to it."
+        },
+        {
+          "content": "When it runs: this line only runs if the code was parsed successfully (no exception) and the condition 'zone == \"R\" and district >= 2000' is met. That means every banned code is also counted as a successfully parsed (valid) code in this program."
+        },
+        {
+          "content": "Common misconceptions / errors to watch for: if you forget to initialize banned before the loop you will get an error; if you intended 'valid' to mean non-banned codes, incrementing valid before checking for banned will give you the wrong counts. Also note the zone comparison is case-sensitive \u2014 'r' will not match 'R' unless you normalize the case."
+        },
+        {
+          "content": "Best practices: make sure banned is initialized (it is on Line 5). Consider normalizing the zone with zone = zone.upper() before the check to avoid case issues. If you want 'valid' to count only non-banned codes, move the valid += 1 after this if-block (or use separate counters like valid_total and valid_non_banned for clarity)."
+        },
+        {
+          "content": "Indentation and placement matter: this line must be inside the if-block (as shown) so it only runs when the condition is true. If it is misindented, it could run for every successfully parsed code."
+        }
+      ]
+    },
+    "17": {
+      "content": "        except IndexError :",
+      "commentList": [
+        "This line begins an exception handler that runs when the try block raises an IndexError, so you stop the program from crashing on short input and let it continue asking for more codes.",
+        "Syntactically, 'except IndexError :' names the exact exception type to catch (IndexError) and the colon starts the indented block that follows \u2014 those lines execute only if an IndexError occurs in the matching try block.",
+        "In this program an IndexError will typically come from trying to access code[9] when the entered string has fewer than 10 characters; note that slicing (code[3:7]) would not raise IndexError even if the string is too short.",
+        "A common misconception is that this will catch all input problems \u2014 it only catches IndexError. Other problems, such as non-numeric district parts, raise ValueError and are handled by a different except clause.",
+        "Best practices: you should prefer validating input length (for example using if len(code) >= 10) before indexing instead of relying entirely on exceptions, and keep the try block as small as possible so you don't accidentally hide other bugs."
+      ],
+      "indentLevel": 2,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line begins an exception handler that runs when the try block raises an IndexError, so you stop the program from crashing on short input and let it continue asking for more codes."
+        },
+        {
+          "content": "Syntactically, 'except IndexError :' names the exact exception type to catch (IndexError) and the colon starts the indented block that follows \u2014 those lines execute only if an IndexError occurs in the matching try block."
+        },
+        {
+          "content": "In this program an IndexError will typically come from trying to access code[9] when the entered string has fewer than 10 characters; note that slicing (code[3:7]) would not raise IndexError even if the string is too short."
+        },
+        {
+          "content": "A common misconception is that this will catch all input problems \u2014 it only catches IndexError. Other problems, such as non-numeric district parts, raise ValueError and are handled by a different except clause."
+        },
+        {
+          "content": "Best practices: you should prefer validating input length (for example using if len(code) >= 10) before indexing instead of relying entirely on exceptions, and keep the try block as small as possible so you don't accidentally hide other bugs."
+        }
+      ]
+    },
+    "18": {
+      "content": "            print(\"Improper code length.\")",
+      "commentList": [
+        "This print statement tells you what went wrong when an IndexError is caught: it informs you that the entered product code does not have the expected length.",
+        "The syntax print(\"Improper code length.\") sends that exact message to the console. Because it sits inside except IndexError, it runs only when you tried to access a character index that doesn't exist (for example code[9] when the string has fewer than 10 characters).",
+        "A common misconception is that slicing like code[3:7] will raise IndexError on short strings \u2014 it won\u2019t (slicing returns a shorter string). The IndexError here most often comes from code[9], so this message points you to the length problem specifically.",
+        "Because the valid counter is only incremented inside the try block after the indexing and conversion, you can be sure that codes triggering this print are not counted as valid. The print lets you know the program handled the bad input and will continue running.",
+        "Best practice: instead of relying only on catching IndexError, you should check the length up front (for example with len(code) >= 10) and strip whitespace (code = code.strip()) so you can give a clearer, more helpful message (e.g., show the expected format or the length you received)."
+      ],
+      "indentLevel": 3,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This print statement tells you what went wrong when an IndexError is caught: it informs you that the entered product code does not have the expected length."
+        },
+        {
+          "content": "The syntax print(\"Improper code length.\") sends that exact message to the console. Because it sits inside except IndexError, it runs only when you tried to access a character index that doesn't exist (for example code[9] when the string has fewer than 10 characters)."
+        },
+        {
+          "content": "A common misconception is that slicing like code[3:7] will raise IndexError on short strings \u2014 it won\u2019t (slicing returns a shorter string). The IndexError here most often comes from code[9], so this message points you to the length problem specifically."
+        },
+        {
+          "content": "Because the valid counter is only incremented inside the try block after the indexing and conversion, you can be sure that codes triggering this print are not counted as valid. The print lets you know the program handled the bad input and will continue running."
+        },
+        {
+          "content": "Best practice: instead of relying only on catching IndexError, you should check the length up front (for example with len(code) >= 10) and strip whitespace (code = code.strip()) so you can give a clearer, more helpful message (e.g., show the expected format or the length you received)."
+        }
+      ]
+    },
+    "19": {
+      "content": "        except ValueError :",
+      "commentList": [
+        "You use this line to catch a ValueError thrown in the preceding try block (most likely from int(code[3:7])), so the program can handle non-numeric district substrings without crashing.",
+        "You should understand the syntax: except ValueError: attaches to the try above it and runs only when a ValueError is raised; the indented code that follows (line 20) is the handler that executes in that case.",
+        "You must not assume this catches every error \u2014 it only catches ValueError. For example, an IndexError (too-short code) is handled by the earlier except IndexError, and other exception types would still propagate unless you add handlers for them.",
+        "A common reason for ValueError here is that the slice code[3:7] contains letters, symbols, or is an empty string (e.g., code too short or the characters are not digits). Note that int() accepts whitespace and signs (e.g., '-123'), so you may still need extra checks for domain rules (four-digit positive numbers).",
+        "Best practice: catching a specific exception like ValueError is good. You can also pre-validate the slice (for example, check length and use str.isdigit()) before calling int(), or log the bad input and prompt the user to re-enter. The current handler prints a clear message and, because valid += 1 happens inside the try, the code won't count invalid inputs as valid."
+      ],
+      "indentLevel": 2,
+      "blank": true,
+      "comments": [
+        {
+          "content": "You use this line to catch a ValueError thrown in the preceding try block (most likely from int(code[3:7])), so the program can handle non-numeric district substrings without crashing."
+        },
+        {
+          "content": "You should understand the syntax: except ValueError: attaches to the try above it and runs only when a ValueError is raised; the indented code that follows (line 20) is the handler that executes in that case."
+        },
+        {
+          "content": "You must not assume this catches every error \u2014 it only catches ValueError. For example, an IndexError (too-short code) is handled by the earlier except IndexError, and other exception types would still propagate unless you add handlers for them."
+        },
+        {
+          "content": "A common reason for ValueError here is that the slice code[3:7] contains letters, symbols, or is an empty string (e.g., code too short or the characters are not digits). Note that int() accepts whitespace and signs (e.g., '-123'), so you may still need extra checks for domain rules (four-digit positive numbers)."
+        },
+        {
+          "content": "Best practice: catching a specific exception like ValueError is good. You can also pre-validate the slice (for example, check length and use str.isdigit()) before calling int(), or log the bad input and prompt the user to re-enter. The current handler prints a clear message and, because valid += 1 happens inside the try, the code won't count invalid inputs as valid."
+        }
+      ]
+    },
+    "20": {
+      "content": "            print(\"Error! District is not numeric.\")",
+      "commentList": [
+        "Purpose: This line shows an error message to the user when converting the district slice to an integer fails. You see this message when the four characters from position 4 to 7 are not numeric.",
+        "Syntax and semantics: print(...) writes the given text to the screen. Because this print is inside the except ValueError block, it only runs when int(code[3:7]) raised a ValueError.",
+        "Program flow and counts: Because the ValueError happened before the program increments the valid count (valid += 1), you do not count this code as valid or banned. The message simply informs you that the district part is invalid.",
+        "Common misconception to avoid: Don't assume this message means the whole code is badly formed\u2014only the district substring failed numeric conversion. The code might still have the right length or zone character.",
+        "Best practice suggestion: You could make the message more helpful (for example, show the offending slice or the full code) and consider validating the slice first with code[3:7].isdigit() before calling int(), so you avoid relying solely on exceptions for normal input checks.",
+        "Edge note: If whitespace or signs (like '+' or '-') are present, int() might still succeed or fail differently. If you want strict four-digit numeric districts, check that the slice has exactly four digits using isdigit() and length checks before converting."
+      ],
+      "indentLevel": 3,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line shows an error message to the user when converting the district slice to an integer fails. You see this message when the four characters from position 4 to 7 are not numeric."
+        },
+        {
+          "content": "Syntax and semantics: print(...) writes the given text to the screen. Because this print is inside the except ValueError block, it only runs when int(code[3:7]) raised a ValueError."
+        },
+        {
+          "content": "Program flow and counts: Because the ValueError happened before the program increments the valid count (valid += 1), you do not count this code as valid or banned. The message simply informs you that the district part is invalid."
+        },
+        {
+          "content": "Common misconception to avoid: Don't assume this message means the whole code is badly formed\u2014only the district substring failed numeric conversion. The code might still have the right length or zone character."
+        },
+        {
+          "content": "Best practice suggestion: You could make the message more helpful (for example, show the offending slice or the full code) and consider validating the slice first with code[3:7].isdigit() before calling int(), so you avoid relying solely on exceptions for normal input checks."
+        },
+        {
+          "content": "Edge note: If whitespace or signs (like '+' or '-') are present, int() might still succeed or fail differently. If you want strict four-digit numeric districts, check that the slice has exactly four digits using isdigit() and length checks before converting."
+        }
+      ]
+    },
+    "21": {
+      "content": "        code = input(\"Enter product code: \")",
+      "commentList": [
+        "Purpose: This line asks the user for the next product code and stores what they type in the variable code so the while loop can check it again (for the STOP sentinel and for further processing). Without this line the loop would never get new input and could become infinite.",
+        "Syntax and semantics: input(\"Enter product code: \") calls Python's input function with the prompt string, which returns what the user types as a string. The = assigns that string to the variable code. After this line executes, code holds the exact characters the user entered (including any spaces).",
+        "How it interacts with exceptions: This line runs whether the try block succeeded or an exception was caught. That means the program will always re-prompt the user after handling an error, letting you enter a corrected code or STOP to exit.",
+        "Common misconceptions / pitfalls: Because the code compares code to the exact string \"STOP\" in the while condition, any extra spaces or different letter case (like \" stop\" or \"Stop\") will not stop the loop. Also, input returns an empty string if the user just presses Enter, which may later cause IndexError or ValueError when the code is sliced or converted.",
+        "Best practices: Trim and normalize input right away, for example code = input(...).strip() and consider comparing code.upper() == 'STOP' so the sentinel is case-insensitive. Also consider handling KeyboardInterrupt (Ctrl+C) if you want a graceful exit, and avoid repeating the prompt string by storing it in a variable or using a loop that reads once at the top and breaks when appropriate."
+      ],
+      "indentLevel": 2,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line asks the user for the next product code and stores what they type in the variable code so the while loop can check it again (for the STOP sentinel and for further processing). Without this line the loop would never get new input and could become infinite."
+        },
+        {
+          "content": "Syntax and semantics: input(\"Enter product code: \") calls Python's input function with the prompt string, which returns what the user types as a string. The = assigns that string to the variable code. After this line executes, code holds the exact characters the user entered (including any spaces)."
+        },
+        {
+          "content": "How it interacts with exceptions: This line runs whether the try block succeeded or an exception was caught. That means the program will always re-prompt the user after handling an error, letting you enter a corrected code or STOP to exit."
+        },
+        {
+          "content": "Common misconceptions / pitfalls: Because the code compares code to the exact string \"STOP\" in the while condition, any extra spaces or different letter case (like \" stop\" or \"Stop\") will not stop the loop. Also, input returns an empty string if the user just presses Enter, which may later cause IndexError or ValueError when the code is sliced or converted."
+        },
+        {
+          "content": "Best practices: Trim and normalize input right away, for example code = input(...).strip() and consider comparing code.upper() == 'STOP' so the sentinel is case-insensitive. Also consider handling KeyboardInterrupt (Ctrl+C) if you want a graceful exit, and avoid repeating the prompt string by storing it in a variable or using a loop that reads once at the top and breaks when appropriate."
+        }
+      ]
+    },
+    "23": {
+      "content": "    print(\"# of valid codes entered:\", valid)",
+      "commentList": [
+        "This line prints the final count of syntactically valid product codes after the input loop finishes, so you see how many inputs were accepted without error.",
+        "Syntax/semantics: print(\"# of valid codes entered:\", valid) calls the print() function with two arguments. Python converts the integer valid to a string, inserts a space between the two arguments, and writes the combined text to standard output (ending with a newline).",
+        "A common misconception you should avoid: in this program valid is incremented for every input that parsed without raising an exception, including codes that later get classified as banned. So valid here means \"no parsing error,\" not necessarily \"allowed for sale.\"",
+        "Potential errors to watch for: if valid were not initialized before the loop you'd get a NameError. Also, if you moved this print inside the loop you would see intermediate totals instead of the final result.",
+        "Best practices you can follow: use a clearer label (for example, \"# of syntactically valid codes:\"), or use an f-string like print(f\"# of valid codes entered: {valid}\") for cleaner formatting. For testing, consider returning the counts from the function instead of printing so you can assert values in unit tests."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line prints the final count of syntactically valid product codes after the input loop finishes, so you see how many inputs were accepted without error."
+        },
+        {
+          "content": "Syntax/semantics: print(\"# of valid codes entered:\", valid) calls the print() function with two arguments. Python converts the integer valid to a string, inserts a space between the two arguments, and writes the combined text to standard output (ending with a newline)."
+        },
+        {
+          "content": "A common misconception you should avoid: in this program valid is incremented for every input that parsed without raising an exception, including codes that later get classified as banned. So valid here means \"no parsing error,\" not necessarily \"allowed for sale.\""
+        },
+        {
+          "content": "Potential errors to watch for: if valid were not initialized before the loop you'd get a NameError. Also, if you moved this print inside the loop you would see intermediate totals instead of the final result."
+        },
+        {
+          "content": "Best practices you can follow: use a clearer label (for example, \"# of syntactically valid codes:\"), or use an f-string like print(f\"# of valid codes entered: {valid}\") for cleaner formatting. For testing, consider returning the counts from the function instead of printing so you can assert values in unit tests."
+        }
+      ]
+    },
+    "24": {
+      "content": "    print(\"# of banned codes entered:\", banned)",
+      "commentList": [
+        "Purpose: This line shows you the final count of banned product codes by printing the value stored in the variable banned so you can see how many inputs were classified as banned.",
+        "Syntax and semantics: 'print(\"# of banned codes entered:\", banned)' calls the print function with two arguments \u2014 a label string and the variable banned. Python converts banned to text, inserts a single space between the two arguments in the output, and then ends the line with a newline.",
+        "When it runs: This print runs after the input loop finishes (after you enter STOP), so it reports the totals accumulated while the loop was running.",
+        "Possible errors and misconceptions: If banned were never defined you would get a NameError \u2014 in this program banned is set to 0 at the start, so it is safe. Also, if you expect no extra space between the label and number, remember print inserts a space between arguments; use formatting if you want a different layout. Note this is Python 3 style print; Python 2 behaves differently.",
+        "Best practices: For clearer and more controlled output you can use an f-string: print(f\"# of banned codes entered: {banned}\"). Keep your labels consistent with other summary lines and make sure you only increment banned when a code truly meets the banned condition so the printed total is accurate."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line shows you the final count of banned product codes by printing the value stored in the variable banned so you can see how many inputs were classified as banned."
+        },
+        {
+          "content": "Syntax and semantics: 'print(\"# of banned codes entered:\", banned)' calls the print function with two arguments \u2014 a label string and the variable banned. Python converts banned to text, inserts a single space between the two arguments in the output, and then ends the line with a newline."
+        },
+        {
+          "content": "When it runs: This print runs after the input loop finishes (after you enter STOP), so it reports the totals accumulated while the loop was running."
+        },
+        {
+          "content": "Possible errors and misconceptions: If banned were never defined you would get a NameError \u2014 in this program banned is set to 0 at the start, so it is safe. Also, if you expect no extra space between the label and number, remember print inserts a space between arguments; use formatting if you want a different layout. Note this is Python 3 style print; Python 2 behaves differently."
+        },
+        {
+          "content": "Best practices: For clearer and more controlled output you can use an f-string: print(f\"# of banned codes entered: {banned}\"). Keep your labels consistent with other summary lines and make sure you only increment banned when a code truly meets the banned condition so the printed total is accurate."
+        }
+      ]
+    },
+    "26": {
+      "content": "check_product_code()",
+      "commentList": [
+        "This line calls the function check_product_code(), which starts the entire program: it runs the input loop, reads product codes, updates the valid and banned counters, and prints the results \u2014 in short, executing this line makes the program actually run.",
+        "Syntax and semantics: check_product_code() is a function call. The parentheses mean you are invoking (executing) the function you defined earlier. If you wrote check_product_code without parentheses, you would only refer to the function object and not run its code.",
+        "Common errors and misconceptions: if you misspell the name or the function has not been defined yet, Python raises a NameError. If you remove the parentheses by mistake, no execution happens. Also be aware that the function uses input(), so running this call in a non-interactive environment may cause blocking, EOFError, or KeyboardInterrupt if input is not available or the user interrupts.",
+        "Best practice: wrap this call in a guard like if __name__ == \"__main__\": check_product_code() when you put this code into a module. That prevents the function from running automatically if someone imports your file as a module, and it makes your program easier to test.",
+        "When you run this line during development, you can test the program by entering product codes and finally typing STOP to exit the loop \u2014 this is how you exercise the function\u2019s behavior interactively."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line calls the function check_product_code(), which starts the entire program: it runs the input loop, reads product codes, updates the valid and banned counters, and prints the results \u2014 in short, executing this line makes the program actually run."
+        },
+        {
+          "content": "Syntax and semantics: check_product_code() is a function call. The parentheses mean you are invoking (executing) the function you defined earlier. If you wrote check_product_code without parentheses, you would only refer to the function object and not run its code."
+        },
+        {
+          "content": "Common errors and misconceptions: if you misspell the name or the function has not been defined yet, Python raises a NameError. If you remove the parentheses by mistake, no execution happens. Also be aware that the function uses input(), so running this call in a non-interactive environment may cause blocking, EOFError, or KeyboardInterrupt if input is not available or the user interrupts."
+        },
+        {
+          "content": "Best practice: wrap this call in a guard like if __name__ == \"__main__\": check_product_code() when you put this code into a module. That prevents the function from running automatically if someone imports your file as a module, and it makes your program easier to test."
+        },
+        {
+          "content": "When you run this line during development, you can test the program by entering product codes and finally typing STOP to exit the loop \u2014 this is how you exercise the function\u2019s behavior interactively."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "banned += 1",
+      "description": "You may accidentally increment the wrong counter because the two variables have similar roles. If you use this line, every successfully parsed code will increase the banned counter even when it is not actually banned. The valid counter will remain unchanged, so the program will report zero valid codes while reporting an inflated number of banned codes. If a code truly is banned later in the if-statement, it may get counted twice depending on the rest of the code flow. This distractor breaks the separation of concerns between counting successful parses and counting banned cases.",
+      "line_number": 0
+    },
+    {
+      "code": "except TypeError :",
+      "description": "You might pick this because it feels like a type-related problem: converting the district substring to an integer seems like a type error. Step by step, you could think the program will raise a type-related exception when the substring isn't numeric, so catching TypeError should handle the bad input. In reality, the int() conversion raises a different exception when it can\u2019t parse the string, so this except clause will not catch that situation. If you use this line, non-numeric districts will produce an uncaught exception and the program will stop instead of handling the bad input and continuing to ask for more codes. Compared to the intended handler for this parsing failure, this distractor catches the wrong class of problems and therefore fails to handle the actual error you want to manage.",
+      "line_number": 0
+    },
+    {
+      "code": "district = int(code[4:8])",
+      "description": "You might choose this because you count characters starting at 1 and so you think the 4th character is index 4. This line will slice a different set of characters (indices 4..7) than intended, so you will extract the wrong four characters as the district. If those characters happen to be digits, the program will accept them and use a wrong district number, causing incorrect valid/banned decisions. If they include non-digits, int(...) will raise a ValueError and the code will be treated as invalid. In short, this distractor shifts the slice one position to the right: it doesn't fail obviously in all cases, but it misreads the district field and leads to incorrect counting.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "TRV2475A5Z-14 TRV275A5Z-14 TRD1704A7R-12 TRQ2778A7R-19 TRV2105A2 STOP",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-27T16:07:35.352Z",
+  "updated_at": "2026-09-02T02:51:20.065Z",
+  "stat": {
+    "size": 129416,
+    "lastTimeModified": 1788317483775.8057
+  }
+}

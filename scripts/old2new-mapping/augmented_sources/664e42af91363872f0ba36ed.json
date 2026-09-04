@@ -1,0 +1,411 @@
+{
+  "id": "664e42af91363872f0ba36ed",
+  "_id": "664e42af91363872f0ba36ed",
+  "name": "Printing Table of Medal Counts with Row Totals",
+  "description": "Assume that we have a 7x4 matrix that stores the number of medals that seven countries won in the skating competitions at the Winter Olympic. This matrix looks like as follows:\\n[[ \"Canada\", 1, 0, 1 ],\\n [ \"China\", 1, 1, 0 ],\\n ...]\\nEach row of this matrix corresponds to the medal counts for the country in that row. The second, third, and fourth numbers within a row represent the number of Gold, Silver, and Bronze medals won by the corresponding country in that row.\\nConstruct a program that takes this matrix and prints a table of medal counts with row total that shows the number of Gold, Silver, Bronze, and Total medals for each of the countries who participated in the competition. The output table should look like as follows:\\n    Country    Gold  Silver  Bronze   Total\\n     Canada        1       0       1            2\\n        China        1       1       0            2\\n       ...\\n",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_print_medals_row_total.py",
+  "code": "#Step 1: Define a 7x4 matrix that stores the number of medals won by seven countries\nmedal_counts = [[ \"CAN\", 1, 0, 1 ],\n                [ \"CHN\", 1, 1, 0 ],\n                [ \"GER\", 0, 0, 1 ],\n                [ \"KOR\", 1, 0, 0 ],\n                [ \"JPN\", 0, 1, 1 ],\n                [ \"RUS\", 0, 1, 1 ],\n                [ \"USA\", 1, 1, 0 ]]\n#Step 2: Print the header of the output table\nprint(\"{:>4s}{:>3s}{:>3s}{:>3s}{:>4s}\".format(\"Name\",\"G\",\"S\",\"B\",\"All\"))\n#Step 3: Iterate through the rows in the medal counts matrix\nfor i in range(len(medal_counts)):\n    #Step 3.1: Assign initial values to variables we need for printing row i\n    line = \"{:>4s}\".format(medal_counts[i][0])\n    row_total = 0\n    #Step 3.2: Iterate through the columns that have medal counts\n    for j in range(1, len(medal_counts[0])):\n        #Step 3.2.1: Append medal counts to the content of row i\n        line += \"{:>3d}\".format(medal_counts[i][j])\n        #Step 3.2.2: Update the row total for row i \n        row_total += medal_counts[i][j]\n    #Step 3.3: Add the row total to the content of the output table for row i\n    line += \"{:>3d}\".format(row_total)\n    #Step 3.4: Print the content of the output table for row i\n    print(line)",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Define a 7x4 matrix that stores the number of medals won by seven countries",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "medal_counts = [[ \"CAN\", 1, 0, 1 ],",
+      "commentList": [
+        "This line assigns a list (the outer list) to the variable medal_counts and starts the first inner list row: [\"CAN\", 1, 0, 1]. That inner list encodes one country's data: index 0 is the country code \"CAN\", index 1 is Gold, index 2 is Silver, and index 3 is Bronze.",
+        "Syntax-wise this is a list literal containing another list. The inner list mixes a string (\"CAN\") and three integers (1, 0, 1). The trailing comma and newline show that more rows follow on the next lines \u2014 Python allows a list to span multiple lines.",
+        "Be careful about types: later the code uses string formatting that expects a str for the name (\"{:>4s}\") and ints for medals (\"{:>3d}\"). If you accidentally put the numbers in quotes (e.g. \"1\") or the name as a non-string, you can get TypeError during formatting.",
+        "Common syntax errors you might hit here: forgetting the comma after this inner list, mismatching or missing quotes around \"CAN\", or not closing the outer list with ] at the end \u2014 all of those cause a SyntaxError.",
+        "Best practices you can follow: keep each row the same length (4 elements) so indexing is consistent, use clear country names or consistent codes, and consider validating rows before printing. For clearer code in larger programs, you could use a dict or a small object instead of mixed-type lists."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "                [ \"CHN\", 1, 1, 0 ],",
+      "commentList": [],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "4": {
+      "content": "                [ \"GER\", 0, 0, 1 ],",
+      "commentList": [],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "5": {
+      "content": "                [ \"KOR\", 1, 0, 0 ],",
+      "commentList": [],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "6": {
+      "content": "                [ \"JPN\", 0, 1, 1 ],",
+      "commentList": [],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "7": {
+      "content": "                [ \"RUS\", 0, 1, 1 ],",
+      "commentList": [],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "8": {
+      "content": "                [ \"USA\", 1, 1, 0 ]]",
+      "commentList": [],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "9": {
+      "content": "#Step 2: Print the header of the output table",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "10": {
+      "content": "print(\"{:>4s}{:>3s}{:>3s}{:>3s}{:>4s}\".format(\"Name\",\"G\",\"S\",\"B\",\"All\"))",
+      "commentList": [
+        "Purpose: This line prints the header row for your output table so you (and anyone reading the program) can see the column labels: Name, G, S, B, and All. It creates the top line that aligns with the numeric rows printed later.",
+        "How it works (syntax and semantics): print(...) writes text to the screen. Inside, a format string with five fields \"{:>4s}{:>3s}{:>3s}{:>3s}{:>4s}\" tells Python to take the five arguments given to .format(...) and place each into a fixed-width slot. For each slot, > means right-align and the number (4, 3, 3, 3, 4) is the minimum field width; the trailing s says you expect a string. The .format(\"Name\",\"G\",\"S\",\"B\",\"All\") supplies the five header labels in order to those slots.",
+        "Common errors and misconceptions to watch for: if you pass a non-string where a {:s} is used (for example an int), Python will raise a TypeError; make sure the number of items in .format(...) matches the number of fields or you'll get an IndexError; the widths are minimums \u2014 if a label or data item is longer than the width it will expand the column, not truncate it; and > means right-align (not center or left). Also note there are no extra spaces between the fields in the format string, so you control spacing only via the widths you choose.",
+        "Best practices and tips: choose widths that match your longest expected country name and your largest numbers so columns stay aligned (e.g., use a larger width for the name). If you want clearer spacing, add explicit spaces in the format string (for example \"{:>10s} {:>4s}...\") or increase the numeric widths. For readability in your code you can also use f-strings or a small helper function to build rows, but the .format approach shown here is fine for simple tables."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "11": {
+      "content": "#Step 3: Iterate through the rows in the medal counts matrix",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "12": {
+      "content": "for i in range(len(medal_counts)):",
+      "commentList": [
+        "Purpose: This line starts a loop that visits each row of the medal_counts matrix so you can build and print one output line per country. It ensures the program processes all seven country rows (or however many rows exist).",
+        "Syntax and semantics: for introduces a loop; range(len(medal_counts)) produces the sequence 0, 1, ..., n-1 where n is the number of rows; i is the loop variable that will take each index; the trailing colon (:) begins the indented block that runs for each i. Inside the block you use medal_counts[i] to access the i-th row.",
+        "How it contributes: By giving you the row index i, this line lets you access the country name and its medal counts with medal_counts[i][0], medal_counts[i][1], etc., which you then format and print to produce the table row-by-row.",
+        "Common mistakes to watch for: If medal_counts is empty, the loop body won't run \u2014 that is normal but you might want to handle that case. Be careful with off-by-one thinking: range(len(...)) goes from 0 up to len-1. Also avoid modifying the medal_counts list (adding/removing rows) while iterating, because that can cause unexpected behavior.",
+        "Assumptions and pitfalls related to other code: This loop assumes each row has the same number of columns because later code uses len(medal_counts[0]) for the inner loop. If rows differ in length you can get index errors when accessing medal_counts[i][j].",
+        "Best practices: You can make this clearer and safer by using a more descriptive name (for example for row_idx in range(len(medal_counts)):), or by iterating directly over rows (for row in medal_counts:) when you don't need the index. If you do need both index and row, use enumerate(medal_counts)."
+      ],
+      "indentLevel": 0,
+      "blank": true
+    },
+    "13": {
+      "content": "    #Step 3.1: Assign initial values to variables we need for printing row i",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "14": {
+      "content": "    line = \"{:>4s}\".format(medal_counts[i][0])",
+      "commentList": [
+        "Purpose: You create the variable line to start building the output for one country by placing the country's name (the first element of medal_counts[i]) into a formatted string. This gives you the left part of the row that you will append the medal numbers to.",
+        "Syntax and semantics: You call the format method with the format specifier {:>4s}, which means 'treat the value as a string (s) and right-align it in a field of width 4 (>4)'. medal_counts[i][0] picks the country code from row i, and that formatted result is assigned to line.",
+        "Potential errors and misconceptions: If medal_counts[i][0] is not actually a string (for example an int or None), the 's' format code can cause a formatting error; you can avoid this by converting the value to a string (str(...)) or using {} without the 's' specifier. Also remember that if the country name is longer than 4 characters it will not be truncated \u2014 it will expand the output and shift alignment.",
+        "Best practices: Choose a field width that fits your real data (for example 10 for full country names) so columns stay aligned. Use a clearer variable name like row_text or row_str if you prefer. You can also use an f-string for the same effect, e.g. f'{medal_counts[i][0]:>10}', or build the row pieces in a list and join them for cleaner code and better performance.",
+        "Small clarifications you should know: {:>4s} pads with spaces on the left to reach width 4. To left-align use <: to center use ^. This helps you control how the table looks."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "15": {
+      "content": "    row_total = 0",
+      "commentList": [
+        "Purpose: you set row_total = 0 to give yourself a starting value for adding up the medals for the current country; this variable will hold the running total for that row.",
+        "Syntax/semantics: this is a simple assignment that binds the integer 0 to the name row_total. Because this line runs inside the outer loop, you reset the total for each new country.",
+        "Potential errors and misconceptions: if you forget to reset row_total here (for example by placing the initialization outside the loop), totals will accumulate across rows and give wrong results. Also, if you initialize it to a non-integer (like None or a string), you'll get a TypeError when you try to add numbers to it.",
+        "Best practices: initialize the accumulator immediately before the inner loop so it's clear you're starting a fresh total for this row. Use a descriptive name like row_total (as shown). As an alternative, you could compute the sum in one step with sum(medal_counts[i][1:]) for clarity, but the explicit loop with row_total = 0 is fine for learning how accumulation works.",
+        "Formatting note: keeping row_total as an integer matters because later you use '{:>3d}'.format(row_total) to print it; using 0 ensures the formatting call expects and receives an int."
+      ],
+      "indentLevel": 1,
+      "blank": true
+    },
+    "16": {
+      "content": "    #Step 3.2: Iterate through the columns that have medal counts",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "17": {
+      "content": "    for j in range(1, len(medal_counts[0])):",
+      "commentList": [
+        "Purpose: This line starts a loop that visits each medal column (Gold, Silver, Bronze) for the current country row. You will get j = 1, 2, 3 so you can read medal_counts[i][j] for each medal type.",
+        "Syntax/semantics: range(1, len(medal_counts[0])) produces integers from 1 up to (but not including) the length of the first row. The loop variable j is an integer index you use to access columns in the current row.",
+        "Why it uses index 1 as the start: Column 0 holds the country name, so you start at 1 to skip the name and only loop over numeric medal counts.",
+        "Common mistakes to watch for: range's upper bound is exclusive \u2014 if you expect 1..3, using range(1,4) or range(1, len(...)) is correct. Don't confuse rows and columns (using len(medal_counts) would iterate rows, not columns).",
+        "Potential error: this code assumes every row has the same number of columns as medal_counts[0]. If a row is shorter or malformed, you can get an IndexError. To be safer, use len(medal_counts[i]) or validate row lengths first.",
+        "Best practices: for clearer code, consider iterating over the medal values directly, e.g. for medal in medal_counts[i][1:]: or use enumerate(medal_counts[i][1:], start=1) if you still need the index. Also use a named variable like row = medal_counts[i] before the loop to make the code easier to read."
+      ],
+      "indentLevel": 1,
+      "blank": true
+    },
+    "18": {
+      "content": "        #Step 3.2.1: Append medal counts to the content of row i",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "19": {
+      "content": "        line += \"{:>3d}\".format(medal_counts[i][j])",
+      "commentList": [
+        "You append the current medal count to the row string `line` so the printed row is built field by field; the `+=` operator concatenates the formatted number onto the existing text.",
+        "You use the format specifier \"{:>3d}\" to format the value: '>' means right-align, '3' sets a field width of 3 characters, and 'd' means a decimal integer. The `.format(medal_counts[i][j])` call supplies the specific cell value from the matrix.",
+        "Watch out for type errors: if `medal_counts[i][j]` is not an int (for example the country name or a string), the 'd' specifier will raise a TypeError. This is why the inner loop starts at 1 (to skip the country name in column 0).",
+        "Also be aware that a number wider than 3 digits will not be truncated \u2014 it will expand the field and push alignment \u2014 and negative numbers include the minus sign inside the width, which may affect spacing.",
+        "Best practice: make sure your medal values are integers (or call `int()` on them) before formatting, or use a more forgiving specifier like \"{:>3}\". Consider using an f-string (for example `f\"{medal_counts[i][j]:>3d}\"`) and store column widths in a variable so you can adjust formatting easily."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "20": {
+      "content": "        #Step 3.2.2: Update the row total for row i ",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "21": {
+      "content": "        row_total += medal_counts[i][j]",
+      "commentList": [
+        "Purpose: this line adds the current medal count for column j to the running total for the current row so you build the Total column for that country.",
+        "Syntax and semantics: 'row_total += medal_counts[i][j]' is shorthand for 'row_total = row_total + medal_counts[i][j]'. medal_counts[i][j] uses the i-th row and j-th column to get a single number, and += updates row_total in place.",
+        "Potential errors and misconceptions: you must initialize row_total = 0 before this loop or you'll get a NameError. If medal_counts contains non-numeric values in the counted columns you'll get a TypeError when trying to add. If rows are not all the same length the indexing medal_counts[i][j] could raise an IndexError. Also note the loop starts at j=1 to skip the country name\u2014if you change that you might accidentally add the string name and cause an error.",
+        "Best practices: for clarity and fewer errors you can compute the row total once with sum(medal_counts[i][1:]) instead of accumulating inside a loop, or iterate directly 'for count in medal_counts[i][1:]: row_total += count'. Use descriptive names (e.g., medals_row, total_medals) and validate your data types/row lengths before summing.",
+        "Formatting note: later the code uses an integer format specifier ('{:>3d}'), so make sure row_total stays an int; otherwise the final print will raise a formatting TypeError."
+      ],
+      "indentLevel": 2,
+      "blank": true
+    },
+    "22": {
+      "content": "    #Step 3.3: Add the row total to the content of the output table for row i",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "23": {
+      "content": "    line += \"{:>3d}\".format(row_total)",
+      "commentList": [
+        "Purpose: You append the computed row_total to the end of the text line for the current country so that when you print line it shows Name, the three medal counts, and the Total in one row.",
+        "Syntax and semantics: line is a string and += concatenates another string to it. \"{:>3d}\" is a format specifier that produces a decimal integer ('d') right-aligned in a field of width 3 ('>3'). .format(row_total) converts row_total into that formatted string and returns it for concatenation.",
+        "Potential errors and misconceptions: if row_total is not an integer (for example a float or a non-numeric string) the '{:>3d}'.format(...) will raise a TypeError. Also beware that the header used width 4 for the total column, while you use width 3 here, so columns may not align as you expect. If row_total is larger than 3 digits it will overflow the field width and shift the layout.",
+        "Best practices: make sure row_total is an int (use int(row_total) if needed), use matching column widths for header and rows (e.g. use >4 for both header and total), and consider using a named width constant or f-strings (for example f\"{row_total:>4d}\") so your formatting stays consistent and easy to change."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "24": {
+      "content": "    #Step 3.4: Print the content of the output table for row i",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "25": {
+      "content": "    print(line)",
+      "commentList": [
+        "Purpose: You call print(line) to send the fully formatted row (country name, Gold/Silver/Bronze counts and the row total) to the console so the user sees one line of the output table.",
+        "Syntax and semantics: print(...) is a Python 3 function call that takes the variable line (a string you built earlier) and writes it to standard output; by default it appends a newline so each row appears on its own line.",
+        "Potential errors / misconceptions: If line were not defined (e.g., a bug earlier in the loop) you would get a NameError. Also remember that print returns None \u2014 it displays text but does not produce a value you can use in expressions.",
+        "Python version note: In Python 3 you must use parentheses as shown. In older Python 2 code print could be used without parentheses, which is different behavior you should avoid relying on.",
+        "Best practices: You already format the line before printing, which is good. If you need no trailing newline use print(line, end='') or, for many lines, consider collecting lines and printing once with '\\n'.join(lines) to reduce repeated I/O.",
+        "Formatting reminder: Because you used .format to align fields, printing the prepared line preserves the column alignment; don\u2019t reformat when printing so the columns stay consistent."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "a7b7f0c3-3164-4c35-a5f8-cfc7df596d56",
+      "line": {
+        "number": 0,
+        "content": "for i in range(len(medal_counts[0])):",
+        "commentList": [
+          "You might pick this because you see a 2D structure and assume the outer loop should use the length of an inner row. If you use this line, the loop runs for the number of columns (4) instead of the number of country-rows (7). As a result, the program will only process the first four country rows and skip the rest. The rest of the code still accesses medal_counts[i][...], so no immediate indexing error will appear for the smaller i range, but your output will omit countries. This distractor targets the common mix-up between row-count and column-count in a matrix. The mistake is that you are iterating over the wrong dimension: you are controlling how many rows to print by the number of columns, which leads to incomplete output rather than a crash."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this because you see a 2D structure and assume the outer loop should use the length of an inner row. If you use this line, the loop runs for the number of columns (4) instead of the number of country-rows (7). As a result, the program will only process the first four country rows and skip the rest. The rest of the code still accesses medal_counts[i][...], so no immediate indexing error will appear for the smaller i range, but your output will omit countries. This distractor targets the common mix-up between row-count and column-count in a matrix. The mistake is that you are iterating over the wrong dimension: you are controlling how many rows to print by the number of columns, which leads to incomplete output rather than a crash."
+      ]
+    },
+    {
+      "id": "b0b92259-3af5-4976-87c4-08d6ac11bdcc",
+      "line": {
+        "number": 0,
+        "content": "for row in medal_counts:",
+        "commentList": [
+          "You might choose this because it is a Pythonic way to loop over a list of rows and seems simpler. However, the rest of the code expects an index variable named i and uses expressions like medal_counts[i][0]. If you change the loop header to 'for row in medal_counts:' you introduce a different loop variable (row) but you do not update the later code. This mismatch causes a NameError (because i is not defined) or other errors if you tried to use the wrong variable. The core misconception is thinking direct element iteration can be dropped into code that uses numeric indices without changing the inner code. The program will fail unless you also rewrite the body to use row instead of indexing."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might choose this because it is a Pythonic way to loop over a list of rows and seems simpler. However, the rest of the code expects an index variable named i and uses expressions like medal_counts[i][0]. If you change the loop header to 'for row in medal_counts:' you introduce a different loop variable (row) but you do not update the later code. This mismatch causes a NameError (because i is not defined) or other errors if you tried to use the wrong variable. The core misconception is thinking direct element iteration can be dropped into code that uses numeric indices without changing the inner code. The program will fail unless you also rewrite the body to use row instead of indexing."
+      ]
+    },
+    {
+      "id": "ff49013d-0202-414c-bb0d-36e5297aaad3",
+      "line": {
+        "number": 0,
+        "content": "for i in range(1, len(medal_counts)+1):",
+        "commentList": [
+          "You might be tempted to start at 1 because some math or non-programming contexts use 1-based counting. If you use this line, you skip the first country (index 0) and then when i reaches len(medal_counts) you attempt to access medal_counts[len(medal_counts)], which is out of bounds. That causes an IndexError and the program will crash. This distractor plays on the frequent off-by-one mistake: confusing inclusive/exclusive bounds and 0-based indexing in code. The problem is that you are shifting the index range incorrectly so the loop both omits data and eventually accesses an invalid index."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might be tempted to start at 1 because some math or non-programming contexts use 1-based counting. If you use this line, you skip the first country (index 0) and then when i reaches len(medal_counts) you attempt to access medal_counts[len(medal_counts)], which is out of bounds. That causes an IndexError and the program will crash. This distractor plays on the frequent off-by-one mistake: confusing inclusive/exclusive bounds and 0-based indexing in code. The problem is that you are shifting the index range incorrectly so the loop both omits data and eventually accesses an invalid index."
+      ]
+    },
+    {
+      "id": "f5ed65e8-6e31-4035-9f50-7a144206cdf7",
+      "line": {
+        "number": 0,
+        "content": "row_total = medal_counts[i][1]",
+        "commentList": [
+          "You might pick this because you think the running total should start with the first medal count so the loop only adds the remaining medal columns. That seems to save one addition and feels efficient. However, given the loop iterates from the first medal column onward, you will end up adding that same first medal count again inside the loop. This produces row totals that are too large (the first medal is counted twice). The program will still run and print numbers, but the totals will be wrong. The core issue is that this line seeds the accumulator with a data value from the row instead of beginning the accumulator in a neutral numeric state that lets the loop sum all medal columns exactly once."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might pick this because you think the running total should start with the first medal count so the loop only adds the remaining medal columns. That seems to save one addition and feels efficient. However, given the loop iterates from the first medal column onward, you will end up adding that same first medal count again inside the loop. This produces row totals that are too large (the first medal is counted twice). The program will still run and print numbers, but the totals will be wrong. The core issue is that this line seeds the accumulator with a data value from the row instead of beginning the accumulator in a neutral numeric state that lets the loop sum all medal columns exactly once."
+      ]
+    },
+    {
+      "id": "b67453ae-dc6f-4685-b57c-7c37698dd5d6",
+      "line": {
+        "number": 0,
+        "content": "row_total = None",
+        "commentList": [
+          "You might choose None because it signals 'no value yet' and you expect to start adding numbers to it later. In reality, trying to add integers to None will immediately cause a runtime TypeError when the code attempts row_total += medal_counts[i][j]. The interpreter will complain that you can\u2019t use += between NoneType and int, so the program crashes before producing the medal table. Also, even if additions somehow worked, the final formatting expects a numeric value, so printing would fail. The mistake here is using a non-numeric sentinel where a numeric accumulator is required."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might choose None because it signals 'no value yet' and you expect to start adding numbers to it later. In reality, trying to add integers to None will immediately cause a runtime TypeError when the code attempts row_total += medal_counts[i][j]. The interpreter will complain that you can\u2019t use += between NoneType and int, so the program crashes before producing the medal table. Also, even if additions somehow worked, the final formatting expects a numeric value, so printing would fail. The mistake here is using a non-numeric sentinel where a numeric accumulator is required."
+      ]
+    },
+    {
+      "id": "019b6156-d456-4fa3-a4a9-69784b1a2091",
+      "line": {
+        "number": 0,
+        "content": "row_total = sum(medal_counts[i])",
+        "commentList": [
+          "You might think using sum over the row is a neat shortcut to get the total immediately. But the row begins with a country name (a string), and calling sum on a list that contains a string together with integers will raise a TypeError right away. The program will crash when executing this line rather than during the loop, because Python cannot add a string and an integer. While the idea of using sum is reasonable for numeric-only lists, this distractor incorrectly applies it to a mixed-type row, so it fails at runtime. The problem is initializing the total by summing a list that includes a non-numeric element instead of ensuring you only sum the numeric medal entries or set up a proper numeric accumulator first."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might think using sum over the row is a neat shortcut to get the total immediately. But the row begins with a country name (a string), and calling sum on a list that contains a string together with integers will raise a TypeError right away. The program will crash when executing this line rather than during the loop, because Python cannot add a string and an integer. While the idea of using sum is reasonable for numeric-only lists, this distractor incorrectly applies it to a mixed-type row, so it fails at runtime. The problem is initializing the total by summing a list that includes a non-numeric element instead of ensuring you only sum the numeric medal entries or set up a proper numeric accumulator first."
+      ]
+    },
+    {
+      "id": "fbba5e29-4a10-414b-9a25-506af841e6fb",
+      "line": {
+        "number": 0,
+        "content": "for j in range(len(medal_counts[0])):",
+        "commentList": [
+          "You might pick this because you're used to 0-based indexing and think 'start at 0' is natural. However, this makes j take the value 0 for each row, which refers to the country name (a string). Later in the loop the code treats medal_counts[i][j] as a number (it formats it with {:>3d} and adds it to row_total). When j is 0 the code will try to format or add a string where a number is expected, causing a TypeError and stopping the program. In short, this distractor includes the name column in the numeric processing. That is why it is incorrect: it fails when the loop encounters the string value instead of skipping the name column."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might pick this because you're used to 0-based indexing and think 'start at 0' is natural. However, this makes j take the value 0 for each row, which refers to the country name (a string). Later in the loop the code treats medal_counts[i][j] as a number (it formats it with {:>3d} and adds it to row_total). When j is 0 the code will try to format or add a string where a number is expected, causing a TypeError and stopping the program. In short, this distractor includes the name column in the numeric processing. That is why it is incorrect: it fails when the loop encounters the string value instead of skipping the name column."
+      ]
+    },
+    {
+      "id": "2407fd66-9ac3-4564-aff4-4add4d02acfe",
+      "line": {
+        "number": 0,
+        "content": "for j in range(1, len(medal_counts)):",
+        "commentList": [
+          "You might choose this because you see two lengths in the program and pick the wrong one. This line makes j run from 1 up to the number of rows (the number of countries), not the number of columns in a row. For small j values (1..3) it will access medal counts, but once j exceeds the actual number of columns in a row (which is 3 medal columns plus the name at index 0), you'll attempt to access medal_counts[i][j] where j is too large. That causes an IndexError at runtime and the program will crash. The error comes from using the matrix height instead of the row length, so this line is invalid for iterating over a row's medal columns."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might choose this because you see two lengths in the program and pick the wrong one. This line makes j run from 1 up to the number of rows (the number of countries), not the number of columns in a row. For small j values (1..3) it will access medal counts, but once j exceeds the actual number of columns in a row (which is 3 medal columns plus the name at index 0), you'll attempt to access medal_counts[i][j] where j is too large. That causes an IndexError at runtime and the program will crash. The error comes from using the matrix height instead of the row length, so this line is invalid for iterating over a row's medal columns."
+      ]
+    },
+    {
+      "id": "2539dbf9-f57c-45c8-9aa3-5cdf3e9a3484",
+      "line": {
+        "number": 0,
+        "content": "for j in range(3):",
+        "commentList": [
+          "You might pick this because there are three medal types and you assume range(3) matches them. But range(3) produces j = 0,1,2. That means you will include j=0 (the country name) in numeric processing, causing a TypeError when the code tries to format or add a string as if it were a number. Also, you will miss the bronze column at index 3 entirely, so totals and printed rows will be wrong if the code were adjusted to avoid the string issue. In short, this line both includes the name index incorrectly and omits one medal column, so it will either crash or produce incorrect output."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might pick this because there are three medal types and you assume range(3) matches them. But range(3) produces j = 0,1,2. That means you will include j=0 (the country name) in numeric processing, causing a TypeError when the code tries to format or add a string as if it were a number. Also, you will miss the bronze column at index 3 entirely, so totals and printed rows will be wrong if the code were adjusted to avoid the string issue. In short, this line both includes the name index incorrectly and omits one medal column, so it will either crash or produce incorrect output."
+      ]
+    },
+    {
+      "id": "be74b151-149f-46a1-b2f4-050dedf9e1c7",
+      "line": {
+        "number": 0,
+        "content": "row_total = medal_counts[i][j]",
+        "commentList": [
+          "You might pick this because it looks like you're updating row_total with the current medal count, and you may not realize the difference between setting a variable and adding to it. If you use this line, each loop step will overwrite row_total with the current column's value, so after the inner loop finishes row_total will simply equal the last medal column for that country (for example, the Bronze count) instead of the sum of Gold+Silver+Bronze. This produces wrong totals (but no runtime error). The distractor fails to preserve earlier contributions to the total \u2014 it replaces them \u2014 so it does not accumulate the medal counts as required."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might pick this because it looks like you're updating row_total with the current medal count, and you may not realize the difference between setting a variable and adding to it. If you use this line, each loop step will overwrite row_total with the current column's value, so after the inner loop finishes row_total will simply equal the last medal column for that country (for example, the Bronze count) instead of the sum of Gold+Silver+Bronze. This produces wrong totals (but no runtime error). The distractor fails to preserve earlier contributions to the total \u2014 it replaces them \u2014 so it does not accumulate the medal counts as required."
+      ]
+    },
+    {
+      "id": "e76ffffe-0248-4513-8155-89771b3722c4",
+      "line": {
+        "number": 0,
+        "content": "row_total += medal_counts[j][i]",
+        "commentList": [
+          "You might choose this because it only swaps the two indices and still looks like it reads a medal count. However, that swap changes which element you access. Here j acts as a row index and i as a column index. Since j ranges over medal columns (1..3) and i ranges over country rows (0..6), this can try to access elements that don't exist (for example, using i=4 as a column index on a row that has only 4 entries yields an IndexError). Even if sizes matched, you'd be summing the wrong entries (transposed values) so the totals would be incorrect or the program might crash. The distractor misaddresses which axis is the country and which is the medal column."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might choose this because it only swaps the two indices and still looks like it reads a medal count. However, that swap changes which element you access. Here j acts as a row index and i as a column index. Since j ranges over medal columns (1..3) and i ranges over country rows (0..6), this can try to access elements that don't exist (for example, using i=4 as a column index on a row that has only 4 entries yields an IndexError). Even if sizes matched, you'd be summing the wrong entries (transposed values) so the totals would be incorrect or the program might crash. The distractor misaddresses which axis is the country and which is the medal column."
+      ]
+    },
+    {
+      "id": "8ba4c0fa-58ae-4fd2-b69d-4edb5c3dd85f",
+      "line": {
+        "number": 0,
+        "content": "row_total += 1",
+        "commentList": [
+          "You might think this simplifies counting: add 1 for each medal column. If you use this line, you always add one per medal column visited, so each country's total will become the number of medal columns iterated (three), regardless of actual medal numbers. That yields identical totals for all countries (typically 3) and ignores the actual counts in the matrix. This does not cause a runtime error, but it produces wildly incorrect totals because it treats each column as a single medal rather than summing the numeric medal counts."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might think this simplifies counting: add 1 for each medal column. If you use this line, you always add one per medal column visited, so each country's total will become the number of medal columns iterated (three), regardless of actual medal numbers. That yields identical totals for all countries (typically 3) and ignores the actual counts in the matrix. This does not cause a runtime error, but it produces wildly incorrect totals because it treats each column as a single medal rather than summing the numeric medal counts."
+      ]
+    }
+  ],
+  "programInput": "",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

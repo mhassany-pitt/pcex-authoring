@@ -1,0 +1,2597 @@
+{
+  "summary": {
+    "total_sources": 123,
+    "total_needed": 152,
+    "total_filled_priority1": 100,
+    "total_filled_priority2": 0,
+    "total_filled": 100,
+    "total_unfilled": 52,
+    "sources_fully_at_parity": 76,
+    "sources_with_deficit": 47
+  },
+  "sources": [
+    {
+      "source_id": "664e23fa91363872f0ba32e6",
+      "name": "Pythagorean Theorem (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e23fc91363872f0ba32e8",
+      "name": "Pythagorean Theorem (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 7
+    },
+    {
+      "source_id": "664e23ff91363872f0ba32ee",
+      "name": "Seconds to Minutes Conversion",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "minutes = seconds % 60",
+          "norm": "minutes = seconds % 60",
+          "description": "You might choose this because % is commonly used with time problems and you may think it produces the main amount (minutes) from seconds. In reality, % computes the remainder after division. If you use this line, minutes will hold the leftover seconds less than 60 (for example 20 for 500 seconds), not the count of whole minutes. Since the program also uses % on the next line for remaining_seconds, you would end up giving the same small value for both minutes and remaining seconds, producing a clearly incorrect description like \"20 minutes and 20 seconds\". The program won't crash, but the logic will be wrong because you used the operation that gives the remainder instead of the operation that gives whole units.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "minutes = seconds * 60",
+          "norm": "minutes = seconds * 60",
+          "description": "You might pick this because multiplication is often used in unit conversions, and you could mistakenly reverse the direction of the conversion. Using this line will multiply the input seconds by 60, producing a very large number (for example 30000 for 500 seconds) \u2014 which is nonsense for a \"minutes\" value. This makes the output meaningless and obviously incorrect, though it won't raise an error. The mistake comes from converting in the wrong direction: instead of reducing seconds to get the count of minutes, you're increasing the value, so you end up far from the intended result.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 10
+    },
+    {
+      "source_id": "664e240191363872f0ba32f0",
+      "name": "Converting Milliseconds to Hours-Minutes- and Seconds",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "hours = total_secs // 60",
+          "norm": "hours = total_secs // 60",
+          "description": "You might choose this because 60 is the familiar divisor for converting seconds to minutes, and it's easy to mistakenly apply it when converting to hours. If you use this line, hours will actually contain the total number of minutes, not hours. The program will still run, but the printed \"hours\" value will be far too large (it will be minutes, not hours). The mins and secs calculations that follow will produce values based on the original seconds, so your output will show inconsistent and incorrect results: the field labeled hours will represent minutes, and the minutes field will be the remainder after dividing those minutes, leading to confusing duplicated or nonsensical numbers. The mistake is using the wrong divisor\u2014this line computes a different unit than you intend.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e248491363872f0ba3318",
+      "name": "Determining the Maximum Rating for Each Soda in The Survey",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 6,
+      "server_distractor_count": 3,
+      "needed": 3,
+      "p1_taken": [
+        {
+          "code": "if ratings_data[i][j] < soda_max[i] :",
+          "norm": "if ratings_data[i][j] < soda_max[i] :",
+          "description": "You might pick this because you confuse the direction of comparison when looking for the largest value. If you use '<' here, you're asking whether the current rating is less than the stored value. Because soda_max was initialized to 0 and all ratings are between 1 and 5, that test will never be true, so soda_max entries will never be updated and will remain 0. The program will therefore report incorrect maxima (zeros) for every soda. This is wrong because you should be updating the stored value when you find a rating that is larger than the current stored value; the distractor flips that logic and prevents any updates.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "soda_max[i] = ratings_data[j][i]",
+          "norm": "soda_max[i] = ratings_data[j][i]",
+          "description": "You might choose this if you swap the row and column indices by mistake. This line tries to read ratings_data using j as the row and i as the column. Because j goes from 0 to the number of respondents (0..9) while there are only 4 soda rows (0..3), your program will attempt to access rows that don't exist and will raise an IndexError once j >= 4. Even before a crash, the values you would get (if sizes matched) would be ratings for the wrong combination of person and soda. The core mistake is reversing which index refers to sodas and which refers to respondents; you must keep the first index as the soda (row) and the second as the respondent (column).",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "soda_max = [None] * num_sodas",
+          "norm": "soda_max = [None] * num_sodas",
+          "description": "You might use None to mark uninitialized values, but later the program compares ratings (integers) to the entries in soda_max using the > operator. Comparing an int to None raises a TypeError in Python, so the program will crash the first time it tries the comparison. The issue is that None is not a numeric value and cannot participate in numeric comparisons. This line is tempting because it signals 'no value yet', but it leaves the list elements in a state that prevents the numeric comparisons and updates the rest of the code expects.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 3,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e248d91363872f0ba331a",
+      "name": "Determining the Average Rating for Each Soda in The Survey",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "soda_sum = [0] * num_respondents",
+          "norm": "soda_sum = [0] * num_respondents",
+          "description": "You might choose this because the variable name num_respondents looks relevant and you think a list sized by respondents will work. What this line does is create a list with one element for each respondent (10 elements), not one element for each soda flavor (4 elements). The loop that updates sums still runs once per soda, so the first four entries get correct totals and the extra six entries are simply unused \u2014 so the program may still run without crashing but its setup is semantically wrong. Using this line means you have allocated the wrong number of slots for the thing you intend to sum; it hides the conceptual bug (you're summing by soda, not by respondent). Because the list size doesn't match the data structure you're summarizing, you may later get confusing results or maintain unused data. This line is therefore incorrect for initializing per-soda totals.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "for j in range(num_sodas):",
+          "norm": "for j in range(num_sodas):",
+          "description": "You might pick this because you confuse the two dimensions of the matrix and think both loops should use the same limit. If you use this line, the inner loop runs only num_sodas times (4) instead of once per respondent (10). That means you only add the first four responses for each soda rather than all ten, producing wrong (typically too-small) sums and averages. The program will usually run without crashing, which makes this subtle but incorrect: it silently computes wrong averages because it doesn't iterate through every respondent. This line fails to iterate over every person's rating for a given soda, so the aggregation is incomplete.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 13
+    },
+    {
+      "source_id": "664e24b791363872f0ba331c",
+      "name": "Determining the Average Ratings of each Respondent and Average Ratings Given to Each Soda in the Survey",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "respondent_sum[j] += ratings_data[j][i]",
+          "norm": "respondent_sum[j] += ratings_data[j][i]",
+          "description": "You might be tempted by this because it still uses addition and both indices appear in the expression, so it seems plausible. However, with this line the code tries to read ratings_data[j] where j ranges over all respondents (0..9). Since ratings_data only has 4 rows (one per soda), accessing ratings_data[4] or higher causes a runtime error (IndexError: list index out of range) when j becomes 4. That means the program will crash before producing any results. The root problem is the swapped indices: this line attempts to index the matrix in the wrong order, which not only misinterprets the data layout but also leads to an invalid row access.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "respondent_sum = 0",
+          "norm": "respondent_sum = 0",
+          "description": "You might choose this if you think you only need one running total and that you can somehow index into it later. If you set respondent_sum to the scalar 0, the code later tries to do respondent_sum[j] += ratings_data[i][j], which attempts to index into an integer. That will raise a TypeError (for example, \"'int' object is not subscriptable\") as soon as the code reaches that line. This error happens because a scalar cannot hold separate sums for each respondent. The mistake is initializing a single number instead of separate accumulator slots for each respondent, so the program can't store per-respondent totals.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 7
+    },
+    {
+      "source_id": "664e24ec91363872f0ba332c",
+      "name": "Vending Machine With Dollars and Quarters",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "quarters = change_due // pennies_per_dollar",
+          "norm": "quarters = change_due // pennies_per_dollar",
+          "description": "You might pick this by accident if you copy the earlier dollars computation and forget to switch to the quarter constant. This uses the dollar-size constant instead of the quarter-size, so it computes how many whole dollars are in the remaining change. Because the program already removed all whole dollars, the remaining change is less than a dollar, so this will usually give zero quarters. If you use this line, the program will almost always report 0 quarters even when quarters are needed, producing blatantly wrong change. The problem is a wrong divisor (wrong coin unit), so the operation is applied to the incorrect scale and yields incorrect coin counts.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 8
+    },
+    {
+      "source_id": "664e24ee91363872f0ba332e",
+      "name": "Vending Machine With Quarters-Dimes- and Nickels",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "dimes = change_due // pennies_per_nickel",
+          "norm": "dimes = change_due // pennies_per_nickel",
+          "description": "You might choose this because pennies_per_nickel and pennies_per_dime are both small numbers and it's easy to grab the wrong variable name. If you use the nickel value (5) in the division, you'll compute how many 5-cent pieces fit into the remaining change and store that in dimes. This will typically double the reported number of dimes (for example, 30 cents would yield 6 instead of 3) and make the output nonsensical. Additionally, since the next line still updates change_due using the dime modulus, your computed dimes won't match what the program actually removes from the change, leaving an inconsistent and incorrect result. This distractor is plausible due to a naming slip, but it confuses two different coin denominations.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 8
+    },
+    {
+      "source_id": "664e257991363872f0ba335c",
+      "name": "Updating Two-Dimensional List (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "matrix[2] = [5, 5, 5]",
+          "norm": "matrix[2] = [5, 5, 5]",
+          "description": "Step-by-step: you might supply only three fives because you miscount the number of columns or think one fewer element is fine. This line is syntactically valid and will run, but it replaces the third row with a list of length 3, making the matrix 'ragged' (rows of different lengths). Using this line will not raise an error immediately, and printing will show the last row with three elements instead of the expected four. Later code that assumes every row has four columns could behave incorrectly or raise an IndexError when it tries to access a missing element. You might choose this because it partially matches the goal of putting 5s in the row, but it fails to preserve the correct row length.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "matrix[0][0] = 20",
+          "norm": "matrix[0][0] = 20",
+          "description": "You might choose this because you miscount which row is \"middle\" or you assume row numbers start at 1. This line will successfully assign 20 to the top-left element of the matrix, and the program will run without error. The unintended behavior is that the wrong cell is changed: the element in the first row is updated rather than the element in the middle row. The structure stays valid, but the matrix will show the 20 in the wrong place when printed. This distractor is incorrect because it targets the wrong row index.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 10
+    },
+    {
+      "source_id": "664e257c91363872f0ba335e",
+      "name": "Updating Two-Dimensional List (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 6,
+      "server_distractor_count": 3,
+      "needed": 3,
+      "p1_taken": [
+        {
+          "code": "matrix[1] = 1",
+          "norm": "matrix[1] = 1",
+          "description": "If you write matrix[1] = 1 you may be assuming that giving one value for a row will automatically fill all positions in that row with that value. Step by step, this line replaces the entire second entry of the outer list with the integer 1, so the matrix becomes something like [ [1,2,3], 1, [7,8,9] ]. You would still be able to print the outer list, but the middle row is no longer a list of three items \u2014 it's a single integer. That breaks the intended matrix structure and any later code that expects to index into the middle row (for example, matrix[1][0]) will fail. The core problem is that a scalar value is not a list of repeated elements; the distractor incorrectly uses a single integer where a sequence of three integers is required.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "matrix[1] = (1, 1, 1)",
+          "norm": "matrix[1] = (1, 1, 1)",
+          "description": "Using matrix[1] = (1, 1, 1) replaces the second row with a tuple instead of a list. You might pick this because tuples and lists look similar and both hold multiple values. After this assignment the matrix will contain a tuple in that row (for example [ [1,2,3], (1,1,1), [7,8,9] ]). While printing still works, the middle row is not a list of ones and is immutable, so later code that expects to modify that row or relies on list-specific behavior could fail. The mistake is treating a tuple as an equivalent replacement for a list when the requirement is specifically a list of ones.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "matrix[0][2] == 10",
+          "norm": "matrix[0][2] == 10",
+          "description": "You might choose this because in everyday math equals signs denote assignment, so you expect '==' to put 10 into the spot. In Python, however, '==' is a comparison operator: it checks whether the element equals 10 and returns True or False, but it does not change the matrix. If you use this line, the program will run without error, but the matrix will remain unchanged and the output will not reflect the intended update. This line is invalid for the task because it performs a test rather than modifying the data.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 3,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e257e91363872f0ba3360",
+      "name": "Updating Two-Dimensional List (Case 3)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 6,
+      "server_distractor_count": 3,
+      "needed": 3,
+      "p1_taken": [
+        {
+          "code": "matrix[1][0] = [1, 3, 5, 7]",
+          "norm": "matrix[1][0] = [1, 3, 5, 7]",
+          "description": "You might choose this because you see the nested indexing and assume it references the whole second row. In reality, matrix[1][0] selects only the first element of the second row. Assigning a list to that single element will put a list inside that cell (a nested list as an element). The program will still run, but the matrix will become irregular: one cell will itself be a list while the rest remain numbers. Later operations that expect numeric values in that position may behave strangely, and printing will show a list inside the matrix element. This distractor is tempting because it uses indexing and assignment syntax correctly, but it fails to update the entire row and instead replaces only one element with a list.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "matrix.append([1, 3, 5, 7])",
+          "norm": "matrix.append([1, 3, 5, 7])",
+          "description": "You might pick append because you want to add or change a row and you know append works with lists. If you run this line, it will add a new third row to the matrix rather than modifying any existing row. The matrix becomes 3x4 instead of staying 2x4. The rest of the program will still run (the next assignment to change an element of the first row will work), but the final printed matrix will include an extra row, which does not match the intended update. This distractor is plausible since append is a common list operation, but it adds rather than replaces, so it doesn't perform the desired in-place row update.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "matrix[1][1] = 8",
+          "norm": "matrix[1][1] = 8",
+          "description": "Step-by-step why you might pick this: you might think the first row is row 1, so you use index 1 to access what you believe is the first row. Why that seems plausible: the syntax looks correct for addressing a specific cell and is consistent with how you reason about rows and columns in everyday counting. What happens if you use this line: it will modify the second row's second element (which, after earlier updates, starts as 3) to 8. The program runs fine and prints a matrix, but the change will appear in the wrong row \u2014 the last row will be altered instead of the top row. How this differs from the intended operation: this line changes a cell in the other row, so it fails to perform the targeted update on the correct row and thus gives the wrong result for the task.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 3,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 10
+    },
+    {
+      "source_id": "664e25c591363872f0ba3374",
+      "name": "Printing Common Elements in Two Lists",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 7
+    },
+    {
+      "source_id": "664e25c791363872f0ba3376",
+      "name": "Printing the Total Number of Times Elements of One List Appear in Another List",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "if val1 in lst2:",
+          "norm": "if val1 in lst2:",
+          "description": "You might pick this because it still uses 'in' to see if an element belongs to the other list and seems logically related. But this condition checks whether the current element from the first list appears anywhere in the second list, and it is evaluated inside a loop that already iterates over the second list. That means the test will be true for the same first-list element repeatedly across the outer loop, causing the count to increase too many times. In effect you will overcount by multiplying the number of matches by the number of iterations of the outer loop. The line reflects a confusion about which list should be tested in which loop, so it does not implement the intended pairwise matching correctly.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 10
+    },
+    {
+      "source_id": "664e25cb91363872f0ba3378",
+      "name": "Creating a List that Contains the Numbers of Times Each Element of One List Appears in Another List",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "counts = [0] * len(lst1)",
+          "norm": "counts = [0] * len(lst1)",
+          "description": "You might choose this because you assume there should be one counter per entry in the first list. But the program is supposed to keep one counter for each element in the second list. Using a length based on the first list means the positions you increment (which are derived from the second list's indices) do not correspond correctly to the container's size or meaning. If lst2 is longer than lst1 you will get an IndexError when the code tries to increment a position that doesn't exist; even when lengths happen to match, the counters will not correspond conceptually to the second list's items, so the results are wrong. What you're missing is a container sized to correspond to the second list's elements, not the first list's.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 8
+    },
+    {
+      "source_id": "664e25d391363872f0ba337f",
+      "name": "Concatenating Characters of Two Strings (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 2,
+      "aug_total_distractors": 8
+    },
+    {
+      "source_id": "664e25d491363872f0ba3381",
+      "name": "Concatenating Characters of Two Strings (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "new_a = b[2:] + a[:2]",
+          "norm": "new_a = b[2:] + a[:2]",
+          "description": "You might choose this because you recognize the right pieces (a prefix and a remainder) but you reverse their order. If you run this line, new_a will contain the remainder of the second string followed by the first two characters of the first string. That reverses the intended reading order and yields a string where the prefix appears at the end of the segment instead of at the start. The result will look scrambled compared to the intended swap and will not match the required format, because the parts are concatenated in the wrong sequence.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e26ed91363872f0ba33ae",
+      "name": "Printing Digits of an Integer from Right to Left",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 4
+    },
+    {
+      "source_id": "664e26f191363872f0ba33b0",
+      "name": "The Digit Sum of an Integer",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "total = last_digit",
+          "norm": "total = last_digit",
+          "description": "You might choose this because it looks simple and directly stores the digit you just extracted. If you think each loop iteration only needs to remember the latest digit (or that older digits are implicitly remembered), you could pick this. Step-by-step: on each loop you replace the running value with the newest digit, so after processing 1,2,3,4 you'll end up with 4 (the last digit) instead of any combination of earlier digits. Using this line causes the program to discard earlier information rather than combine it with the current digit. Compared to a correct accumulation step, this line is missing the operation that preserves and adds the previous total; it only performs a direct overwrite, which leads to a wrong final result (the program will output the last processed digit rather than a sum).",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "while num < 0 :",
+          "norm": "while num < 0 :",
+          "description": "You might select this because you confuse the sign direction or think you should guard against negative values by checking '< 0'. Step-by-step what would happen with this line given the program's starting value: num is initially positive (1234), so the condition is false immediately and the loop body never runs. As a result, you never extract any digits and the total stays at its initial value (0). In short, the program produces the wrong answer because it skips the digit-summing entirely. The core mistake is that this condition looks for numbers less than zero instead of the condition that detects 'there are still digits left to process.' Unlike the intended loop guard, this check prevents any processing for a positive integer, so it is invalid for this task.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 10
+    },
+    {
+      "source_id": "664e270191363872f0ba33b2",
+      "name": "Reversing the Digits of an Integer",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "while num > 1 :",
+          "norm": "while num > 1 :",
+          "description": "You might choose this because you think the loop only needs to run while num is larger than 1 and the final digit (when num == 1) will somehow be accounted for later. What actually happens is that when num reduces to 1, the condition num > 1 is false and the loop stops before extracting that last digit. As a result you would miss the final digit in the reversed result \u2014 the program exits early and the computed reverse is incomplete. This line is invalid here because it fails to handle the final single\u2011digit case inside the main loop, so the algorithm does not process every digit of the original integer.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e273d91363872f0ba33c1",
+      "name": "Determining Whether One is a Teenager (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 2,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 13
+    },
+    {
+      "source_id": "664e274591363872f0ba33c3",
+      "name": "Determining Whether One is a Teenager (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e2a9091363872f0ba341a",
+      "name": "Counting the Number of Valid and Banned Product Codes (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "except IndexError :",
+          "norm": "except IndexError :",
+          "description": "You might choose this because you recognize IndexError is the thing to handle and think you can declare the handler first. If you put this line where the program expects the start of a protected block, the Python parser will raise a SyntaxError because an except must follow a try. In other words, you have placed the exception handler out of order so the interpreter has no try block to match it to. If you used this line, the program would not run at all \u2014 it would fail when Python parses the function, so you would never get to the logic that reads codes or counts banned/valid entries. This mistake is plausible because students sometimes focus on the exception type itself and forget that except is tied syntactically to a preceding try block; they may also be confused about the required ordering of try and except. The key issue is that this line does not start an error-protected section\u2014it declares a handler without a block to handle\u2014so it is syntactically invalid in that position.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 16
+    },
+    {
+      "source_id": "664e2aad91363872f0ba341c",
+      "name": "Counting the Number of Valid and Banned Product Codes (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "district = int(code[3:6])",
+          "norm": "district = int(code[3:6])",
+          "description": "You might pick this because you think the slice end index includes the character at position 6, so code[3:6] seems to grab four characters. This is an off-by-one mistake: the slice will actually take indices 3,4,5 (three characters). If those three characters are digits, int(...) will succeed and produce a three-digit district value, which will change the program's behavior (for example, districts that should be >=2000 will never be reached because a three-digit number is <1000). If the code is shorter than expected and the slice becomes empty, int('') will raise a ValueError and trigger the existing error message. Compared to the intended extraction, this line takes too few characters for the district, so your program will either silently use the wrong numeric value or raise a conversion error in some cases, causing incorrect counting of valid and banned codes.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "district = int(code[3])",
+          "norm": "district = int(code[3])",
+          "description": "You might pick this because you confuse indexing with slicing and think code[3] will return the four-digit substring starting at the 4th character. In reality, code[3] returns a single character. If that single character is a digit, int(...) will succeed but give you a one-digit district value, which will almost never meet a threshold like 2000 \u2014 so banned codes will not be detected correctly. If that character is not numeric, int(...) will raise a ValueError and the code will be treated as invalid. This line therefore either silently produces wrong numeric values or triggers conversion errors; it extracts far too little data compared to what the district requires.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e2c5391363872f0ba3442",
+      "name": "Printing A Sequence of Repeated Numbers (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e2c5591363872f0ba3444",
+      "name": "Printing A Sequence of Repeated Numbers (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 5
+    },
+    {
+      "source_id": "664e2c5791363872f0ba344a",
+      "name": "Calculating the Sum of the Values in the List",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "total = None",
+          "norm": "total = None",
+          "description": "You might pick this because you know None represents 'no value' in Python and think it works as a neutral starting point. Step-by-step, this line gives the accumulator a None value. When the loop runs and the code tries to do total += x, Python will raise a TypeError because you cannot add an integer to None. The program will crash at the first addition attempt instead of producing a sum. The underlying problem is that this line does not establish a numeric starting value that can be incremented; it only creates a placeholder of a different type. To use this approach safely you would need extra code to detect None on the first iteration and replace it with a number, but as written it prevents numeric accumulation and stops the program with an error.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e2c5c91363872f0ba344c",
+      "name": "Calculating the Average of the Values in the List",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 15
+    },
+    {
+      "source_id": "664e2c8891363872f0ba3464",
+      "name": "Printing A Right Triangle Star Pattern",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e2c8991363872f0ba3466",
+      "name": "Printing an Inverted Right Triangle Star Pattern",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 7
+    },
+    {
+      "source_id": "664e2d5591363872f0ba3479",
+      "name": "The Class for Representing a Point in the Euclidean Plane (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e2d5991363872f0ba347b",
+      "name": "The Class for Representing a Point in the Euclidean Plane (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "def distance_from_origin() :",
+          "norm": "def distance_from_origin() :",
+          "description": "You might pick this because you remember writing plain functions without parameters and assume a method can be the same. If you use this line, calling p2.distance_from_origin() will cause a TypeError because Python will implicitly pass the instance as the first argument but the method is defined to take zero parameters. That error occurs before any code inside the method runs, so you never get to the distance calculation. Another subtle issue is that without an explicit instance parameter you cannot access the object's attributes inside the method. In short, this definition is missing the instance parameter that lets the method receive and use p2's stored coordinates, so the program will fail when you try to call the method.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e2d5d91363872f0ba3481",
+      "name": "Updating an Element in the List (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2d5e91363872f0ba3483",
+      "name": "Updating an Element in the List (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2d5f91363872f0ba3485",
+      "name": "Updating an Element in the List (Case 3) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2d6691363872f0ba3491",
+      "name": "Rotating the List Values to the Left by One Position",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "for i in range(len(lst)-1, -1, -1):",
+          "norm": "for i in range(len(lst)-1, -1, -1):",
+          "description": "You might choose a reverse loop because you think copying elements from the back toward the front prevents overwriting values you still need. That is a common and reasonable intuition for some array-shift problems. But with the code that uses lst[i + 1] inside the loop, starting at the last index immediately tries to read lst[len(lst)], which does not exist, causing an IndexError right away. Also, iterating completely backwards like this does not match the intended copy pattern used elsewhere in the function, so even if it didn't crash, it wouldn't perform the correct left-shift behavior. In short, this line both creates an out-of-range access and implements the wrong direction of copying for the way the loop body is written.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "for i in range(len(lst)-2):",
+          "norm": "for i in range(len(lst)-2):",
+          "description": "You might pick this because you think you don't need to touch every pair of adjacent elements \u2014 maybe you think the last one will shift automatically or that len-2 is enough. If you run this line with the rest of the function unchanged, the loop stops too early and leaves one or more elements in their original positions. The final assignment that places the saved first value at the end still runs, so the last element becomes the original first value, but the element just before the last will not have been shifted properly. The result is a malformed list (some elements duplicated, some not moved) instead of a correct rotation. This line therefore performs too few iterations and yields an incorrect output rather than an error, which can make this bug harder to notice.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e2d6891363872f0ba3493",
+      "name": "Rotating the List Values to the Left by Two Position",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "lst[i] = lst[i - 2]",
+          "norm": "lst[i] = lst[i - 2]",
+          "description": "You might choose this because subtracting two seems like 'moving left' mathematically. However, in Python negative indices wrap to the end of the list, so when i is 0 you will copy from lst[-2] (the second-last element). That behavior pulls values from the end into the front and mixes up the list in an unexpected way. It also often means you're reading elements that are themselves modified during the loop, producing a scrambled result rather than a clean left rotation. This line is incorrect because it relies on negative indexing semantics you probably didn't intend, and it therefore copies the wrong source elements into the current positions.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "lst[len(lst)] = first",
+          "norm": "lst[len(lst)] = first",
+          "description": "You might pick this because it's intuitive to think 'length equals last position' and so len(lst) would seem like the place to put the saved value. Step-by-step, that means you try to assign to index equal to the list length. In Python that index is one past the last valid index, so the interpreter will raise an IndexError rather than placing the value. If you use this line, the program will crash when it reaches that assignment and won't return a rotated list. Compared to a correct placement, this line fails because it uses an index that does not exist in the list \u2014 it attempts to write beyond the end rather than into an existing slot. That off-by-one mistake is why this option is plausible but wrong.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e2d6f91363872f0ba3495",
+      "name": "Rotating the List Values to the Right by One Position",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "for i in range(len(lst)-1, 0):",
+          "norm": "for i in range(len(lst)-1, 0):",
+          "description": "You might think leaving out the step still iterates down because the start is larger than the stop. In reality, range(start, stop) iterates forward with a default step of +1, so if start is greater than stop the loop yields no values and its body never executes. Step by step: the code stores the last element into a variable, then the intended shifting loop is skipped entirely, and finally the code sets lst[0] = last. The result is a list where only the first element is replaced by the saved last value and the rest of the list stays the same \u2014 not the proper rotation. This line fails because it omits the negative step needed to make the loop go downward.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "for i in range(0, len(lst)-1):",
+          "norm": "for i in range(0, len(lst)-1):",
+          "description": "You might choose a forward loop because it feels natural to move left-to-right. But with the loop body using lst[i] = lst[i - 1], the first iteration tries to read lst[-1] (the last element) and write it to lst[0], and subsequent iterations then copy the already-changed values forward. Step by step example: after the loop many elements end up overwritten with the same value (often the last value), producing a wrong list (for example, many duplicates) instead of a proper rotation. The error arises because the iteration goes in the wrong direction for this assignment pattern; you overwrite values before you can shift the ones you need.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e2d7191363872f0ba3497",
+      "name": "Rotating the List Values to the Right by Two Position",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "for i in range(len(lst), 1, -1):",
+          "norm": "for i in range(len(lst), 1, -1):",
+          "description": "You might write this because you think the loop should start at the list length to include the last element, but in Python valid indices go from 0 to len(lst)-1. On the first iteration i will equal len(lst), and the assignment lst[i] = lst[i - 2] will raise an IndexError because lst[len(lst)] is out-of-range. This is a common off-by-one mistake where you confuse the count of items with the maximum index. The result is not a subtle logic bug but a runtime crash, so while the choice looks reasonable to someone who conflates length and last index, it makes the program fail immediately instead of performing any rotation.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "for i in range(len(lst)-1, 2, -1):",
+          "norm": "for i in range(len(lst)-1, 2, -1):",
+          "description": "You might choose this because you think you should stop the loop once you reach index 2 (maybe to avoid touching the first two slots), but that is too strict. This loop iterates from len(lst)-1 down to 3, leaving indices 2, 1, and 0 untouched by the shifting step. As a result, the element at index 2 will not be moved right by two positions, so the final list will not be a correct rotation \u2014 some middle elements remain in their original spots. This is a plausible mistake if you misunderstand which portion of the list needs to be moved, but it fails to shift all necessary elements and thus produces an incorrect final arrangement rather than a runtime error.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e2e3f91363872f0ba34d2",
+      "name": "Repeating Characters of a String (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "for char in s[::2]:",
+          "norm": "for char in s[::2]:",
+          "description": "Step-by-step: s[::2] uses slicing with a step of 2, so the loop visits every other character (positions 0, 2, 4, ...). You might select this because you see the ::2 and think it controls repetition or that skipping is harmless. In reality, this line will skip half the characters, so when you duplicate each visited item you only duplicate every second character and omit the others. For example, from 'abc' you would process 'a' and 'c' only, producing 'aacc' instead of the expected fully doubled string. Compared with the intended behavior of visiting every character, this distractor fails because it does not iterate through the entire sequence of characters and therefore produces incomplete, incorrect output.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e2e4191363872f0ba34d4",
+      "name": "Repeating Characters of a String (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "for i in range(0, len(s) + 1, 2):",
+          "norm": "for i in range(0, len(s) + 1, 2):",
+          "description": "You might add +1 because you think the range stop value is inclusive and you want to be sure to include the last character. However, in practice this can cause a runtime error for even-length strings: the loop will sometimes try to use an index equal to len(s), which is out of bounds, producing an IndexError when you then access s[i]. For example, with a string of length 8 the range would include index 8, but valid indices go up to 7. This choice demonstrates a misunderstanding of how the range stop value works. The result is not a logic error that just changes output; it's a potential crash for certain inputs, so the program becomes unreliable.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "new_s = s[i] * 2",
+          "norm": "new_s = s[i] * 2",
+          "description": "You might choose this because it looks like it makes the character repeat two times, and you may not notice the single = instead of a concatenation operator. Step-by-step: this line computes a doubled character from s[i], then uses = to store it in new_s. On the next loop iteration it replaces whatever was in new_s with the new doubled character. If you use this instead of the intended operation, your final string will only contain the doubled form of the last processed character \u2014 all earlier work is discarded. This is wrong for the program because you need to build up the new string across iterations, not replace it each time. The key issue is the use of simple assignment which overwrites the variable rather than adding to it; that is why this line is an invalid replacement.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e2e4591363872f0ba34da",
+      "name": "Determining the Sign of an Integer",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2e4691363872f0ba34dc",
+      "name": "Determining Whether an Integer is Even or Odd",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 6,
+      "server_distractor_count": 3,
+      "needed": 3,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 3,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2e4a91363872f0ba34e2",
+      "name": "Determining the Letter Grade Of a Student",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "elif score == 70 :",
+          "norm": "elif score == 70 :",
+          "description": "You might choose this because it explicitly matches the number 70 and seems precise. But that only makes the grade apply when the score is exactly 70. Scores like 71, 75 or 79 would not meet this condition and would fall to the next test, so many students who should get a C would instead get a lower grade. This line leaves almost the whole intended C range unchecked and so misclassifies many valid C scores.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e2e4c91363872f0ba34e4",
+      "name": "Converting the Letter Grade of a Student to It's Numeric Range",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "if grade == \"a\" :",
+          "norm": "if grade == \"a\" :",
+          "description": "You may choose this because you think the letter's case doesn't matter or you expect the language to ignore case automatically. Step-by-step: (1) You compare the grade to a lowercase 'a'. (2) If the user types an uppercase 'A' (as prompted), the condition will be false because the comparison is case-sensitive. (3) The program will skip the intended branch and run a later branch or the else clause, producing the wrong message. Why this is tempting: students often assume 'A' and 'a' are the same when matching text. How this affects the program: instead of recognizing an uppercase A and printing the A-range message, the program treats it as not matching and prints something else. What's missing or wrong: the check looks for a lowercase letter only, so it fails to account for the uppercase input the program asks for (or for case variations in general).",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e2eeb91363872f0ba34f2",
+      "name": "Printing Sequence of Numbers with a Gap Between Adjacent Values (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2eec91363872f0ba34f4",
+      "name": "Printing Sequence of Numbers with a Gap Between Adjacent Values (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2fa291363872f0ba3518",
+      "name": "Printing Consecutive Numbers Within a Specified Range (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2fa491363872f0ba351a",
+      "name": "Printing Consecutive Numbers Within a Specified Range (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2fe691363872f0ba3532",
+      "name": "Determining When at Least One of the Three Boolean Variables is True",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2fe791363872f0ba3534",
+      "name": "Determining When at Least One of the Three Boolean Variables is False",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e2fe991363872f0ba3536",
+      "name": "Determining When All Three Boolean Variables Are Equal",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e3c2a91363872f0ba354b",
+      "name": "The Class for Representing a Bank Account (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "def __init__(owner, account, initial) :",
+          "norm": "def __init__(owner, account, initial) :",
+          "description": "You might drop 'self' because you think Python will automatically give the method a reference to the instance, or because you confuse the constructor signature with a standalone function. In this program the method body refers to 'self' (for example, self.__acct_name = owner). If you use this distractor, the name 'self' is not defined inside the initializer and you'll get a NameError when __init__ executes. In other words, the method will not have the expected reference to the object and the assignments to the instance variables will fail. This is a plausible mistake because beginners sometimes forget that instance methods must explicitly list the instance parameter, but it breaks the program at runtime. Compared to a correct initializer signature, this line is missing the explicit instance parameter that the method body relies on, so the method cannot access or set the object's attributes as intended.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e3c3091363872f0ba354d",
+      "name": "The Class for Representing a Bank Account (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 6,
+      "server_distractor_count": 3,
+      "needed": 3,
+      "p1_taken": [
+        {
+          "code": "def toString(self) :",
+          "norm": "def toString(self) :",
+          "description": "You might be tempted by this because 'toString' is familiar from other languages and clearly describes the intended behavior. However, Python's printing and string-conversion mechanism looks for a specific special method name rather than a language-agnostic descriptive name. If you define toString(self), that method will never be called by print() or str(), so printing an account instance will still produce the default object representation instead of the nicely formatted line. In short, this creates a correctly defined instance method that simply isn't hooked into Python's printing system, so it yields wrong (but non-crashing) behavior.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "return str(self.__acct_number) + self.__acct_name.rjust(20) + self.__balance",
+          "norm": "return str(self.__acct_number) + self.__acct_name.rjust(20) + self.__balance",
+          "description": "Why you might pick this: you may prefer simple string concatenation and think converting the account number to a string is enough, forgetting to format the balance. Step-by-step what happens if you use this line: Python converts the account number to a string and right-justifies the name, then tries to add a float (the balance) to that concatenated string. Python does not implicitly concatenate strings and numbers, so this produces a TypeError at runtime when the program tries to execute the return statement. How this affects the program: the account description will fail and the program will crash instead of printing the intended formatted line. Contrast with the intended approach: this distractor mixes types without converting the numeric balance into a formatted string, so the concatenation is invalid. Proper formatting requires converting numbers to strings with the desired formatting before concatenation or using a formatting API that handles types consistently.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "return self.__acct_number, \"{:>20s}\".format(self.__acct_name), \"{:>10.2f}\".format(self.__balance)",
+          "norm": "return self.__acct_number, \"{:>20s}\".format(self.__acct_name), \"{:>10.2f}\".format(self.__balance)",
+          "description": "Why you might pick this: you may confuse how print works with how return works, thinking commas will join parts into one printable line. Step-by-step what happens if you use this line: the return statement produces a tuple of three elements (an int and two strings). When you later print the object, Python will show the tuple representation, including parentheses and commas, rather than a single neatly formatted line. How this affects the program: instead of a one-line account description, you get an output like (72354, '        Tina Murphy', '     25.59') which is not the intended human-readable single string. Contrast with the intended approach: this distractor returns multiple separate items instead of a single formatted string, so it does not produce the single-line descriptive string required by the class's string method.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 3,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e3c7891363872f0ba356a",
+      "name": "Reporting File Information (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e3c8791363872f0ba356c",
+      "name": "Reporting File Information (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e3c9f91363872f0ba3585",
+      "name": "Calculating the Winning Percentage of a Sports Team (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "while wins <= 0 or wins > total_games :",
+          "norm": "while wins <= 0 or wins > total_games :",
+          "description": "You might choose this because you think the lower bound should exclude zero (using <= instead of <). Step-by-step, this line treats 0 as invalid, so if the user enters 0 (which is a valid number of wins), the loop will ask again. That means you would force the user to re-enter even valid inputs of zero, possibly causing frustration or an infinite loop if the user insists the team won 0 games. The result is a validation that is too strict on the lower end. The error here is in how the lower bound is compared: a legitimate boundary value is being rejected rather than accepted.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e3ca191363872f0ba3587",
+      "name": "Calculating the Winning Percentage of a Sports Team (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 2,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e3ca391363872f0ba3589",
+      "name": "Calculating the Winning Percentage of a Sports Team (Case 3)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "while ties < 0 or ties > total_games :",
+          "norm": "while ties < 0 or ties > total_games :",
+          "description": "This line looks plausible because it ensures ties is between 0 and total_games, but it ignores how ties and wins interact. If you use this, you will accept cases where ties by itself is valid but ties + wins exceeds the total number of games. For example, with total_games = 12 and wins = 10, entering ties = 3 passes this check (3 is not < 0 and not > 12) even though 10 + 3 = 13 exceeds the tournament total. So the program would accept an impossible combination of wins and ties. Students often validate inputs separately and forget to enforce combined limits; that\u2019s why this distractor is tempting but incorrect.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e3ca791363872f0ba3590",
+      "name": "Calculating the Average of Input Integers",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "count = 1",
+          "norm": "count = 1",
+          "description": "You might think assigning count = 1 is sufficient because it marks that an input has been read. If you reset count to 1 on every loop iteration, however, count will never reflect the total number of inputs; it will always be 1 after the first iteration. That means the final average calculation will divide the total sum by 1, giving the cumulative sum rather than the true average. Also any code that relies on the actual number of inputs (for example to decide whether to report 'no integers were entered') will be fooled. This distractor uses assignment instead of accumulation, so it does not record the growing number of entries as the loop proceeds.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e3ca991363872f0ba3592",
+      "name": "Calculating the Average of the Input Integers that are an Even Number",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e3cac91363872f0ba3594",
+      "name": "Calculating the Average of Floating-Point Numbers",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "while num != 0.0 :",
+          "norm": "while num != 0.0 :",
+          "description": "You might choose this because you've seen examples where 0 is used to stop input, so you assume 0.0 should terminate entry. If you use this line, the loop will continue until the user types exactly 0.0. That means any zero the user wanted to include as data will instead stop input and won't be added to the sum or count. Also, negative numbers (which the problem suggests are used to end input) would be treated as normal inputs rather than stopping the loop. The effect is incorrect handling of zeros and a mismatch with the intended stopping rule. This distractor is plausible because 0 is a common sentinel in simple examples, but here it causes the program to accept unintended numbers and to reject legitimate zero inputs.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "num = int(text)",
+          "norm": "num = int(text)",
+          "description": "You might pick this because you assume the user will only enter whole numbers or because you think int() will quietly turn a decimal into a number. Step-by-step, if the user types something like \"5\" this line will produce 5 and the program continues; but if the user types \"3.5\" int(text) will raise a ValueError because int() cannot parse the string \"3.5\" directly. Even when it does work, converting to an integer removes any fractional part so your total and average will be wrong for non-integer inputs. Using this line causes crashes or loss of precision compared to properly handling floating-point input. In other words, this line replaces a conversion that should accept decimals with one that either fails on decimal text or silently truncates values, which breaks the program's intent to handle floating-point numbers.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e3cf791363872f0ba35ab",
+      "name": "Reporting the Total Hours Each Employee Worked (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "                except ValueError:",
+          "norm": "except ValueError:",
+          "description": "You might pick this because you recognize ValueError as the specific error raised when converting a bad string to float, so you think placing that handler here will catch conversion problems. Step by step: you write the except line expecting it to catch bad hour tokens, but Python requires the exception handler to follow an opening exception-handling block. Using this line by itself leads to a syntax error when the file is parsed, so the program won't run at all. Compared to the intended code structure, this line is missing the preceding construct that begins exception handling, so nothing is actually wrapped for the interpreter to monitor. In short: you selected a real error type but put the handler in the wrong place and broke the program's structure.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e3d1591363872f0ba35ad",
+      "name": "Reporting the Total Hours Each Employee Worked (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "eid = int(tokens[0])",
+          "norm": "eid = int(tokens[0])",
+          "description": "You might choose this because it looks simpler\u2014just convert the token and let Python raise an error if the token isn't an integer. It's tempting to think that the later except ValueError: will still handle that error. In reality, replacing the try with a plain assignment removes the try/except pairing required by the language: the except that follows expects a try block and will become invalid or orphaned, producing a syntax error. Even if you fix the syntax by leaving the except, direct conversion without a surrounding try means that a non-integer id will raise an unhandled ValueError at runtime and crash the program. So although the line itself is a valid statement, using it here discards the error-handling structure and leaves the program vulnerable to malformed id tokens.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e40da91363872f0ba3604",
+      "name": "Concatenating Strings and Numbers (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "y = 1989.0",
+          "norm": "y = 1989.0",
+          "description": "You might pick this because you think numeric literals require a decimal or you don't distinguish between integers and floats. If you use this line, the program will run, but the year becomes a floating\u2011point number. When converted to text, it becomes '1989.0', so the printed sentence will show an unwanted '.0' (e.g., '...1989.0.'). That changes the visible output and makes the sentence incorrect. Compared to a proper assignment that gives the year without a fractional part, this line introduces an extra decimal digit in the output and therefore is the wrong choice for producing the exact required text.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e40dc91363872f0ba3606",
+      "name": "Concatenating Strings and Numbers (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "z = 'x * 2'",
+          "norm": "z = 'x * 2'",
+          "description": "Step 1: If you write z = 'x * 2' you are assigning the characters x, space, *, space, 2 to z, not performing any maths. Step 2: When the program prints y + str(z) it concatenates two strings, so you get a textual echo like \"x * 2 = x * 2\" rather than a numeric result. Why you might pick this: you see the phrase in the required output and think it should be stored literally. Why this is wrong: you are storing a label instead of computing a value, so the program never computes a number and the output is just repeated text. This fails the intent of computing a numeric result and will not produce a numeric value for z in further calculations.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "z = x * '2'",
+          "norm": "z = x * '2'",
+          "description": "Step 1: Writing z = x * '2' mixes an integer (x) with a string ('2'). In Python that causes the string to be repeated x times rather than performing numeric multiplication. Step 2: With x equal to 2 you would get the string '22', so the printed output becomes something like \"x * 2 = 22\" which is clearly not the intended numeric result. Why you might pick this: you might think any appearance of a number should be quoted or you misunderstand automatic type conversion. Why this is wrong: it produces string repetition instead of a numeric product, leading to wrong output and making z a string rather than a number for further use.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e40dd91363872f0ba3608",
+      "name": "Concatenating Strings and Numbers (Case 3)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "z = x * y",
+          "norm": "z = x * y",
+          "description": "You might pick this line if you confuse the plus sign with the times sign or think 'combine' means to multiply. If you use this line, z will hold the product of x and y (10 * 20 = 200), so the program will print \"10 + 20 = 200\" \u2014 it runs without error but gives the wrong number. This distractor is wrong because it uses the multiplication operation instead of performing the numeric combination that the program needs; it changes the mathematical operation and so the printed result is incorrect.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e41f891363872f0ba3682",
+      "name": "Creating a Dictionary of Student-Scores Pairs (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "if std_lst[i] not in res_dict:",
+          "norm": "if std_lst[i] not in res_dict:",
+          "description": "You might pick this because you think it makes sense to check for absence before adding data. If you use this line, your code will enter the if-branch when the student is not yet a key and then try to append a score to res_dict[std_lst[i]]. Because that key doesn't exist yet, the program will raise a KeyError and crash on the first occurrence of any new student. Students commonly flip a condition without updating the code inside the branches \u2014 here the append belongs with the case where the key already exists, so simply negating the test is the wrong change. This distractor is invalid because it checks for the wrong condition and causes a runtime error instead of creating or updating the student's score list.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e421291363872f0ba3684",
+      "name": "Creating a Dictionary of Student-Scores Pairs (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "for std_name in new_dict.values() :",
+          "norm": "for std_name in new_dict.values() :",
+          "description": "You might pick this because you see the students' scores are stored as lists (the dictionary values) and you think iterating those directly is fine. If you use this line, std_name will actually be a list of scores for each student, not the student's name. Later the code uses new_dict[std_name], which tries to use that list as a dictionary key. Lists are unhashable, so Python raises a TypeError (unhashable type: 'list') and the program stops. Even if that error did not occur, you would be iterating score-lists instead of student names, so the inner logic would be wrong. This line is wrong because it binds the wrong thing to the loop variable (the value instead of the key).",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "for i in range(len(new_dict)) :",
+          "norm": "for i in range(len(new_dict)) :",
+          "description": "You might write this if you're used to looping over lists with numeric indices. But here i will be an integer 0..n-1, not a student name. The code later does new_dict[std_name] (where std_name would be i), so Python will look for an integer key in the dictionary. Because the dictionary keys are student names (strings), that lookup fails with a KeyError. In short, this line iterates integer indices instead of the dictionary's keys, which breaks the lookup and causes the program to crash or behave incorrectly.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e422e91363872f0ba369a",
+      "name": "Determining When a Customer Could Rent a Car (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e423091363872f0ba369c",
+      "name": "Determining When a Customer Could Rent a Car (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e423191363872f0ba369e",
+      "name": "Determining When a Customer Could Rent a Car (Case 3)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e423491363872f0ba36a5",
+      "name": "Counting the Occurrences of One String in Another (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "for i in range(len(s)-2):",
+          "norm": "for i in range(len(s)-2):",
+          "description": "You might choose this because you think the pattern has two characters so you must subtract 2 to avoid going out of bounds. If you use this line, the loop stops too early and you will fail to check some valid starting positions near the end of the string. That causes the function to undercount occurrences of \"hi\" \u2014 for example, a string of length 2 would produce no iterations at all, giving zero instead of one. The problem is that you reduced the iteration range too far; you are skipping checks that could match the two-character pattern. This distractor is plausible because it comes from a common attempt to avoid indexing mistakes, but it incorrectly prevents needed comparisons.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "for ch in s:",
+          "norm": "for ch in s:",
+          "description": "You might pick this because iterating over characters feels simpler and you may think you can compare each character to the pattern. However, if you replace the loop with this line while leaving the rest of the code unchanged, the variable used later (an index) will no longer exist and you'll get a runtime error. Even if you adjust the later code to use ch, comparing a single character to a two-character string like \"hi\" will never succeed. In short, this change either causes an error or makes the comparison logic invalid. It's tempting because it looks simpler, but it doesn't provide the positional information needed to extract two-character slices of the string.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e423691363872f0ba36a7",
+      "name": "Counting the Occurrences of One String in Another (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 6,
+      "server_distractor_count": 3,
+      "needed": 3,
+      "p1_taken": [
+        {
+          "code": "for i in range(len(s)-4):",
+          "norm": "for i in range(len(s)-4):",
+          "description": "You might choose this because you think subtracting the pattern length will prevent any out-of-range access. While this avoids runtime errors, it goes too far: it stops the loop one position too early. That means any match that starts at index len(s)-4 (the last valid start for a four-character pattern) will never be checked, so your function will undercount occurrences. For example, when the whole string is exactly the pattern length, this loop would perform zero iterations and miss a valid match. This distractor therefore produces incorrect counts rather than a crash.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "if s[i:i+3].lower() == \"hit\":",
+          "norm": "if s[i:i+3].lower() == \"hit\":",
+          "description": "You might pick this because it looks simpler: checking a three-character substring for 'hit' seems to match a pattern that looks like h-i-?-t. Step-by-step, this line takes characters at positions i, i+1, and i+2 and compares them to 'hit'. That means you only check three characters, so any true matches that need four characters (where the unknown letter is between 'i' and 't') will be missed. Conversely, this line will incorrectly count occurrences where the third character is 't' immediately after 'i' (a three-letter sequence 'hit'), which is not the intended four-character pattern. In short, you are using a too-short slice: the code will undercount the correct patterns and may count unintended 3-letter sequences instead. The key mistake here is treating the pattern as length 3 rather than ensuring you inspect the full four-character window that includes the wildcard position.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "if s[i:i+4].lower() == \"hi?t\":",
+          "norm": "if s[i:i+4].lower() == \"hi?t\":",
+          "description": "You might be tempted by this because it checks a four-character slice and looks like it includes a placeholder '?', which you expect to mean 'any letter'. Step-by-step, this line takes four characters and compares them to the exact string 'hi?t' (including the question mark). That means it will only match when the middle character is an actual '?' symbol in the input, not when the middle character is any letter. So you will miss all the intended matches where the middle is a letter like 'n' or 'l', and you'll only count those rare cases where the input literally contains a '?'. The mistake here is treating a plain string equality check as if it supported wildcard syntax; equality checks do not interpret '?' as 'any character'.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 3,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e423b91363872f0ba36ad",
+      "name": "The Class for Representing a TV (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "    def set_channel(self) :",
+          "norm": "def set_channel(self) :",
+          "description": "You might pick this because you imagine the method will fetch the new channel some other way and so you don't need to pass it in. If you keep this line but leave the rest of the method using the name new_channel, two things can happen: if you call tv1.set_channel(30) you'll immediately get a TypeError because you're passing an extra argument; if you instead call tv1.set_channel() the method body will try to use new_channel but that name doesn't exist, causing a NameError. Either way, the setter won't work and the channel won't be updated. The mistake is removing the parameter that the method needs to receive the value to set; without that parameter the method can't get the new channel value in a safe, predictable way.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "    def set_channel(new_channel, self) :",
+          "norm": "def set_channel(new_channel, self) :",
+          "description": "You might use this because you know both the instance and the new value must be parameters but you don't realize the instance must be first. If you define the method this way, Python will still bind the instance as the first argument when you call tv1.set_channel(30). That means inside the method 'new_channel' will actually refer to the TV object and 'self' will be the number 30. When the method tries to access self.__on or self.__channel it will fail with an AttributeError because an integer (30) doesn't have those attributes. The code will therefore crash when it tries to read or set attributes. The core issue is that the instance parameter must come first so that the method's internal variable names refer to the expected objects.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e424391363872f0ba36af",
+      "name": "The Class for Representing a TV (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "def set_volume(new_volume_level) :",
+          "norm": "def set_volume(new_volume_level) :",
+          "description": "You might choose this because it looks like a normal function header and you may forget that instance methods must accept the instance as the first parameter. If you use this line, Python will treat set_volume as a function that expects exactly one argument. When you call tv1.set_volume(4), Python will pass the tv1 object automatically as the first argument and 4 as the second, causing a TypeError about the wrong number of positional arguments. In other words, your method signature doesn't match how instance methods are called. This distractor is tempting if you think 'self' is optional or that Python supplies it behind the scenes, but it is invalid for an instance method and will produce a runtime error rather than allowing the volume-setting logic to run.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "def set_volume(self, new_volume_level=0) :",
+          "norm": "def set_volume(self, new_volume_level=0) :",
+          "description": "You might choose this because you're used to giving parameters default values so the method can be called without arguments. If you use this line, calling set_volume() with no argument will give new_volume_level the value 0. Since the valid volume range is 1..7, that default is invalid and will cause the method's range check (if present) to fail, resulting in no change. Even if you always call the method with a value, the default can hide design problems and suggests an allowed value that actually lies outside the valid range. This distractor is attractive if you think defaulting to 0 is a safe choice, but it introduces a mismatched implicit value and can lead to confusing behavior or silently ignored calls when the method is invoked without an explicit, valid volume argument.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e427291363872f0ba36c8",
+      "name": "Printing Consecutive Numbers Starting from Zero (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e427391363872f0ba36ca",
+      "name": "Printing Consecutive Numbers Starting from Zero (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e427691363872f0ba36d0",
+      "name": "Determining the Smallest of the Three Integers",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "elif num1 == num2 :",
+          "norm": "elif num1 == num2 :",
+          "description": "You may choose this because you think after failing the first test (num1 < num2) you should explicitly check whether num1 equals num2 before comparing the second and third numbers. If you replace the original line with \"elif num1 == num2 :\", the nested block will run only when the outer if is false and num1 == num2 is true (i.e., num1 >= num2 and equal to num2). That leaves out other valid situations, for example when num1 > num2. In those cases no branch will assign min_num, and the program will later fail because min_num was never set. Also, even when num1 == num2, this extra equality test is unnecessary: you do not need to distinguish equality from greater-than to decide whether to compare num2 and num3. The distractor adds an unneeded condition that breaks coverage of all possible inputs.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e427891363872f0ba36d2",
+      "name": "Determining the Largest of the Three Integers",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e429891363872f0ba36e0",
+      "name": "Finding the Smallest Divisor of a Positive Number",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e42a091363872f0ba36e2",
+      "name": "Finding the Largest Divisor of a Positive Number",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "divisor = 1",
+          "norm": "divisor = 1",
+          "description": "You might pick 1 because 1 is always a divisor and seems like a safe default. Step by step: this sets divisor to 1, then the while condition num % divisor != 0 evaluates to False immediately (every integer is divisible by 1), so the loop body never runs and the program prints 1. That makes the program always report 1, even when the number has larger proper divisors. This choice is plausible because 1 is a known divisor, but it breaks the algorithm\u2019s intent: by starting at the smallest possible divisor you never search for larger ones. The problem is that the line sets divisor too low for the search strategy used, so you won\u2019t find the largest divisor.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e42af91363872f0ba36ed",
+      "name": "Printing Table of Medal Counts with Row Totals",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "for i in range(1, len(medal_counts)+1):",
+          "norm": "for i in range(1, len(medal_counts)+1):",
+          "description": "You might be tempted to start at 1 because some math or non-programming contexts use 1-based counting. If you use this line, you skip the first country (index 0) and then when i reaches len(medal_counts) you attempt to access medal_counts[len(medal_counts)], which is out of bounds. That causes an IndexError and the program will crash. This distractor plays on the frequent off-by-one mistake: confusing inclusive/exclusive bounds and 0-based indexing in code. The problem is that you are shifting the index range incorrectly so the loop both omits data and eventually accesses an invalid index.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "row_total = medal_counts[i][1]",
+          "norm": "row_total = medal_counts[i][1]",
+          "description": "You might pick this because you think the running total should start with the first medal count so the loop only adds the remaining medal columns. That seems to save one addition and feels efficient. However, given the loop iterates from the first medal column onward, you will end up adding that same first medal count again inside the loop. This produces row totals that are too large (the first medal is counted twice). The program will still run and print numbers, but the totals will be wrong. The core issue is that this line seeds the accumulator with a data value from the row instead of beginning the accumulator in a neutral numeric state that lets the loop sum all medal columns exactly once.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e42dc91363872f0ba36ef",
+      "name": "Printing Table of Medal Winner Counts with Row and Column Totals",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "column_totals = [0] * len(medal_counts[0])",
+          "norm": "column_totals = [0] * len(medal_counts[0])",
+          "description": "Why you might pick this: you see len(medal_counts[0]) gives 4, so you think the row length is the number of columns and use it to size the totals array. Why that seems reasonable: it's a direct read from the data structure and avoids hard-coding a number. What happens if you use it: column_totals will have length 4 (one more than the number of medal types). The update loop only fills the first three positions, leaving the extra slot zero. When printing column totals you will get an extra zero printed (an extra column total) that doesn't correspond to any medal type. Why this is wrong (contrast): this choice treats the country name as if it were a numeric medal column; it therefore over-allocates and produces an extraneous total in the output.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "column_totals = [0] * ( len(medal_counts[0]) - 2 )",
+          "norm": "column_totals = [0] * ( len(medal_counts[0]) - 2 )",
+          "description": "Why you might pick this: you might try to adjust the row length because you think some elements are labels and you subtract to get the numeric columns, but you subtract too many. What happens if you use it: len(medal_counts[0]) is 4, so this expression yields 2. The code later updates three medal columns (indexes j-1 for j = 1..3). On the third update the program will try to write to column_totals[2], but column_totals only has indices 0 and 1, so you get an IndexError at runtime. Why this is wrong (contrast): this distractor under-allocates the totals array by subtracting the wrong amount, causing the program to crash when it tries to update all medal columns rather than producing incorrect printed totals.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e43e491363872f0ba3717",
+      "name": "Receiving Input Integers Until a Certain Condition is Met (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e43e591363872f0ba3719",
+      "name": "Receiving Input Integers Until a Certain Condition is Met (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e43e791363872f0ba371b",
+      "name": "Receiving Input Integers Until a Certain Condition is Met (Case 3)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e43e991363872f0ba371d",
+      "name": "Receiving Input Integers Until a Certain Condition is Met (Case 4)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e447191363872f0ba3732",
+      "name": "Warning the User about the Changes in the Temperature",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e447391363872f0ba3734",
+      "name": "Warning the User about the Changes in the Temperature and Humidity",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e448691363872f0ba3745",
+      "name": "Calculating Body Mass Index (BMI)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e448891363872f0ba3747",
+      "name": "Calculating and Rounding Up Body Mass Index (BMI) To the Nearest Integer",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e44c291363872f0ba3755",
+      "name": "Add Values to an Empty List (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e44c491363872f0ba3757",
+      "name": "Add Values to an Empty List (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e44cd91363872f0ba3762",
+      "name": "Finding Adjacent Duplicates in a Sequence of Numbers",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "while text != \"-1\":",
+          "norm": "while text != \"-1\":",
+          "description": "Checking the raw input string (text) against \"-1\" can seem to work at first because text holds what the user typed. However, this approach is fragile: it only stops when the user types exactly \"-1\" as characters. If the user types \"-1.0\", adds whitespace, or uses another numeric representation, text != \"-1\" will be true even though the numeric value becomes -1 after conversion. That means the loop may continue when you intended it to stop, or stop incorrectly if input formatting differs. You might choose this because you see text already available and assume comparing it is simpler, but comparing the string rather than the numeric value mixes data types and opens subtle bugs in how the sentinel is recognized.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "if num = previous :",
+          "norm": "if num = previous :",
+          "description": "You might pick this because in many everyday uses you type x = 5 to store a value, and you may think you can write the same symbol to check equality. Step-by-step, what this line does when you try to run it: Python does not allow the use of the single equals sign inside an if condition as a comparison, so the program will raise a syntax error and will not run. If you came from a language where assignment inside conditions is allowed (or where students often confuse '=' and '=='), you may assume this is valid \u2014 that is the misconception targeted. Using this line breaks the program immediately rather than checking whether the new number matches the previous one. Compared with a correct equality test, this distractor does not perform a boolean comparison at all; it attempts an assignment in a context where assignment is not permitted, so the core goal (detecting adjacent duplicates) is never reached.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e44cf91363872f0ba3764",
+      "name": "Finding Adjacent Consecutive Numbers in a Sequence of Integers",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e44d191363872f0ba3766",
+      "name": "Finding Adjacent Numbers in Ascending Order in a Sequence of Numbers",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "while num == 0 :",
+          "norm": "while num == 0 :",
+          "description": "You might choose this if you confuse the idea of a sentinel value with the loop's continuation condition and think the loop should run when the sentinel is seen. If you use this line, the loop will only run when the current number equals zero. That means if the first number is non-zero (the usual case), the loop body won't run at all and no adjacent comparisons will be made. Conversely, if the first input is zero, the loop runs unexpectedly. This reverses the intended logic: instead of continuing while inputs are regular values and stopping at the sentinel, it continues only at the sentinel value, producing no useful processing in typical cases.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "while num != '0' :",
+          "norm": "while num != '0' :",
+          "description": "You might pick this because you remember typing '0' as the end marker when prompted and compare against that exact token. However, in this program num is a float (a numeric value), so comparing it to the string '0' never matches. As a result, the condition stays true for every numeric input and the loop does not stop when the user types 0 \u2014 leading to an effectively infinite loop (until you forcibly terminate the program). This distractor shows a type-mismatch mistake: you're comparing a numeric variable to a string literal, which prevents the intended stop check from working.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e44d691363872f0ba376d",
+      "name": "Determining When a Student Fails a Course (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e44d891363872f0ba376f",
+      "name": "Determining When a Student Fails a Course (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e44d991363872f0ba3771",
+      "name": "Determining When a Student Fails a Course (Case 3)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e4bb091363872f0ba37df",
+      "name": "The Class for Representing a Loan (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 6,
+      "server_distractor_count": 3,
+      "needed": 3,
+      "p1_taken": [
+        {
+          "code": "def __init__(self, loan_amount, annual_interest_rate, number_of_years) :",
+          "norm": "def __init__(self, loan_amount, annual_interest_rate, number_of_years) :",
+          "description": "You might choose this because the order of parameters seems arbitrary or you prefer putting the loan amount first. However, when callers create a Loan1 object using positional arguments (as the test code does), the values you pass are assigned by position, not by parameter name. With this signature, the first value passed will be treated as the loan amount, the second as the interest rate, and the third as years \u2014 which is the wrong mapping for the way the class is used. That will make the stored fields hold swapped values, so monthly payment calculations will produce incorrect results (or look nonsensical). This line changes the expected positional ordering, leading to wrong assignments rather than a syntax error; the program will run but give incorrect outputs. The mistake is reordering parameters without ensuring callers supply matching positional arguments or using keyword arguments consistently.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "def __init__(self, annual_interest_rate=0.0, number_of_years=1, loan_amount=0.0) :",
+          "norm": "def __init__(self, annual_interest_rate=0.0, number_of_years=1, loan_amount=0.0) :",
+          "description": "You might think giving defaults makes the class easier to use if someone forgets to pass a value. But these defaults violate the requirement that instances be created by specifying the interest, years, and amount explicitly. Worse, using a default annual interest rate of 0.0 can cause the monthly-payment formula later to hit a division-by-zero situation or produce meaningless output, masking problems instead of surfacing them. Also, allowing defaults can hide bugs in code that accidentally constructs a loan without the intended values. This line changes the contract of object creation and introduces subtle runtime problems that are hard to detect, so it's not suitable even though it's syntactically valid.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "self.__annual_interest_rate = annual_interest_rate / 12",
+          "norm": "self.__annual_interest_rate = annual_interest_rate / 12",
+          "description": "You might pick this because you think it makes sense to store the monthly interest rate right away so later computations are simpler. The line you chose divides the incoming annual rate by 12 and stores that result. However, the class later divides the stored value by 12 again when calculating monthly payments. That means the stored value will be divided twice, producing an interest rate far too small and resulting in an incorrect monthly payment. The mistake is storing a transformed value when the rest of the class expects the original annual rate. Instead of fixing the later calculation, this change misaligns the representation and yields wrong numeric results (but it won't raise an immediate error).",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 3,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e4bfc91363872f0ba37e1",
+      "name": "The Class for Representing a Loan (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "def get_total_payment(self, monthly_payment) :",
+          "norm": "def get_total_payment(self, monthly_payment) :",
+          "description": "You might pick this if you believe the total payment should be calculated from a supplied monthly payment value. Step-by-step: with this signature, the method now expects an extra argument. But the rest of the program calls loan2.get_total_payment() with no arguments, so replacing the line will cause a TypeError at the call site (it will say a required positional argument is missing). Even if you changed the calls to pass a value, this design forces callers to recompute or supply the monthly payment rather than letting the object compute it from its own stored attributes; that makes the class less cohesive and allows inconsistent values (a caller could pass a monthly payment that doesn't match the loan's attributes). In short, this distractor improperly requires external input for a value that should be derived from the instance, and it will break existing calls that pass no extra parameter.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e4c1c91363872f0ba37f1",
+      "name": "Determining the Weather Condition (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e4c2091363872f0ba37f3",
+      "name": "Determining the Weather Condition (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e4c2191363872f0ba37f5",
+      "name": "Determining the Weather Condition (Case 3)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e4c2391363872f0ba37f7",
+      "name": "Determining the Weather Condition (Case 4)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e4c2791363872f0ba37ff",
+      "name": "Printing the Squares of Numbers Within a Specified Range (Case 1) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e4c2991363872f0ba3801",
+      "name": "Printing the Squares of Numbers Within a Specified Range (Case 2) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e4c2b91363872f0ba3803",
+      "name": "Printing the Squares of Numbers Within a Specified Range (Case 3) ",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 2,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e4c2e91363872f0ba380a",
+      "name": "Finding the Number of Days Above the Average Temperature",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e4c3d91363872f0ba380c",
+      "name": "Displaying the Days That are Above 32 Degrees Fahrenheit",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "days_above_32 = 0",
+          "norm": "days_above_32 = 0",
+          "description": "Step-by-step: you might pick this because many problems ask for a count and you may think initializing to 0 is the right start. It feels natural to begin counting from zero and then increase the value when a temperature exceeds 32. However, later in the program the code tries to call an append method on this variable. Integers do not have an append method, so when the program reaches that line you will get a runtime error (for example, something like \"'int' object has no attribute 'append'\"). Even if you tried to change the following code to increment this variable, you would lose the ability to keep the actual day labels (like \"Day 1\"). In short, this choice mixes up counting and collecting: it causes a crash when the program expects a container that can store multiple named items.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 12
+    },
+    {
+      "source_id": "664e4dc191363872f0ba384d",
+      "name": "Modifying a List (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 6,
+      "server_distractor_count": 3,
+      "needed": 3,
+      "p1_taken": [
+        {
+          "code": "for i in range(len(lst)+1):",
+          "norm": "for i in range(len(lst)+1):",
+          "description": "Why this looks plausible: you know you want to loop 'through' the list length and some students think adding 1 ensures you 'reach' the last element. What happens if you use this line: the loop will produce an index equal to len(lst) on the final iteration. But valid indices run from 0 up to len(lst)-1, so trying to use that index to access the list will raise an IndexError. In other words, you attempted to include an extra index that doesn't exist. The mistake stems from thinking the upper bound of the range is inclusive; the result is an out-of-range access on the last iteration. This distractor is incorrect because it introduces an off-by-one error that causes the program to crash when it tries to update an invalid position.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "lst += 1",
+          "norm": "lst += 1",
+          "description": "You might pick this thinking += will add 1 to every element of the list as if lists were numeric vectors. In plain Python, lst += 1 attempts to extend/concatenate the list with an integer, which is not allowed, so Python raises a TypeError (something like: can only concatenate list (not \"int\") to list). In other environments (for example, with NumPy arrays) a similar-looking operation would work element-wise, which can make this mistake look plausible. Using this line will stop the program with a type error instead of updating the values. The error comes from treating the list as if it supported scalar addition, rather than operating on each element individually.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "lst[i] =+ 1",
+          "norm": "lst[i] =+ 1",
+          "description": "You might choose =+ because it visually resembles += and you assume it also increments the existing element. However, in Python lst[i] =+ 1 is parsed as lst[i] = (+1) \u2014 it assigns the value 1 to the element at index i, it does not add 1 to the current value. Step by step: each time this line runs it replaces the element with 1, so after the loop the list will be filled with ones rather than its values incremented. This does not raise an error, which can make the bug sneaky: the program runs but produces wrong results. The mistake is that you replace the element with a constant instead of increasing the element's current value.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 3,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e4dc391363872f0ba384f",
+      "name": "Modifying a List (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 3,
+      "legacy_distractor_count": 3,
+      "server_distractor_count": 3,
+      "needed": 0,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e4e3a91363872f0ba3881",
+      "name": "Determining When to Buy a New Phone (Case 1)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e4e3c91363872f0ba3883",
+      "name": "Determining When to Buy a New Phone (Case 2)",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e500191363872f0ba38c4",
+      "name": "Creating a Dictionary of Character-Count Pairs",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "        if char not in counts:",
+          "norm": "if char not in counts:",
+          "description": "You might pick this because it reads naturally to you: 'if the character is not present, do something.' But with the existing code structure, that 'something' is to increment the count. Step by step, using this line means on the first occurrence of any character you will enter the if branch and immediately try to add 1 to counts[char]. Since counts has no such key yet, this causes a KeyError and the program crashes. For later occurrences (when the key does exist), execution will go to the else branch and set the key to 1, which resets counts instead of incrementing. In short, this flips the intended behavior: you end up attempting to increment missing keys and resetting existing ones. The line therefore misimplements the membership logic and is not correct.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 9
+    },
+    {
+      "source_id": "664e500691363872f0ba38c6",
+      "name": "Creating a Dictionary of Character-Words Pairs",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "res_dict[word[0]] = word",
+          "norm": "res_dict[word[0]] = word",
+          "description": "Why you might pick this: you may think that to store the new word under the character key you should set that key to the word directly. That seems simple and matches the idea of putting the word into the dictionary.\nStep-by-step what happens if you use this line:\n1) On the first word for a character you replace the list stored at that key with a string (the word).  \n2) Later, when another word with the same starting character appears, the code checks if the word is not already present using a membership test against that value. Because the value is now a string, the membership test is checking if the full word appears as a substring of the stored word (usually false).  \n3) The code then tries to add the new value using this same assignment line again, or if another part of the code expects a list and calls list methods, you will get errors (for example, trying to call list methods on a string will raise AttributeError).\nWhy this is invalid here: this line replaces the list container with a plain string, so you lose the ability to hold multiple words for the same key and you change the stored type. Because the program must keep a list of distinct words per character, assigning a single string breaks that requirement and leads to wrong behavior or runtime errors. This distractor is plausible because it looks like a simple way to \"store the word,\" but it fails to preserve the list structure the rest of the program relies on.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e501e91363872f0ba38d9",
+      "name": "Celsius To Fahrenheit Conversion",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "conversion_factor = 5 / 9",
+          "norm": "conversion_factor = 5 / 9",
+          "description": "You might choose this because you remember the numbers 5 and 9 are involved in temperature conversions but you reverse their order. Using this line gives a conversion_factor around 0.555... which scales temperatures down rather than up. If you use it, multiplying the Celsius temperature by this smaller factor then adding the base will produce values far lower than the expected Fahrenheit equivalents. In practical terms, the output will be wrong because you applied the inverse ratio \u2014 so each Celsius degree contributes too little to the final Fahrenheit value. The line is valid Python and looks plausible, which is why it can trick you, but it implements the wrong direction of the ratio.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e502091363872f0ba38db",
+      "name": "Fahrenheit to Celsius Conversion",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 6,
+      "server_distractor_count": 3,
+      "needed": 3,
+      "p1_taken": [
+        {
+          "code": "conversion_factor = 5 // 9",
+          "norm": "conversion_factor = 5 // 9",
+          "description": "Step-by-step: if you write this line, the expression uses integer (floor) division. That computes 5 // 9 as 0 because 5 divided by 9 is less than 1 and integer division drops the fractional part. You might choose this because you think dividing two integers should give an integer result or because you remember seeing // used for division in examples. If you use this line, conversion_factor becomes 0 and every Celsius result will be (fahrenheit_temp - base) * 0, i.e. always 0, which is clearly wrong for most inputs. The error is that the line produces an integer result of zero instead of a fractional multiplier; it misses the need for a fractional (nonzero) conversion factor and therefore completely removes the intended scaling of the temperature difference.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": true
+        },
+        {
+          "code": "celsius_temp = (fahrenheit_temp - base) * (5 // 9)",
+          "norm": "celsius_temp = (fahrenheit_temp - base) * (5 // 9)",
+          "description": "You might pick this because you see the fraction 5/9 and think using integer division is fine or even required when working with integer inputs. In Python, // is floor (integer) division, so 5 // 9 evaluates to 0. That makes the whole product (fahrenheit_temp - base) * 0 equal to 0 for many inputs, which is almost always wrong for a temperature conversion. If you use this line, the program will print 0 (or other incorrect integer results for some negative cases because of floor behavior) instead of a meaningful Celsius value. The core mistake is replacing a real-valued conversion factor with an integer zero; the line fails to preserve the fractional scaling needed to convert degrees. This is why this choice is invalid for this program.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "celsius_temp = (fahrenheit_temp - base) / conversion_factor",
+          "norm": "celsius_temp = (fahrenheit_temp - base) / conversion_factor",
+          "description": "You might pick this because you know a conversion factor exists and think division and multiplication are interchangeable here. But dividing by the stored conversion factor effectively inverts the scaling: since conversion_factor (5/9) is about 0.555, dividing by it makes the result roughly 1.8 times larger instead of smaller. That gives Celsius values that are far too big. Using this line will produce incorrect results because it applies the wrong mathematical operation to the temperature difference. The error stems from mixing up whether to multiply or divide by the factor representing 5/9; this line applies the wrong operation and so is invalid for the intended conversion.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 3,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e504491363872f0ba38ec",
+      "name": "Finding the Maximum Value in a List",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "if values[i]:",
+          "norm": "if values[i]:",
+          "description": "Step-by-step why you might pick this: you might be familiar with truthy/falsy tests and assume that checking if an element 'exists' or is nonzero is enough to decide whether to update the stored value. What happens if you use this line: the if-condition becomes a truthiness check \u2014 it is True for any nonzero element and False only for zero. As a result, the code will assign max_value to each nonzero element as it appears, so the final value will be the last nonzero element in the list rather than the true maximum. For this particular list you would end up with the last nonzero item, which might sometimes be the maximum by coincidence but is not determined by magnitude. Why this is invalid for the task: this line fails to compare magnitudes entirely \u2014 it only tests whether the current element is nonzero. The necessary numerical comparison to decide if one number is larger than another is missing, so the program does not reliably find the maximum.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "max_value == values[i]",
+          "norm": "max_value == values[i]",
+          "description": "You might pick this because you recognize a comparison between the current element and the running maximum and mistakenly think that writing the comparison again will store the new maximum. In reality, this line only compares max_value and values[i] and then discards the True/False result; it does not change any variable. If you use this line, max_value will never be updated inside the loop, so the program will keep whatever value max_value had before the loop and produce the wrong result. This is plausible because the line looks similar to the conditional check, but it is missing the action that actually changes the running maximum.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e504691363872f0ba38ee",
+      "name": "Finding the Minimum Value in a List",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 5,
+      "server_distractor_count": 3,
+      "needed": 2,
+      "p1_taken": [
+        {
+          "code": "if (values[i] == min_value):",
+          "norm": "if (values[i] == min_value):",
+          "description": "Why you might pick this: you might think the program should check whether the current element matches the stored minimum before changing anything, perhaps because you misunderstand when updates are required. What happens if you use it: the code only updates min_value when the current element is exactly equal to min_value. Since you initialized min_value to the first item, any strictly smaller element later in the list will fail this equality check and will not replace min_value. How this goes wrong for the program: the variable will typically remain the initial value (or only change when you encounter another identical value), so the true smaller values are ignored and the result is incorrect. In other words, equality checks do not detect 'smaller than' and therefore cannot find a new minimum.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        },
+        {
+          "code": "if (values[i] = min_value):",
+          "norm": "if (values[i] = min_value):",
+          "description": "Why you might pick this: you may be used to other languages where assignment inside an if-statement is allowed or where the difference between '=' and '==' is not yet clear. What happens if you use it: in Python this is a syntax error \u2014 the interpreter will refuse to run the program because '=' is the assignment operator and cannot appear where a boolean expression is expected. How this goes wrong for the program: the program will not execute at all, so you get no result. Even conceptually, assigning min_value = values[i] inside the condition would overwrite the stored value rather than checking a relationship between them, which is not the intended operation for deciding whether to update the minimum.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 2,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    },
+    {
+      "source_id": "664e50cc91363872f0ba3909",
+      "name": "Calculating the Employee's Wage Based on the Hours That the Employee Has Worked and an Hourly Pay Rate",
+      "language": "PYTHON",
+      "blank_lines_count": 1,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [],
+      "p2_taken": [],
+      "total_filled": 0,
+      "unfilled_deficit": 1,
+      "aug_total_distractors": 3
+    },
+    {
+      "source_id": "664e50ce91363872f0ba390b",
+      "name": "Calculating the Wage of an Employee at the Customer Service Call Center",
+      "language": "PYTHON",
+      "blank_lines_count": 2,
+      "legacy_distractor_count": 4,
+      "server_distractor_count": 3,
+      "needed": 1,
+      "p1_taken": [
+        {
+          "code": "if no_weekend_days <= 5 :",
+          "norm": "if no_weekend_days <= 5 :",
+          "description": "You might write <= because you are unsure whether the boundary value 5 should be included with the smaller group. If you use this line, when no_weekend_days is exactly 5 the program will treat it as the 'fewer-than-5' case and add weekend_pay_min for all 5 days. Example: with 5 weekend days you would get 5 * weekend_pay_min instead of the larger extra pay you expect for that many days. For values less than 5 the behavior stays the same as intended, so this error only shows up at the boundary and is a classic off-by-one mistake. Using this distractor flips the handling of the boundary value, so employees who hit the 5-day mark receive the smaller extra pay rather than the larger one.",
+          "line_number": 0,
+          "origin": "post_aug_extra_llm",
+          "matches_human_legacy": false
+        }
+      ],
+      "p2_taken": [],
+      "total_filled": 1,
+      "unfilled_deficit": 0,
+      "aug_total_distractors": 6
+    }
+  ]
+}

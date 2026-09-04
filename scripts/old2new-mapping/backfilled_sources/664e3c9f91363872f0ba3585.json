@@ -1,0 +1,300 @@
+{
+  "id": "6a91ae6632e78ede45c116a5",
+  "user": "moh70@pitt.edu",
+  "name": "Calculating the Winning Percentage of a Sports Team (Case 1)",
+  "description": "Construct a program that receives from the user the number of games that a sports team won in a tournament of 12 games and calculates the winning percentage of that sports team. The program must ask for the number of the games won until the user enters a valid number.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_win_percentage.py",
+  "code": "#Step 1: Assign initial values to the variables which we need for this program\ntotal_games = 12\n#Step 2: Read the number that the user enters\ntext = input(\"Enter the number of games that the sports team won in the tournament: \")\nwins = int(text)      \n#Step 3: Validate the user input, ask for a valid input as long as the user enters an invalid number; otherwise stop\nwhile wins < 0 or wins > total_games :\n    text = input(\"Enter the number of games that the sports team won in the tournament: \")\n    wins = int(text)\n#Step 4: Calculate and print the percentage of games won by a team\nratio = wins / total_games\nprint(\"Winning percentage:\", ratio)",
+  "lines": {
+    "2": {
+      "content": "total_games = 12",
+      "commentList": [
+        "Purpose: You store the tournament size (12 games) in the variable total_games so the program knows the maximum possible wins used for validation and for calculating the winning percentage.",
+        "Syntax and meaning: total_games is a variable name, = is the assignment operator, and 12 is an integer literal \u2014 this line puts the number 12 into total_games.",
+        "How it\u2019s used: You later compare wins against total_games in the while loop (to reject values > total_games) and divide by total_games to compute the ratio, so this value defines the valid range and the denominator.",
+        "Common mistakes to avoid: Don\u2019t make total_games a string (e.g., \"12\") \u2014 that would cause type errors when comparing or dividing with an integer. Also avoid accidentally using a different variable name later (NameError).",
+        "Edge cases to watch: If total_games were 0 you would later attempt to divide by zero; keep it a positive integer. If the tournament size can change, don\u2019t hardcode the number \u2014 either read it from input or define it in one central place.",
+        "Best practice: Treat this as a constant (give it a clear name and place it at the top). For example, you might write TOTAL_GAMES = 12 to show it shouldn\u2019t change and to avoid magic numbers scattered through your code."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: You store the tournament size (12 games) in the variable total_games so the program knows the maximum possible wins used for validation and for calculating the winning percentage."
+        },
+        {
+          "content": "Syntax and meaning: total_games is a variable name, = is the assignment operator, and 12 is an integer literal \u2014 this line puts the number 12 into total_games."
+        },
+        {
+          "content": "How it\u2019s used: You later compare wins against total_games in the while loop (to reject values > total_games) and divide by total_games to compute the ratio, so this value defines the valid range and the denominator."
+        },
+        {
+          "content": "Common mistakes to avoid: Don\u2019t make total_games a string (e.g., \"12\") \u2014 that would cause type errors when comparing or dividing with an integer. Also avoid accidentally using a different variable name later (NameError)."
+        },
+        {
+          "content": "Edge cases to watch: If total_games were 0 you would later attempt to divide by zero; keep it a positive integer. If the tournament size can change, don\u2019t hardcode the number \u2014 either read it from input or define it in one central place."
+        },
+        {
+          "content": "Best practice: Treat this as a constant (give it a clear name and place it at the top). For example, you might write TOTAL_GAMES = 12 to show it shouldn\u2019t change and to avoid magic numbers scattered through your code."
+        }
+      ]
+    },
+    "4": {
+      "content": "text = input(\"Enter the number of games that the sports team won in the tournament: \")",
+      "commentList": [
+        "You show a prompt and read one line of input from the user: input(\"...\") prints the message and waits for the user to type something and press Enter; the text they enter is stored as the string variable text.",
+        "You are keeping the raw user response as a string so you can examine or convert it later; remember that input() always returns a string in Python, so numerical work requires an explicit conversion (which happens on Line 5).",
+        "If the user types non-numeric characters, an empty line, or only spaces, the later int(text) conversion will raise a ValueError \u2014 so you must not assume the input is a valid integer.",
+        "A common misconception is that input() returns a number; another pitfall is attempting numeric comparisons on the raw string (which would lead to errors in Python 3). Always convert and validate before using the value numerically.",
+        "Best practice: trim obvious whitespace with .strip() (for example input(...).strip()) and perform conversion and range checks inside a try/except or inside the validation loop so you can re-prompt the user without the program crashing.",
+        "Also consider keeping the prompt text in one place (a variable or a reusable function) so you avoid duplicating the exact prompt in multiple lines and make the code easier to maintain."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You show a prompt and read one line of input from the user: input(\"...\") prints the message and waits for the user to type something and press Enter; the text they enter is stored as the string variable text."
+        },
+        {
+          "content": "You are keeping the raw user response as a string so you can examine or convert it later; remember that input() always returns a string in Python, so numerical work requires an explicit conversion (which happens on Line 5)."
+        },
+        {
+          "content": "If the user types non-numeric characters, an empty line, or only spaces, the later int(text) conversion will raise a ValueError \u2014 so you must not assume the input is a valid integer."
+        },
+        {
+          "content": "A common misconception is that input() returns a number; another pitfall is attempting numeric comparisons on the raw string (which would lead to errors in Python 3). Always convert and validate before using the value numerically."
+        },
+        {
+          "content": "Best practice: trim obvious whitespace with .strip() (for example input(...).strip()) and perform conversion and range checks inside a try/except or inside the validation loop so you can re-prompt the user without the program crashing."
+        },
+        {
+          "content": "Also consider keeping the prompt text in one place (a variable or a reusable function) so you avoid duplicating the exact prompt in multiple lines and make the code easier to maintain."
+        }
+      ]
+    },
+    "5": {
+      "content": "wins = int(text)      ",
+      "commentList": [
+        "Purpose: this line converts the raw text you read from input into an integer and stores it in the variable wins so you can do numeric checks and calculations (like computing the winning ratio).",
+        "Syntax and semantics: = assigns the right-hand value to the variable wins; int(text) tries to parse the string text and return an integer value which becomes wins.",
+        "Behavior details: int() ignores leading/trailing spaces and accepts a leading + or - (so strings like ' 5 ' or '-3' become 5 and -3), but the program relies on the later validation loop to reject negative or too-large numbers.",
+        "Potential errors and misconceptions: if the user types non-integer input such as 'three', '3.5', or an empty string, int(text) will raise a ValueError and the program will crash unless you handle that case.",
+        "Best practice: don't call int() directly on untrusted input without handling errors \u2014 wrap the conversion in a try/except inside your input loop (or validate the string first) so you can prompt the user again instead of letting the program crash.",
+        "Tip: note that converting a floating-point string like '3.0' with int(text) will also raise ValueError; if you expect decimals, parse to float first or reject such input explicitly."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: this line converts the raw text you read from input into an integer and stores it in the variable wins so you can do numeric checks and calculations (like computing the winning ratio)."
+        },
+        {
+          "content": "Syntax and semantics: = assigns the right-hand value to the variable wins; int(text) tries to parse the string text and return an integer value which becomes wins."
+        },
+        {
+          "content": "Behavior details: int() ignores leading/trailing spaces and accepts a leading + or - (so strings like ' 5 ' or '-3' become 5 and -3), but the program relies on the later validation loop to reject negative or too-large numbers."
+        },
+        {
+          "content": "Potential errors and misconceptions: if the user types non-integer input such as 'three', '3.5', or an empty string, int(text) will raise a ValueError and the program will crash unless you handle that case."
+        },
+        {
+          "content": "Best practice: don't call int() directly on untrusted input without handling errors \u2014 wrap the conversion in a try/except inside your input loop (or validate the string first) so you can prompt the user again instead of letting the program crash."
+        },
+        {
+          "content": "Tip: note that converting a floating-point string like '3.0' with int(text) will also raise ValueError; if you expect decimals, parse to float first or reject such input explicitly."
+        }
+      ]
+    },
+    "7": {
+      "content": "while wins < 0 or wins > total_games :",
+      "commentList": [
+        "Purpose: You use this while loop to keep asking for input as long as the current value of wins is invalid. The loop repeats whenever wins is less than 0 or greater than total_games, so the program will not move on until you have a valid number between 0 and total_games (inclusive).",
+        "Syntax and meaning: The expression wins < 0 or wins > total_games combines two comparisons with the boolean operator or. If either comparison is True, the whole condition is True and the indented block after the colon runs. The colon marks the start of the loop body that will repeat while the condition holds.",
+        "Possible errors and misconceptions: If you forget to update wins inside the loop, the condition will stay True and the program will loop forever. Also, converting user text to int (on lines 5 and 9) can raise an error if the user types non-numeric input \u2014 that will crash the program unless you handle it. A common mistake is using the wrong comparisons (for example accidentally rejecting 0 or 12 by using <= or >= incorrectly).",
+        "Best practices: Make the prompt tell the user the allowed range so they know what to enter. Put the input-and-conversion inside a try/except (or validate with .isdigit()) to avoid crashes on non-numeric input. You can also structure the loop as while True with a break when the value is valid for clearer flow."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: You use this while loop to keep asking for input as long as the current value of wins is invalid. The loop repeats whenever wins is less than 0 or greater than total_games, so the program will not move on until you have a valid number between 0 and total_games (inclusive)."
+        },
+        {
+          "content": "Syntax and meaning: The expression wins < 0 or wins > total_games combines two comparisons with the boolean operator or. If either comparison is True, the whole condition is True and the indented block after the colon runs. The colon marks the start of the loop body that will repeat while the condition holds."
+        },
+        {
+          "content": "Possible errors and misconceptions: If you forget to update wins inside the loop, the condition will stay True and the program will loop forever. Also, converting user text to int (on lines 5 and 9) can raise an error if the user types non-numeric input \u2014 that will crash the program unless you handle it. A common mistake is using the wrong comparisons (for example accidentally rejecting 0 or 12 by using <= or >= incorrectly)."
+        },
+        {
+          "content": "Best practices: Make the prompt tell the user the allowed range so they know what to enter. Put the input-and-conversion inside a try/except (or validate with .isdigit()) to avoid crashes on non-numeric input. You can also structure the loop as while True with a break when the value is valid for clearer flow."
+        }
+      ]
+    },
+    "8": {
+      "content": "    text = input(\"Enter the number of games that the sports team won in the tournament: \")",
+      "commentList": [
+        "Purpose: You ask the user again for the number of wins when the previously read value was invalid (less than 0 or greater than total_games). This keeps the program prompting until a valid number is provided.",
+        "Syntax and semantics: You call input(...) which displays the prompt and returns a string; that string is stored in text. Because this line is indented inside the while loop, it runs each time the loop repeats. The next line (Line 9) converts that string to an integer so the loop condition can be re-evaluated.",
+        "Potential errors and misconceptions: You might think input enforces a number, but it doesn't. If the user types something non-numeric (for example 'three' or an empty string), the int(text) on the next line will raise a ValueError and crash the program. Also, if you forget to convert text to an int and try to compare a string with numbers, you'll get a TypeError.",
+        "Best practices: You should validate and convert inside a try/except block so you can handle non-numeric input without crashing (for example, try to convert and on ValueError print an error and continue). Also consider showing a clearer error message that states the valid range (0 to 12) and avoid repeating the prompt text by storing it in a variable or a small helper function."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: You ask the user again for the number of wins when the previously read value was invalid (less than 0 or greater than total_games). This keeps the program prompting until a valid number is provided."
+        },
+        {
+          "content": "Syntax and semantics: You call input(...) which displays the prompt and returns a string; that string is stored in text. Because this line is indented inside the while loop, it runs each time the loop repeats. The next line (Line 9) converts that string to an integer so the loop condition can be re-evaluated."
+        },
+        {
+          "content": "Potential errors and misconceptions: You might think input enforces a number, but it doesn't. If the user types something non-numeric (for example 'three' or an empty string), the int(text) on the next line will raise a ValueError and crash the program. Also, if you forget to convert text to an int and try to compare a string with numbers, you'll get a TypeError."
+        },
+        {
+          "content": "Best practices: You should validate and convert inside a try/except block so you can handle non-numeric input without crashing (for example, try to convert and on ValueError print an error and continue). Also consider showing a clearer error message that states the valid range (0 to 12) and avoid repeating the prompt text by storing it in a variable or a small helper function."
+        }
+      ]
+    },
+    "9": {
+      "content": "    wins = int(text)",
+      "commentList": [
+        "Purpose: You convert the latest user input (the string in text) into an integer and store it in wins so the while loop can re-check the value and the program can later use wins in calculations.",
+        "Syntax and meaning: wins = int(text) calls Python's int() function to parse the string text into an integer; if parsing succeeds, that integer replaces the previous value of wins.",
+        "Potential errors and misconceptions: If the user types something that is not a plain integer (for example letters, an empty string, or a float like '3.5'), int(text) will raise a ValueError and the program will crash. Also note int() does not round numeric-looking floats given as strings \u2014 '3.5' is invalid.",
+        "Best practices: You should validate or wrap this conversion in a try/except to catch ValueError and re-prompt the user with a clear message. Also consider using text.strip() to remove extra spaces before converting, and always update wins inside the loop so the loop condition can become false when the user finally enters a valid number."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: You convert the latest user input (the string in text) into an integer and store it in wins so the while loop can re-check the value and the program can later use wins in calculations."
+        },
+        {
+          "content": "Syntax and meaning: wins = int(text) calls Python's int() function to parse the string text into an integer; if parsing succeeds, that integer replaces the previous value of wins."
+        },
+        {
+          "content": "Potential errors and misconceptions: If the user types something that is not a plain integer (for example letters, an empty string, or a float like '3.5'), int(text) will raise a ValueError and the program will crash. Also note int() does not round numeric-looking floats given as strings \u2014 '3.5' is invalid."
+        },
+        {
+          "content": "Best practices: You should validate or wrap this conversion in a try/except to catch ValueError and re-prompt the user with a clear message. Also consider using text.strip() to remove extra spaces before converting, and always update wins inside the loop so the loop condition can become false when the user finally enters a valid number."
+        }
+      ]
+    },
+    "11": {
+      "content": "ratio = wins / total_games",
+      "commentList": [
+        "Purpose: This line computes the fraction of games the team won by dividing wins by total_games and stores that result in the variable ratio so you can use it later to show the team\u2019s win rate.",
+        "Syntax and semantics: The = operator assigns the value on the right (wins / total_games) to the name ratio. The expression wins / total_games performs numeric division using the current values of wins and total_games.",
+        "Type note: In Python 3 the / operator produces a decimal (float), so ratio will be a float like 0.75 for 9 wins out of 12. If you want a percent between 0 and 100, multiply ratio by 100 before printing or formatting.",
+        "Possible errors and misconceptions: If total_games were 0 you would get a division-by-zero error, but here total_games is 12 so this line is safe. Also be aware that converting the user input to int earlier can raise a ValueError if the input is not a valid integer.",
+        "Best practice (clarity): If you intend to show a percentage, compute percentage = (wins / total_games) * 100 and format it (for example round or format specifiers) so the output is user-friendly.",
+        "Best practice (robustness): Use clear variable names and keep total_games as a named constant. If you ever allow fractional wins or different game counts, consider converting inputs to float() explicitly so the division behaves as you expect."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line computes the fraction of games the team won by dividing wins by total_games and stores that result in the variable ratio so you can use it later to show the team\u2019s win rate."
+        },
+        {
+          "content": "Syntax and semantics: The = operator assigns the value on the right (wins / total_games) to the name ratio. The expression wins / total_games performs numeric division using the current values of wins and total_games."
+        },
+        {
+          "content": "Type note: In Python 3 the / operator produces a decimal (float), so ratio will be a float like 0.75 for 9 wins out of 12. If you want a percent between 0 and 100, multiply ratio by 100 before printing or formatting."
+        },
+        {
+          "content": "Possible errors and misconceptions: If total_games were 0 you would get a division-by-zero error, but here total_games is 12 so this line is safe. Also be aware that converting the user input to int earlier can raise a ValueError if the input is not a valid integer."
+        },
+        {
+          "content": "Best practice (clarity): If you intend to show a percentage, compute percentage = (wins / total_games) * 100 and format it (for example round or format specifiers) so the output is user-friendly."
+        },
+        {
+          "content": "Best practice (robustness): Use clear variable names and keep total_games as a named constant. If you ever allow fractional wins or different game counts, consider converting inputs to float() explicitly so the division behaves as you expect."
+        }
+      ]
+    },
+    "12": {
+      "content": "print(\"Winning percentage:\", ratio)",
+      "commentList": [
+        "Purpose: This line prints the result so the user can see the outcome \u2014 it displays the label \"Winning percentage:\" followed by the value stored in ratio.",
+        "Syntax and semantics: print accepts multiple arguments separated by commas; here print(\"Winning percentage:\", ratio) converts ratio to text and inserts a single space between the label and the value before sending the combined text to the screen.",
+        "Potential errors and misconceptions: learners often expect a percent (like 75%) but ratio is a fraction between 0 and 1 (e.g., 0.75). Also, if ratio was never assigned earlier you would get a NameError. In very old Python versions integer division could hide decimals, so make sure you're using Python 3 or that wins/total_games produced a float.",
+        "Best practice \u2014 show a human-friendly percent: multiply by 100 and add a percent sign, and format the number to a reasonable number of decimals. For example, you could write: print(f\"Winning percentage: {ratio*100:.1f}%\") to show one decimal place.",
+        "Best practice \u2014 consistent output: choose a clear label and consistent formatting so users immediately understand the result, and avoid relying on the default spacing if you need tighter control (you can use f-strings or the sep= and end= parameters of print)."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line prints the result so the user can see the outcome \u2014 it displays the label \"Winning percentage:\" followed by the value stored in ratio."
+        },
+        {
+          "content": "Syntax and semantics: print accepts multiple arguments separated by commas; here print(\"Winning percentage:\", ratio) converts ratio to text and inserts a single space between the label and the value before sending the combined text to the screen."
+        },
+        {
+          "content": "Potential errors and misconceptions: learners often expect a percent (like 75%) but ratio is a fraction between 0 and 1 (e.g., 0.75). Also, if ratio was never assigned earlier you would get a NameError. In very old Python versions integer division could hide decimals, so make sure you're using Python 3 or that wins/total_games produced a float."
+        },
+        {
+          "content": "Best practice \u2014 show a human-friendly percent: multiply by 100 and add a percent sign, and format the number to a reasonable number of decimals. For example, you could write: print(f\"Winning percentage: {ratio*100:.1f}%\") to show one decimal place."
+        },
+        {
+          "content": "Best practice \u2014 consistent output: choose a clear label and consistent formatting so users immediately understand the result, and avoid relying on the default spacing if you need tighter control (you can use f-strings or the sep= and end= parameters of print)."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "while wins < 0 or wins >= total_games :",
+      "description": "You might pick this because you think the upper bound should exclude the total number of games (using >=). Step-by-step, this line treats a value equal to total_games as invalid, so if the user enters the maximum allowed wins (for example, 12), the loop will prompt for a new input. That incorrectly rejects a valid case (the team winning all games) and forces the user to re-enter until they provide a number less than the maximum. This makes the validation incorrectly exclude a legitimate boundary value. The core issue is the wrong comparison operator at the upper bound, which makes the check too restrictive.",
+      "line_number": 0
+    },
+    {
+      "code": "ratio = wins // total_games",
+      "description": "You might choose floor (//) division because you expect a simple whole-number result or you think decimals aren't needed. Step-by-step: using // performs integer/floor division, so any case where wins is less than total_games will yield 0, and only when wins equals total_games will you get 1. That makes the output almost always 0 for partial wins and 1 only for a perfect record, losing all fractional detail. This line won't crash, but it destroys the precision you need to represent the winning proportion and will give misleading output for most inputs. The problem requires a ratio that reflects partial wins, but this version discards the fractional part and thus is incorrect.",
+      "line_number": 0
+    },
+    {
+      "code": "while wins < 0 and wins > total_games :",
+      "description": "[backfilled] You might pick this because you think the program should check both ends of the range at the same time, so you use AND. Step-by-step, this line requires wins to be both less than 0 and greater than total_games simultaneously. That can never be true for any single numeric value (a number cannot be below 0 and above total_games at the same time). As a result, the loop body will never run, so if the user enters an invalid number (like -1 or 13) the program will not ask for a new input and will continue using the invalid value. This can produce wrong percentages (negative or greater than 100%) or other unexpected behavior. The key mistake here is using a conjunction that demands an impossible combination of conditions rather than detecting either invalid condition; it makes the validation ineffective.",
+      "line_number": 0
+    },
+    {
+      "code": "while wins <= 0 or wins > total_games :",
+      "description": "[backfilled] You might choose this because you think the lower bound should exclude zero (using <= instead of <). Step-by-step, this line treats 0 as invalid, so if the user enters 0 (which is a valid number of wins), the loop will ask again. That means you would force the user to re-enter even valid inputs of zero, possibly causing frustration or an infinite loop if the user insists the team won 0 games. The result is a validation that is too strict on the lower end. The error here is in how the lower bound is compared: a legitimate boundary value is being rejected rather than accepted.",
+      "line_number": 0
+    },
+    {
+      "code": "ratio = total_games / wins",
+      "description": "[backfilled] You might pick this because it looks like you're comparing the two numbers by division, but you have swapped the roles of 'part' and 'whole'. Step-by-step: if you put total_games first, you compute how many times the wins fit into the total, not the fraction of games won. That often produces values greater than 1 (for example 12/6 gives 2.0) and can cause a runtime error if wins is 0 (division-by-zero). Using this line would therefore produce incorrect numbers or crash the program for some inputs. Compared to the intended calculation of the proportion of games won, this line inverts the relationship and fails to handle the case where the number of wins is zero. Because of that inversion and the possible error, this line is not a correct replacement.",
+      "line_number": 0
+    },
+    {
+      "code": "ratio = wins * 100 / total_games",
+      "description": "[backfilled] You might write this because you think a percentage must be a number out of 100, so you multiply by 100 to convert a fraction to percent. Step-by-step: this produces a value like 50 for half the games won instead of 0.5. That is a valid numeric representation of the win rate (as a percent), but it changes the unit of the output. Using this line will not cause an error, but it will print a different scale than the intended proportion output\u2014so the number means something different. If the rest of the program or the assignment expects a fraction between 0 and 1, this will be semantically wrong. The issue here is a mismatch in representation (percent vs proportion), not a runtime error, which makes this a tempting but incorrect choice for this particular program.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "-1 13 15 5",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:02.048Z",
+  "updated_at": "2026-08-31T01:46:31.141Z",
+  "stat": {
+    "size": 48451,
+    "lastTimeModified": 1788140794008.2068
+  }
+}

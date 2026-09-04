@@ -1,0 +1,350 @@
+{
+  "id": "6a91ae6d32e78ede45c11711",
+  "user": "moh70@pitt.edu",
+  "name": "Displaying the Days That are Above 32 Degrees Fahrenheit",
+  "description": "Construct a program that reads a series of temperatures and reports the days that are above 32 degrees Fahrenheit. Assume that the temperature values are in Fahrenheit. Also assume that input values could have a decimal point.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_temperature_list_days_above_threshold.py",
+  "code": "#Step 1: Read the number of days that we have to enter their temperature data\nnum_days = int(input(\"Enter the number of temperature values that will be entered: \"))\n#Step 2: Read the temperature values\ntemps = []\nfor i in range(num_days):\n    val = float(input(\"Enter the temperature: \"))\n    temps.append(val)\n#Step 3: Create a list that contains the days that are above 32 degrees Fahrenheit\ndays_above_32 = []\nfor i in range(len(temps)) :\n    if temps[i] > 32:\n        days_above_32.append(\"Day \" + str(i+1))\n#Step 4: Print the result\nprint(\"Days above 32 degrees Fahrenheit:\", days_above_32)",
+  "lines": {
+    "2": {
+      "content": "num_days = int(input(\"Enter the number of temperature values that will be entered: \"))",
+      "commentList": [
+        "Purpose: This line asks you to enter how many temperature values you will provide, reads what you type, and stores that count as an integer in the variable num_days so the program knows how many times to loop later.",
+        "Syntax and semantics: input(\"...\") displays the prompt and returns a string; int(...) converts that returned string into an integer. The result is assigned to num_days and is then used by range(num_days) to control how many temperature entries you read.",
+        "Potential errors and misconceptions: If you type a non-integer (for example \"3.5\" or \"five\"), int(...) will raise a ValueError and the program will crash. A common mistake is assuming int() accepts decimal strings\u2014int(\"3.5\") fails. Also beware of negative or zero values: they will make the reading loop do nothing or behave unexpectedly.",
+        "Best practices: Validate the input before using it. For example, use a loop with try/except to re-prompt until you get a positive integer, and optionally call .strip() on the input. Avoid silently converting decimals with int(float(...)) unless you deliberately want to accept that behavior."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line asks you to enter how many temperature values you will provide, reads what you type, and stores that count as an integer in the variable num_days so the program knows how many times to loop later."
+        },
+        {
+          "content": "Syntax and semantics: input(\"...\") displays the prompt and returns a string; int(...) converts that returned string into an integer. The result is assigned to num_days and is then used by range(num_days) to control how many temperature entries you read."
+        },
+        {
+          "content": "Potential errors and misconceptions: If you type a non-integer (for example \"3.5\" or \"five\"), int(...) will raise a ValueError and the program will crash. A common mistake is assuming int() accepts decimal strings\u2014int(\"3.5\") fails. Also beware of negative or zero values: they will make the reading loop do nothing or behave unexpectedly."
+        },
+        {
+          "content": "Best practices: Validate the input before using it. For example, use a loop with try/except to re-prompt until you get a positive integer, and optionally call .strip() on the input. Avoid silently converting decimals with int(float(...)) unless you deliberately want to accept that behavior."
+        }
+      ]
+    },
+    "4": {
+      "content": "temps = []",
+      "commentList": [
+        "You create an empty list named temps to hold each temperature value you will read; this lets the program store the numbers so you can later check which days are above 32\u00b0F.",
+        "You use the identifier temps, the = assignment operator, and the list literal [] \u2014 [] means an empty list that supports .append(), so later temps.append(val) adds each float into this list.",
+        "You must initialize the list before the input loop: if you try to call temps.append(...) without temps = [] earlier you'll get a NameError because temps doesn't exist.",
+        "A common confusion is mixing [] with () or {}: () makes a tuple (which is immutable) and {} makes a set or dict; if you used those you wouldn't be able to append values the same way, so a list is the correct choice here.",
+        "As a best practice you should use a clear name like temps and, if you want extra clarity, add a type hint (for example: temps: list[float] = []). Once you're comfortable, you can also use a list comprehension to collect inputs in one line."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You create an empty list named temps to hold each temperature value you will read; this lets the program store the numbers so you can later check which days are above 32\u00b0F."
+        },
+        {
+          "content": "You use the identifier temps, the = assignment operator, and the list literal [] \u2014 [] means an empty list that supports .append(), so later temps.append(val) adds each float into this list."
+        },
+        {
+          "content": "You must initialize the list before the input loop: if you try to call temps.append(...) without temps = [] earlier you'll get a NameError because temps doesn't exist."
+        },
+        {
+          "content": "A common confusion is mixing [] with () or {}: () makes a tuple (which is immutable) and {} makes a set or dict; if you used those you wouldn't be able to append values the same way, so a list is the correct choice here."
+        },
+        {
+          "content": "As a best practice you should use a clear name like temps and, if you want extra clarity, add a type hint (for example: temps: list[float] = []). Once you're comfortable, you can also use a list comprehension to collect inputs in one line."
+        }
+      ]
+    },
+    "5": {
+      "content": "for i in range(num_days):",
+      "commentList": [
+        "Purpose: this line starts a loop that repeats exactly num_days times so you can read one temperature per iteration (it controls how many times lines 6\u20137 run).",
+        "Syntax and meaning: for i in range(num_days): creates a loop variable i that takes values from 0 up to num_days - 1; the colon and the indented block that follows are required to mark the loop body.",
+        "Indexing note: because i starts at 0, you must add 1 when you want a human-friendly day number (that is why the code later uses i + 1 to print \"Day 1\", \"Day 2\", etc.).",
+        "Potential errors and misconceptions: if you think i starts at 1 you will mislabel days or miss the last entry; forgetting the colon or wrong indentation causes a SyntaxError/IndentationError; if num_days is 0 or negative the loop body will not run.",
+        "Input-related caution: num_days was converted with int(...) earlier, so a non-integer input would already raise an error before this loop; you should validate num_days (e.g., ensure it is non-negative) to avoid unexpected behavior.",
+        "Best practices: to make the code clearer you can use a more descriptive loop like for day in range(1, num_days + 1): and then use day directly for printing; also consider limiting num_days or handling conversion errors to make your program more robust."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: this line starts a loop that repeats exactly num_days times so you can read one temperature per iteration (it controls how many times lines 6\u20137 run)."
+        },
+        {
+          "content": "Syntax and meaning: for i in range(num_days): creates a loop variable i that takes values from 0 up to num_days - 1; the colon and the indented block that follows are required to mark the loop body."
+        },
+        {
+          "content": "Indexing note: because i starts at 0, you must add 1 when you want a human-friendly day number (that is why the code later uses i + 1 to print \"Day 1\", \"Day 2\", etc.)."
+        },
+        {
+          "content": "Potential errors and misconceptions: if you think i starts at 1 you will mislabel days or miss the last entry; forgetting the colon or wrong indentation causes a SyntaxError/IndentationError; if num_days is 0 or negative the loop body will not run."
+        },
+        {
+          "content": "Input-related caution: num_days was converted with int(...) earlier, so a non-integer input would already raise an error before this loop; you should validate num_days (e.g., ensure it is non-negative) to avoid unexpected behavior."
+        },
+        {
+          "content": "Best practices: to make the code clearer you can use a more descriptive loop like for day in range(1, num_days + 1): and then use day directly for printing; also consider limiting num_days or handling conversion errors to make your program more robust."
+        }
+      ]
+    },
+    "6": {
+      "content": "    val = float(input(\"Enter the temperature: \"))",
+      "commentList": [
+        "Purpose: This line reads one temperature from the user, converts that input into a floating\u2011point number, and stores it in the variable val so you can add it to the temps list.",
+        "Syntax breakdown: input(\"Enter the temperature: \") displays the prompt and returns a string; float(...) converts that string to a numeric float; the = assigns the resulting number to val.",
+        "Why float is used: By using float you allow decimal temperatures like 32.5. If you used int instead, you would lose any fractional part.",
+        "Common error: If the user types non-numeric text (for example 'thirty' or just presses Enter), float(...) will raise a ValueError \u2014 your program will crash unless you handle this.",
+        "Best practice: You should validate or catch conversion errors (use a try/except or a loop to re-prompt) and consider using a clearer name such as temp instead of val to make your code easier to read.",
+        "Minor notes/edge cases: float(...) expects a dot for the decimal separator (e.g., '32.5'), so users entering a comma ('32,5') will cause an error; negative temperatures and a leading + sign are accepted by float."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line reads one temperature from the user, converts that input into a floating\u2011point number, and stores it in the variable val so you can add it to the temps list."
+        },
+        {
+          "content": "Syntax breakdown: input(\"Enter the temperature: \") displays the prompt and returns a string; float(...) converts that string to a numeric float; the = assigns the resulting number to val."
+        },
+        {
+          "content": "Why float is used: By using float you allow decimal temperatures like 32.5. If you used int instead, you would lose any fractional part."
+        },
+        {
+          "content": "Common error: If the user types non-numeric text (for example 'thirty' or just presses Enter), float(...) will raise a ValueError \u2014 your program will crash unless you handle this."
+        },
+        {
+          "content": "Best practice: You should validate or catch conversion errors (use a try/except or a loop to re-prompt) and consider using a clearer name such as temp instead of val to make your code easier to read."
+        },
+        {
+          "content": "Minor notes/edge cases: float(...) expects a dot for the decimal separator (e.g., '32.5'), so users entering a comma ('32,5') will cause an error; negative temperatures and a leading + sign are accepted by float."
+        }
+      ]
+    },
+    "7": {
+      "content": "    temps.append(val)",
+      "commentList": [
+        "Purpose: This line adds the temperature value you just read (val) to the temps list so you keep all inputs in the order they were entered; that order lets you later map list indexes to day numbers (day i is at index i-1).",
+        "Syntax and semantics: temps is a list and append(...) is a list method that takes a single argument (here val). Calling temps.append(val) mutates the list in place by placing val at the end; the method does not return a new list.",
+        "Common errors and misconceptions: if you forget to convert the input to a number (using float), you'll append a string and comparisons later will fail or give wrong results; do not write temps = temps.append(val) \u2014 append returns None, so that would overwrite temps with None; also avoid using extend when you mean append (extend treats its argument as an iterable of multiple items).",
+        "Edge cases to watch: if val is undefined because input failed, this line will raise a NameError; if val is itself a list, append will insert the whole list as one element instead of merging elements \u2014 use extend for that merge behavior.",
+        "Best practices: validate or convert the input (e.g., use try/except around float(...) before appending) and keep variable names clear. Rely on append for adding single items and remember you don\u2019t need to reassign temps after calling append."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line adds the temperature value you just read (val) to the temps list so you keep all inputs in the order they were entered; that order lets you later map list indexes to day numbers (day i is at index i-1)."
+        },
+        {
+          "content": "Syntax and semantics: temps is a list and append(...) is a list method that takes a single argument (here val). Calling temps.append(val) mutates the list in place by placing val at the end; the method does not return a new list."
+        },
+        {
+          "content": "Common errors and misconceptions: if you forget to convert the input to a number (using float), you'll append a string and comparisons later will fail or give wrong results; do not write temps = temps.append(val) \u2014 append returns None, so that would overwrite temps with None; also avoid using extend when you mean append (extend treats its argument as an iterable of multiple items)."
+        },
+        {
+          "content": "Edge cases to watch: if val is undefined because input failed, this line will raise a NameError; if val is itself a list, append will insert the whole list as one element instead of merging elements \u2014 use extend for that merge behavior."
+        },
+        {
+          "content": "Best practices: validate or convert the input (e.g., use try/except around float(...) before appending) and keep variable names clear. Rely on append for adding single items and remember you don\u2019t need to reassign temps after calling append."
+        }
+      ]
+    },
+    "9": {
+      "content": "days_above_32 = []",
+      "commentList": [
+        "You create an empty list named days_above_32 that will hold the labels (for example 'Day 1') for each temperature that is above 32\u00b0F; this sets up the storage for the program's result.",
+        "You use = to assign the empty list literal [] to the variable; [] produces a new, mutable list object that you will populate later with days_above_32.append(...).",
+        "A common bug is placing this initialization inside the loop that checks temperatures; if you reinitialize the list on each iteration you will lose previously collected days, so initialize it once before the loop.",
+        "Another mistake is using parentheses () instead of brackets []; () creates a tuple which does not have an append method, so days_above_32.append(...) would raise an error.",
+        "Best practice: keep the variable name descriptive, initialize your collection before you fill it, and if you prefer more concise code you can build the list in one step using enumerate or a list comprehension (but initializing explicitly as shown is clear for beginners)."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You create an empty list named days_above_32 that will hold the labels (for example 'Day 1') for each temperature that is above 32\u00b0F; this sets up the storage for the program's result."
+        },
+        {
+          "content": "You use = to assign the empty list literal [] to the variable; [] produces a new, mutable list object that you will populate later with days_above_32.append(...)."
+        },
+        {
+          "content": "A common bug is placing this initialization inside the loop that checks temperatures; if you reinitialize the list on each iteration you will lose previously collected days, so initialize it once before the loop."
+        },
+        {
+          "content": "Another mistake is using parentheses () instead of brackets []; () creates a tuple which does not have an append method, so days_above_32.append(...) would raise an error."
+        },
+        {
+          "content": "Best practice: keep the variable name descriptive, initialize your collection before you fill it, and if you prefer more concise code you can build the list in one step using enumerate or a list comprehension (but initializing explicitly as shown is clear for beginners)."
+        }
+      ]
+    },
+    "10": {
+      "content": "for i in range(len(temps)) :",
+      "commentList": [
+        "Purpose: You use this for-loop to visit each temperature in the temps list by its index so you can check every day and build the days_above_32 list of day labels.",
+        "Syntax and semantics: for i in range(len(temps)) : produces integer values 0 through len(temps)-1 and assigns each to i in turn; the trailing colon starts the indented block that runs for each i.",
+        "Indexing detail: Because you iterate by index, you access the current temperature as temps[i]. Remember lists are zero-indexed, so the first element is index 0 \u2014 that is why the code later uses i+1 when making human-friendly day numbers.",
+        "Potential errors and misconceptions: Common mistakes are forgetting the colon or misindenting the following lines (which breaks the loop), assuming indexes start at 1, or using range(len(temps)) when temps is not defined (which will cause an error). If temps is empty the loop simply won't run \u2014 that is expected.",
+        "Best practice: You can make this clearer by using enumerate to get both the day number and value directly, e.g. for day, temp in enumerate(temps, start=1):, which avoids manual i+1 and makes your intent easier to read. Also consider using a more descriptive name than i, like index or day_index, if it helps you understand the code."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: You use this for-loop to visit each temperature in the temps list by its index so you can check every day and build the days_above_32 list of day labels."
+        },
+        {
+          "content": "Syntax and semantics: for i in range(len(temps)) : produces integer values 0 through len(temps)-1 and assigns each to i in turn; the trailing colon starts the indented block that runs for each i."
+        },
+        {
+          "content": "Indexing detail: Because you iterate by index, you access the current temperature as temps[i]. Remember lists are zero-indexed, so the first element is index 0 \u2014 that is why the code later uses i+1 when making human-friendly day numbers."
+        },
+        {
+          "content": "Potential errors and misconceptions: Common mistakes are forgetting the colon or misindenting the following lines (which breaks the loop), assuming indexes start at 1, or using range(len(temps)) when temps is not defined (which will cause an error). If temps is empty the loop simply won't run \u2014 that is expected."
+        },
+        {
+          "content": "Best practice: You can make this clearer by using enumerate to get both the day number and value directly, e.g. for day, temp in enumerate(temps, start=1):, which avoids manual i+1 and makes your intent easier to read. Also consider using a more descriptive name than i, like index or day_index, if it helps you understand the code."
+        }
+      ]
+    },
+    "11": {
+      "content": "    if temps[i] > 32:",
+      "commentList": [
+        "Purpose: This line checks whether the temperature for the current day is greater than 32\u00b0F. If the condition is true, the following indented block (Line 12) runs to record that day for the output.",
+        "Syntax breakdown: temps[i] accesses the temperature at index i from the list temps, > is the greater-than comparison operator, and the trailing colon (:) starts the indented block that runs when the condition is true. The expression temps[i] > 32 evaluates to True or False.",
+        "Common errors and misconceptions: If temps contains strings instead of numbers (e.g., you forgot to convert input to float), Python will raise a TypeError when trying to compare a string to an integer. If i somehow goes out of range, you'd get an IndexError, though that won't happen here because you iterate using range(len(temps)). Also note this uses strictly greater than (>) so a value of exactly 32 will not be counted\u2014use >= if you want to include 32.",
+        "Edge cases: Because inputs can be decimals, the comparison works with float values (e.g., 32.1 > 32 is True). Very rare floating-point precision issues do not affect simple comparisons like this in typical temperature input scenarios.",
+        "Best practices: Give the threshold a named constant like THRESHOLD = 32 and write if temps[i] > THRESHOLD: so the meaning is clearer and easier to change. You can also use enumerate(temps, start=1) in the loop to avoid manual index handling (then you check value directly instead of temps[i]).",
+        "Styling and correctness tips: Keep the if line properly indented under the for loop; the colon is required. Make sure you validated or converted input to float earlier (as this program does on Line 6) so the comparison behaves as you expect."
+      ],
+      "indentLevel": 1,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line checks whether the temperature for the current day is greater than 32\u00b0F. If the condition is true, the following indented block (Line 12) runs to record that day for the output."
+        },
+        {
+          "content": "Syntax breakdown: temps[i] accesses the temperature at index i from the list temps, > is the greater-than comparison operator, and the trailing colon (:) starts the indented block that runs when the condition is true. The expression temps[i] > 32 evaluates to True or False."
+        },
+        {
+          "content": "Common errors and misconceptions: If temps contains strings instead of numbers (e.g., you forgot to convert input to float), Python will raise a TypeError when trying to compare a string to an integer. If i somehow goes out of range, you'd get an IndexError, though that won't happen here because you iterate using range(len(temps)). Also note this uses strictly greater than (>) so a value of exactly 32 will not be counted\u2014use >= if you want to include 32."
+        },
+        {
+          "content": "Edge cases: Because inputs can be decimals, the comparison works with float values (e.g., 32.1 > 32 is True). Very rare floating-point precision issues do not affect simple comparisons like this in typical temperature input scenarios."
+        },
+        {
+          "content": "Best practices: Give the threshold a named constant like THRESHOLD = 32 and write if temps[i] > THRESHOLD: so the meaning is clearer and easier to change. You can also use enumerate(temps, start=1) in the loop to avoid manual index handling (then you check value directly instead of temps[i])."
+        },
+        {
+          "content": "Styling and correctness tips: Keep the if line properly indented under the for loop; the colon is required. Make sure you validated or converted input to float earlier (as this program does on Line 6) so the comparison behaves as you expect."
+        }
+      ]
+    },
+    "12": {
+      "content": "        days_above_32.append(\"Day \" + str(i+1))",
+      "commentList": [
+        "Purpose: This line adds a label for the current day (like \"Day 1\") to the days_above_32 list so you collect which days had temperatures above 32\u00b0F.",
+        "Syntax breakdown: days_above_32.append(...) calls the list method append to add one item. \"Day \" + str(i+1) builds the text label: i is the 0-based loop index, so you use i+1 to get the human-friendly day number, and str(...) converts that number to text so it can be concatenated with \"Day \" .",
+        "Potential errors and misconceptions: If you forget str(i+1) and write \"Day \" + (i+1) you'll get a TypeError because you can't add a string and an integer. If you use i instead of i+1 you'll report days starting at 0 (off-by-one error). Also be aware this makes the list contain strings; mixing types in the list can be confusing later.",
+        "Best practices: For clearer code you can use an f-string: days_above_32.append(f\"Day {i+1}\") which avoids explicit str(). Alternatively, store the numeric day (i+1) in the list and format the text only when you print, so you keep data and presentation separate.",
+        "Behavior note: append mutates the existing list in place and this line runs only when the if condition is true. Make sure the indentation is correct so you only add the day when temps[i] > 32."
+      ],
+      "indentLevel": 2,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line adds a label for the current day (like \"Day 1\") to the days_above_32 list so you collect which days had temperatures above 32\u00b0F."
+        },
+        {
+          "content": "Syntax breakdown: days_above_32.append(...) calls the list method append to add one item. \"Day \" + str(i+1) builds the text label: i is the 0-based loop index, so you use i+1 to get the human-friendly day number, and str(...) converts that number to text so it can be concatenated with \"Day \" ."
+        },
+        {
+          "content": "Potential errors and misconceptions: If you forget str(i+1) and write \"Day \" + (i+1) you'll get a TypeError because you can't add a string and an integer. If you use i instead of i+1 you'll report days starting at 0 (off-by-one error). Also be aware this makes the list contain strings; mixing types in the list can be confusing later."
+        },
+        {
+          "content": "Best practices: For clearer code you can use an f-string: days_above_32.append(f\"Day {i+1}\") which avoids explicit str(). Alternatively, store the numeric day (i+1) in the list and format the text only when you print, so you keep data and presentation separate."
+        },
+        {
+          "content": "Behavior note: append mutates the existing list in place and this line runs only when the if condition is true. Make sure the indentation is correct so you only add the day when temps[i] > 32."
+        }
+      ]
+    },
+    "14": {
+      "content": "print(\"Days above 32 degrees Fahrenheit:\", days_above_32)",
+      "commentList": [
+        "This line displays the final result to the user: it prints the label 'Days above 32 degrees Fahrenheit:' followed by the list stored in days_above_32 so you can see which days met the condition.",
+        "Breakdown: print(...) calls Python's print function. The first argument is a text message (a string), and the second argument is the variable days_above_32. Because they are separated by a comma, Python converts the list to its string form and prints both parts with a space between them.",
+        "Common misconception / possible error: if days_above_32 is empty you will see an empty list '[]' \u2014 that is expected but you might prefer a clearer message like 'No days above 32'. Also, if days_above_32 were undefined (for example, if the earlier loop never ran), you'd get a NameError, so make sure the variable is always created before you print it.",
+        "Formatting tip: the current output shows the Python list syntax (e.g., ['Day 2', 'Day 5']). If you want cleaner text, you can join the list into a single string: print('Days above 32 degrees Fahrenheit:', ', '.join(days_above_32)). This works because each item in days_above_32 is already a string.",
+        "Best practice: separate program logic from presentation. Build days_above_32 in your logic, and use a clear, user-friendly print here. Consider special-case messages (like 'No days above 32') or printing each day on its own line for readability.",
+        "Note about types: join will fail if days_above_32 contains non-string items. In this program you append strings ('Day ' + str(i+1)), so join is safe; if you ever store integers, convert them to strings first."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line displays the final result to the user: it prints the label 'Days above 32 degrees Fahrenheit:' followed by the list stored in days_above_32 so you can see which days met the condition."
+        },
+        {
+          "content": "Breakdown: print(...) calls Python's print function. The first argument is a text message (a string), and the second argument is the variable days_above_32. Because they are separated by a comma, Python converts the list to its string form and prints both parts with a space between them."
+        },
+        {
+          "content": "Common misconception / possible error: if days_above_32 is empty you will see an empty list '[]' \u2014 that is expected but you might prefer a clearer message like 'No days above 32'. Also, if days_above_32 were undefined (for example, if the earlier loop never ran), you'd get a NameError, so make sure the variable is always created before you print it."
+        },
+        {
+          "content": "Formatting tip: the current output shows the Python list syntax (e.g., ['Day 2', 'Day 5']). If you want cleaner text, you can join the list into a single string: print('Days above 32 degrees Fahrenheit:', ', '.join(days_above_32)). This works because each item in days_above_32 is already a string."
+        },
+        {
+          "content": "Best practice: separate program logic from presentation. Build days_above_32 in your logic, and use a clear, user-friendly print here. Consider special-case messages (like 'No days above 32') or printing each day on its own line for readability."
+        },
+        {
+          "content": "Note about types: join will fail if days_above_32 contains non-string items. In this program you append strings ('Day ' + str(i+1)), so join is safe; if you ever store integers, convert them to strings first."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "for temp in temps:",
+      "description": "You might choose this because Python lets you iterate directly over list elements, and that often simplifies code. The mistake here is not noticing that the rest of the loop uses the index variable i (for example, temps[i] and building the string \"Day \" + str(i+1)). If you replace the loop header with for temp in temps: but leave the body unchanged, the variable i does not exist and you'll get a NameError. If you change the body to use temp instead of temps[i], you then lose the day number (you no longer have the index to build \"Day X\"), so the program can't report which day each temperature came from without extra work. In short, iterating values is a good idea when you only need values, but here you also need indices \u2014 so this distractor is plausible but incompatible with the existing loop body.",
+      "line_number": 0
+    },
+    {
+      "code": "if temps[i] >= 32:",
+      "description": "Step-by-step why you might pick this: You could read 'above 32 degrees' and interpret it as '32 or above', so you use the >= operator to be safe and include 32. Why this is incorrect for this program: using >= will treat a temperature exactly equal to 32 as qualifying, even though the requirement is to report days strictly above 32. How it would affect the program: days whose temperature is exactly 32 would be added to the result list, producing extra days in the output. Contrast with the intended behavior: this line changes the boundary condition by including the equality case, which is the key mistake \u2014 the distractor misimplements the intended strict 'greater than' rule.",
+      "line_number": 0
+    },
+    {
+      "code": "days_above_32.append('Day ' + i+1)",
+      "description": "You might pick this because it looks like a short way to join the label 'Day ' with the day number \u2014 you expect the language to quietly convert the number to text. Step-by-step: when Python evaluates this, it tries to compute 'Day ' + i first; since i is an int, Python cannot use + to combine a string and an int, so you get a TypeError immediately. If you somehow imagine the + would add i and 1 first, that doesn't happen because the left-to-right evaluation hits the invalid string+int operation first. The practical impact is the program will crash at runtime when it reaches the first qualifying temperature, so you won't get any output list at all. This line fails because it mixes a raw string and an integer without an explicit conversion; the missing conversion is what makes it invalid, not the idea of building a label.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "10 30.3 39.1 30 33.6 25.8 38.2 36.1 20 24.7 29.5",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:09.105Z",
+  "updated_at": "2026-08-31T21:54:44.864Z",
+  "stat": {
+    "size": 98896,
+    "lastTimeModified": 1788213290529.0498
+  }
+}

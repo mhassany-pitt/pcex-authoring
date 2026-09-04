@@ -1,0 +1,307 @@
+{
+  "id": "664e2aad91363872f0ba341c",
+  "_id": "664e2aad91363872f0ba341c",
+  "name": "Counting the Number of Valid and Banned Product Codes (Case 2) ",
+  "description": "Suppose a hypothetical company uses codes to represent its various products. A product code includes, among other information, a character in the tenth position that represents the zone from which that product was made, and a four-digit integer representing the district in which it will be sold. This four-digit integer begins at the 4th character and extends to the 7th character in the input code (inclusive). Due to some reorganization, products from zone R are banned from being sold in districts with a designation of 2000 or higher.\\nConstruct a program that reads product codes from the user and counts the number of valid and banned codes entered. Make sure that the program handles all possible exceptions.\\nThe program must ask the user for an input until the user enters STOP.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_check_product_code2.py",
+  "code": "#Step 1: Define the function\ndef check_product_code():\n    #Step 1.1: Assign initial values to the variables that we need for counts\n    valid = 0\n    banned = 0\n    #Step 1.2: Ask for a valid input as long as the user does'nt enter STOP; otherwise stop\n    code = input(\"Enter product code: \")\n    while ( code != \"STOP\") :\n        #Step 1.2.1: Enclose the code that might throw an exception within the try block\n        try : \n            zone = code[9]\n            district = int(code[3:7])\n            valid += 1\n            if zone == \"R\" and district >= 2000:\n                banned += 1\n        #Step 1.2.2: Handle all possible exceptions that may be thrown in the try block \n        except IndexError :\n            print(\"Improper code length.\")\n        except ValueError :\n            print(\"Error! District is not numeric.\")\n        code = input(\"Enter product code: \")\n    #Step 1.3: Print the result\n    print(\"# of valid codes entered:\", valid)\n    print(\"# of banned codes entered:\", banned)\n#Step 2: Call the function\ncheck_product_code()",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Define the function",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "def check_product_code():",
+      "commentList": [
+        "We need to first declare the function that reads product codes from the user and counts the number of valid and banned codes entered. This function asks the user for an input until the user enters STOP.",
+        "Note that all statements following the header line are indented."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "    #Step 1.1: Assign initial values to the variables that we need for counts",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "4": {
+      "content": "    valid = 0",
+      "commentList": [
+        "We need this variable to count the number of the valid product codes that the user enters. We set it 0 because we have not started counting yet."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "5": {
+      "content": "    banned = 0",
+      "commentList": [
+        "We need this variable to count the number of the banned product codes that the user enters. We set it 0 because we have not started counting yet."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "6": {
+      "content": "    #Step 1.2: Ask for a valid input as long as the user does'nt enter STOP; otherwise stop",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "7": {
+      "content": "    code = input(\"Enter product code: \")",
+      "commentList": [
+        "The input function prompts the user to enter the product code, then reads the text entered by the user and places it in the variable code. The value that will be stored in variable code is a string."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "8": {
+      "content": "    while ( code != \"STOP\") :",
+      "commentList": [
+        "We need to repeat receiving the input from the user as long as the user does not enter STOP. Therefore, we need to use a loop structure. Since we don't know ahead of time how many times the loop will be repeated, we need to use a while loop. The condition in the while loop tests whether the body of the loop should be repeated, so it should test whether the input is different from STOP.",
+        "Note that we could compare whether two strings are different using != operator.",
+        "The body of the while loop is repeated as long as the user does not enter STOP. The loop terminates when the loop condition evaluates to False, that is when the user enters STOP."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "9": {
+      "content": "        #Step 1.2.1: Enclose the code that might throw an exception within the try block",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "10": {
+      "content": "        try : ",
+      "commentList": [
+        "The try blocks tries to execute the code within it. The statements in the try block may throw several types of exception.",
+        "If an error is encountered, the try block code execution is stopped and transferred down to the except block(s)."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "11": {
+      "content": "            zone = code[9]",
+      "commentList": [
+        "code[9] gives us the character at index 9 of the given string. This character represents the zone from which the product was made."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "12": {
+      "content": "            district = int(code[3:7])",
+      "commentList": [
+        "We need to extract the substring that represents the district in which the product will be sold. We get this substring by code[3:7] that fetches a range of characters starting from the index 3 and ending with the character at the index 6 of the given string (inclusive). We convert this substring to integer by using the int() function.",
+        "Note that the conversion to integer can only be done if the string actually presents a number. If the input number is a float, the int() function cuts off the fractional part of the floating-point number to create an integer."
+      ],
+      "indentLevel": 3,
+      "blank": true
+    },
+    "13": {
+      "content": "            valid += 1",
+      "commentList": [
+        "When we could extract the zone and district from the product code, it means the code is valid. Therefore, we need to increment the number of valid codes by 1.",
+        "The += operator adds the value on the right-hand side of the assignment operator (i.e., 1) to the current value of the variable on the left-hand side (i.e., value of variable valid) and the result is stored in the variable valid. Thus, this statement is equivalent to the statement valid = valid + 1."
+      ],
+      "indentLevel": 3,
+      "blank": true
+    },
+    "14": {
+      "content": "            if zone == \"R\" and district >= 2000:",
+      "commentList": [
+        "To check if the product is banned from being sold, we need to check if the zone of the product code is R and the district is greater than or equal to 2000. If the product's code has a zone of R and the district is greater than or equal to 2000, then we increment the number of banned codes by 1.",
+        "Note that we could compare whether two strings are equal using == operator. Also, note that the and operator yields the result True if both conditions are True.",
+        "If the product's zone is R and the district is greater than or equal to 2000, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "15": {
+      "content": "                banned += 1",
+      "commentList": [
+        "When the product's zone is R and the district is 2000 or higher, it means the product is banned from being sold. Therefore, we need to increment the number of banned codes by 1.",
+        "The += operator adds the value on the right-hand side of the assignment operator (i.e., 1) to the current value of the variable on the left-hand side (i.e., value of variable banned) and the result is stored in the variable banned. Thus, this statement is equivalent to the statement banned = banned + 1."
+      ],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "16": {
+      "content": "        #Step 1.2.2: Handle all possible exceptions that may be thrown in the try block ",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "17": {
+      "content": "        except IndexError :",
+      "commentList": [
+        "We need to handle the IndexError. This error occurs when the try block accesses the character at the index that does not exist in the code.",
+        "The body of this except block gets executed only if the length of the code is less than 10; in that case, the character at index 9 does not exist in the code. Otherwise, the body of this except statement is skipped."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "18": {
+      "content": "            print(\"Improper code length.\")",
+      "commentList": [
+        "This statement prints to the default standard output stream the error that caused the IndexError. The printed text is followed by the end-of-line character at the end."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "19": {
+      "content": "        except ValueError :",
+      "commentList": [
+        "We need to handle the ValueError. This error occurs when the district substring in the product's code does not contain a valid integer and we call the function int() to convert that value to an integer.",
+        "The body of this except block gets executed only if the district substring in the product's code is not a number. Otherwise, the body of this except statement is skipped."
+      ],
+      "indentLevel": 2,
+      "blank": true
+    },
+    "20": {
+      "content": "            print(\"Error! District is not numeric.\")",
+      "commentList": [
+        "This statement prints to the default standard output stream the error that caused the ValueError. The printed text is followed by the end-of-line character at the end."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "21": {
+      "content": "        code = input(\"Enter product code: \")",
+      "commentList": [
+        "The input function prompts the user to enter the next product code, then reads the text entered by the user and places it in the variable code. The value that will be stored in variable code is a string."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "22": {
+      "content": "    #Step 1.3: Print the result",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "23": {
+      "content": "    print(\"# of valid codes entered:\", valid)",
+      "commentList": [
+        "This statement prints to the default standard output stream the given text and the value of variable valid. The printed text shows the arguments of the print function separated by the default delimiter (i.e., single space character) and followed by the end-of-line character at the end."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "24": {
+      "content": "    print(\"# of banned codes entered:\", banned)",
+      "commentList": [
+        "This statement prints to the default standard output stream the given text and the value of variable banned. The printed text shows the arguments of the print function separated by the default delimiter (i.e., single space character) and followed by the end-of-line character at the end."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "25": {
+      "content": "#Step 2: Call the function",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "26": {
+      "content": "check_product_code()",
+      "commentList": [
+        "This statement calls the check_product_code function. Note that the function call must be done after the function is declared."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "46e8d9b0-5dbb-4156-8da1-5fd30e75a6af",
+      "line": {
+        "number": 0,
+        "content": "district = int(code[4:8])",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    },
+    {
+      "id": "542df997-38bb-41ac-9a3a-7b6b7b66255c",
+      "line": {
+        "number": 0,
+        "content": "district = code[3:6]",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    },
+    {
+      "id": "91377b2b-e1d6-467a-bf69-b7239cc58592",
+      "line": {
+        "number": 0,
+        "content": "district = int(code[3:6])",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    },
+    {
+      "id": "4da7836b-3a49-42a3-aa17-ec20d68e05dc",
+      "line": {
+        "number": 0,
+        "content": "except KeyError :",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    },
+    {
+      "id": "af582adb-4318-4cc0-8717-8fbe252b7831",
+      "line": {
+        "number": 0,
+        "content": "except IndexError :",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    }
+  ],
+  "programInput": "TRV2475A5Z-14 TRV275A5Z-14 TRD1704A7R-12 TRQ2778A7R-19 TRV2105A2 STOP",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

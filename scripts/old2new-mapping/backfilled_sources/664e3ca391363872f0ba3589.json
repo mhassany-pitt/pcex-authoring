@@ -1,0 +1,453 @@
+{
+  "id": "6a91ae6632e78ede45c116a9",
+  "user": "moh70@pitt.edu",
+  "name": "Calculating the Winning Percentage of a Sports Team (Case 3)",
+  "description": "Construct a program that receives from the user the number of games that a sports team won and tied in a tournament of 12 games and calculates the winning percentage of the sports team, counting ties as half wins. The program must ask the user for each of the two inputs until the user enters a valid number.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_win_percentage_won_equal.py",
+  "code": "#Step 1: Assign initial values to the variables which we need for this program\ntotal_games = 12\n#Step 2: Read the number of games that the sports team won in the tournament\ntext = input(\"Enter the number of games that the sports team won in the tournament: \")\nwins = int(text)      \n#Step 3: Validate the user input for the number of wins, ask for a valid input as long as the user enters an invalid number; otherwise stop\nwhile wins < 0 or wins > total_games :\n    text = input(\"Enter the number of games that the sports team won in the tournament: \")\n    wins = int(text)\n#Step 4: Read the number of games that the sports team tied in the tournament\ntext = input(\"Enter the number of games tied: \")\nties = int(text)\n#Step 5: Validate the user input for the number of ties, ask for a valid input as long as the user enters an invalid number; otherwise stop\nwhile ties < 0 or total_games < (ties + wins) :\n    text = input(\"Enter the number of games tied: \")\n    ties = int(text)\n#Step 6: Calculate and print the percentage of games won by a team, counting ties as half wins\nratio = ( wins + ties // 2) / total_games\nprint(\"Winning percentage:\", ratio)",
+  "lines": {
+    "2": {
+      "content": "total_games = 12",
+      "commentList": [
+        "Purpose: you store the fixed number of games in the tournament so the program can check user answers and compute the percentage; total_games is used later to validate wins/ties and as the divisor when computing the ratio.",
+        "Syntax: this is a simple assignment that gives the variable total_games the integer value 12. After this line, total_games holds the number 12 and you can use that name in expressions and comparisons.",
+        "Common misconceptions / errors: if you set total_games to 0 later (or to the string \"12\"), the program will fail \u2014 0 would cause a division-by-zero error when you compute the percentage, and a string would break numeric comparisons and arithmetic. Make sure it stays a non-zero integer.",
+        "How it affects validation and calculation: you use total_games to limit valid values for wins and ties (neither can be negative, and wins + ties must not exceed total_games), and you divide by total_games to get the final winning percentage.",
+        "Best practice: because this value is a fixed rule from the problem, consider treating it as a constant (for example name it TOTAL_GAMES = 12) or add a short comment so you and others know it should not change during the program."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: you store the fixed number of games in the tournament so the program can check user answers and compute the percentage; total_games is used later to validate wins/ties and as the divisor when computing the ratio."
+        },
+        {
+          "content": "Syntax: this is a simple assignment that gives the variable total_games the integer value 12. After this line, total_games holds the number 12 and you can use that name in expressions and comparisons."
+        },
+        {
+          "content": "Common misconceptions / errors: if you set total_games to 0 later (or to the string \"12\"), the program will fail \u2014 0 would cause a division-by-zero error when you compute the percentage, and a string would break numeric comparisons and arithmetic. Make sure it stays a non-zero integer."
+        },
+        {
+          "content": "How it affects validation and calculation: you use total_games to limit valid values for wins and ties (neither can be negative, and wins + ties must not exceed total_games), and you divide by total_games to get the final winning percentage."
+        },
+        {
+          "content": "Best practice: because this value is a fixed rule from the problem, consider treating it as a constant (for example name it TOTAL_GAMES = 12) or add a short comment so you and others know it should not change during the program."
+        }
+      ]
+    },
+    "4": {
+      "content": "text = input(\"Enter the number of games that the sports team won in the tournament: \")",
+      "commentList": [
+        "Purpose: This line asks the user to type how many games the team won and saves exactly what they type (the raw text) into the variable text so the program can use it next.",
+        "Syntax and behavior: input(\"...\") displays the prompt you see and then waits (blocks) until the user presses Enter. Whatever the user types is returned as a string and stored in text; nothing is converted here yet.",
+        "Common errors and misconceptions: Don't assume input gives you a number \u2014 it gives a string. The very next line calls int(text), which will raise a ValueError if the user typed letters, a blank line, or something that's not a valid integer. An EOFError can also happen if there is no input source.",
+        "How this line contributes to the solution: This first read is the starting point for the program's validation loop. You collect the raw response here, then convert and check it (in the next lines) until the user provides a valid number of wins.",
+        "Best practices you should follow: Make the prompt clearer and show the allowed range (for example: \"Enter number of games won (0-12): \"). Use a descriptive variable name like wins_text instead of text, trim whitespace with .strip() if helpful, and handle bad input using try/except around int(...) or by validating the string before conversion so the program doesn't crash on non-numeric input.",
+        "Alternative improvement: Rather than converting once here and crashing on invalid input, consider putting the input+conversion inside the validation loop with try/except so you keep asking until the user supplies a valid integer in range."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line asks the user to type how many games the team won and saves exactly what they type (the raw text) into the variable text so the program can use it next."
+        },
+        {
+          "content": "Syntax and behavior: input(\"...\") displays the prompt you see and then waits (blocks) until the user presses Enter. Whatever the user types is returned as a string and stored in text; nothing is converted here yet."
+        },
+        {
+          "content": "Common errors and misconceptions: Don't assume input gives you a number \u2014 it gives a string. The very next line calls int(text), which will raise a ValueError if the user typed letters, a blank line, or something that's not a valid integer. An EOFError can also happen if there is no input source."
+        },
+        {
+          "content": "How this line contributes to the solution: This first read is the starting point for the program's validation loop. You collect the raw response here, then convert and check it (in the next lines) until the user provides a valid number of wins."
+        },
+        {
+          "content": "Best practices you should follow: Make the prompt clearer and show the allowed range (for example: \"Enter number of games won (0-12): \"). Use a descriptive variable name like wins_text instead of text, trim whitespace with .strip() if helpful, and handle bad input using try/except around int(...) or by validating the string before conversion so the program doesn't crash on non-numeric input."
+        },
+        {
+          "content": "Alternative improvement: Rather than converting once here and crashing on invalid input, consider putting the input+conversion inside the validation loop with try/except so you keep asking until the user supplies a valid integer in range."
+        }
+      ]
+    },
+    "5": {
+      "content": "wins = int(text)      ",
+      "commentList": [
+        "This line converts the text you got from input into an integer and stores that integer in the variable wins \u2014 so wins will hold the number of games the team won as an int.",
+        "Syntax note: int(text) parses the string text to produce an integer value, and the = operator assigns that value to wins.",
+        "Common error: if the user typed something that is not a valid integer (for example 'three', '2.5', or an empty string), int(text) will raise a ValueError and the program will crash before the validation loop runs.",
+        "Common misconception: int('3.0') does not work \u2014 decimal strings raise ValueError. Also, int() will accept negative numbers syntactically, but your later validation should reject them if they are outside the allowed range.",
+        "Best practice: you should guard this conversion with a try/except or do the conversion inside a loop so you keep asking the user until they enter a valid integer, and you should print a clear error message when conversion fails.",
+        "Minor detail: int() tolerates surrounding whitespace (so ' 4 ' is fine), but you still need the range check (0..total_games), which the subsequent while-loop is intended to perform."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line converts the text you got from input into an integer and stores that integer in the variable wins \u2014 so wins will hold the number of games the team won as an int."
+        },
+        {
+          "content": "Syntax note: int(text) parses the string text to produce an integer value, and the = operator assigns that value to wins."
+        },
+        {
+          "content": "Common error: if the user typed something that is not a valid integer (for example 'three', '2.5', or an empty string), int(text) will raise a ValueError and the program will crash before the validation loop runs."
+        },
+        {
+          "content": "Common misconception: int('3.0') does not work \u2014 decimal strings raise ValueError. Also, int() will accept negative numbers syntactically, but your later validation should reject them if they are outside the allowed range."
+        },
+        {
+          "content": "Best practice: you should guard this conversion with a try/except or do the conversion inside a loop so you keep asking the user until they enter a valid integer, and you should print a clear error message when conversion fails."
+        },
+        {
+          "content": "Minor detail: int() tolerates surrounding whitespace (so ' 4 ' is fine), but you still need the range check (0..total_games), which the subsequent while-loop is intended to perform."
+        }
+      ]
+    },
+    "7": {
+      "content": "while wins < 0 or wins > total_games :",
+      "commentList": [
+        "This line starts a loop that keeps asking for the number of wins as long as the current value in wins is invalid \u2014 specifically if you entered a negative number or a number greater than total_games.",
+        "Read it as: while (wins < 0) or (wins > total_games): \u2014 the condition after while is a Boolean expression using the or operator; if either side is true the loop body runs. The trailing colon begins the indented loop block.",
+        "Be careful: if you mistakenly use and instead of or the check will only reject values that are both negative and greater than total_games at the same time, which is impossible, so invalid inputs would not be caught.",
+        "A common source of errors is forgetting to update wins inside the loop \u2014 that would create an infinite loop. This code does update wins later in the loop (Line 9), so the loop can end once you enter a valid number.",
+        "Also watch out for non-integer input: you convert text to int before this while, so if the user enters something that isn\u2019t an integer your program will crash. A better practice is to convert inside a try/except or validate the string before int() so you keep prompting without crashing.",
+        "For clearer intent you could write the condition as not (0 <= wins <= total_games) or include a prompt that tells the user the valid range (0 to 12) each time you ask."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line starts a loop that keeps asking for the number of wins as long as the current value in wins is invalid \u2014 specifically if you entered a negative number or a number greater than total_games."
+        },
+        {
+          "content": "Read it as: while (wins < 0) or (wins > total_games): \u2014 the condition after while is a Boolean expression using the or operator; if either side is true the loop body runs. The trailing colon begins the indented loop block."
+        },
+        {
+          "content": "Be careful: if you mistakenly use and instead of or the check will only reject values that are both negative and greater than total_games at the same time, which is impossible, so invalid inputs would not be caught."
+        },
+        {
+          "content": "A common source of errors is forgetting to update wins inside the loop \u2014 that would create an infinite loop. This code does update wins later in the loop (Line 9), so the loop can end once you enter a valid number."
+        },
+        {
+          "content": "Also watch out for non-integer input: you convert text to int before this while, so if the user enters something that isn\u2019t an integer your program will crash. A better practice is to convert inside a try/except or validate the string before int() so you keep prompting without crashing."
+        },
+        {
+          "content": "For clearer intent you could write the condition as not (0 <= wins <= total_games) or include a prompt that tells the user the valid range (0 to 12) each time you ask."
+        }
+      ]
+    },
+    "8": {
+      "content": "    text = input(\"Enter the number of games that the sports team won in the tournament: \")",
+      "commentList": [
+        "You prompt the user again for the number of wins while the program is inside the validation loop; this line makes the program wait for a new input whenever the previous value was out of range.",
+        "You call input(...) which returns a string and store it in the variable text; the indentation shows this prompt runs repeatedly because it is inside the while loop started on Line 7.",
+        "You should know that this line only reads a string \u2014 the conversion to an integer happens on the next line (Line 9). If the user types something that is not an integer (for example letters, a float like '3.5', or leaves it blank), the int(text) on Line 9 will raise an error.",
+        "You might think this single prompt is enough, but without handling conversion errors the program can crash. A common misconception is believing input(...) plus int(...) is always safe; you should guard the conversion with try/except or explicitly check the string before converting.",
+        "You can improve usability by making the prompt clearer (for example: 'Enter wins (0 to 12): ') and by giving an error message when the previous entry was invalid so the user understands why they must re-enter the value.",
+        "You ensure the program eventually gets a valid wins value within 0..total_games; that is necessary so the later calculation of the winning percentage is correct and meaningful."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You prompt the user again for the number of wins while the program is inside the validation loop; this line makes the program wait for a new input whenever the previous value was out of range."
+        },
+        {
+          "content": "You call input(...) which returns a string and store it in the variable text; the indentation shows this prompt runs repeatedly because it is inside the while loop started on Line 7."
+        },
+        {
+          "content": "You should know that this line only reads a string \u2014 the conversion to an integer happens on the next line (Line 9). If the user types something that is not an integer (for example letters, a float like '3.5', or leaves it blank), the int(text) on Line 9 will raise an error."
+        },
+        {
+          "content": "You might think this single prompt is enough, but without handling conversion errors the program can crash. A common misconception is believing input(...) plus int(...) is always safe; you should guard the conversion with try/except or explicitly check the string before converting."
+        },
+        {
+          "content": "You can improve usability by making the prompt clearer (for example: 'Enter wins (0 to 12): ') and by giving an error message when the previous entry was invalid so the user understands why they must re-enter the value."
+        },
+        {
+          "content": "You ensure the program eventually gets a valid wins value within 0..total_games; that is necessary so the later calculation of the winning percentage is correct and meaningful."
+        }
+      ]
+    },
+    "9": {
+      "content": "    wins = int(text)",
+      "commentList": [
+        "Purpose: this line converts the text you just read from the user into an integer and stores that integer in the variable wins so the loop can re-check whether the number of wins is valid.",
+        "Syntax and meaning: int(text) attempts to turn the string stored in text into an integer, and the = operator assigns that integer value to the name wins.",
+        "Potential errors and misconceptions: if the user types anything that is not a whole number (for example letters, an empty string, or '2.5'), int(text) will raise a ValueError and the program will crash. Also note that this line overwrites the previous value of wins.",
+        "Best practice: you should guard this conversion with a try/except block (or validate the string before converting) so you can ask the user again instead of letting the program crash. To avoid repeating code, consider making a small function that asks, converts, and validates input."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: this line converts the text you just read from the user into an integer and stores that integer in the variable wins so the loop can re-check whether the number of wins is valid."
+        },
+        {
+          "content": "Syntax and meaning: int(text) attempts to turn the string stored in text into an integer, and the = operator assigns that integer value to the name wins."
+        },
+        {
+          "content": "Potential errors and misconceptions: if the user types anything that is not a whole number (for example letters, an empty string, or '2.5'), int(text) will raise a ValueError and the program will crash. Also note that this line overwrites the previous value of wins."
+        },
+        {
+          "content": "Best practice: you should guard this conversion with a try/except block (or validate the string before converting) so you can ask the user again instead of letting the program crash. To avoid repeating code, consider making a small function that asks, converts, and validates input."
+        }
+      ]
+    },
+    "11": {
+      "content": "text = input(\"Enter the number of games tied: \")",
+      "commentList": [
+        "You display a prompt asking the user to type how many games were tied and store whatever they type (a string) in the variable text so you can convert and validate it next.",
+        "You are calling the built-in input() with the prompt string \"Enter the number of games tied: \". input() shows that message to the user and returns their response as a string, which the = operator assigns to the variable text.",
+        "Be aware that this line does not check the response: if the user types non-numeric text or nothing at all, the later conversion to int (on Line 12) will raise a ValueError (or input could raise EOFError in non-interactive environments). Also remember input() always returns a string \u2014 it does not produce an integer automatically.",
+        "For better robustness, you should trim whitespace (e.g., text = input(...).strip()) or wrap the conversion in a try/except so you can handle non-numeric input gracefully. You can also make the prompt clearer (for example include the valid range like \"(0-12)\") so users know what to enter."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You display a prompt asking the user to type how many games were tied and store whatever they type (a string) in the variable text so you can convert and validate it next."
+        },
+        {
+          "content": "You are calling the built-in input() with the prompt string \"Enter the number of games tied: \". input() shows that message to the user and returns their response as a string, which the = operator assigns to the variable text."
+        },
+        {
+          "content": "Be aware that this line does not check the response: if the user types non-numeric text or nothing at all, the later conversion to int (on Line 12) will raise a ValueError (or input could raise EOFError in non-interactive environments). Also remember input() always returns a string \u2014 it does not produce an integer automatically."
+        },
+        {
+          "content": "For better robustness, you should trim whitespace (e.g., text = input(...).strip()) or wrap the conversion in a try/except so you can handle non-numeric input gracefully. You can also make the prompt clearer (for example include the valid range like \"(0-12)\") so users know what to enter."
+        }
+      ]
+    },
+    "12": {
+      "content": "ties = int(text)",
+      "commentList": [
+        "You convert the text the user entered into an integer and store it in the variable ties so you can use that number in later checks and calculations.",
+        "You are using the assignment operator '=': the right side calls int(text) which attempts to turn the input string into a Python int, and the result becomes the value of ties (an integer type).",
+        "You need ties as an integer because the program later adds and divides these values to compute the winning percentage and to compare sums against total_games.",
+        "Be aware of a common error: int(text) will raise a ValueError and crash the program if the input is not a valid whole-number string (for example \"three\", \"4.5\", or an empty string). Because this conversion happens before the validation loop, invalid input here will stop the program immediately.",
+        "A better practice is to validate or handle conversion errors right away: either wrap the conversion in a try/except block and re-prompt on ValueError, or check the input format (e.g., text.strip().isdigit()) and loop until you successfully convert. Also strip whitespace (text.strip()) before converting, and remember the later while loop only checks numeric range, not parseability.",
+        "Note for learners: int() does not accept decimal strings like \"3.0\" (that raises ValueError). If you expect decimals, handle them explicitly (convert to float then to int if appropriate), but for counting games you should require a non\u2011negative whole number."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You convert the text the user entered into an integer and store it in the variable ties so you can use that number in later checks and calculations."
+        },
+        {
+          "content": "You are using the assignment operator '=': the right side calls int(text) which attempts to turn the input string into a Python int, and the result becomes the value of ties (an integer type)."
+        },
+        {
+          "content": "You need ties as an integer because the program later adds and divides these values to compute the winning percentage and to compare sums against total_games."
+        },
+        {
+          "content": "Be aware of a common error: int(text) will raise a ValueError and crash the program if the input is not a valid whole-number string (for example \"three\", \"4.5\", or an empty string). Because this conversion happens before the validation loop, invalid input here will stop the program immediately."
+        },
+        {
+          "content": "A better practice is to validate or handle conversion errors right away: either wrap the conversion in a try/except block and re-prompt on ValueError, or check the input format (e.g., text.strip().isdigit()) and loop until you successfully convert. Also strip whitespace (text.strip()) before converting, and remember the later while loop only checks numeric range, not parseability."
+        },
+        {
+          "content": "Note for learners: int() does not accept decimal strings like \"3.0\" (that raises ValueError). If you expect decimals, handle them explicitly (convert to float then to int if appropriate), but for counting games you should require a non\u2011negative whole number."
+        }
+      ]
+    },
+    "14": {
+      "content": "while ties < 0 or total_games < (ties + wins) :",
+      "commentList": [
+        "Purpose: This while line makes the program keep asking for the number of ties until you enter a valid number. It enforces two rules at once: ties cannot be negative, and the total of wins plus ties cannot exceed the tournament's total games.",
+        "Breakdown of the condition: 'while' starts a loop that repeats as long as the condition is true. The condition has two parts joined by 'or': 'ties < 0' checks for negative ties, and 'total_games < (ties + wins)' checks whether the sum of ties and wins is larger than total_games (i.e. ties + wins > total_games). The parentheses force the addition to happen before the comparison.",
+        "How it runs: if either part is true, the loop body runs and you are asked again. Python evaluates the left side first and will skip evaluating the right side if the left is already true (short-circuiting), but here both checks are cheap so this is only an efficiency note.",
+        "Common mistakes to watch for: some learners might think 'total_games < (ties + wins)' allows equality \u2014 it does not; equality (ties + wins == total_games) is allowed. Others might forget that 'wins' must already exist, which would cause a NameError. Also, if the user types something that can't be converted to int, you'll get a ValueError before this loop \u2014 consider catching that where you convert input to int.",
+        "Readability and clarity tip: you can write the same check more clearly as 'while ties < 0 or ties + wins > total_games:' \u2014 this reads left-to-right as 'ties negative or ties+wins exceeds total games.' Keeping the arithmetic explicit (ties + wins) helps other readers understand your intent.",
+        "Best practices suggestion: when you re-prompt inside this loop, give the user a helpful message (for example, show how many games remain: total_games - wins) and use try/except around int(...) so you handle non-integer input gracefully. Also keep the parentheses if it helps clarity, even when they are not strictly required."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This while line makes the program keep asking for the number of ties until you enter a valid number. It enforces two rules at once: ties cannot be negative, and the total of wins plus ties cannot exceed the tournament's total games."
+        },
+        {
+          "content": "Breakdown of the condition: 'while' starts a loop that repeats as long as the condition is true. The condition has two parts joined by 'or': 'ties < 0' checks for negative ties, and 'total_games < (ties + wins)' checks whether the sum of ties and wins is larger than total_games (i.e. ties + wins > total_games). The parentheses force the addition to happen before the comparison."
+        },
+        {
+          "content": "How it runs: if either part is true, the loop body runs and you are asked again. Python evaluates the left side first and will skip evaluating the right side if the left is already true (short-circuiting), but here both checks are cheap so this is only an efficiency note."
+        },
+        {
+          "content": "Common mistakes to watch for: some learners might think 'total_games < (ties + wins)' allows equality \u2014 it does not; equality (ties + wins == total_games) is allowed. Others might forget that 'wins' must already exist, which would cause a NameError. Also, if the user types something that can't be converted to int, you'll get a ValueError before this loop \u2014 consider catching that where you convert input to int."
+        },
+        {
+          "content": "Readability and clarity tip: you can write the same check more clearly as 'while ties < 0 or ties + wins > total_games:' \u2014 this reads left-to-right as 'ties negative or ties+wins exceeds total games.' Keeping the arithmetic explicit (ties + wins) helps other readers understand your intent."
+        },
+        {
+          "content": "Best practices suggestion: when you re-prompt inside this loop, give the user a helpful message (for example, show how many games remain: total_games - wins) and use try/except around int(...) so you handle non-integer input gracefully. Also keep the parentheses if it helps clarity, even when they are not strictly required."
+        }
+      ]
+    },
+    "15": {
+      "content": "    text = input(\"Enter the number of games tied: \")",
+      "commentList": [
+        "Purpose: This line re-asks the user for the number of tied games and stores the raw text they type in the variable text so the loop can check it again. Because it is inside the while loop, it runs repeatedly until the loop condition stops being true.",
+        "Syntax & semantics: input(\"...\") displays the prompt and returns a string. That string is assigned to text. This line does not convert the input to a number \u2014 the conversion happens on the next line with int(text).",
+        "Common errors / misconceptions: You might think this line validates the value; it does not. If the user types something non-numeric (for example 'two' or ''), the subsequent int(text) will raise a ValueError and the program will crash unless you handle it. Also remember input always returns a string, not an integer.",
+        "Best practice 1: Convert and validate inside a try/except so you can catch non-numeric input and prompt the user again instead of crashing. For example, wrap int(text) in try and continue the loop on exception.",
+        "Best practice 2: Make the prompt clearer by showing the valid range (for example 0 to total_games - wins) so the user knows the allowed number of ties. You can also call text = input(...).strip() to remove accidental spaces before converting."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line re-asks the user for the number of tied games and stores the raw text they type in the variable text so the loop can check it again. Because it is inside the while loop, it runs repeatedly until the loop condition stops being true."
+        },
+        {
+          "content": "Syntax & semantics: input(\"...\") displays the prompt and returns a string. That string is assigned to text. This line does not convert the input to a number \u2014 the conversion happens on the next line with int(text)."
+        },
+        {
+          "content": "Common errors / misconceptions: You might think this line validates the value; it does not. If the user types something non-numeric (for example 'two' or ''), the subsequent int(text) will raise a ValueError and the program will crash unless you handle it. Also remember input always returns a string, not an integer."
+        },
+        {
+          "content": "Best practice 1: Convert and validate inside a try/except so you can catch non-numeric input and prompt the user again instead of crashing. For example, wrap int(text) in try and continue the loop on exception."
+        },
+        {
+          "content": "Best practice 2: Make the prompt clearer by showing the valid range (for example 0 to total_games - wins) so the user knows the allowed number of ties. You can also call text = input(...).strip() to remove accidental spaces before converting."
+        }
+      ]
+    },
+    "16": {
+      "content": "    ties = int(text)",
+      "commentList": [
+        "Purpose: you update the loop variable by converting the latest input string in text into an integer and storing it in ties so the validation condition can check the new value.",
+        "Syntax and semantics: int(text) attempts to parse the string text as a base-10 integer; ties = ... assigns that integer value to the variable ties for later use.",
+        "Potential errors and misconceptions: if the user types non-digit characters, a blank string, or a float like \"1.5\", int(text) will raise a ValueError and crash the program; also note that int(\"1.5\") does not round \u2014 it raises an error (int(1.5) would truncate only if you already had a numeric float).",
+        "Why it must be inside the loop: you need this conversion here so ties changes each iteration; if you omitted it the loop condition would never see the new input and you could get an infinite loop.",
+        "Best practices: you should wrap the conversion in a try/except to catch invalid input and re-prompt the user, use text.strip() to remove extra spaces before converting, and keep the conversion next to the input prompt so the code is easier to follow."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: you update the loop variable by converting the latest input string in text into an integer and storing it in ties so the validation condition can check the new value."
+        },
+        {
+          "content": "Syntax and semantics: int(text) attempts to parse the string text as a base-10 integer; ties = ... assigns that integer value to the variable ties for later use."
+        },
+        {
+          "content": "Potential errors and misconceptions: if the user types non-digit characters, a blank string, or a float like \"1.5\", int(text) will raise a ValueError and crash the program; also note that int(\"1.5\") does not round \u2014 it raises an error (int(1.5) would truncate only if you already had a numeric float)."
+        },
+        {
+          "content": "Why it must be inside the loop: you need this conversion here so ties changes each iteration; if you omitted it the loop condition would never see the new input and you could get an infinite loop."
+        },
+        {
+          "content": "Best practices: you should wrap the conversion in a try/except to catch invalid input and re-prompt the user, use text.strip() to remove extra spaces before converting, and keep the conversion next to the input prompt so the code is easier to follow."
+        }
+      ]
+    },
+    "18": {
+      "content": "ratio = ( wins + ties // 2) / total_games",
+      "commentList": [
+        "Purpose: This line computes the team's winning ratio by treating ties as half a win. You add the (wins plus half of the ties) and divide by total_games to get the fraction of games 'won'.",
+        "How it works (syntax and semantics): The parentheses force you to add wins and the result of ties // 2 first, then divide by total_games. ties // 2 uses integer (floor) division, so it returns an integer. The final / produces a float result for ratio.",
+        "Common mistake / bug to watch for: Using // (floor division) for ties loses the half when ties is odd (e.g., 1 tie becomes 0). Also note that the printed label says \"Winning percentage\" but this ratio is in the range 0\u20131, not 0\u2013100, so you might mistakenly think it's already a percent.",
+        "Best practice suggestions: Use ties / 2 or ties * 0.5 instead of ties // 2 so you correctly count halves (e.g., (wins + ties / 2) / total_games). If you want a percent, multiply the ratio by 100 and format the output (for example round(ratio*100, 1) or format to a fixed number of decimal places). Also consider a clearer variable name like winning_ratio or winning_percentage for readability."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line computes the team's winning ratio by treating ties as half a win. You add the (wins plus half of the ties) and divide by total_games to get the fraction of games 'won'."
+        },
+        {
+          "content": "How it works (syntax and semantics): The parentheses force you to add wins and the result of ties // 2 first, then divide by total_games. ties // 2 uses integer (floor) division, so it returns an integer. The final / produces a float result for ratio."
+        },
+        {
+          "content": "Common mistake / bug to watch for: Using // (floor division) for ties loses the half when ties is odd (e.g., 1 tie becomes 0). Also note that the printed label says \"Winning percentage\" but this ratio is in the range 0\u20131, not 0\u2013100, so you might mistakenly think it's already a percent."
+        },
+        {
+          "content": "Best practice suggestions: Use ties / 2 or ties * 0.5 instead of ties // 2 so you correctly count halves (e.g., (wins + ties / 2) / total_games). If you want a percent, multiply the ratio by 100 and format the output (for example round(ratio*100, 1) or format to a fixed number of decimal places). Also consider a clearer variable name like winning_ratio or winning_percentage for readability."
+        }
+      ]
+    },
+    "19": {
+      "content": "print(\"Winning percentage:\", ratio)",
+      "commentList": [
+        "Purpose: this line shows the result to the user by printing the text \"Winning percentage:\" followed by the value stored in ratio.",
+        "Syntax and behavior: print(...) is a function that takes the string \"Winning percentage:\" and the variable ratio as two arguments; Python converts ratio to text, inserts a space between the two arguments, and then writes the line followed by a newline.",
+        "What you will see: if ratio is a float you will get a decimal like 0.5; if ratio is an integer you will get an integer. The code as written prints a fraction (0\u20131), not a percent (0\u2013100).",
+        "Common mistakes to watch for: earlier the code uses integer division (ties // 2), which can lose the half-point for odd ties and make ratio smaller than expected. If you wanted a true percentage you should multiply ratio by 100 or compute ties as ties / 2 (or ties * 0.5) to avoid integer truncation.",
+        "Best practice suggestions: make the output clearer and nicely formatted for the user, for example show a percent sign and limit decimals: print(f\"Winning percentage: {ratio * 100:.1f}%\"). Also ensure ratio is computed with float division so you don't lose fractional wins."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: this line shows the result to the user by printing the text \"Winning percentage:\" followed by the value stored in ratio."
+        },
+        {
+          "content": "Syntax and behavior: print(...) is a function that takes the string \"Winning percentage:\" and the variable ratio as two arguments; Python converts ratio to text, inserts a space between the two arguments, and then writes the line followed by a newline."
+        },
+        {
+          "content": "What you will see: if ratio is a float you will get a decimal like 0.5; if ratio is an integer you will get an integer. The code as written prints a fraction (0\u20131), not a percent (0\u2013100)."
+        },
+        {
+          "content": "Common mistakes to watch for: earlier the code uses integer division (ties // 2), which can lose the half-point for odd ties and make ratio smaller than expected. If you wanted a true percentage you should multiply ratio by 100 or compute ties as ties / 2 (or ties * 0.5) to avoid integer truncation."
+        },
+        {
+          "content": "Best practice suggestions: make the output clearer and nicely formatted for the user, for example show a percent sign and limit decimals: print(f\"Winning percentage: {ratio * 100:.1f}%\"). Also ensure ratio is computed with float division so you don't lose fractional wins."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "while ties < 0 or ties > total_games :",
+      "description": "This line looks plausible because it ensures ties is between 0 and total_games, but it ignores how ties and wins interact. If you use this, you will accept cases where ties by itself is valid but ties + wins exceeds the total number of games. For example, with total_games = 12 and wins = 10, entering ties = 3 passes this check (3 is not < 0 and not > 12) even though 10 + 3 = 13 exceeds the tournament total. So the program would accept an impossible combination of wins and ties. Students often validate inputs separately and forget to enforce combined limits; that\u2019s why this distractor is tempting but incorrect.",
+      "line_number": 0
+    },
+    {
+      "code": "ratio = (wins + ties / 2) * 100 / total_games",
+      "description": "You might choose this because the phrase 'winning percentage' can make you think you must multiply by 100 to show a percent. The issue with this distractor is not the half-win logic (ties are halved here), but the extra multiplication by 100 changes the scale of the answer. If the rest of the program (or the expected output) expects a fraction between 0 and 1, multiplying by 100 will produce values from 0 to 100 and therefore be incorrect. Even if you wanted a percent, adding *100 here changes whether the output is a proportion or a percent, so you must be sure what numeric form is required before multiplying by 100.",
+      "line_number": 0
+    },
+    {
+      "code": "while ties < 0 and total_games < (ties + wins) :",
+      "description": "[backfilled] You might pick this because you think both conditions should be true to consider the input invalid. The mistake is that 'and' requires both tests to be true at the same time. That means if ties is negative but the total (wins + ties) does not exceed the tournament size, the loop will not run and the program will accept a negative ties value. Example: total_games = 12, wins = 3, ties = -1 -> ties < 0 is True but total_games < (ties + wins) is False, so the whole condition is False and the invalid negative input is accepted. Similarly, if ties makes the sum exceed total_games but ties itself is nonnegative, that invalid sum will also be accepted. Using this line therefore fails to re-prompt in many invalid cases. It\u2019s plausible because students often mix up when to use and/or for combined checks, but it\u2019s incorrect here because it only rejects input when both problems occur together.",
+      "line_number": 0
+    },
+    {
+      "code": "while ties <= 0 or total_games < (ties + wins) :",
+      "description": "[backfilled] You might choose this because you think the number of ties must be strictly positive, so you use <= 0 instead of < 0. The problem with this line is that it incorrectly rejects ties = 0, which is a valid case (a team can have zero ties). If the user enters 0 ties, the program will ask again even though that input is acceptable. This leads to unnecessary re-prompting and can confuse or annoy the user. The rest of the condition still checks the combined total, but the check for ties itself is too strict. Many students fall into this trap by assuming counts must be positive rather than allowing zero.",
+      "line_number": 0
+    },
+    {
+      "code": "ratio = (wins + ties) / total_games",
+      "description": "[backfilled] You might pick this because it looks simple and symmetric: add wins and ties, then divide by total games. The misconception here is that a tie counts the same as a win. If you use this line, every tie will be counted as one full win, so the calculated winning rate will be too large whenever there are ties. For example, if you had several ties, you would overstate the team's performance. This line does not implement the rule that ties count as half a win, so it gives an incorrect result even though the code runs without error.",
+      "line_number": 0
+    },
+    {
+      "code": "ratio = (wins + ties / 2) // total_games",
+      "description": "[backfilled] You may select this because you want an integer result or you think '//' is a safer division. The problem is that '//' performs floor division, so any fractional winning rate less than 1 becomes 0, and only large totals that produce whole numbers survive. For most realistic inputs, this will yield 0 or 1 instead of a useful fractional value. That drastically changes the meaning of the result and makes the output useless for comparing teams. This line misapplies the division operator and loses the fractional part of the calculated rate.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "-1 13 15 5 8 6",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:02.283Z",
+  "updated_at": "2026-08-31T01:47:28.467Z",
+  "stat": {
+    "size": 66315,
+    "lastTimeModified": 1788140851343.484
+  }
+}

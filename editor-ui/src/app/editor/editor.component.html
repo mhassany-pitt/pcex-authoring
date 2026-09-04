@@ -26,8 +26,8 @@
             class="p-button-sm p-button-secondary p-button-outlined -my-2 uppercase tracking-tight" (click)="back()">
           </button>
           <button pButton type="submit" label="SAVE" icon="pi pi-check" class="p-button-sm -my-2 uppercase tracking-tight"
-            [disabled]="form.invalid || _v['update'] || distractorCount > 3 || blankLineCount > 4" [loading]="_v['update']"
-            [title]="distractorCount > 3 ? 'Cannot save: More than 3 distractors (' + distractorCount + '/3)' : (blankLineCount > 4 ? 'Cannot save: More than 4 blank lines (' + blankLineCount + '/4)' : 'Save changes')">
+            [disabled]="form.invalid || _v['update'] || blankLineCount > 4" [loading]="_v['update']"
+            [title]="blankLineCount > 4 ? 'Cannot save: More than 4 blank lines (' + blankLineCount + '/4)' : 'Save changes'">
           </button>
         </div>
       </div>
@@ -69,16 +69,16 @@
         </span>
       </div>
 
-      <div *ngIf="distractorCount > 3"
-        class="bg-red-50 border border-red-300 text-red-800 text-sm p-3 rounded-sm shadow-sm flex items-center justify-between">
+      <div *ngIf="distractorCount > (blankLineCount * 4)"
+        class="bg-amber-50 border border-amber-300 text-amber-900 text-sm p-3 rounded-sm shadow-sm flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <i class="pi pi-exclamation-circle text-lg text-red-600"></i>
+          <i class="pi pi-exclamation-triangle text-lg text-amber-600"></i>
           <span>
-            <strong>Too many distractors:</strong> A source cannot have more than 3 distractors. Please remove the extra distractors to save.
+            <strong>Warning (High distractor count):</strong> This source has {{ distractorCount }} distractors, exceeding 4 per blank line ({{ blankLineCount * 4 }} recommended). Please avoid adding more distractors, as this can affect how long it takes to compile and prepare the activity for preview.
           </span>
         </div>
-        <span class="text-xs font-bold bg-red-200 text-red-800 px-2 py-0.5 rounded text-nowrap">
-          {{ distractorCount }} / 3
+        <span class="text-xs font-bold bg-amber-200 text-amber-900 px-2 py-0.5 rounded text-nowrap">
+          {{ distractorCount }} / {{ blankLineCount * 4 }}
         </span>
       </div>
 
@@ -470,21 +470,20 @@
                   <div class="flex items-center justify-end gap-2">
                     <button pButton type="button" label="ADD" icon="pi pi-plus"
                       class="p-button-outlined p-button-sm p-button-help uppercase tracking-tight"
-                      [disabled]="distractorCount >= 3"
-                      [title]="distractorCount >= 3 ? 'Maximum of 3 distractors reached' : 'Add a distractor'"
+                      title="Add a distractor"
                       (click)="addDistractor()">
                     </button>
                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">or</span>
                     <button pButton type="button" label="GENERATE DISTRACTORS"
-                      [title]="distractorCount >= 3 ? 'Maximum of 3 distractors reached' : 'Generate distractors for this blank line'"
+                      title="Generate distractors for this blank line"
                       icon="genai-icon"
                       class="p-button-sm p-button-secondary p-button-outlined uppercase tracking-tight" [loading]="_v['generate:distractors']"
-                      [disabled]="!model.code || distractorCount >= 3" (click)="onGenDistractors()">
+                      [disabled]="!model.code" (click)="onGenDistractors()">
                     </button>
                   </div>
-                  <span *ngIf="distractorCount >= 3" class="text-[11px] text-amber-700 text-right flex items-center justify-end gap-1">
-                    <i class="pi pi-info-circle text-xs"></i>
-                    Maximum of 3 distractors reached per source.
+                  <span *ngIf="distractorCount > (blankLineCount * 4)" class="text-[11px] text-amber-700 text-right flex items-center justify-end gap-1">
+                    <i class="pi pi-exclamation-triangle text-xs"></i>
+                    Warning: {{ distractorCount }} distractors exceeds {{ blankLineCount * 4 }} (4 per blank line). Please avoid adding more to prevent slow compilation/preview.
                   </span>
                 </ng-container>
               </div>

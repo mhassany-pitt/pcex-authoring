@@ -1,0 +1,450 @@
+{
+  "id": "664e3c8791363872f0ba356c",
+  "_id": "664e3c8791363872f0ba356c",
+  "name": "Reporting File Information (Case 2) ",
+  "description": " Construct a program that receives the full path to an input file from the user, reads that file and reports the number of lines, the longest line, the number of words on each line, and the length of the longest word on each line. Make sure that the program handles each specific exception that could occur. Also, the program must ask the user for a valid file path until the user enters a file path that could be accessed without any exception.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_input_stat2.py",
+  "code": "#Step 1: Define the function that gets the valid file path\ndef get_file():\n    valid = False\n    while not valid : \n        try:\n            file_name = input(\"Enter the full path of a file: \")\n            myfile = open( file_name, \"r\") \n            myfile.close()\n            valid = True\n        except FileNotFoundError:\n            print(\"File not found.\")\n        except IOError:\n            print(\"Problem with the file!\")\n    return file_name\n#Step 2: Define the function that processes the file\ndef get_stat(file_name):\n    #Step 2.1: Assign initial value to variable that we need for reporting the file information\n    num_lines = 0\n    longest_line = \"\"\n    #Step 2.2: Enclose the code that might throw an exception within the try block\n    try :\n        #Step 2.2.1: Open the file and process each line in the file\n        myfile = open( file_name, \"r\")\n        for line in myfile:\n            num_lines += 1\n            num_words = len(line.split())\n            #Determine if the line is the longest line so far\n            if (len(line) > len(longest_line)) :\n                longest_line = line\n            #Find the length of the longest word in the line\n            longest_word = 0\n            for w in line.split() :\n                if len(w) > longest_word :\n                    longest_word = len(w)\n            #Print the line information\n            print(\"Line \" + str(num_lines) + \" has \" + str(num_words) + \" tokens (longest = \" + str(longest_word) + \")\")\n        print(\"Longest line:\" + longest_line)\n        #Step 2.2.2: Close the file\n        myfile.close()\n    #Step 2.3: Handle all possible exceptions that may be thrown in the try block \n    except FileNotFoundError:\n        print(\"File not found.\")\n    except IOError:\n        print(\"Problem with the file!\")\n#Step 3: Call the functions\nget_stat( get_file() )",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Define the function that gets the valid file path",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "def get_file():",
+      "commentList": [
+        "We need to first declare the function that gets the file path from the user. This function asks the user to enter the file path until the user enters a file path that could be accessed without any exception. The function returns the file path that could be accessed without any exception.",
+        "Note that all statements following the header line are indented."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "    valid = False",
+      "commentList": [
+        "We need this variable to control when we should stop asking the user to enter the file path. This variable is True when the file path is valid, and False otherwise. We initialize it to False because we have not received the file path yet."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "4": {
+      "content": "    while not valid : ",
+      "commentList": [
+        "We need to repeat asking the user to enter the file path as long as the user enters a file path that is not valid. Therefore, we need to use a loop structure. Since we don't know ahead of time how many times the loop will be repeated, we need to use a while loop. The condition in the while loop tests whether the body of the loop should be repeated, so it should test whether the file path is not valid.",
+        "We check whether the file path is not valid by inverting the condition that checks whether the file path is valid. We invert the condition by using the not operator. Note that the following statement is also correct:<br>while valid == False ",
+        "Note that the not operator takes a single condition and evaluates to True if that condition is False and to False if the condition is True. ",
+        "The body of the while loop is repeated as long as the user enters a file path that is not valid. The loop terminates when the loop condition evaluates to False, that is when the user enters a file path that is valid."
+      ],
+      "indentLevel": 1,
+      "blank": true
+    },
+    "5": {
+      "content": "        try:",
+      "commentList": [
+        "The try blocks tries to execute the code within it. The statements in the try block may throw several types of exception.",
+        "If an error is encountered, the try block code execution is stopped and transferred down to the except block(s)."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "6": {
+      "content": "            file_name = input(\"Enter the full path of a file: \")",
+      "commentList": [
+        "The input function prompts the user to enter the file path, then reads the text entered by the user and places it in the variable file_name. The value that will be stored in variable file_name is a string."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "7": {
+      "content": "            myfile = open( file_name, \"r\") ",
+      "commentList": [
+        "The open function opens the file. The variable file_name specifies the path to this file. We want to read the file; therefore, we open it in the read mode \"r\".",
+        "We could also call the open function without specifying the mode, because when only the filename is passed, the open function opens the file in read mode."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "8": {
+      "content": "            myfile.close()",
+      "commentList": [
+        "We need to close the file after opening it; therefore, we use close() to close it and free up any system resources taken up by the open file."
+      ],
+      "indentLevel": 3,
+      "blank": true
+    },
+    "9": {
+      "content": "            valid = True",
+      "commentList": [
+        "The statement is executed when none of the previous statements in the try block throw an exception. In this case, the input file path is valid and we set variable valid to True."
+      ],
+      "indentLevel": 3,
+      "blank": true
+    },
+    "10": {
+      "content": "        except FileNotFoundError:",
+      "commentList": [
+        "We need to handle the FileNotFoundError. This error occurs when the file could not be found.",
+        "The body of this except block gets executed only if the file could not be found. Otherwise, the body of this except statement is skipped."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "11": {
+      "content": "            print(\"File not found.\")",
+      "commentList": [
+        "This statement prints to the default standard output stream the error that caused the FileNotFoundError. The printed text is followed by the end-of-line character at the end."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "12": {
+      "content": "        except IOError:",
+      "commentList": [
+        "We need to handle the IOError. This error occurs when an error occurs when trying to read/close the file.",
+        "The body of this except block gets executed only if an error occurs when trying to read/close the file. Otherwise, the body of this except statement is skipped."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "13": {
+      "content": "            print(\"Problem with the file!\")",
+      "commentList": [
+        "This statement prints to the default standard output stream the error that caused the IOError. The printed text is followed by the end-of-line character at the end."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "14": {
+      "content": "    return file_name",
+      "commentList": [
+        "Now that we finished validating the file path, we need to return the file path. The return statement, when reached, ends the function call and sends the result back to the caller."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "15": {
+      "content": "#Step 2: Define the function that processes the file",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "16": {
+      "content": "def get_stat(file_name):",
+      "commentList": [
+        "We need to first declare the function that receives a full path for a file, reads that file, and reports some information related to that file. The given full file path is referred by variable file_name.<br><br>Note that all statements following the header line are indented."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "17": {
+      "content": "    #Step 2.1: Assign initial value to variable that we need for reporting the file information",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "18": {
+      "content": "    num_lines = 0",
+      "commentList": [
+        "We need this variable to track the line numbers. We set it to 0 because we have not started processing the lines yet."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "19": {
+      "content": "    longest_line = \"\"",
+      "commentList": [
+        "We need this variable to track the longest line. This statement sets variable longest_line to the empty string. Later, we will update the content of this variable as we iterate through the lines in the file."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "20": {
+      "content": "    #Step 2.2: Enclose the code that might throw an exception within the try block",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "21": {
+      "content": "    try :",
+      "commentList": [
+        "The try blocks tries to execute the code within it. The statements in the try block may throw several types of exception.",
+        "If an error is encountered, the try block code execution is stopped and transferred down to the except block(s)."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "22": {
+      "content": "        #Step 2.2.1: Open the file and process each line in the file",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "23": {
+      "content": "        myfile = open( file_name, \"r\")",
+      "commentList": [
+        "The open function opens the file. The variable file_name specifies the path to this file. We want to read the file; therefore, we open it in the read mode \"r\".",
+        "We could also call the open function without specifying the mode, because when only the filename is passed, the open function opens the file in read mode."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "24": {
+      "content": "        for line in myfile:",
+      "commentList": [
+        "For reading lines from a file, we can loop over the file object.",
+        "This for loop assigns the name line to each of the lines in the file in turn, from the beginning of the file to the end, and then the statement in the loop body will be executed for each line.",
+        "Note that all statements inside the loop need to be indented with respect to the loop header."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "25": {
+      "content": "            num_lines += 1",
+      "commentList": [
+        "Once we start processing each line, we increment the line number by 1.",
+        "The += operator adds the value on the right-hand side of the assignment operator (i.e., 1) to the current value of the variable on the left-hand side (i.e., value of variable num_lines) and the result is stored in the variable num_lines. Thus, this statement is equivalent to the statement num_lines = num_lines + 1."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "26": {
+      "content": "            num_words = len(line.split())",
+      "commentList": [
+        "To get the number of words in the line, we need to split the line into words, and count the number of words. We split the line into a list of words by calling the split function. The len() function returns the number of words in the list that is returned by the split function. ",
+        "Note that we don't necessarily need to store the list of words returned by the split function in a variable. To get the number of words in this list, we could use the returned list from the split function directly in the len() function .",
+        "Also, note that, by default, the split function considers any number of whitespace characters as a word boundary."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "27": {
+      "content": "            #Determine if the line is the longest line so far",
+      "commentList": [],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "28": {
+      "content": "            if (len(line) > len(longest_line)) :",
+      "commentList": [
+        "To find the longest line, we need to compare the number of characters in the current line with the number of characters in the longest line we've found so far. If the current line has more characters, then we need to set the variable longest_line to the current line.",
+        "len(line) returns the number of characters in the current line.<br>len(longest_line) returns the number of characters in the longest line we've found so far.",
+        "If the current line has more characters than the longest line we've found so far, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "29": {
+      "content": "                longest_line = line",
+      "commentList": [
+        "This statement sets the longest line to the current line."
+      ],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "30": {
+      "content": "            #Find the length of the longest word in the line",
+      "commentList": [],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "31": {
+      "content": "            longest_word = 0",
+      "commentList": [
+        "We need this variable to find the length of the longest word in the line. We set it to 0 because we have not started processing the words of the line yet."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "32": {
+      "content": "            for w in line.split() :",
+      "commentList": [
+        "We want to iterate over the words in the line and find the length of the longest word. We can use a for loop to iterate through the words in the list of words in the line.",
+        "This for loop assigns the name w to each of the words in the list of words in turn, from left to right, and then the statement in the loop body will be executed for each word.",
+        "Note that we could iterate through the list of words that will be returned by the split function without necessarily having to store that list in a variable. We could use the returned list from the split function directly in the for loop header.",
+        "Also, note that, by default, the split function considers any number of whitespace characters as a word boundary. Also, note that all statements inside the loop need to be indented with respect to the loop header."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "33": {
+      "content": "                if len(w) > longest_word :",
+      "commentList": [
+        "To find the length of the longest word, we need to compare the number of characters in the visited word with the number of characters in the longest word that we've found so far. If the visited word has more characters, then we need to set the variable longest_word to the length of the visited word.",
+        "Note that the function len(w) returns the number of characters in the visited word.",
+        "If the visited word has more characters than the longest word that we've found so far, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+      ],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "34": {
+      "content": "                    longest_word = len(w)",
+      "commentList": [
+        "This statement sets the length of the longest word to the length of the visited word.",
+        "Note that the function len(w) returns the number of characters in the visited word."
+      ],
+      "indentLevel": 5,
+      "blank": false
+    },
+    "35": {
+      "content": "            #Print the line information",
+      "commentList": [],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "36": {
+      "content": "            print(\"Line \" + str(num_lines) + \" has \" + str(num_words) + \" tokens (longest = \" + str(longest_word) + \")\")",
+      "commentList": [
+        "This statement concatenates the content of the given strings and variables to print the file information. We concatenate the content of these variables using the + operator. Variables num_lines, num_words, and longest_word hold integer values and their values can be concatenated with strings only when they're explicitly converted to a string using the str function.",
+        "Note that the concatenating and printing are done in the same line. That is, we don't have to store the concatenated string to a new variable at first and then print it in the next line.",
+        "Note that the + operator creates a new string from the contents of its operands joined. This string will be printed by the print function and followed by the end-of-line character at the end."
+      ],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "37": {
+      "content": "        print(\"Longest line:\" + longest_line)",
+      "commentList": [
+        "This statement prints the given text followed by the longest line to the default output stream. The printed text is followed by the end-of-line character at the end.",
+        "Note that we concatenate the content of two strings using the + operator. Also, note that the concatenating and printing are done in the same line. That is, we don't have to store the concatenated string to a new variable at first and then print it in the next line."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "38": {
+      "content": "        #Step 2.2.2: Close the file",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "39": {
+      "content": "        myfile.close()",
+      "commentList": [
+        "We're done with reading the file; therefore, we use close() to close it and free up any system resources taken up by the open file."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "40": {
+      "content": "    #Step 2.3: Handle all possible exceptions that may be thrown in the try block ",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "41": {
+      "content": "    except FileNotFoundError:",
+      "commentList": [
+        "We need to handle the FileNotFoundError. This error occurs when the file could not be found.",
+        "The body of this except block gets executed only if the file could not be found. Otherwise, the body of this except statement is skipped."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "42": {
+      "content": "        print(\"File not found.\")",
+      "commentList": [
+        "This statement prints to the default standard output stream the error that caused the FileNotFoundError. The printed text is followed by the end-of-line character at the end."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "43": {
+      "content": "    except IOError:",
+      "commentList": [
+        "We need to handle the IOError. This error occurs when an error occurs when trying to read/close the file.",
+        "The body of this except block gets executed only if an error occurs when trying to read/close the file. Otherwise, the body of this except statement is skipped."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "44": {
+      "content": "        print(\"Problem with the file!\")",
+      "commentList": [
+        "This statement prints to the default standard output stream the error that caused the IOError. The printed text is followed by the end-of-line character at the end."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "45": {
+      "content": "#Step 3: Call the functions",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "46": {
+      "content": "get_stat( get_file() )",
+      "commentList": [
+        "This statement first calls the get_file function. Then, it calls the get_stat function passing it the path to the file that the user entered.",
+        "Note that we do not necessarily have to store the value returned from the get_file function call in a variable. We could use the file returned from this function call directly in the get_stat function.",
+        "Note that the function call must be done after the function is declared."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "ac201758-e09a-447b-842e-6ca3bc81c39d",
+      "line": {
+        "number": 0,
+        "content": "while valid :",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    },
+    {
+      "id": "4f87f566-7d07-4ccf-85e5-9e0d9ec89e48",
+      "line": {
+        "number": 0,
+        "content": "if not valid :",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    },
+    {
+      "id": "6c2c1fe3-891c-4f21-a13b-a35e589980c9",
+      "line": {
+        "number": 0,
+        "content": "if valid == False :",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    }
+  ],
+  "programInput": "/Users/input_stat_2.txt /Users/input_stat.txt",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

@@ -1,0 +1,318 @@
+{
+  "id": "664e3ca791363872f0ba3590",
+  "_id": "664e3ca791363872f0ba3590",
+  "name": "Calculating the Average of Input Integers",
+  "description": "Construct a program that reads a series of integers from the user, sums them up, and calculates their average. The user enters 0 to indicate the end of the input.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_average.py",
+  "code": "#Step 1: Assign initial values to the variables which we need for this program\ntotal = 0\ncount = 0\n#Step 2: Read the first integer that the user enters\ntext = input(\"Enter an integer (0 to quit): \")\nnum = int(text)\n#Step 3: Process the integer that the user has entered, then receive and process the next integers as long as the user enters a non-zero integer; otherwise stop\nwhile num != 0 :\n    count += 1\n    total += num\n    print(\"The sum so far is\", total, \", count =\", count)\n    text = input(\"Enter an integer (0 to quit): \")\n    num = int(text)\n#Step 4: Calculate and print the average of the integers entered by the user\nif count == 0 :\n    print(\"No integers were entered.\")\nelse :\n    average = total / count\nprint(\"The average is:\", average)",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Assign initial values to the variables which we need for this program",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "total = 0",
+      "commentList": [
+        "Purpose: You create a variable named total and set it to 0 so you have a place to keep the running sum of all integers the user enters before you start the loop.",
+        "Syntax & semantics: total = 0 binds the name total to the integer value 0. Later in the program you will update that value with statements like total += num to add each new number to the running total.",
+        "Common mistakes & misconceptions: If you forget to initialize total before the loop you will get a NameError when you try to use it. If you initialize it inside the loop you will reset the sum on each iteration. Also avoid initializing it to a non-zero value (e.g., 1) because that will give a wrong total.",
+        "Type note: Initializing as 0 is fine here \u2014 in Python 3 the final average will be a float when you divide. If you want to emphasize floating behavior you could use 0.0, but 0 works correctly for accumulation.",
+        "Best practices: Use a clear name like total (instead of sum, which would shadow Python's built-in sum function), put this initialization before you read inputs or enter the loop, and add a short comment so you or others understand this variable's role."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "count = 0",
+      "commentList": [
+        "You set count to 0 to create a counter that tracks how many valid integers the user has entered; this value is used later to compute the average (total / count) and to detect if no numbers were entered.",
+        "You are using the assignment operator '=' to give the name count the integer value 0; after this line you can change count with statements like 'count += 1' inside the loop.",
+        "If you forget to initialize count before the loop, you'll get an error because Python won't know what count refers to, or you might accidentally reuse a leftover value from earlier code and get a wrong average.",
+        "Don't set count to 1 thinking the first input is already counted \u2014 initialize to 0 and only increment when you actually process a non-zero input so the count matches the summed values.",
+        "Best practice: pick a clear name like count, initialize it right before the loop, and keep a brief comment so you (or others) understand this variable's role in computing the average."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "4": {
+      "content": "#Step 2: Read the first integer that the user enters",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "5": {
+      "content": "text = input(\"Enter an integer (0 to quit): \")",
+      "commentList": [
+        "Purpose: this line shows a prompt to the user and saves whatever they type as a string in the variable text so you can convert and check it next.",
+        "Syntax/semantics: input(...) prints the prompt and returns the user\u2019s response as a string; the = stores that string in text.",
+        "How it fits: you read the first value before the loop so Line 6 can convert it to an integer and Line 8 can test whether it equals the sentinel 0 to start or skip the loop.",
+        "Possible errors: input itself returns a string \u2014 if the user types non-digits (or nothing) the later int(text) will raise a ValueError; if the user sends EOF (Ctrl\u2011D/Ctrl\u2011Z) input() can raise EOFError.",
+        "Common misconceptions: don\u2019t assume input returns a number. In Python 3 it returns a string (unlike Python 2\u2019s input), so you must convert and/or validate it before using it as a number.",
+        "Best practices: make the prompt clear (you already show the sentinel 0), strip whitespace with text = text.strip() before conversion, and validate inside a try/except or re-prompt until the user enters a valid integer; also consider renaming text to user_input for clarity and avoid shadowing built-ins."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "6": {
+      "content": "num = int(text)",
+      "commentList": [
+        "You convert the text the user typed into an integer and store it in the variable num so you can compare it to 0 and do arithmetic with it.",
+        "You are calling the built-in function int(text) to parse the string from input into an integer; the = sign assigns that integer value to the name num.",
+        "Be aware that if the user types something that is not a valid integer (for example 'abc', '' or '3.5'), int(text) will raise a ValueError. Also note that int('3.5') will not round \u2014 it will error (int(3.5) as a number would truncate, but here you have a string).",
+        "As a best practice, you should validate or wrap this conversion in a try/except block so you can handle bad input (e.g., prompt the user again). You could also write num = int(input(...)) in one line, but keeping the conversion separate makes it easier to catch errors and explain what happens.",
+        "This line also correctly handles signed integers (negative numbers) and zero, which is important because zero is the sentinel value that tells the program to stop reading more numbers."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "7": {
+      "content": "#Step 3: Process the integer that the user has entered, then receive and process the next integers as long as the user enters a non-zero integer; otherwise stop",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "8": {
+      "content": "while num != 0 :",
+      "commentList": [
+        "Purpose: This line starts a loop that keeps the program processing numbers until the user signals the end by entering 0. You use this loop to repeatedly run the indented lines that update the count and total and ask for the next number.",
+        "Syntax and meaning: 'while' begins a pre-test loop. The condition num != 0 is evaluated before each iteration; '!=' means \"not equal to\". The trailing colon (:) introduces the indented block that runs when the condition is True, and Python uses that indentation to group the loop body.",
+        "Potential errors and misconceptions: If you forget to update num inside the loop, you will create an infinite loop because the condition never changes. A common mistake is trying to use a single '=' (assignment) in the condition \u2014 that is a syntax error in Python. Also be aware that if num was not successfully converted to an integer earlier, a ValueError would occur before reaching this line.",
+        "Best practices: Make sure you update num (by reading and converting input) inside the loop so the condition can become False. Consider validating user input with try/except so a non-integer doesn't crash the program. For clarity you can also use a while True with a clear break when num == 0, but the current explicit condition is simple and readable."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "9": {
+      "content": "    count += 1",
+      "commentList": [
+        "You use this line to increase the count of numbers processed by one each time the loop runs; it ensures the 'count' variable reflects how many non-zero integers you've entered so far, which is needed to compute the average.",
+        "You can read 'count += 1' as a shorthand for 'count = count + 1' \u2014 it adds 1 to the current value of count and stores the result back in count.",
+        "Because this line is inside the while num != 0 loop, you only increment when the current number is non-zero; you should keep it indented exactly here so it runs once per valid input processed.",
+        "Watch out for common mistakes: if you forget to initialize count = 0 before the loop, you'll get a NameError; if you accidentally write count++ (a C/Java style) it won't work in Python; if you write count =+ 1 you won't increment but set count to +1.",
+        "Also be careful with types: if count were not a number (for example a string), doing count += 1 would raise a TypeError \u2014 you should ensure count is an integer before this line runs.",
+        "For good practice, keep this increment right next to the code that processes the number, give the variable a clear name like count, and add a short comment so you (and others) clearly understand that you're tracking how many values were entered."
+      ],
+      "indentLevel": 1,
+      "blank": true
+    },
+    "10": {
+      "content": "    total += num",
+      "commentList": [
+        "Purpose: This line adds the current number (num) to the running total so that total always holds the sum of all integers you have processed so far.",
+        "Syntax and meaning: 'total += num' is shorthand for 'total = total + num'. It updates the existing total by adding num and storing the result back in total; both values must be numeric.",
+        "Potential errors and misconceptions: If you hadn't set total = 0 before the loop you'd get a NameError because total would not exist. Some learners think '+=' creates a new variable\u2014actually it updates the existing one. Also, if num were not a valid integer, the program would already have failed earlier when converting input to int.",
+        "Best practices: Make sure you initialize total to 0 before the loop. Avoid naming variables 'sum' because that shadows the built-in sum() function. Consider validating user input (try/except) so non-integer input doesn't crash the program, and remember to compute the average after the loop using total and count (casting to float if you need decimal precision in older Python versions)."
+      ],
+      "indentLevel": 1,
+      "blank": true
+    },
+    "11": {
+      "content": "    print(\"The sum so far is\", total, \", count =\", count)",
+      "commentList": [
+        "Purpose: You use this line to show the user the running results\u2014it prints the current sum (total) and how many integers you have processed (count) while the loop runs.",
+        "How it works (syntax & semantics): You call print with several arguments separated by commas: a string, the variable total, another string, and the variable count. Python converts the non-string variables to text and inserts a single space between each argument, so the output will look like: The sum so far is 10 , count = 3 (note the space before the comma comes from using a comma-separated string argument).",
+        "Common errors and misconceptions: If you try to join numbers and strings with the + operator (for example 'The sum so far is ' + total) you'll get a TypeError unless you convert total to a string. Also be careful not to put this print before you update total and count\u2014then you'll show stale values. Finally, if you forget the parentheses (Python 3) you'll get a SyntaxError.",
+        "Best practices: For clearer and cleaner output, prefer an f-string or format call so you avoid awkward spacing, for example: print(f'The sum so far is {total}, count = {count}'). You can also control separators with the sep parameter if you keep print's comma-style arguments (e.g., sep=' ' or sep=''). Avoid excessive printing inside very large loops for performance reasons."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "12": {
+      "content": "    text = input(\"Enter an integer (0 to quit): \")",
+      "commentList": [
+        "This line asks the user for the next integer while the loop is running and stores whatever they type as the string variable text so the program can process the next input.",
+        "Syntax/semantics: input(\"Enter an integer (0 to quit): \") displays the prompt and returns what the user types as a string; that string is then assigned to the variable text. input() does not convert the value to a number by itself.",
+        "How it fits the flow: you must read a new value each loop iteration so the program can eventually see a zero and stop; without this read the loop would repeatedly process the same num and become infinite. Note that this line only updates text \u2014 line 13 converts it to the numeric variable num that the while condition checks.",
+        "Common errors/misconceptions: if the user types something that is not a valid integer, the later conversion (int(text) on line 13) will raise a ValueError. Also forgetting this line (or the following conversion) is a frequent cause of an infinite loop.",
+        "Best practices: make the prompt clear (as it is) and validate the input before converting. For example, wrap the int conversion in a try/except to handle non-integer input, or strip whitespace with text = input(...).strip() before converting. You can also combine reading and converting in one step (num = int(input(...))) if you handle conversion errors appropriately."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "13": {
+      "content": "    num = int(text)",
+      "commentList": [
+        "Purpose: This line converts the most recent user input stored in text into an integer and stores that numeric value in num so the while loop can check the new value on the next iteration.",
+        "Syntax & semantics: int(text) tries to parse the string text into an integer; the = operator assigns the resulting int to the variable num, replacing its previous value.",
+        "Common errors/misconceptions: If the user entered something that isn't a valid integer (for example 'abc', '' or '3.5'), int(text) will raise a ValueError. Also note int() returns a new integer and does not change the string in text.",
+        "Best practices: You should validate input or wrap this conversion in a try/except block to handle ValueError. Trimming whitespace first (text = text.strip()) can avoid simple mistakes from extra spaces.",
+        "Role in control flow: Because this assignment is at the end of the loop body, it updates the loop-control variable num so the while num != 0 condition can respond to the user's latest entry and eventually terminate when the user types 0."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "14": {
+      "content": "#Step 4: Calculate and print the average of the integers entered by the user",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "15": {
+      "content": "if count == 0 :",
+      "commentList": [
+        "Purpose: This line checks whether no integers were entered by you (count equals zero). If it is true, the program will take the branch that reports that no numbers were given instead of trying to compute an average.",
+        "Syntax and meaning: 'if' starts a conditional statement, 'count == 0' uses '==' to test equality (not assignment), and the trailing ':' begins the indented block that runs only when the condition is true. Indentation determines which statements belong to this 'if'.",
+        "Common errors and misconceptions: A frequent mistake is to write a single '=' instead of '==' (which would be a syntax error in an if). Another issue is forgetting to handle the zero case \u2014 if you don't check count == 0 before dividing, you'll get a ZeroDivisionError at the average calculation.",
+        "Program-flow pitfall to watch for: In this specific solution you must ensure the code that prints or computes the average does not run when count is zero. If you leave the final print outside the else-block, you can get a NameError (average undefined) or attempt a division by zero. Keep the average computation and its print inside the else branch.",
+        "Best practices: Keep the equality check explicit as written, add a short comment if helpful, and test your program by immediately entering 0 to confirm the 'no integers' message appears and no division or undefined-variable errors occur."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "16": {
+      "content": "    print(\"No integers were entered.\")",
+      "commentList": [
+        "Purpose: This line prints a clear message to the user when no integers were entered \u2014 you reach this line when count == 0, so it tells you there is nothing to average.",
+        "Syntax and semantics: print(\"No integers were entered.\") calls Python's print function with a single string argument. You are passing a string literal (inside quotes) which is displayed exactly as written.",
+        "Potential error / common misconception: You might think printing this message is enough, but in the given program the average is printed after this if-block regardless. If you do nothing else, the program will later try to print the variable average even though it was never set, causing a runtime error. Be careful to ensure you don't use average when count == 0.",
+        "Best practice: After you print this message you should either stop the program (for example by returning or exiting) or move the later print of the average inside the else branch. You can also initialize or set average to a safe value only when at least one integer is entered so you avoid undefined-variable errors."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "17": {
+      "content": "else :",
+      "commentList": [
+        "Line 17 starts the else branch that pairs with the if on line 15. You use this branch so the code that follows runs only when the if condition (count == 0) is false \u2014 i.e., when you have at least one number to average.",
+        "Syntax note: else must be at the same indentation level as its matching if and must end with a colon. If you forget the colon or misindent, Python will raise a SyntaxError or attach the block to the wrong statement.",
+        "Semantics: else has no condition \u2014 it executes exactly when the preceding if condition is false. In this program that means the average calculation inside the else is safe because you already checked that count is not zero.",
+        "Common misconception: don't confuse this else with a loop's else. Here it belongs to the if on line 15. Placing it incorrectly can make you think it pairs with the while loop, which would change your program's logic.",
+        "Potential error this avoids: if you always computed the average without this else, you could get a ZeroDivisionError when count is 0. By using else you ensure you only compute average when it's valid.",
+        "Best practice: keep the if/else paths clear and small. You can also choose an early return or exit after printing the 'No integers were entered.' message to eliminate the else and make the control flow easier to read."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "18": {
+      "content": "    average = total / count",
+      "commentList": [
+        "This line computes the average: you divide the accumulated sum (total) by the number of values entered (count) and store that result in the variable average for printing later.",
+        "The '=' operator assigns the value on the right to the variable on the left; 'total / count' performs numeric division. In Python 3 this produces a float even if total and count are integers.",
+        "If count were zero this would cause a ZeroDivisionError; you avoid that here because the code only reaches this line inside the else branch that runs when count != 0.",
+        "A common mistake is using integer division ('//') which would truncate any fractional part. You should use '/' to get a precise (possibly non-integer) average.",
+        "Best practice: if you want a specific number of decimal places when you show the average, format or round it before printing (for example round(average, 2) or use an f-string/format). Also keep your variable names clear so you and others understand their roles."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "19": {
+      "content": "print(\"The average is:\", average)",
+      "commentList": [
+        "Purpose: This line displays the calculated average to the user so they can see the final result of the program.",
+        "Syntax and semantics: print takes the label and the value (average) as separate arguments. Python converts average to text and prints both with a space between them by default; print itself returns None and only produces output.",
+        "Potential errors and common misconceptions: as written, average is only assigned inside the else block (line 18). If no integers were entered (count == 0), average will not exist and this print will raise a NameError. Also note that average = total / count produces a floating-point result in Python 3 (in Python 2 it would do integer division for integers).",
+        "Best practices: you should only print average when it is defined \u2014 move this print inside the else block or guard it with an if to avoid a NameError. For clearer output and control over formatting, consider using an f-string like print(f\"The average is: {average:.2f}\") to show a rounded number."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "c0945327-f272-43c8-8f16-57ffbd24c1e4",
+      "line": {
+        "number": 0,
+        "content": "total += 1",
+        "commentList": [
+          "You might choose this because you think some variable must be increased each time an input occurs and you mix up which variable does what. If you use total += 1 here, you add 1 to the running sum instead of updating the number-of-inputs tracker. As the loop continues, total will get both this extra +1 each iteration and also the actual input added later, so the sum will be inflated by one per input. Meanwhile the variable that is supposed to record how many integers were entered never changes, so the program's logic that depends on that count will be wrong (for example the program may behave as if no numbers were entered or produce an incorrect average). Compared to the intended action at this spot, this distractor updates the wrong variable and so fails to keep track of how many inputs you processed."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might choose this because you think some variable must be increased each time an input occurs and you mix up which variable does what. If you use total += 1 here, you add 1 to the running sum instead of updating the number-of-inputs tracker. As the loop continues, total will get both this extra +1 each iteration and also the actual input added later, so the sum will be inflated by one per input. Meanwhile the variable that is supposed to record how many integers were entered never changes, so the program's logic that depends on that count will be wrong (for example the program may behave as if no numbers were entered or produce an incorrect average). Compared to the intended action at this spot, this distractor updates the wrong variable and so fails to keep track of how many inputs you processed."
+      ]
+    },
+    {
+      "id": "1f0402bf-2cfe-4d2f-9427-525282b2007d",
+      "line": {
+        "number": 0,
+        "content": "count += num",
+        "commentList": [
+          "You might pick this because it looks like 'adding something to count' and you assume count should reflect the total of inputs. If you do count += num, the count variable will accumulate the numeric values the user enters, so after several inputs count will equal the sum of inputs rather than the number of inputs. Later, when the program computes average = total / count, both numerator and denominator will often be similar (both are sums), which produces a wrong result (for many positive inputs it can even collapse to 1). In short, this line turns the counter into a second sum instead of tracking how many entries you processed, so the computed average and any logic that checks the number of inputs will be incorrect."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might pick this because it looks like 'adding something to count' and you assume count should reflect the total of inputs. If you do count += num, the count variable will accumulate the numeric values the user enters, so after several inputs count will equal the sum of inputs rather than the number of inputs. Later, when the program computes average = total / count, both numerator and denominator will often be similar (both are sums), which produces a wrong result (for many positive inputs it can even collapse to 1). In short, this line turns the counter into a second sum instead of tracking how many entries you processed, so the computed average and any logic that checks the number of inputs will be incorrect."
+      ]
+    },
+    {
+      "id": "c648203a-4ab8-4d72-b467-12846e92e3cf",
+      "line": {
+        "number": 0,
+        "content": "count = 1",
+        "commentList": [
+          "You might think assigning count = 1 is sufficient because it marks that an input has been read. If you reset count to 1 on every loop iteration, however, count will never reflect the total number of inputs; it will always be 1 after the first iteration. That means the final average calculation will divide the total sum by 1, giving the cumulative sum rather than the true average. Also any code that relies on the actual number of inputs (for example to decide whether to report 'no integers were entered') will be fooled. This distractor uses assignment instead of accumulation, so it does not record the growing number of entries as the loop proceeds."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might think assigning count = 1 is sufficient because it marks that an input has been read. If you reset count to 1 on every loop iteration, however, count will never reflect the total number of inputs; it will always be 1 after the first iteration. That means the final average calculation will divide the total sum by 1, giving the cumulative sum rather than the true average. Also any code that relies on the actual number of inputs (for example to decide whether to report 'no integers were entered') will be fooled. This distractor uses assignment instead of accumulation, so it does not record the growing number of entries as the loop proceeds."
+      ]
+    },
+    {
+      "id": "c6d322a4-b35c-4d34-9f0e-8eb6d43c3e2c",
+      "line": {
+        "number": 0,
+        "content": "total = num",
+        "commentList": [
+          "Step-by-step why you might pick this: you see that 'num' holds the current input and may think the program should 'store' that input into the running total. You may confuse assignment with accumulation and think replacing the total each time is correct. What happens if you use this line: each loop you overwrite the running total with the latest number, so the running 'sum' will actually just be the last value the user entered. The final average will then be computed as that last value divided by the count of numbers \u2014 clearly not the intended average. There is no syntax error, so the program runs, which makes this an attractive but wrong choice. Why this is invalid: this line loses all previously added values instead of keeping them, so the program no longer accumulates a running sum and produces an incorrect result."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "Step-by-step why you might pick this: you see that 'num' holds the current input and may think the program should 'store' that input into the running total. You may confuse assignment with accumulation and think replacing the total each time is correct. What happens if you use this line: each loop you overwrite the running total with the latest number, so the running 'sum' will actually just be the last value the user entered. The final average will then be computed as that last value divided by the count of numbers \u2014 clearly not the intended average. There is no syntax error, so the program runs, which makes this an attractive but wrong choice. Why this is invalid: this line loses all previously added values instead of keeping them, so the program no longer accumulates a running sum and produces an incorrect result."
+      ]
+    },
+    {
+      "id": "a19e4302-aa43-41a4-87b8-437ad63690ca",
+      "line": {
+        "number": 0,
+        "content": "total = total * num",
+        "commentList": [
+          "Step-by-step why you might pick this: you may understand that 'total' must be changed using 'num' but confuse which operation to use and pick multiplication. What happens if you use this line: because total starts at 0, every multiplication by any input will leave total equal to 0 (0 * num = 0), so the running sum never increases and the final average becomes 0 (0 divided by the count). Even if total did not start at 0, multiplying numbers produces a product, not a sum, so the computed average would be meaningless for the intended task. Why this is invalid: it uses the wrong arithmetic operation \u2014 multiplication \u2014 which either freezes the total at 0 here or produces the wrong combined value, so the result does not reflect the sum of the entered integers."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "Step-by-step why you might pick this: you may understand that 'total' must be changed using 'num' but confuse which operation to use and pick multiplication. What happens if you use this line: because total starts at 0, every multiplication by any input will leave total equal to 0 (0 * num = 0), so the running sum never increases and the final average becomes 0 (0 divided by the count). Even if total did not start at 0, multiplying numbers produces a product, not a sum, so the computed average would be meaningless for the intended task. Why this is invalid: it uses the wrong arithmetic operation \u2014 multiplication \u2014 which either freezes the total at 0 here or produces the wrong combined value, so the result does not reflect the sum of the entered integers."
+      ]
+    },
+    {
+      "id": "b254b9a4-1ae9-4572-8cfc-fd531023a04d",
+      "line": {
+        "number": 0,
+        "content": "total += text",
+        "commentList": [
+          "Step-by-step why you might pick this: you see the variable 'text' holding the user input and might assume you can add it directly to the running total without remembering the conversion to an integer. What happens if you use this line: Python will try to add a string to an integer and raise a TypeError at runtime (the program will crash when this line executes). This makes the program stop immediately and prevents producing the sum or average. Why this is invalid: it fails to handle types correctly \u2014 you must add numeric values to a numeric total, not raw strings. Using this line shows you forgot the conversion step, so the program will not work as intended."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "Step-by-step why you might pick this: you see the variable 'text' holding the user input and might assume you can add it directly to the running total without remembering the conversion to an integer. What happens if you use this line: Python will try to add a string to an integer and raise a TypeError at runtime (the program will crash when this line executes). This makes the program stop immediately and prevents producing the sum or average. Why this is invalid: it fails to handle types correctly \u2014 you must add numeric values to a numeric total, not raw strings. Using this line shows you forgot the conversion step, so the program will not work as intended."
+      ]
+    }
+  ],
+  "programInput": "9 2 5 6 0",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

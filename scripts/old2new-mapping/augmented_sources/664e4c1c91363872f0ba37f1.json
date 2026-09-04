@@ -1,0 +1,317 @@
+{
+  "id": "664e4c1c91363872f0ba37f1",
+  "_id": "664e4c1c91363872f0ba37f1",
+  "name": "Determining the Weather Condition (Case 1)",
+  "description": "Construct a program that determines whether it is both too hot and too dry based on the inputs that it receives from the user.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_boolean_dry_hot1.py",
+  "code": "#Step 1: Read the user input for determining whether it is too hot\ntext = input(\"Enter 1 if it is too hot, otherwise enter 0:\")\ninput_num = int(text)\n#Step 2: Determine whether it is too hot\nif input_num == 1 :\n    too_hot = True\nelse:\n    too_hot = False\n#Step 3: Read the user input for determining whether it is too dry\ntext = input(\"Enter 1 if it is too dry, otherwise enter 0:\")\ninput_num = int(text)\n#Step 4: Determine whether it is too dry\nif input_num == 1 :\n    too_dry = True\nelse:\n    too_dry = False\n#Step 5: Write the boolean expression to determine whether it is both too hot and too dry\nresult = too_hot and too_dry\n#Step 6: Print the result\nif result == True :\n    print(\"Yes! It is too hot and too dry.\")\nelse:\n    print(\"No! the weather condition 'too hot and too dry' is not met.\")",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Read the user input for determining whether it is too hot",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "text = input(\"Enter 1 if it is too hot, otherwise enter 0:\")",
+      "commentList": [
+        "Purpose: This line shows the prompt \"Enter 1 if it is too hot, otherwise enter 0:\" to the user and saves whatever the user types (as text) into the variable named text so you can use it later.",
+        "Syntax: text is the variable name, = is the assignment operator, and input(...) is a built-in function that takes the prompt string in quotes and returns the user's response as a string.",
+        "Behavior: input(...) stops the program and waits for the user to type something and press Enter. The returned string contains exactly what the user typed (except the Enter key), including any spaces.",
+        "Relation to later code: This line only collects a string. You convert that string to an integer on the next line (int(text)); until you convert it, comparisons with numbers will not work as intended.",
+        "Common errors and misconceptions: If the user types letters, symbols, or nothing, the later conversion int(text) will raise a ValueError. If the program runs where no interactive input is available, input(...) can raise an EOFError. Also, if the user types a digit other than 0 or 1, the program will accept it but the logic (input_num == 1) may not behave as you expect.",
+        "Best practices: Make the prompt clear and include an example or allowed values. Validate and sanitize the response before converting (for example, use text = text.strip() and check text in ('0','1')). Wrap int(...) in try/except or loop until the user gives valid input. Consider using a more descriptive variable name like hot_input to avoid confusion if you reuse text for other prompts."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "input_num = int(text)",
+      "commentList": [
+        "Purpose: you convert the text the user typed into a number and store that number in the variable input_num so you can compare it to 1 later.",
+        "Syntax and semantics: int(text) calls Python's built-in converter to parse the string variable text into an integer; the = operator assigns that integer value to input_num.",
+        "Possible errors and misconceptions: if the user types something that isn't an integer (for example 'yes', '', or '1.0'), int(text) will raise a ValueError. A common mistake is to forget conversion and compare the original string to a number (e.g., text == 1), which will always be False.",
+        "Best practices: trim extra spaces first (int(text.strip())) and handle bad input with try/except so your program can prompt again or show a clear error message instead of crashing.",
+        "Alternative you might consider: to keep things simple you can skip int() and use a string comparison like too_hot = (text.strip() == '1'), which directly gives you a boolean without conversion."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "4": {
+      "content": "#Step 2: Determine whether it is too hot",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "5": {
+      "content": "if input_num == 1 :",
+      "commentList": [
+        "Purpose: This line tests whether the integer you read from the user equals 1 so the program can decide (in the next indented lines) if it should set too_hot to True.",
+        "Syntax: 'if' starts a conditional statement, 'input_num == 1' uses the equality operator (==) to compare values, and the trailing ':' begins the indented block that runs when the condition is True.",
+        "Semantics: Python evaluates input_num == 1 to either True or False; if it is True, the indented branch runs (setting too_hot = True), otherwise execution continues to the else branch.",
+        "Common errors and misconceptions: don't use a single '=' here (that is assignment and will cause a SyntaxError); missing the ':' or wrong indentation will also cause errors; remember that if the user entered something that couldn't be converted to int earlier, you would have already hit a ValueError before this line.",
+        "Behavior note: if the user types any integer other than 1 (for example 0 or 2), the condition is False and too_hot becomes False \u2014 the code checks for the exact value 1, not \"truthiness\".",
+        "Best practices: validate and sanitize the input before this check (e.g., try/except around int()), follow style by writing the line as if input_num == 1: (no space before ':'), and consider the simpler equivalent too_hot = (input_num == 1) when you only need to assign a boolean from the comparison."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "6": {
+      "content": "    too_hot = True",
+      "commentList": [
+        "You set the variable too_hot to True when the if condition above determines the user indicated it is too hot; this stored boolean is used later to compute the final result (line 18).",
+        "This line is an assignment: too_hot = True binds the boolean literal True to the name too_hot. The indentation shows it runs only inside the if block. Remember that True is a Python boolean literal and must be capitalized.",
+        "Common mistakes you might make: writing 'true' (lowercase) will cause a NameError, and trying to use '==' here would be wrong because '==' is for comparison while '=' is for assignment. Incorrect indentation can also change the program flow or cause an IndentationError.",
+        "As a best practice you can simplify this pattern by using a direct boolean expression, e.g. too_hot = (input_num == 1), and you should validate or sanitize user input earlier so you don't rely on only 0 or 1 being provided."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "7": {
+      "content": "else:",
+      "commentList": [
+        "Purpose: This else: line marks the branch that runs when the preceding if input_num == 1 is not true, so you will run the code under this else to handle the 'not too hot' case.",
+        "Syntax and semantics: The else keyword must align with the matching if and is followed by a colon :, which tells Python that an indented block of statements (the else-block) follows and will execute only when the if-condition is False.",
+        "Potential errors and misconceptions: If you forget the colon or mis-indent the next line, Python will raise a SyntaxError or an IndentationError; also remember else has no condition\u2014if you need another test, use elif instead of else.",
+        "Behavior detail: The else itself does not perform an assignment; it only begins the block where you place statements (here, the next line sets too_hot = False). If the if-condition was True, the else-block will be skipped.",
+        "Best practice: Make sure this else lines up with its if so you don't accidentally attach it to a different if. Also consider validating input earlier so that this else really means 'not too hot' rather than 'invalid input'; alternatively, you can simplify by assigning too_hot = (input_num == 1) to avoid a separate if/else block."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "8": {
+      "content": "    too_hot = False",
+      "commentList": [
+        "This line assigns the boolean value False to the variable too_hot when the previous condition (input_num == 1) is not met, so you record that it is not too hot for use later in the program.",
+        "Syntax and meaning: too_hot is the variable name, = is the assignment operator, and False is the Boolean literal in Python (note the capital F). This makes too_hot hold a Boolean value rather than a string or number.",
+        "Common mistakes to watch for: you must use a single = for assignment (not == which is comparison), and you must write False with a capital F (writing false or \"False\" would be wrong or a different type). Also ensure correct indentation so this else branch runs only when intended.",
+        "A potential confusion is having too_hot as a string (e.g. \"False\") instead of a Boolean; that would change how later expressions like too_hot and too_dry behave, so you should keep it as the Boolean False.",
+        "Best practice tip: you can simplify the whole if/else by assigning directly with a comparison, e.g. too_hot = (input_num == 1), which makes your intent clearer and avoids redundant branches."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "9": {
+      "content": "#Step 3: Read the user input for determining whether it is too dry",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "10": {
+      "content": "text = input(\"Enter 1 if it is too dry, otherwise enter 0:\")",
+      "commentList": [
+        "This line shows the prompt 'Enter 1 if it is too dry, otherwise enter 0:' to the user and reads whatever they type, storing that text into the variable text so you can use it to decide if it is too dry.",
+        "input(...) is a built-in function that displays the prompt and returns the user's response as a string; the = operator assigns that returned string to the name text. The quoted string is exactly what the user sees.",
+        "Remember that input always returns a string even when the user types digits. You must convert this string to an integer (as the program does on line 11) before comparing it to numbers.",
+        "Possible errors and misconceptions: if the user types non-numeric characters (like letters) then int(text) on the next line will raise a ValueError. If the user types a number other than '1' (for example '2'), the program won't crash here but will treat it as 'not equal to 1' and mark too_dry as False.",
+        "Best practices: make the prompt clear (as done here), validate the input before converting (for example use text = text.strip(); check text in ('0','1')), or wrap the int conversion in try/except. Also consider using a more specific variable name (e.g., dry_text) so you don't accidentally overwrite earlier inputs."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "11": {
+      "content": "input_num = int(text)",
+      "commentList": [
+        "Purpose: you convert the text you read from the user into a numeric value so the program can check whether the input means 1 (true) or 0 (false) and store that number in the variable input_num.",
+        "Syntax and meaning: int(text) calls Python's integer constructor to turn the string in text into an int, and the = operator assigns that int to the name input_num.",
+        "Common errors and misconceptions: if the user types something that is not an integer string (for example 'one', '1.0', or any letters) int(text) will raise a ValueError; also note that input() returns a string, so comparing the raw string '1' to the number 1 without conversion would be wrong.",
+        "Best practices: you should validate or handle bad input (for example with try/except or by checking text.strip().isdigit()) before calling int(), and consider using clearer variable names (like dry_input_num) instead of reusing generic names to avoid confusion when the program grows."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "12": {
+      "content": "#Step 4: Determine whether it is too dry",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "13": {
+      "content": "if input_num == 1 :",
+      "commentList": [
+        "Purpose: This line tests whether the second user input means 'too dry' by checking if input_num equals 1; if the test is true, you will run the next indented line to set too_dry to True.",
+        "Syntax breakdown: 'if' starts a conditional statement, 'input_num == 1' uses the equality operator (==) to compare values, and the trailing ':' marks the start of the indented block that runs when the condition is true.",
+        "Semantics: If the expression input_num == 1 evaluates to True, Python executes the indented statements below this line; otherwise it skips to the else block that follows.",
+        "Common errors and misconceptions: If you use a single '=' here you will get a SyntaxError because '=' is assignment not comparison; if you forgot to convert the input to an int (e.g. left it as the string '1') the comparison could fail; forgetting the ':' or wrong indentation will also cause syntax errors.",
+        "Best practices: You can simplify this pattern by assigning directly, e.g. too_dry = (input_num == 1), and you should validate or sanitize the input (use try/except or check that input_num is 0 or 1) to avoid unexpected values."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "14": {
+      "content": "    too_dry = True",
+      "commentList": [
+        "Purpose: This line assigns the boolean value True to the variable too_dry because the if condition (input_num == 1) above was satisfied. You are marking that the user indicated it is too dry.",
+        "Syntax and semantics: This is an assignment statement using a single equals sign (=). You store the boolean literal True (capital T) into the name too_dry so the program can use that truth value later.",
+        "Errors and misconceptions: Be careful to use True (capital T). Using true or TRUE will cause a NameError. Also don\u2019t confuse = (assignment) with == (comparison); writing too_dry == True would not assign a value. If you removed the else branch, too_dry might be undefined when the condition is false.",
+        "Indentation note: The indentation places this line inside the if block, so it only runs when input_num == 1. Changing or removing the indentation will change the program\u2019s behavior or cause an IndentationError.",
+        "Best practices: You can simplify the logic by writing too_dry = (input_num == 1) instead of the if/else. Also validate user input before this point so you don\u2019t rely on unexpected values."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "15": {
+      "content": "else:",
+      "commentList": [
+        "Purpose: This line starts the alternative branch for the if on line 13 \u2014 when input_num == 1 is false, the statements you write under this else will run (here you set too_dry to False).",
+        "Syntax & semantics: else: is a keyword followed by a colon and an indented block. It has no condition; it executes only when the corresponding if condition is false.",
+        "Common errors/misconceptions: If you forget the colon or mis-indent the following line, Python will raise a SyntaxError or IndentationError. Also avoid placing else at the wrong indentation level or without a matching if, which will also cause an error.",
+        "Input-related note: This else runs for any value not equal to 1 (including 0 or unexpected integers). If you want to reject invalid input (like 2 or negative numbers), you should check and handle that before this if/else.",
+        "Best practice: Keep the else aligned with its if so the structure is clear. For simpler code, you could skip the if/else entirely and write too_dry = (input_num == 1), which does the same thing more concisely.",
+        "Readability tip: Use a short comment or a clear variable name so when you (or others) read this else later, you immediately understand that this branch means 'not too dry'."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "16": {
+      "content": "    too_dry = False",
+      "commentList": [
+        "Purpose: This line sets the variable too_dry to False inside the else branch, so you record that the user indicated it is not too dry. It ensures the program has a clear True/False value to use later when computing the final result.",
+        "Syntax and semantics: too_dry = False is an assignment statement. The single equals sign (=) gives the name too_dry the boolean value False. In Python, boolean literals must be capitalized exactly as True or False.",
+        "Conditional context: This line runs only when the if condition (input_num == 1) is false. In other words, if the user did not enter 1 for \"too dry\", you explicitly set too_dry to False here so the variable is defined for later use.",
+        "Common errors and misconceptions: Don't use == here (that would compare rather than assign). Don't write false or FALSE (those are NameError in Python). Don't put quotes around False (\"False\" would be a string, not a boolean). Also make sure this line is indented to match the else block; wrong indentation will cause syntax errors or change program behavior.",
+        "Best practice suggestion: You could simplify the code by assigning directly from the condition, for example too_dry = (input_num == 1). That avoids the explicit if/else, but if you keep this pattern, make sure you consistently set both branches so too_dry is always defined before use."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "17": {
+      "content": "#Step 5: Write the boolean expression to determine whether it is both too hot and too dry",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "18": {
+      "content": "result = too_hot and too_dry",
+      "commentList": [
+        "Purpose: This line stores in the variable result whether both conditions are true so you can use that single boolean later to decide the program output. If both too_hot and too_dry are True, result will be True; otherwise it will be False.",
+        "Syntax and semantics: The expression uses the boolean operator and. You can read it as \u201ctoo_hot and too_dry\u201d. In Python, and returns True only when the left operand and the right operand are both True. The whole expression is then assigned to result with the = operator.",
+        "Potential errors and misconceptions: Make sure both too_hot and too_dry are defined before this line or you'll get a NameError. Don\u2019t confuse Python\u2019s and with operators from other languages: Python does not use &&, and using & (bitwise and) is not idiomatic and can behave differently for non-boolean values. Also note that and short-circuits: if too_hot is False, Python won\u2019t evaluate too_dry (not an issue here since they are simple booleans).",
+        "Best practices: Keep the expression simple as written. You could use this expression directly in an if statement (for example if too_hot and too_dry:) instead of comparing result to True later. Ensure your variables hold boolean values (True/False) so the and operator behaves as you expect, and give clear variable names so you (and others) understand the logic at a glance."
+      ],
+      "indentLevel": 0,
+      "blank": true
+    },
+    "19": {
+      "content": "#Step 6: Print the result",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "20": {
+      "content": "if result == True :",
+      "commentList": [
+        "You use this line to decide which of the two print statements runs: if the expression after if is true, the program prints the message that it is both too hot and too dry.",
+        "You can read the syntax as: if (condition) colon \u2014 the if keyword starts a conditional, result == True is a comparison that yields True or False, and the trailing ':' begins the indented block that follows.",
+        "You should know this comparison is redundant: instead of writing if result == True, you can simply write if result. Both check truth, but if result is already a boolean the shorter form is clearer.",
+        "You must be careful about names and types: if result was never assigned you'll get a NameError; if result is not a boolean but another value, result == True may behave in unexpected ways (for example 1 == True is True, but many other truthy values will not equal True).",
+        "You must keep the colon and proper indentation: forgetting the ':' or using wrong indentation will cause a SyntaxError or change which lines run inside the if block.",
+        "You should follow the best practice of writing clear conditionals: prefer if result: for boolean checks, and only use explicit comparisons (like == True) when you have a specific reason and understand the type implications."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "21": {
+      "content": "    print(\"Yes! It is too hot and too dry.\")",
+      "commentList": [
+        "You use this line to show the positive result to the user \u2014 it prints a clear message when the program has determined that it is both too hot and too dry. Because it is indented under the if result == True:, it only runs when that condition holds.",
+        "You are calling Python's print function with a string literal as the argument. The text inside the parentheses and quotes is sent to standard output and, by default, print adds a newline after the message so the next output appears on the next line.",
+        "Be careful with indentation: if you accidentally unindent this line it will run regardless of the condition. Also, if you omit the parentheses or the quotes you'll get a syntax error in Python 3. A common misconception is thinking this line changes any program state \u2014 it only displays text.",
+        "As a best practice you can simplify the earlier condition to if result: instead of if result == True:, which makes the code clearer. You should also keep user messages consistent and easy to read; for larger programs avoid hard-coding user-facing strings (store them in variables or resources) so you can reuse or translate them later.",
+        "If you need different formatting (no trailing newline, or additional data), you can use print's optional parameters (for example end='') or format the message. But for this simple yes/no feedback, the current plain print call is appropriate and easy for learners to understand."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "22": {
+      "content": "else:",
+      "commentList": [
+        "Purpose: This else starts the alternative branch that runs when the if condition on the previous line is not true \u2014 in this program it covers the case when the weather is not both too hot and too dry, so you will print the negative message.",
+        "Syntax and structure: In Python else must be written as else: with a colon, and the code that belongs to this branch must be indented under it. The colon and indentation tell Python that the following indented lines are the else block.",
+        "Semantics: The else block executes whenever the if condition (result == True) evaluated to False. Because result is a boolean, that means else runs when result is False (i.e., not both too hot and too dry).",
+        "Common errors and misconceptions: If you forget the colon after else or misalign the indentation of the print line, Python will raise a SyntaxError or IndentationError. Also note that else never takes a condition \u2014 if you need a condition, use elif or a different if.",
+        "Best practices: Keep your indentation consistent and avoid writing if result == True: \u2014 instead write if result: to make your intent clearer. If you temporarily need an empty else block while developing, use pass inside it so the code remains valid."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "23": {
+      "content": "    print(\"No! the weather condition 'too hot and too dry' is not met.\")",
+      "commentList": [
+        "Purpose: This line runs when the program finds that the combined condition is not met; you print a clear message telling the user that it is not both too hot and too dry.",
+        "Syntax: print(\"...\") is a function call that sends the text inside the quotes to the screen; you must include the parentheses and matching quotation marks so Python treats the content as a string literal.",
+        "Semantics: Because this print is inside the else block, you get here only when the if test (result == True) was false \u2014 that means result is False and the program determined it is not both too hot and too dry.",
+        "Common errors/misconceptions: If you misindent this line so it is not under the else block, you will change the program flow or get an IndentationError; you must align it with other lines inside the else.",
+        "Common errors/misconceptions: If you forget the parentheses or mismatched quotes (in Python 3), you will get a SyntaxError; double-check that you have print(... ) with matching quotes and parentheses.",
+        "Best practices: You can simplify the earlier test to if result: instead of if result == True: so the flow is clearer, and you might make the message more consistent or informative (for debugging you could include the values of too_hot and too_dry so you or other users understand why the else branch ran).",
+        "Style tip: Keep the user message clear and consistently formatted (consistent capitalization and punctuation) so you or others reading the output won't be confused by small grammar or punctuation issues."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "55ec3543-b925-4c82-beed-766397cb9464",
+      "line": {
+        "number": 0,
+        "content": "result = too_hot or too_dry",
+        "commentList": [
+          "You might pick this if you think the program should report a problem when either condition is true, or if you mix up logical AND and OR. Step-by-step: this line makes result True when at least one of too_hot or too_dry is True. That means if it is only too hot (but not too dry) you would get True, and likewise if it is only too dry. If neither is true, result is False. If you use this instead of the intended check, the program will say 'Yes' whenever one condition alone holds, which is not what you want for a test that should require both conditions. In other words, this distractor implements an 'either-or' test rather than the required 'both' test, so it accepts cases that should be rejected."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this if you think the program should report a problem when either condition is true, or if you mix up logical AND and OR. Step-by-step: this line makes result True when at least one of too_hot or too_dry is True. That means if it is only too hot (but not too dry) you would get True, and likewise if it is only too dry. If neither is true, result is False. If you use this instead of the intended check, the program will say 'Yes' whenever one condition alone holds, which is not what you want for a test that should require both conditions. In other words, this distractor implements an 'either-or' test rather than the required 'both' test, so it accepts cases that should be rejected."
+      ]
+    },
+    {
+      "id": "3932a4cf-b5cc-4077-96aa-4bb0f000d5b0",
+      "line": {
+        "number": 0,
+        "content": "result = too_hot == too_dry",
+        "commentList": [
+          "You might choose this if you mistakenly believe comparing the two booleans for equality is the same as requiring both to be true. Step-by-step: this expression is True when too_hot and too_dry have the same value. That makes result True in two cases: when both are True and when both are False. If you use this line, the program will incorrectly report 'Yes' when neither condition holds (both False). It will also report 'No' when one is True and the other False, even though one True/one False is not the intended case. This distractor therefore accepts the case where both are False and rejects some cases where one is True, so it does not implement the required 'both must be true' logic."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might choose this if you mistakenly believe comparing the two booleans for equality is the same as requiring both to be true. Step-by-step: this expression is True when too_hot and too_dry have the same value. That makes result True in two cases: when both are True and when both are False. If you use this line, the program will incorrectly report 'Yes' when neither condition holds (both False). It will also report 'No' when one is True and the other False, even though one True/one False is not the intended case. This distractor therefore accepts the case where both are False and rejects some cases where one is True, so it does not implement the required 'both must be true' logic."
+      ]
+    },
+    {
+      "id": "e8c98a8c-76aa-4f0e-af64-5c88730d1560",
+      "line": {
+        "number": 0,
+        "content": "result = not (too_hot and too_dry)",
+        "commentList": [
+          "You might pick this if you try to emphasize the condition with a 'not' or if you misunderstand negation. Step-by-step: this expression is True whenever the pair is not both True \u2014 that is, when at least one of too_hot or too_dry is False. So it becomes True for most cases except when both are True. If you use this line, the program will print 'Yes' when the combined condition is actually not met (for example, when neither is true or only one is true). This distractor inverts the intended test, so it reports the opposite situation of what you want."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this if you try to emphasize the condition with a 'not' or if you misunderstand negation. Step-by-step: this expression is True whenever the pair is not both True \u2014 that is, when at least one of too_hot or too_dry is False. So it becomes True for most cases except when both are True. If you use this line, the program will print 'Yes' when the combined condition is actually not met (for example, when neither is true or only one is true). This distractor inverts the intended test, so it reports the opposite situation of what you want."
+      ]
+    }
+  ],
+  "programInput": "1 1",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

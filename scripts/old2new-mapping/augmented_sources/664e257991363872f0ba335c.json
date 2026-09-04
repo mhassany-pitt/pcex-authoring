@@ -1,0 +1,249 @@
+{
+  "id": "664e257991363872f0ba335c",
+  "_id": "664e257991363872f0ba335c",
+  "name": "Updating Two-Dimensional List (Case 1)",
+  "description": "Construct a program that initializes a 3x4 two-dimensional matrix that has the numbers 1 through 12 for entries, updates the last row to a list filled with 5s, then sets the left-most element in the middle row of the matrix to be 20, and finally prints the matrix.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_list2d_basic1.py",
+  "code": "#Step 1: Define a 3x4 two-dimensional list \nmatrix = [[ 1, 2, 3, 4 ],\n          [ 5, 6, 7, 8 ],\n          [ 9, 10, 11, 12]]\n#Step 2: Update the two-dimensional list \nmatrix[2] = [5, 5, 5, 5]\nmatrix[1][0] = 20\n#Step 3: Print the list\nprint(matrix)",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Define a 3x4 two-dimensional list ",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "matrix = [[ 1, 2, 3, 4 ],",
+      "commentList": [
+        "Purpose: You are creating and assigning the variable matrix to be a two-dimensional list (a list of rows). This line starts the literal that defines the first row [1, 2, 3, 4] and begins the outer list that will hold all three rows.",
+        "Syntax and semantics: The equals sign (=) assigns the value on the right to the name matrix. The outer square bracket [ begins the whole matrix, and the inner brackets [ 1, 2, 3, 4 ] define the first row. Commas separate elements in a row and separate rows in the outer list. The trailing comma tells Python there are more rows to follow on the next lines.",
+        "Potential errors and misconceptions: Make sure you close both inner and outer brackets later (forgetting ] or ] ] is a common syntax error). Remember Python uses 0-based indexing: matrix[0] is the first row, matrix[2] is the third row. Also avoid creating nested lists with multiplication like [[0]*4]*3 if you want independent rows \u2014 that makes all rows refer to the same list, so changing one row would change all of them.",
+        "Best practices: Use a clear name like matrix, format the nested lists across lines for readability (as shown), and keep commas and brackets consistent. If you need a patterned matrix (like numbers 1\u201312), consider generating it with a simple loop or a range-based expression so you avoid manual errors."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "          [ 5, 6, 7, 8 ],",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "4": {
+      "content": "          [ 9, 10, 11, 12]]",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "5": {
+      "content": "#Step 2: Update the two-dimensional list ",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "6": {
+      "content": "matrix[2] = [5, 5, 5, 5]",
+      "commentList": [
+        "You replace the entire third (last) row of matrix with a new list [5, 5, 5, 5], so the matrix's last row becomes all 5s.",
+        "You use matrix[2] to select the row at index 2 (Python uses 0-based indexing), and the = operator assigns the list literal [5, 5, 5, 5] to that position, replacing the previous row object.",
+        "You must remember that using the wrong index (for example matrix[3]) will raise an IndexError because there are only three rows (indices 0, 1, 2). Also, replacing the row creates a new list object\u2014any other references to the old row will not reflect this change.",
+        "You should keep the new row length consistent with the number of columns (4 here); giving a different length makes the structure irregular and can break code that assumes a rectangular matrix.",
+        "You can avoid hard-coding the row index or column count by using matrix[len(matrix)-1] = [5] * len(matrix[0]) to target the last row dynamically. If you want to modify the existing list object instead of replacing it (so other references stay in sync), use slice assignment like matrix[2][:] = [5, 5, 5, 5]."
+      ],
+      "indentLevel": 0,
+      "blank": true
+    },
+    "7": {
+      "content": "matrix[1][0] = 20",
+      "commentList": [
+        "You set the left-most element (first column) of the middle row to 20 so the matrix matches the requested change.",
+        "You use matrix[1] to pick the second row (Python uses zero-based indexing) and [0] to pick the first element of that row; the = 20 assigns the new value into that nested list element.",
+        "You must be careful with indexes: because rows and columns start at 0, the middle row of a 3-row matrix is index 1. Using the wrong indexes (for example matrix[2][0] or matrix[1][1]) will change a different element.",
+        "You should avoid using matrix[1,0] with a comma \u2014 that will raise a TypeError for normal Python lists because list indexing requires separate bracketed indexes, not a tuple.",
+        "You should also confirm the row exists and is a list before assigning (otherwise you can get IndexError or other errors). Consider checking lengths or using named constants like MIDDLE = 1 and LEFT = 0 and add a short comment to make your intent clear."
+      ],
+      "indentLevel": 0,
+      "blank": true
+    },
+    "8": {
+      "content": "#Step 3: Print the list",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "9": {
+      "content": "print(matrix)",
+      "commentList": [
+        "Purpose: You use print(matrix) here to send the final state of the 3x4 list to standard output so you can see the updated matrix after you changed the last row and the middle row's left element.",
+        "Syntax and semantics: print(...) is a function call that takes the variable matrix as an argument. Python converts the list-of-lists into its string representation (e.g. [[1, 2, 3, 4], [20, 6, 7, 8], [5, 5, 5, 5]]) and writes that text followed by a newline to the console.",
+        "Potential errors and misconceptions: If you forget the parentheses (print matrix) you will get a syntax error in Python 3 because print is a function. Also note that print shows the Python representation of the nested lists \u2014 it does not format them as a neat grid unless you format the output yourself.",
+        "Best practices: If you want a nicer, row-by-row display, you can loop and print each row (for row in matrix: print(row)) or use pprint.pprint(matrix) for clearer formatting. For production code, prefer logging over print so you can control output destination and verbosity.",
+        "Behavior note: Because you modified matrix earlier, print will show those modifications. print does not change matrix \u2014 it only displays its current contents."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "6b0e2404-9e53-446d-bf24-4317491e234e",
+      "line": {
+        "number": 0,
+        "content": "matrix[3] = [5, 5, 5, 5]",
+        "commentList": [
+          "Step-by-step: you might write this because you count rows as 1, 2, 3 and so assume the last row has index 3. In Python, lists are 0-indexed, so valid row indices here are 0, 1, and 2. If you use this line, the program will raise an IndexError at runtime when it tries to assign to index 3, and execution will stop before any later steps run. You might pick this because it looks like you are updating the third row by its \"human\" number, but the mistake is using an index that doesn't exist. This is invalid because the index is out of range; the assignment cannot succeed and the program fails immediately."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "Step-by-step: you might write this because you count rows as 1, 2, 3 and so assume the last row has index 3. In Python, lists are 0-indexed, so valid row indices here are 0, 1, and 2. If you use this line, the program will raise an IndexError at runtime when it tries to assign to index 3, and execution will stop before any later steps run. You might pick this because it looks like you are updating the third row by its \"human\" number, but the mistake is using an index that doesn't exist. This is invalid because the index is out of range; the assignment cannot succeed and the program fails immediately."
+      ]
+    },
+    {
+      "id": "57c7c693-df70-4a5a-9b7c-3440af50a4aa",
+      "line": {
+        "number": 0,
+        "content": "matrix[1] = [5, 5, 5, 5]",
+        "commentList": [
+          "You might pick matrix[1] = [5, 5, 5, 5] because it looks like \u201creplace a row with all 5s\u201d and you may be thinking in 1-based row numbers (row 1 = the last row) or simply confusing which row index is last. This is an off-by-one or indexing misconception: with zero-based indexing the last row is not index 1 for a 3-row matrix. If you use this distractor, the program will not crash, but it will replace the middle row with 5s. The next line matrix[1][0] = 20 then changes that middle row\u2019s first element to 20, so the final matrix ends up with the middle row [20, 5, 5, 5] while the actual last row remains unchanged as [9, 10, 11, 12]. In short, the distractor is plausible because it seems to perform the intended \u201cfill a row with 5s,\u201d but it targets the wrong row due to indexing confusion, so it fails the program requirement to update the last row."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick matrix[1] = [5, 5, 5, 5] because it looks like \u201creplace a row with all 5s\u201d and you may be thinking in 1-based row numbers (row 1 = the last row) or simply confusing which row index is last. This is an off-by-one or indexing misconception: with zero-based indexing the last row is not index 1 for a 3-row matrix. If you use this distractor, the program will not crash, but it will replace the middle row with 5s. The next line matrix[1][0] = 20 then changes that middle row\u2019s first element to 20, so the final matrix ends up with the middle row [20, 5, 5, 5] while the actual last row remains unchanged as [9, 10, 11, 12]. In short, the distractor is plausible because it seems to perform the intended \u201cfill a row with 5s,\u201d but it targets the wrong row due to indexing confusion, so it fails the program requirement to update the last row."
+      ]
+    },
+    {
+      "id": "551aa1fc-fa8e-439a-bbea-2192a76392fc",
+      "line": {
+        "number": 0,
+        "content": "matrix[1][3] = 20",
+        "commentList": [
+          "You might pick matrix[1][3] = 20 because it uses the same middle row (index 1) and seems to place 20 among the row\u2019s elements \u2014 a plausible short answer if you confuse column positions or use 1-based counting for columns. This choice reflects two common misconceptions: an off-by-one error in column indexing (treating the last column as the first) and mixing up which side of the row is \u201cleft-most.\u201d If you use this line, the program will run but put 20 in the wrong column of the middle row instead of the intended left-most position, so the final printed matrix will be incorrect but not produce an error. The distractor therefore looks reasonable at a glance but fails because it updates the wrong column of the row rather than the left-most element."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick matrix[1][3] = 20 because it uses the same middle row (index 1) and seems to place 20 among the row\u2019s elements \u2014 a plausible short answer if you confuse column positions or use 1-based counting for columns. This choice reflects two common misconceptions: an off-by-one error in column indexing (treating the last column as the first) and mixing up which side of the row is \u201cleft-most.\u201d If you use this line, the program will run but put 20 in the wrong column of the middle row instead of the intended left-most position, so the final printed matrix will be incorrect but not produce an error. The distractor therefore looks reasonable at a glance but fails because it updates the wrong column of the row rather than the left-most element."
+      ]
+    },
+    {
+      "id": "6ed457f0-663e-44b8-bc36-4ef522e77e86",
+      "line": {
+        "number": 0,
+        "content": "matrix[2][0] = 20",
+        "commentList": [
+          "You might choose matrix[2][0] = 20 because it looks like a simple way to change a cell and you may be confusing how to update a whole row versus a single element or mixing up row indices (using 2 instead of the middle row). Step-by-step: that statement assigns 20 only to the first element of the third row. It does not replace the entire row with repeated 5s, so the rest of that row stays the original numbers. The program won\u2019t crash, but the output will be wrong \u2014 you\u2019ll get an unexpected 20 in the last row (and still execute the later line that sets the middle row\u2019s left element), producing unintended values. What\u2019s wrong here is that the distractor performs a single-element assignment, uses the wrong row index, and sets the wrong value; these mistakes are easy to make for beginners who conflate element and row assignment syntax or who miscount row positions."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might choose matrix[2][0] = 20 because it looks like a simple way to change a cell and you may be confusing how to update a whole row versus a single element or mixing up row indices (using 2 instead of the middle row). Step-by-step: that statement assigns 20 only to the first element of the third row. It does not replace the entire row with repeated 5s, so the rest of that row stays the original numbers. The program won\u2019t crash, but the output will be wrong \u2014 you\u2019ll get an unexpected 20 in the last row (and still execute the later line that sets the middle row\u2019s left element), producing unintended values. What\u2019s wrong here is that the distractor performs a single-element assignment, uses the wrong row index, and sets the wrong value; these mistakes are easy to make for beginners who conflate element and row assignment syntax or who miscount row positions."
+      ]
+    },
+    {
+      "id": "cd17e7df-22d1-4b85-8ad4-27b3e949760b",
+      "line": {
+        "number": 0,
+        "content": "matrix[0][2] = 20",
+        "commentList": [
+          "You might choose matrix[0][2] = 20 because you confuse row/column indexing or miscount rows (off-by-one) and think the target is at row 0, column 2. If you use this line the program will run without error but it will set the top row's third element to 20 instead of changing the left-most element of the middle row; it also does nothing to replace the last row with 5s, so the final matrix is incorrect. The distractor looks plausible because it uses valid indexing, but it targets the wrong position and omits the required update of the last row."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might choose matrix[0][2] = 20 because you confuse row/column indexing or miscount rows (off-by-one) and think the target is at row 0, column 2. If you use this line the program will run without error but it will set the top row's third element to 20 instead of changing the left-most element of the middle row; it also does nothing to replace the last row with 5s, so the final matrix is incorrect. The distractor looks plausible because it uses valid indexing, but it targets the wrong position and omits the required update of the last row."
+      ]
+    },
+    {
+      "id": "6e240ad2-b853-407c-9234-95262a8ccadd",
+      "line": {
+        "number": 0,
+        "content": "matrix[2] = 5",
+        "commentList": [
+          "Step-by-step: you may think assigning a single 5 will make every element of the row become 5. In reality, this assigns the integer 5 to the whole row slot, replacing the list that used to be there. If you use this line, the third row becomes the integer 5, so the matrix no longer has consistent row types. Printing will show an integer where a row should be, and any later code that expects to index into that row (for example to access matrix[2][0]) would raise a TypeError. You might select this because it seems shorter or because you expect implicit filling, but it incorrectly changes the row's type and structure."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "Step-by-step: you may think assigning a single 5 will make every element of the row become 5. In reality, this assigns the integer 5 to the whole row slot, replacing the list that used to be there. If you use this line, the third row becomes the integer 5, so the matrix no longer has consistent row types. Printing will show an integer where a row should be, and any later code that expects to index into that row (for example to access matrix[2][0]) would raise a TypeError. You might select this because it seems shorter or because you expect implicit filling, but it incorrectly changes the row's type and structure."
+      ]
+    },
+    {
+      "id": "d29c2427-bd45-4b78-8498-dffcf47a7f63",
+      "line": {
+        "number": 0,
+        "content": "matrix[2] = [5, 5, 5]",
+        "commentList": [
+          "Step-by-step: you might supply only three fives because you miscount the number of columns or think one fewer element is fine. This line is syntactically valid and will run, but it replaces the third row with a list of length 3, making the matrix 'ragged' (rows of different lengths). Using this line will not raise an error immediately, and printing will show the last row with three elements instead of the expected four. Later code that assumes every row has four columns could behave incorrectly or raise an IndexError when it tries to access a missing element. You might choose this because it partially matches the goal of putting 5s in the row, but it fails to preserve the correct row length."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "Step-by-step: you might supply only three fives because you miscount the number of columns or think one fewer element is fine. This line is syntactically valid and will run, but it replaces the third row with a list of length 3, making the matrix 'ragged' (rows of different lengths). Using this line will not raise an error immediately, and printing will show the last row with three elements instead of the expected four. Later code that assumes every row has four columns could behave incorrectly or raise an IndexError when it tries to access a missing element. You might choose this because it partially matches the goal of putting 5s in the row, but it fails to preserve the correct row length."
+      ]
+    },
+    {
+      "id": "321af810-3e4a-4ac4-b89a-9ee442be29a0",
+      "line": {
+        "number": 0,
+        "content": "matrix[1] = 20",
+        "commentList": [
+          "You might pick this because you think addressing a row (matrix[1]) lets you change one value inside it. What this line actually does is replace the entire second row (the sublist at index 1) with the integer 20. That is valid Python, so the program will run and print, but the matrix structure becomes inconsistent (a number appears where a list of four numbers should be). If later code tried to treat that row as a list (for example, indexing matrix[1][0]), you would get a TypeError because you replaced the list with an int. This distractor is wrong because it changes a whole row instead of a single element; it fails to target an individual entry and thereby breaks the intended matrix structure."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this because you think addressing a row (matrix[1]) lets you change one value inside it. What this line actually does is replace the entire second row (the sublist at index 1) with the integer 20. That is valid Python, so the program will run and print, but the matrix structure becomes inconsistent (a number appears where a list of four numbers should be). If later code tried to treat that row as a list (for example, indexing matrix[1][0]), you would get a TypeError because you replaced the list with an int. This distractor is wrong because it changes a whole row instead of a single element; it fails to target an individual entry and thereby breaks the intended matrix structure."
+      ]
+    },
+    {
+      "id": "8b911d91-a77b-44d9-8a03-a2bf2a4e081f",
+      "line": {
+        "number": 0,
+        "content": "matrix[0][0] = 20",
+        "commentList": [
+          "You might choose this because you miscount which row is \"middle\" or you assume row numbers start at 1. This line will successfully assign 20 to the top-left element of the matrix, and the program will run without error. The unintended behavior is that the wrong cell is changed: the element in the first row is updated rather than the element in the middle row. The structure stays valid, but the matrix will show the 20 in the wrong place when printed. This distractor is incorrect because it targets the wrong row index."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might choose this because you miscount which row is \"middle\" or you assume row numbers start at 1. This line will successfully assign 20 to the top-left element of the matrix, and the program will run without error. The unintended behavior is that the wrong cell is changed: the element in the first row is updated rather than the element in the middle row. The structure stays valid, but the matrix will show the 20 in the wrong place when printed. This distractor is incorrect because it targets the wrong row index."
+      ]
+    },
+    {
+      "id": "c9db2d68-7336-4d9e-9ddc-1f65e980d927",
+      "line": {
+        "number": 0,
+        "content": "matrix[1][1] = 20",
+        "commentList": [
+          "You may pick this line if you think columns are numbered starting from 1, so you try to set the 'first' column by using index 1. This line will set the second element of the second row to 20. The code runs fine, but the wrong column in the middle row is changed, so the printed matrix will show 20 in the middle row's second position instead of the intended left-most position. This distractor fails because it updates the incorrect column within the chosen row rather than the left-most element."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You may pick this line if you think columns are numbered starting from 1, so you try to set the 'first' column by using index 1. This line will set the second element of the second row to 20. The code runs fine, but the wrong column in the middle row is changed, so the printed matrix will show 20 in the middle row's second position instead of the intended left-most position. This distractor fails because it updates the incorrect column within the chosen row rather than the left-most element."
+      ]
+    }
+  ],
+  "programInput": "",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

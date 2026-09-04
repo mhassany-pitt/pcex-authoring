@@ -1,0 +1,333 @@
+{
+  "id": "664e24ec91363872f0ba332c",
+  "_id": "664e24ec91363872f0ba332c",
+  "name": "Vending Machine With Dollars and Quarters",
+  "description": "Suppose we have a vending machine that gives change. A customer selects an item for purchase and inserts a bill into the vending machine. The vending machine dispenses the purchased item and gives change. We will assume that all item prices are multiples of 25 cents, and the machine gives all change in dollar and quarters. Construct a program that computes how many dollars and quarters to return to the customer.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_vending_machine1.py",
+  "code": "#Step 1: Assign initial values to the variables which we need for this program\npennies_per_dollar = 100\npennies_per_quarter = 25\n#Step 2: Read the bill value and item price\ntext = input(\"Enter bill value in dollars (1 = $1 bill, 5 = $5 bill, etc.): \")\nbill_value = int(text)\ntext = input(\"Enter item price in pennies: \")\nitem_price = int(text)\n#Step 3: Compute the change due\nchange_due = pennies_per_dollar * bill_value - item_price\n#Step 4: Compute the number of dollars and update the change due after taking away the dollars\ndollars = change_due // pennies_per_dollar\nchange_due = change_due % pennies_per_dollar\n#Step 5: Compute the number of quarters in the remaining change due\nquarters = change_due // pennies_per_quarter\n#Step 6: Display the result\nprint(\"Your change consists of:\") \nprint(dollars, \"dollars\")\nprint(quarters, \"quarters\")",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Assign initial values to the variables which we need for this program",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "pennies_per_dollar = 100",
+      "commentList": [
+        "You are creating a variable named pennies_per_dollar and assigning it the integer value 100 so you can convert dollars into pennies (1 dollar = 100 pennies) when computing change.",
+        "This is a simple assignment statement: the name (pennies_per_dollar) is on the left, the equals sign (=) gives the value on the right, and 100 is an integer literal. In Python you do not declare types explicitly\u2014Python infers that this is an int.",
+        "Be careful not to use a string or a float here (e.g., '100' or 100.0) because later arithmetic with integers is simpler and avoids unexpected float behavior. Also avoid using the wrong number (for example 25 or 1000) which would make all change calculations incorrect.",
+        "A common misconception is thinking you need to recalculate this value each time; treat it as a fixed constant. By giving it a clear name you avoid \u201cmagic numbers\u201d scattered through the code and make the purpose obvious to anyone reading it.",
+        "Best practice: since this is a constant value, you might name it in all caps (PENNIES_PER_DOLLAR = 100) or add a short comment so you and others immediately recognize it as an immutable conversion factor."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "pennies_per_quarter = 25",
+      "commentList": [
+        "Purpose: You are giving the program a named value for how many pennies are in a quarter (25) so you can later compute how many quarters to return.",
+        "Syntax and meaning: This is a simple assignment. The variable pennies_per_quarter is created and given the integer value 25. After this line, pennies_per_quarter refers to that number in your calculations.",
+        "Units and consistency: The value 25 means 25 pennies, not 0.25 dollars. You must keep all money values in the same unit (here, pennies) so the arithmetic works correctly with other variables like change_due and item_price.",
+        "Common errors and misconceptions: A frequent mistake is using 0.25 (a float) or the string \"25\"; both will break unit consistency or require extra conversion. Another mistake is typing the wrong number (e.g., 20 or 250), which gives wrong change.",
+        "Best practices: Use a clear name (as shown) and consider marking true constants in uppercase (PENNIES_PER_QUARTER). Add a short comment about units to avoid confusion and prefer integers for currency when working in cents to avoid floating-point issues."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "4": {
+      "content": "#Step 2: Read the bill value and item price",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "5": {
+      "content": "text = input(\"Enter bill value in dollars (1 = $1 bill, 5 = $5 bill, etc.): \")",
+      "commentList": [
+        "You display the prompt and read whatever the user types; input(...) shows the message in parentheses and then returns the typed characters as a string, which you store in the variable text.",
+        "You are calling the built-in input function with a prompt string: Python prints the prompt, waits for the user to type and press Enter, and then assigns the resulting string to text.",
+        "You are asking the user for the bill value in whole dollars (the prompt suggests entering 1 for $1, 5 for $5, etc.), so the program later expects that text to represent an integer number of dollars.",
+        "You must not enter non-numeric characters (for example '$', 'one', or '1.00') because the next line uses int(text); such inputs will cause int(...) to fail with a ValueError.",
+        "You should be aware that input() returns a string even if the user types digits; if the user types leading/trailing spaces those remain in text and can cause conversion problems unless you strip them.",
+        "A better practice is to validate and clean the input before converting: for example use text = input(...).strip() and wrap the conversion in a try/except or loop until the user provides a valid integer.",
+        "As an alternative, you could combine reading and conversion in one step (bill_value = int(input(...))) but then you should still handle exceptions and check that the value is a reasonable bill amount (positive, and perhaps one of 1, 5, 10, 20)."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "6": {
+      "content": "bill_value = int(text)",
+      "commentList": [
+        "Purpose: This line converts the text you got from input() into an integer and stores it in bill_value so you can do arithmetic with it (for example, multiply by pennies_per_dollar to get total pennies).",
+        "How it works (syntax): the = operator assigns the value on the right to the variable on the left. int(text) calls Python's int() function to turn the string variable text into a whole number, and that number becomes bill_value.",
+        "Common error to watch for: if the user types something that's not a plain whole number (for example \"$1\", \"1.00\", \"one\", or leaves it blank), int(text) will fail and Python will raise an error. input() always returns a string, so you must convert it before using numeric operations.",
+        "Common misconception: int() does not parse strings with decimals like \"1.00\"\u2014that will also cause an error. Also, int() on a floating value (not a string) would truncate toward zero, but here you are converting from a string, not rounding.",
+        "Best practices: strip extra spaces (text = text.strip()) and validate the input before converting. Use a try/except block to catch conversion errors and ask the user again, and check that bill_value is a positive allowed bill (e.g., 1, 5, 10, 20) before continuing."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "7": {
+      "content": "text = input(\"Enter item price in pennies: \")",
+      "commentList": [
+        "Purpose: This line shows a prompt to the user asking for the item price in pennies and stores whatever the user types into the variable text. The program will pause here until you enter something.",
+        "Syntax and semantics: input(\"...\") displays the prompt string and returns the typed characters as a string; the = assigns that string to the name text. The prompt text is what the user sees on the screen.",
+        "Potential errors and misconceptions: you must enter an integer number of pennies (for example 125 for $1.25). If you type a dollar amount like 1.25, include a $ sign, leave it blank, or enter non-digits, the later int(text) conversion will raise a ValueError or produce the wrong result. Also note that reusing the variable name text overwrites the previous input value for the bill.",
+        "Best practices: you should make the prompt extra clear (for example, \"Enter item price in pennies (e.g., 125 for $1.25): \") and use a distinct name like item_text. Validate the input before converting: trim whitespace, check that it contains only digits, or wrap the int conversion in a try/except and re-prompt until you get a valid non-negative integer.",
+        "Alternative: if you want to accept prices in dollars with decimals, consider accepting a float, converting to pennies with round(float_value * 100), and then validating that the result is a multiple of 25 to match the problem assumptions."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "8": {
+      "content": "item_price = int(text)",
+      "commentList": [
+        "Purpose: This line converts the text you read from the user into an integer and stores it in the variable item_price so the program can do arithmetic with the price (in pennies).",
+        "Syntax and semantics: input() returned a string and int(text) parses that string into an integer; the = operator assigns that integer value to the name item_price. After this line, item_price is an int that represents the item price in pennies.",
+        "Possible errors and misconceptions: if you or the user types something that is not a whole number (for example letters, or \"3.50\"), int(text) will raise a ValueError. A common mistake is entering the price in dollars instead of pennies \u2014 the prompt asks for pennies, so entering 150 for $1.50 is required. Also watch out for negative numbers or non-multiples of 25, which would break the problem assumptions.",
+        "Best practices: you should validate the input before converting (for example, strip whitespace, check that it\u2019s digits, confirm it\u2019s non-negative and a multiple of 25). Consider using try/except to catch conversion errors and give a friendly message, or rename the variable to item_price_pennies to make units explicit."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "9": {
+      "content": "#Step 3: Compute the change due",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "10": {
+      "content": "change_due = pennies_per_dollar * bill_value - item_price",
+      "commentList": [
+        "This line computes how many pennies you must return: it converts the bill from dollars to pennies (pennies_per_dollar * bill_value) and then subtracts the item price in pennies to get change_due.",
+        "Because multiplication happens before subtraction, the bill is converted to pennies first and then you subtract item_price; you could add parentheses ((pennies_per_dollar * bill_value) - item_price) to make this clearer.",
+        "A common mistake is mixing units: if you forget to convert bill_value (dollars) into pennies, you will get a wrong result. Make sure bill_value and item_price are both integers in pennies before this calculation.",
+        "Watch for negative results: if item_price is greater than the bill value, change_due will be negative. You should validate inputs earlier (or handle negative change) so you don\u2019t give an incorrect output.",
+        "Use integers here (not floats) because later steps use integer division and modulus. If you use floats, you can get rounding issues when counting dollars and quarters.",
+        "For clarity and maintainability, you should keep pennies_per_dollar as a named constant (as done) and consider checking that bill_value is one of the expected bills (1, 5, 10, etc.) before computing change_due."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "11": {
+      "content": "#Step 4: Compute the number of dollars and update the change due after taking away the dollars",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "12": {
+      "content": "dollars = change_due // pennies_per_dollar",
+      "commentList": [
+        "Purpose: This line computes how many whole dollars you should give back by dividing the total change (in pennies) by the number of pennies in a dollar and saving that count in the variable dollars.",
+        "Syntax and semantics: The // operator does integer (floor) division, so change_due // pennies_per_dollar returns the whole-number quotient (no fractional dollars). The result is then assigned to the variable dollars with the = operator.",
+        "Possible errors and misconceptions: If you used / instead of // you'd get a float (like 3.0) instead of an integer count; if change_due were negative or pennies_per_dollar were zero you'd get unexpected results or a crash, so you should ensure change_due is non\u2011negative and pennies_per_dollar is a valid positive integer.",
+        "Best practices: Make sure you keep all amounts in the same unit (here, pennies) before dividing, validate inputs so the bill covers the price, and use clear names (like dollars and pennies_per_dollar) so you avoid confusion about what the division returns."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "13": {
+      "content": "change_due = change_due % pennies_per_dollar",
+      "commentList": [
+        "Purpose: This line replaces change_due with the leftover cents after you remove all whole dollars, so the value is now the amount (in pennies) that you still need to make up with quarters.",
+        "Syntax and semantics: The % operator is the modulus operator; it computes the remainder when change_due is divided by pennies_per_dollar. The right-hand expression is evaluated first and then assigned back to the variable change_due.",
+        "How it fits the program: You already computed the number of whole dollars on the previous line using //. Here you get the remaining cents (guaranteed to be less than pennies_per_dollar) so the next line can compute how many quarters fit into that remainder.",
+        "Potential errors and misconceptions: If you used / you would get a float, and if you used // you would get another count of whole dollars instead of the remainder. Also be careful if change_due can be negative (for example if the item price exceeds the bill); the remainder behavior can be surprising, so you should validate inputs to avoid negative change or handle that case explicitly. Finally, ensure pennies_per_dollar is not zero to avoid a division-by-zero error.",
+        "Best practices: Keep your units consistent (all values in pennies) and use clear variable names as here. You could also use divmod(change_due, pennies_per_dollar) earlier to compute both the dollar count and remainder in one step if you want a concise alternative."
+      ],
+      "indentLevel": 0,
+      "blank": true
+    },
+    "14": {
+      "content": "#Step 5: Compute the number of quarters in the remaining change due",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "15": {
+      "content": "quarters = change_due // pennies_per_quarter",
+      "commentList": [
+        "Purpose: This line computes how many quarters you should return by dividing the remaining change (change_due) by the value of a quarter (pennies_per_quarter) and storing that whole-number result in the variable quarters.",
+        "Syntax and semantics: The // operator performs integer (floor) division, so you get the whole count of quarters and any cents less than 25 are not included in this result. The left side (quarters) becomes the quotient of change_due divided by pennies_per_quarter.",
+        "Potential errors and misconceptions: If change_due is not a multiple of 25 there will be a remainder that this line ignores (the problem assumes prices are multiples of 25 so that remainder should be zero). If change_due is negative (item price exceeds bill) you'll get a negative quarters value, and if pennies_per_quarter were zero you'd get a division-by-zero error. Also note that if your operands are floats you may get a float result like 3.0 instead of an int.",
+        "Best practices: Before this line, you should validate inputs so change_due is nonnegative and item_price is a multiple of 25. Ensure pennies_per_quarter is set to 25 and is an integer. For clarity and convenience you can use divmod(change_due, pennies_per_quarter) to get both the quarter count and the leftover remainder in one step."
+      ],
+      "indentLevel": 0,
+      "blank": true
+    },
+    "16": {
+      "content": "#Step 6: Display the result",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "17": {
+      "content": "print(\"Your change consists of:\") ",
+      "commentList": [
+        "You use this line to print a short label that introduces the change breakdown; it tells the user that the next lines will show how many dollars and quarters they will receive as change.",
+        "You are calling Python's print() function with a single string literal. The text inside the quotes is sent to the screen exactly as written and print() adds a newline so the next printed values appear on the following lines.",
+        "You should watch for common mistakes: forgetting the parentheses (using Python 2 style) causes a SyntaxError in Python 3, leaving out the quotes causes Python to look for a variable name and raise an error, and mismatched quotes also cause a SyntaxError. Also note this line only prints a label\u2014not the numeric results themselves.",
+        "For best practice, keep user messages clear and consistent with the values you print next. If you prefer a single line of output, you can combine the label and values using a formatted string (for example an f-string) so the message and numbers appear together and are easier for the user to read."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "18": {
+      "content": "print(dollars, \"dollars\")",
+      "commentList": [
+        "Purpose: This line prints how many whole dollars you should get back so the user can see the $1 bills to return (for example it will display something like \u201c2 dollars\u201d).",
+        "Syntax and semantics: print(dollars, \"dollars\") calls the print function with two arguments: the integer variable dollars and the string \"dollars\". Python converts the integer to text and inserts a single space between the arguments, then adds a newline at the end, producing output like: 2 dollars",
+        "Potential errors and common misconceptions: if the variable dollars does not exist you will get a NameError. If you run this code under an older Python where print is a statement (Python 2), print(dollars, \"dollars\") would produce a tuple-like output; make sure you run Python 3 or import the print function. Also note it will print \"1 dollars\" for a single dollar unless you handle singular vs plural.",
+        "Best practices: you should ensure dollars is an integer and not negative before printing. For clearer, controllable output consider formatting instead of relying on print's default spacing, for example using an f-string or format and handling pluralization: print(f\"{dollars} dollar\" if dollars==1 else f\"{dollars} dollars\")."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "19": {
+      "content": "print(quarters, \"quarters\")",
+      "commentList": [
+        "You use this line to show the customer how many quarters the machine will return; it is the final part of the program output that communicates the quarter count.",
+        "You are calling Python's print function with two arguments: quarters (an integer variable) and \"quarters\" (a string literal). Python converts the integer to text, inserts a space between the items, and then prints a newline.",
+        "You should watch for common mistakes: if quarters was never computed you will get a NameError, and if quarters somehow became negative it would print an unexpected value. Also, if you try to concatenate with '+' (e.g. quarters + \" quarters\") you must first convert the integer to a string or you'll get a TypeError.",
+        "You can make this clearer and more robust by using formatted output, for example an f-string: print(f\"{quarters} quarters\"). Also consider handling singular vs plural (print \"1 quarter\" instead of \"1 quarters\") for nicer user-facing messages."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "2e9007bc-20f1-4d94-9589-72a064838222",
+      "line": {
+        "number": 0,
+        "content": "change_due - pennies_per_dollar = change_due",
+        "commentList": [
+          "You might pick this because it looks like you are trying to remove a dollar from change_due (algebraic style) rather than computing a remainder, or because you misunderstand assignment direction. In actual Python this line is a syntax error: you cannot assign to an expression (change_due - pennies_per_dollar = change_due), so the program would not run. Even if you mentally convert it to a valid subtraction assignment, it only subtracts one dollar once instead of producing the correct leftover cents after removing all whole dollars. In short, this distractor confuses algebra with programming assignment and fails to compute the proper remainder of cents, causing either a crash or wrong change amounts."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this because it looks like you are trying to remove a dollar from change_due (algebraic style) rather than computing a remainder, or because you misunderstand assignment direction. In actual Python this line is a syntax error: you cannot assign to an expression (change_due - pennies_per_dollar = change_due), so the program would not run. Even if you mentally convert it to a valid subtraction assignment, it only subtracts one dollar once instead of producing the correct leftover cents after removing all whole dollars. In short, this distractor confuses algebra with programming assignment and fails to compute the proper remainder of cents, causing either a crash or wrong change amounts."
+      ]
+    },
+    {
+      "id": "559c70cb-b463-42f2-a1ee-bffcf6ab20d5",
+      "line": {
+        "number": 0,
+        "content": "change_due = change_due -  change_due // pennies_per_dollar",
+        "commentList": [
+          "You might pick this distractor because it looks like you are removing the whole-dollar part using integer division (//) \u2014 it uses the dollar count that you just computed. The misconception is a units mistake: you subtract the number of dollars instead of subtracting their value in pennies. If you use this line, the program still runs but produces the wrong remainder in cents, so the computed number of quarters will be wildly wrong (for example you could get many extra quarters). This is a logical bug, not a syntax error. The key issue is that the distractor fails to convert the dollar count back to pennies (it subtracts a count, not the penny value), so the remaining change is miscomputed. You should not use this because it misapplies integer division results and therefore gives incorrect change amounts."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this distractor because it looks like you are removing the whole-dollar part using integer division (//) \u2014 it uses the dollar count that you just computed. The misconception is a units mistake: you subtract the number of dollars instead of subtracting their value in pennies. If you use this line, the program still runs but produces the wrong remainder in cents, so the computed number of quarters will be wildly wrong (for example you could get many extra quarters). This is a logical bug, not a syntax error. The key issue is that the distractor fails to convert the dollar count back to pennies (it subtracts a count, not the penny value), so the remaining change is miscomputed. You should not use this because it misapplies integer division results and therefore gives incorrect change amounts."
+      ]
+    },
+    {
+      "id": "8cb4bd25-58fd-42d8-8db8-908025973c24",
+      "line": {
+        "number": 0,
+        "content": "quarters = change_due // pennies_per_dollar",
+        "commentList": [
+          "You might pick this by accident if you copy the earlier dollars computation and forget to switch to the quarter constant. This uses the dollar-size constant instead of the quarter-size, so it computes how many whole dollars are in the remaining change. Because the program already removed all whole dollars, the remaining change is less than a dollar, so this will usually give zero quarters. If you use this line, the program will almost always report 0 quarters even when quarters are needed, producing blatantly wrong change. The problem is a wrong divisor (wrong coin unit), so the operation is applied to the incorrect scale and yields incorrect coin counts."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this by accident if you copy the earlier dollars computation and forget to switch to the quarter constant. This uses the dollar-size constant instead of the quarter-size, so it computes how many whole dollars are in the remaining change. Because the program already removed all whole dollars, the remaining change is less than a dollar, so this will usually give zero quarters. If you use this line, the program will almost always report 0 quarters even when quarters are needed, producing blatantly wrong change. The problem is a wrong divisor (wrong coin unit), so the operation is applied to the incorrect scale and yields incorrect coin counts."
+      ]
+    },
+    {
+      "id": "8a0a4e30-6f0e-461c-9856-e3077dd72df5",
+      "line": {
+        "number": 0,
+        "content": "quarters = change_due % pennies_per_quarter",
+        "commentList": [
+          "You might pick this because you remember % is used with coins or remainders and think it produces the count of quarters. In reality, this computes the leftover cents after taking out all whole quarters, not how many quarters fit into the amount. If you use this line, quarters will be a value less than 25 (0\u201324), so the program would print a tiny number of 'quarters' that actually represents leftover cents, not the coin count. This misuse comes from swapping the roles of quotient and remainder. Compared with the correct approach, this line uses the wrong operation (remainder) and thus returns the leftover amount in cents rather than the number of quarter coins, making the output incorrect even though the expression is syntactically valid."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this because you remember % is used with coins or remainders and think it produces the count of quarters. In reality, this computes the leftover cents after taking out all whole quarters, not how many quarters fit into the amount. If you use this line, quarters will be a value less than 25 (0\u201324), so the program would print a tiny number of 'quarters' that actually represents leftover cents, not the coin count. This misuse comes from swapping the roles of quotient and remainder. Compared with the correct approach, this line uses the wrong operation (remainder) and thus returns the leftover amount in cents rather than the number of quarter coins, making the output incorrect even though the expression is syntactically valid."
+      ]
+    },
+    {
+      "id": "97d4bf75-7080-47b9-8d7f-b2663111e295",
+      "line": {
+        "number": 0,
+        "content": "change_due = change_due // pennies_per_dollar",
+        "commentList": [
+          "You might pick this because it looks like it reduces the change after you computed the number of dollars \u2014 and you may think floor division will give you what remains. In reality this line replaces the amount of cents remaining with the number of whole dollars, not the leftover cents. For example, if the change due is 175 cents and you already computed 1 dollar, this line would set change_due to 1 (175 // 100 = 1). When you then compute quarters you get 1 // 25 = 0 quarters, so the program would output 1 dollar and 0 quarters instead of the correct extra quarters. Using this line loses the cent information and produces wildly incorrect quarter counts. The error stems from using the operator that counts whole units instead of the operation that extracts the remainder."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might pick this because it looks like it reduces the change after you computed the number of dollars \u2014 and you may think floor division will give you what remains. In reality this line replaces the amount of cents remaining with the number of whole dollars, not the leftover cents. For example, if the change due is 175 cents and you already computed 1 dollar, this line would set change_due to 1 (175 // 100 = 1). When you then compute quarters you get 1 // 25 = 0 quarters, so the program would output 1 dollar and 0 quarters instead of the correct extra quarters. Using this line loses the cent information and produces wildly incorrect quarter counts. The error stems from using the operator that counts whole units instead of the operation that extracts the remainder."
+      ]
+    },
+    {
+      "id": "38d8f294-7b48-4d74-9b93-f4637e8e4131",
+      "line": {
+        "number": 0,
+        "content": "change_due = change_due - pennies_per_dollar",
+        "commentList": [
+          "You might choose this because it looks like you're removing a dollar from the change after computing how many dollars to give. The problem is this always subtracts exactly one dollar (100 cents), even if you already removed multiple dollars or none. If the change contains multiple whole dollars you'll leave too much leftover, and if the change was less than a dollar you could get a negative remaining amount. For example, with 250 cents change and 2 dollars computed, subtracting 100 yields 150 cents left \u2014 so quarters become 6 (150 // 25 = 6), which is nonsensical for coin counts. This line fails to account for the actual number of dollars removed and thus produces incorrect and inconsistent results."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might choose this because it looks like you're removing a dollar from the change after computing how many dollars to give. The problem is this always subtracts exactly one dollar (100 cents), even if you already removed multiple dollars or none. If the change contains multiple whole dollars you'll leave too much leftover, and if the change was less than a dollar you could get a negative remaining amount. For example, with 250 cents change and 2 dollars computed, subtracting 100 yields 150 cents left \u2014 so quarters become 6 (150 // 25 = 6), which is nonsensical for coin counts. This line fails to account for the actual number of dollars removed and thus produces incorrect and inconsistent results."
+      ]
+    },
+    {
+      "id": "ac795b2d-0e61-4fb7-a543-0f84d47e9aed",
+      "line": {
+        "number": 0,
+        "content": "change_due = change_due % pennies_per_quarter",
+        "commentList": [
+          "You might be tempted to take the remainder modulo a quarter because you are thinking about quarters next. However, this line reduces the remaining change to an amount less than one quarter (0\u201324 cents). After that, when the program computes how many quarters are in the remainder you'll always get zero quarters. For instance, if the change after taking dollars is 75 cents, this line would set the remainder to 0 (75 % 25 = 0), so the program would report 0 quarters instead of 3. Using this line removes all usable quarter information and prevents the program from correctly calculating how many quarters to give."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might be tempted to take the remainder modulo a quarter because you are thinking about quarters next. However, this line reduces the remaining change to an amount less than one quarter (0\u201324 cents). After that, when the program computes how many quarters are in the remainder you'll always get zero quarters. For instance, if the change after taking dollars is 75 cents, this line would set the remainder to 0 (75 % 25 = 0), so the program would report 0 quarters instead of 3. Using this line removes all usable quarter information and prevents the program from correctly calculating how many quarters to give."
+      ]
+    },
+    {
+      "id": "2d964ae2-1bdf-4cb1-b035-cf4a7b87544e",
+      "line": {
+        "number": 0,
+        "content": "quarters = change_due / pennies_per_quarter",
+        "commentList": [
+          "You might choose this because / looks like the natural way to divide to find how many quarters fit. However, this performs floating-point division, so the result will be a float (for example 3.0) rather than an integer count. If inputs were ever not exact multiples of the quarter value, you'd get a fractional number of quarters (e.g., 2.5), which doesn't make sense for a coin count. Using this line will typically print a float instead of a clean integer coin count and can hide logic errors. The key issue is using the general division operator instead of the operation that yields an integer count; this line therefore gives a different data type and can produce fractional values instead of an integer number of coins."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "You might choose this because / looks like the natural way to divide to find how many quarters fit. However, this performs floating-point division, so the result will be a float (for example 3.0) rather than an integer count. If inputs were ever not exact multiples of the quarter value, you'd get a fractional number of quarters (e.g., 2.5), which doesn't make sense for a coin count. Using this line will typically print a float instead of a clean integer coin count and can hide logic errors. The key issue is using the general division operator instead of the operation that yields an integer count; this line therefore gives a different data type and can produce fractional values instead of an integer number of coins."
+      ]
+    }
+  ],
+  "programInput": "5 225",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

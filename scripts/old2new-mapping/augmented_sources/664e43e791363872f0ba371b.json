@@ -1,0 +1,172 @@
+{
+  "id": "664e43e791363872f0ba371b",
+  "_id": "664e43e791363872f0ba371b",
+  "name": "Receiving Input Integers Until a Certain Condition is Met (Case 3)",
+  "description": "Construct a program that receives an integer from the user, outputs that integer, and stops receiving integers when the user enters a negative integer or an integer greater than 1000.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_input3.py",
+  "code": "#Step 1: Read the first integer that the user enters\ntext = input(\"Enter an integer:\")\nnum = int(text)\n#Step 2: Print the integer that the user has entered, then receive the next integers as long as the user enters an integer that is not negative and is not greater than 1000; otherwise stop\nwhile num >= 0 and num <= 1000 :\n    print(\"The integer entered is:\", num)\n    text = input(\"Enter an integer:\")\n    num = int(text)\nprint(\"End of input.\")",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Read the first integer that the user enters",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "text = input(\"Enter an integer:\")",
+      "commentList": [
+        "You use this line to ask the user to type something and to store what they type in the variable text so the program can use it later.",
+        "You call input(\"Enter an integer:\") which shows the prompt \"Enter an integer:\" to the user and then returns whatever the user types as a string; the = operator assigns that string to the name text.",
+        "You must remember that input() always returns a string; if the user types something that is not a valid integer (letters, symbols, or an empty line), the later int(text) will raise an error (ValueError).",
+        "You should be aware that this code assumes Python 3; in Python 2 input() behaves differently and can be unsafe because it evaluates the input rather than returning a raw string.",
+        "Best practice: make the prompt clear (consider adding a space after the colon), validate or strip the text before converting (e.g. text = text.strip()), and use try/except around int(text) so you can handle non-integer input gracefully; also consider a clearer variable name like user_input for readability."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "num = int(text)",
+      "commentList": [
+        "You convert the string stored in text into an integer and save it in num so the program can compare it to 0 and 1000 and print it as a number.",
+        "The expression int(text) calls Python's integer conversion; int parses the characters in text as a base-10 integer and the resulting numeric value is assigned to the variable num.",
+        "Be careful: if the user types something that is not a valid integer (for example letters or a decimal like 3.5) int(text) will raise a ValueError and the program will crash unless you handle it. Also, if you leave num as a string instead of converting, numeric comparisons will be wrong or cause errors.",
+        "Best practice: strip whitespace from the input first and handle conversion inside a try/except block so you can report invalid input without crashing. You can use int(input(...)) for brevity, but converting in a separate line makes it easier for you to validate or debug."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "4": {
+      "content": "#Step 2: Print the integer that the user has entered, then receive the next integers as long as the user enters an integer that is not negative and is not greater than 1000; otherwise stop",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "5": {
+      "content": "while num >= 0 and num <= 1000 :",
+      "commentList": [
+        "Purpose: This while line starts a loop that keeps running as long as the number you last read is between 0 and 1000 inclusive; it makes the program continue printing and reading more integers until the stop condition is reached.",
+        "Syntax and meaning: 'while' begins a loop, the expression 'num >= 0 and num <= 1000' is a boolean condition that must be true to continue, and the trailing ':' marks the start of the loop block that is indented underneath.",
+        "Logical detail: The 'and' operator means both comparisons must be true. So the loop continues only when num is at least 0 and at most 1000; if num is negative or greater than 1000 the loop ends.",
+        "Common mistakes: If you forget the ':' you will get a syntax error; if you forget to update num inside the loop (the int conversion later) the loop can become infinite; also be careful not to mix up 'and' with 'or' which would change the stopping behavior.",
+        "Input issues to watch for: Converting the user's input to int before the loop can raise a ValueError if the input isn't a valid integer; you should validate or handle exceptions if you expect bad input.",
+        "Best practices: For readability you can write the condition as '0 <= num <= 1000'. Also ensure the loop body updates num each iteration and consider using try/except around int() if you want robust input handling."
+      ],
+      "indentLevel": 0,
+      "blank": true
+    },
+    "6": {
+      "content": "    print(\"The integer entered is:\", num)",
+      "commentList": [
+        "Purpose: This line prints the current value of num with a short message so you (the user) can see each integer the program accepts while the loop is running.",
+        "Syntax and semantics: print(...) is a function call with two arguments here: a string literal and the variable num. The comma between them makes print convert num to text and insert a single space between the message and the number. The indentation shows this print runs once per loop iteration.",
+        "How it affects the program flow: This line only produces output; it does not change num or the loop condition. The loop continues or stops based on the condition in Line 5 and the inputs read in Lines 7\u20138.",
+        "Common errors and misconceptions: If you wrote \"The integer entered is:\" + num you'd get a TypeError because you must convert num to a string first. If this line is misindented it might run outside the loop (printing only once). Also, print does not terminate the loop \u2014 some learners mistakenly think it stops input reading.",
+        "Best practices: Consider using an f-string for clearer formatting, e.g. f\"The integer entered is: {num}\". You can also use the sep or end parameters of print to control spacing/newlines. Keep the print inside the loop so you show every accepted value.",
+        "Potential runtime issues to watch for: If num were not defined before the loop you'd get a NameError. If input conversion fails earlier (invalid int), handle it with try/except so this print doesn't run with an undefined or wrong value."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "7": {
+      "content": "    text = input(\"Enter an integer:\")",
+      "commentList": [
+        "Purpose: this line asks the user for the next input during each loop iteration and stores the raw text they type into the variable text so the program can convert and check it on the next line.",
+        "Syntax and semantics: input(\"Enter an integer:\") displays the prompt and returns the characters the user types as a string; the = operator assigns that string to the variable text. The call blocks (pauses) until the user presses Enter.",
+        "Role in the loop: by reading a new value each iteration you allow the program to update num (on Line 8) and then re-evaluate the while condition. Without this line the loop would repeatedly print the same number and never stop (infinite loop).",
+        "Common errors and misconceptions: input always returns a string \u2014 it does not convert to int for you. If the user types something that is not a valid integer, the subsequent int(text) will raise ValueError. If the user sends EOF (e.g., Ctrl+D/Ctrl+Z) you may get EOFError; if they interrupt, you'll get KeyboardInterrupt.",
+        "Best practices: validate and handle bad input \u2014 wrap the conversion in try/except to catch ValueError and EOFError, or use a loop that asks again on invalid input. You can also strip whitespace (text.strip()) before converting. If you don't need the intermediate string, you can combine steps (e.g., num = int(input(\"Enter an integer:\"))) but still handle exceptions."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "8": {
+      "content": "    num = int(text)",
+      "commentList": [
+        "This line converts the latest user input (text) into an integer and stores it in the variable num so the program can use numeric comparisons and operations.",
+        "Syntax: int(text) calls Python's built-in function to parse the string text as an integer, and the = assigns the resulting integer value to the name num.",
+        "You need this assignment inside the loop so that num is updated each time the user enters a new value; without it the loop would keep checking the old number and could become an infinite loop.",
+        "If text does not represent a valid integer (for example 'abc' or '3.14'), int(text) will raise a ValueError. You should handle this with input validation or a try/except to avoid the program crashing.",
+        "A common misconception: int('3.14') will not give 3 \u2014 it raises an error. int(3.14) (passing a numeric float) would truncate, but here you are parsing a string, so the string must be a plain integer format (optionally with + or -).",
+        "Best practice: call text = text.strip() before converting to remove accidental spaces, and prefer wrapping the conversion in try/except so you can prompt the user again on invalid input instead of terminating the program.",
+        "Also note: num must be an integer for the while condition (num >= 0 and num <= 1000) to work correctly; if you left text as a string, the comparisons would be wrong because they'd be string comparisons, not numeric ones."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "9": {
+      "content": "print(\"End of input.\")",
+      "commentList": [
+        "Purpose: This line prints a final message so you know the program has stopped reading integers. It is meant to run after the loop ends and appears once to signal the end of input.",
+        "Syntax and semantics: print(\"End of input.\") calls Python's print function with a string literal. When the while condition becomes false, execution continues here and you will see the exact text End of input. printed followed by a newline.",
+        "Common errors and misconceptions: Be careful with indentation \u2014 if you indent this line inside the while loop it will print every iteration instead of once at the end. Also ensure you use parentheses (Python 3) and correct spelling inside the quotes.",
+        "Best practices: Keep the message short and clear so users understand why input stopped. Place it outside the loop as shown; if you want more feedback you could include additional details (for example, how many numbers were entered)."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "2e66cd4f-9e38-46e0-8c3d-e1b82e9edb81",
+      "line": {
+        "number": 0,
+        "content": "while num >= 0 or num <= 1000 :",
+        "commentList": [
+          "Step-by-step: you might read the stop rule as \"stop when the number is negative or greater than 1000\" and then think \"continue while not that\", but using OR here makes the loop condition true for every integer. For any integer, either it is >= 0 or it is <= 1000 (in fact one of those is always true), so the loop never ends. If you use this line, your program will typically enter an infinite loop and keep asking for integers forever. Students pick this because they mix up AND/OR logic when translating a compound condition into code. The problem with this line is that it allows numbers that should stop the process to still satisfy the condition; the logical connector is wrong for expressing the requirement that both bounds must be satisfied to continue."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "Step-by-step: you might read the stop rule as \"stop when the number is negative or greater than 1000\" and then think \"continue while not that\", but using OR here makes the loop condition true for every integer. For any integer, either it is >= 0 or it is <= 1000 (in fact one of those is always true), so the loop never ends. If you use this line, your program will typically enter an infinite loop and keep asking for integers forever. Students pick this because they mix up AND/OR logic when translating a compound condition into code. The problem with this line is that it allows numbers that should stop the process to still satisfy the condition; the logical connector is wrong for expressing the requirement that both bounds must be satisfied to continue."
+      ]
+    },
+    {
+      "id": "f398d124-9551-41eb-8c58-5e1c1ac988e2",
+      "line": {
+        "number": 0,
+        "content": "while num > 0 and num < 1000 :",
+        "commentList": [
+          "Step-by-step: you may think \"greater than 0 and less than 1000\" is equivalent to the allowed range, so you write strict inequalities. However, that excludes 0 and 1000 themselves. If a user enters 0 or 1000, this condition will be false and the loop will stop, even though the specification allows non-negative numbers up to 1000 inclusive. If you use this line, the program will stop one input early when the user types 0 or 1000. Students often choose this because they misunderstand whether the endpoints are allowed. The issue is a boundary mistake: the line incorrectly treats the endpoints as forbidden instead of permitted."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "Step-by-step: you may think \"greater than 0 and less than 1000\" is equivalent to the allowed range, so you write strict inequalities. However, that excludes 0 and 1000 themselves. If a user enters 0 or 1000, this condition will be false and the loop will stop, even though the specification allows non-negative numbers up to 1000 inclusive. If you use this line, the program will stop one input early when the user types 0 or 1000. Students often choose this because they misunderstand whether the endpoints are allowed. The issue is a boundary mistake: the line incorrectly treats the endpoints as forbidden instead of permitted."
+      ]
+    },
+    {
+      "id": "dccbddd8-1111-498e-8340-7ae4e93fa67f",
+      "line": {
+        "number": 0,
+        "content": "if num >= 0 and num <= 1000 :",
+        "commentList": [
+          "Step-by-step: you might think you only need to check the condition once before printing, so you replace the loop with an if. That will print the first valid integer but will not repeat the input process; after the first iteration the program continues past the block and will not keep asking for more numbers. If you use this line, your program will read and print only the very first input (if it passes the check) and then exit without repeatedly receiving integers until the stop condition is met. Students often pick this because they confuse branching (do something once when a condition holds) with iteration (keep doing something while a condition holds). The key problem is that this line does not provide repetition, so the program cannot meet the requirement to keep receiving integers until the stopping condition occurs."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "Step-by-step: you might think you only need to check the condition once before printing, so you replace the loop with an if. That will print the first valid integer but will not repeat the input process; after the first iteration the program continues past the block and will not keep asking for more numbers. If you use this line, your program will read and print only the very first input (if it passes the check) and then exit without repeatedly receiving integers until the stop condition is met. Students often pick this because they confuse branching (do something once when a condition holds) with iteration (keep doing something while a condition holds). The key problem is that this line does not provide repetition, so the program cannot meet the requirement to keep receiving integers until the stopping condition occurs."
+      ]
+    }
+  ],
+  "programInput": "999 1000 0 1001",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

@@ -889,15 +889,6 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   update() {
-    if (this.distractorCount > 3) {
-      this.messages.add({
-        severity: 'error',
-        summary: 'Validation Error',
-        detail: `A source cannot have more than 3 distractors (currently ${this.distractorCount}). Please remove the extra distractors before saving.`
-      });
-      return;
-    }
-
     if (this.blankLineCount > 4) {
       this.messages.add({
         severity: 'error',
@@ -905,6 +896,14 @@ export class EditorComponent implements OnInit, OnDestroy {
         detail: `A source cannot have more than 4 blank lines (currently ${this.blankLineCount}). Please unmask the extra lines before saving.`
       });
       return;
+    }
+
+    if (this.distractorCount > (this.blankLineCount * 4)) {
+      this.messages.add({
+        severity: 'warn',
+        summary: 'High Distractor Count',
+        detail: `This source has ${this.distractorCount} distractors (recommended maximum is ${this.blankLineCount * 4}, which is 4 per blank line). Please avoid adding more, as this can affect compile and preview time.`
+      });
     }
 
     this.model.translations = {};

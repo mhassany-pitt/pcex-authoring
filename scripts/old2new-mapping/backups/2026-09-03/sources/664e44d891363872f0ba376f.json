@@ -1,0 +1,445 @@
+{
+  "id": "6a91ae6b32e78ede45c116f9",
+  "user": "moh70@pitt.edu",
+  "name": "Determining When a Student Fails a Course (Case 2)",
+  "description": "Construct a program that determines whether a student fails the course based on the inputs that it receives from the instructor. The student fails the course if the exam score is less than 55 or when the student has cheated.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_fail_course2.py",
+  "code": "#Step 1: Read the instructor inputs\ntext = input(\"Enter the exam score:\")\nexam_score = int(text)\ntext = input(\"Enter 1 if the student has cheated, otherwise enter 0:\")\ninput_num = int(text)\n#Step 2: Determine whether the student has cheated\nif input_num == 1 :\n    has_cheated = True\nelse:\n    has_cheated = False\n#Step 3: Write the boolean expression to determine whether the student fails the course\nis_failing = exam_score < 55 or has_cheated\n#Step 4: Print the result\nif is_failing == True :\n    print(\"Yes! The student fails the course.\")\nelse:\n    print(\"No! The student does not fail the course.\")",
+  "lines": {
+    "2": {
+      "content": "text = input(\"Enter the exam score:\")",
+      "commentList": [
+        "You use this line to show the prompt Enter the exam score: to the instructor and capture whatever they type into the variable text so you can use it later.",
+        "You call the built-in function input(...) with a prompt string; input(...) waits for the user to type and press Enter, then returns that value as a string. The = operator stores that returned string in the variable text.",
+        "Be careful: input(...) always returns text, not a number. You might expect a numeric value here, but the conversion to an integer happens on the next line (exam_score = int(text)). If the instructor types letters, an empty string, or a decimal like 72.5, int(text) will raise an error.",
+        "To avoid common mistakes, you should validate what the user typed before converting. For example, you can strip whitespace, check that the string contains only digits (or handle a sign), or wrap int(text) in a try/except block and re-prompt until the instructor enters a valid whole-number score.",
+        "As a best practice, use a clearer variable name (for example score_input or exam_text) and make the prompt more specific (for example Enter the exam score (0-100):) so the instructor knows the expected format."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You use this line to show the prompt Enter the exam score: to the instructor and capture whatever they type into the variable text so you can use it later."
+        },
+        {
+          "content": "You call the built-in function input(...) with a prompt string; input(...) waits for the user to type and press Enter, then returns that value as a string. The = operator stores that returned string in the variable text."
+        },
+        {
+          "content": "Be careful: input(...) always returns text, not a number. You might expect a numeric value here, but the conversion to an integer happens on the next line (exam_score = int(text)). If the instructor types letters, an empty string, or a decimal like 72.5, int(text) will raise an error."
+        },
+        {
+          "content": "To avoid common mistakes, you should validate what the user typed before converting. For example, you can strip whitespace, check that the string contains only digits (or handle a sign), or wrap int(text) in a try/except block and re-prompt until the instructor enters a valid whole-number score."
+        },
+        {
+          "content": "As a best practice, use a clearer variable name (for example score_input or exam_text) and make the prompt more specific (for example Enter the exam score (0-100):) so the instructor knows the expected format."
+        }
+      ]
+    },
+    "3": {
+      "content": "exam_score = int(text)",
+      "commentList": [
+        "This line converts the text you read from input into an integer and stores it in the variable exam_score so you can make numeric comparisons (for example, checking if it's less than 55).",
+        "exam_score = int(text) is an assignment: int(text) calls Python's int() function to parse the string text into an integer, and the resulting number is assigned to exam_score.",
+        "Be careful: int() requires a string that looks exactly like an integer (for example '85'); if you type something else (like '85.0', 'eighty', or '85%') Python will raise an error and your program will stop.",
+        "If you expect decimal scores, you can convert with float() first or use int(float(text)), but that will truncate toward zero; to avoid crashes you should validate input or wrap the conversion in a try/except block to handle invalid entries gracefully.",
+        "Best practices: give a clear prompt, strip whitespace from text before converting, check the converted value is in a sensible range (e.g., 0\u2013100), and handle conversion errors by re-prompting the user or showing a helpful message."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line converts the text you read from input into an integer and stores it in the variable exam_score so you can make numeric comparisons (for example, checking if it's less than 55)."
+        },
+        {
+          "content": "exam_score = int(text) is an assignment: int(text) calls Python's int() function to parse the string text into an integer, and the resulting number is assigned to exam_score."
+        },
+        {
+          "content": "Be careful: int() requires a string that looks exactly like an integer (for example '85'); if you type something else (like '85.0', 'eighty', or '85%') Python will raise an error and your program will stop."
+        },
+        {
+          "content": "If you expect decimal scores, you can convert with float() first or use int(float(text)), but that will truncate toward zero; to avoid crashes you should validate input or wrap the conversion in a try/except block to handle invalid entries gracefully."
+        },
+        {
+          "content": "Best practices: give a clear prompt, strip whitespace from text before converting, check the converted value is in a sensible range (e.g., 0\u2013100), and handle conversion errors by re-prompting the user or showing a helpful message."
+        }
+      ]
+    },
+    "4": {
+      "content": "text = input(\"Enter 1 if the student has cheated, otherwise enter 0:\")",
+      "commentList": [
+        "Purpose: this line shows a message asking the instructor to type 1 if the student cheated or 0 otherwise, and it stores whatever the instructor types (as text) into the variable text so the program can use it next.",
+        "Syntax and semantics: input('...') displays the prompt and returns the user's response as a string; the = operator assigns that string to the variable named text. The quoted text inside input(...) is what the user sees on the screen.",
+        "Potential errors and misconceptions: input() always returns a string, so if you think this line makes a number or a boolean directly, you'll be mistaken; the next line must convert the string to an integer. Also beware that if the user types something like 'yes', 'one', or leaves it blank, converting to int later will raise a ValueError.",
+        "Best practices: make the prompt as clear as possible (for example, mention acceptable values), validate the user's response before converting it, and handle conversion errors with try/except. You could also use a more descriptive variable name like cheated_input to make the purpose clearer.",
+        "Alternative improvement: you can convert immediately and validate in one step (for example, use try: input_num = int(input(...)) except ValueError: ...) or accept more flexible answers (e.g., 'y'/'n') and map them to a boolean, which can be clearer for users."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: this line shows a message asking the instructor to type 1 if the student cheated or 0 otherwise, and it stores whatever the instructor types (as text) into the variable text so the program can use it next."
+        },
+        {
+          "content": "Syntax and semantics: input('...') displays the prompt and returns the user's response as a string; the = operator assigns that string to the variable named text. The quoted text inside input(...) is what the user sees on the screen."
+        },
+        {
+          "content": "Potential errors and misconceptions: input() always returns a string, so if you think this line makes a number or a boolean directly, you'll be mistaken; the next line must convert the string to an integer. Also beware that if the user types something like 'yes', 'one', or leaves it blank, converting to int later will raise a ValueError."
+        },
+        {
+          "content": "Best practices: make the prompt as clear as possible (for example, mention acceptable values), validate the user's response before converting it, and handle conversion errors with try/except. You could also use a more descriptive variable name like cheated_input to make the purpose clearer."
+        },
+        {
+          "content": "Alternative improvement: you can convert immediately and validate in one step (for example, use try: input_num = int(input(...)) except ValueError: ...) or accept more flexible answers (e.g., 'y'/'n') and map them to a boolean, which can be clearer for users."
+        }
+      ]
+    },
+    "5": {
+      "content": "input_num = int(text)",
+      "commentList": [
+        "You convert the text you read from input into an integer and store that number in the variable input_num so you can use it in numerical comparisons later (for example, checking if it equals 1).",
+        "You are using the int(...) function to parse the string in text into an integer; the = sign assigns that integer value to the name input_num so the program can refer to it again.",
+        "You will get a ValueError if text does not contain a valid integer representation (for example, 'yes', '', or '1.0' will fail). You should not assume input is always correct unless you validate it.",
+        "You must not confuse assignment (=) with equality comparison (==). Here you are assigning a value to input_num; later the code uses input_num == 1 to check the value.",
+        "As a best practice, you should validate or handle bad input before calling int(), for example with a check or try/except. Also consider directly creating a boolean (has_cheated = (int(text) == 1)) so you avoid a separate if/else later."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You convert the text you read from input into an integer and store that number in the variable input_num so you can use it in numerical comparisons later (for example, checking if it equals 1)."
+        },
+        {
+          "content": "You are using the int(...) function to parse the string in text into an integer; the = sign assigns that integer value to the name input_num so the program can refer to it again."
+        },
+        {
+          "content": "You will get a ValueError if text does not contain a valid integer representation (for example, 'yes', '', or '1.0' will fail). You should not assume input is always correct unless you validate it."
+        },
+        {
+          "content": "You must not confuse assignment (=) with equality comparison (==). Here you are assigning a value to input_num; later the code uses input_num == 1 to check the value."
+        },
+        {
+          "content": "As a best practice, you should validate or handle bad input before calling int(), for example with a check or try/except. Also consider directly creating a boolean (has_cheated = (int(text) == 1)) so you avoid a separate if/else later."
+        }
+      ]
+    },
+    "7": {
+      "content": "if input_num == 1 :",
+      "commentList": [
+        "Purpose: You start a decision that checks whether the instructor entered 1 to mean the student cheated. If this condition is true, the indented block that follows will run and set has_cheated to True.",
+        "Syntax breakdown: 'if' begins a conditional. 'input_num == 1' uses the double equals operator (==) to compare the value of input_num to the integer 1. The colon (:) ends the if header and the next indented line is the body that executes when the condition is True.",
+        "Common errors and misconceptions: Do not use a single '=' here \u2014 that is assignment and will cause a SyntaxError in an if statement. Also make sure input_num is an integer (the earlier int(text) call is required); if it were a string, the comparison to 1 would always be False. Beware of using 'if input_num:' instead \u2014 that treats any nonzero number as True, so it is less precise than checking for 1.",
+        "Best practices: You can simplify this pattern by assigning the boolean directly: has_cheated = (input_num == 1). Also validate that the user entered only 0 or 1 and keep clear spacing and correct indentation for readability."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: You start a decision that checks whether the instructor entered 1 to mean the student cheated. If this condition is true, the indented block that follows will run and set has_cheated to True."
+        },
+        {
+          "content": "Syntax breakdown: 'if' begins a conditional. 'input_num == 1' uses the double equals operator (==) to compare the value of input_num to the integer 1. The colon (:) ends the if header and the next indented line is the body that executes when the condition is True."
+        },
+        {
+          "content": "Common errors and misconceptions: Do not use a single '=' here \u2014 that is assignment and will cause a SyntaxError in an if statement. Also make sure input_num is an integer (the earlier int(text) call is required); if it were a string, the comparison to 1 would always be False. Beware of using 'if input_num:' instead \u2014 that treats any nonzero number as True, so it is less precise than checking for 1."
+        },
+        {
+          "content": "Best practices: You can simplify this pattern by assigning the boolean directly: has_cheated = (input_num == 1). Also validate that the user entered only 0 or 1 and keep clear spacing and correct indentation for readability."
+        }
+      ]
+    },
+    "8": {
+      "content": "    has_cheated = True",
+      "commentList": [
+        "You assign the boolean value True to the variable has_cheated when the if condition is met; this records inside the program that the student cheated.",
+        "You must keep this line indented under the if so Python knows it belongs to the 'then' branch; without correct indentation it will be a syntax error or have the wrong behavior.",
+        "You are using the assignment operator '=' to store the boolean value. True is a built-in boolean and must be capitalized exactly as shown; using 'true', '\"True\"', or other forms will either be a NameError or create a string instead of a boolean.",
+        "You should not try to write 'if input_num = 1:' because '=' is assignment and not allowed in a condition in Python; the code correctly uses '==' on Line 7 to compare.",
+        "You should ensure input_num was parsed successfully to an integer before this line (otherwise int(text) would have already raised an error). Consider validating input or using try/except if user input might be invalid.",
+        "As a cleaner alternative, you can combine the if/else and write has_cheated = (input_num == 1). This makes the intent explicit and reduces lines of code."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You assign the boolean value True to the variable has_cheated when the if condition is met; this records inside the program that the student cheated."
+        },
+        {
+          "content": "You must keep this line indented under the if so Python knows it belongs to the 'then' branch; without correct indentation it will be a syntax error or have the wrong behavior."
+        },
+        {
+          "content": "You are using the assignment operator '=' to store the boolean value. True is a built-in boolean and must be capitalized exactly as shown; using 'true', '\"True\"', or other forms will either be a NameError or create a string instead of a boolean."
+        },
+        {
+          "content": "You should not try to write 'if input_num = 1:' because '=' is assignment and not allowed in a condition in Python; the code correctly uses '==' on Line 7 to compare."
+        },
+        {
+          "content": "You should ensure input_num was parsed successfully to an integer before this line (otherwise int(text) would have already raised an error). Consider validating input or using try/except if user input might be invalid."
+        },
+        {
+          "content": "As a cleaner alternative, you can combine the if/else and write has_cheated = (input_num == 1). This makes the intent explicit and reduces lines of code."
+        }
+      ]
+    },
+    "9": {
+      "content": "else:",
+      "commentList": [
+        "You use the else: line to start the branch that runs when the if input_num == 1 test is false; here it makes sure has_cheated gets a value in every case so the program can later decide if the student fails.",
+        "You must end the else keyword with a colon and follow it with an indented block; else has no condition of its own \u2014 it simply runs when the matching if is false and it attaches to the nearest previous if at the same indentation level.",
+        "Be careful: if you forget the colon or indent the following lines incorrectly you'll get a SyntaxError or IndentationError; also you cannot put a condition after else (use elif if you need another conditional test).",
+        "A common misconception is that else checks another condition \u2014 remember that you run the else block for every case not handled by the if. In this program any input value other than 1 will take you into the else branch.",
+        "This code treats any non-1 integer (including unexpected or invalid values) as 'not cheated'. You should validate the input or handle unexpected values (for example re-prompt the user or raise an error) so you don't silently mark cheaters as not cheating.",
+        "As a best practice you can avoid the if/else entirely and write has_cheated = (input_num == 1) \u2014 this makes your intent clearer, reduces indentation, and helps keep the code concise."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You use the else: line to start the branch that runs when the if input_num == 1 test is false; here it makes sure has_cheated gets a value in every case so the program can later decide if the student fails."
+        },
+        {
+          "content": "You must end the else keyword with a colon and follow it with an indented block; else has no condition of its own \u2014 it simply runs when the matching if is false and it attaches to the nearest previous if at the same indentation level."
+        },
+        {
+          "content": "Be careful: if you forget the colon or indent the following lines incorrectly you'll get a SyntaxError or IndentationError; also you cannot put a condition after else (use elif if you need another conditional test)."
+        },
+        {
+          "content": "A common misconception is that else checks another condition \u2014 remember that you run the else block for every case not handled by the if. In this program any input value other than 1 will take you into the else branch."
+        },
+        {
+          "content": "This code treats any non-1 integer (including unexpected or invalid values) as 'not cheated'. You should validate the input or handle unexpected values (for example re-prompt the user or raise an error) so you don't silently mark cheaters as not cheating."
+        },
+        {
+          "content": "As a best practice you can avoid the if/else entirely and write has_cheated = (input_num == 1) \u2014 this makes your intent clearer, reduces indentation, and helps keep the code concise."
+        }
+      ]
+    },
+    "10": {
+      "content": "    has_cheated = False",
+      "commentList": [
+        "Purpose: This line sets the boolean variable has_cheated to False when the else branch runs \u2014 you are marking that the student did not cheat. That value is used later to decide if the student is failing.",
+        "Syntax and semantics: This is an assignment statement: the name has_cheated on the left is bound to the boolean literal False on the right. In Python False must be capitalized; this stores the false boolean value in the variable for you to use later.",
+        "Control flow note: This line only executes when the if condition (input_num == 1) is false. If you entered 1 earlier, this line is skipped because has_cheated was already set to True on Line 8.",
+        "Common errors and misconceptions: Do not write 'false' or 'FALSE' (you would get a NameError). Also avoid using '==' here (that would be a comparison, not an assignment). Assigning the string 'False' or the integer 0 is not the same as the boolean False and can lead to confusing behavior.",
+        "Best practice: You can simplify and make your intent clearer by using a direct boolean expression: has_cheated = (input_num == 1). Also, later prefer 'if is_failing:' instead of 'if is_failing == True:' for cleaner code."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line sets the boolean variable has_cheated to False when the else branch runs \u2014 you are marking that the student did not cheat. That value is used later to decide if the student is failing."
+        },
+        {
+          "content": "Syntax and semantics: This is an assignment statement: the name has_cheated on the left is bound to the boolean literal False on the right. In Python False must be capitalized; this stores the false boolean value in the variable for you to use later."
+        },
+        {
+          "content": "Control flow note: This line only executes when the if condition (input_num == 1) is false. If you entered 1 earlier, this line is skipped because has_cheated was already set to True on Line 8."
+        },
+        {
+          "content": "Common errors and misconceptions: Do not write 'false' or 'FALSE' (you would get a NameError). Also avoid using '==' here (that would be a comparison, not an assignment). Assigning the string 'False' or the integer 0 is not the same as the boolean False and can lead to confusing behavior."
+        },
+        {
+          "content": "Best practice: You can simplify and make your intent clearer by using a direct boolean expression: has_cheated = (input_num == 1). Also, later prefer 'if is_failing:' instead of 'if is_failing == True:' for cleaner code."
+        }
+      ]
+    },
+    "12": {
+      "content": "is_failing = exam_score < 55 or has_cheated",
+      "commentList": [
+        "Purpose: this line computes whether the student fails and stores the result in is_failing. You set is_failing to True when the exam score is less than 55 or when has_cheated is True, which matches the problem rule.",
+        "Syntax and semantics: exam_score < 55 is a comparison that produces True or False. The or operator combines that boolean with the boolean value has_cheated. The whole expression on the right-hand side is then assigned to the variable is_failing.",
+        "Short-circuit note: or evaluates the left side first and, if that is True, it does not need to evaluate the right side. In this program the right side is a simple variable, so there are no side effects, but you should remember this behavior when the right side is a function call.",
+        "Common errors and misconceptions: if you forget to convert the input to int earlier, exam_score < 55 will raise a TypeError or behave unexpectedly. Also avoid writing is_failing == (exam_score < 55 or has_cheated) in later checks (redundant) or using bitwise | instead of or, which can give incorrect results with non-boolean types.",
+        "Best practices: validate exam_score (e.g., ensure it is within 0\u2013100) before this line so your comparison is meaningful. Use clear boolean names like has_cheated and is_failing. You can add parentheses for readability: is_failing = (exam_score < 55) or has_cheated, though they are not required here.",
+        "Quick examples to check your understanding: if exam_score is 54 and has_cheated is False, the expression is True (failing). If exam_score is 80 and has_cheated is True, it is True. If exam_score is 80 and has_cheated is False, it is False."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: this line computes whether the student fails and stores the result in is_failing. You set is_failing to True when the exam score is less than 55 or when has_cheated is True, which matches the problem rule."
+        },
+        {
+          "content": "Syntax and semantics: exam_score < 55 is a comparison that produces True or False. The or operator combines that boolean with the boolean value has_cheated. The whole expression on the right-hand side is then assigned to the variable is_failing."
+        },
+        {
+          "content": "Short-circuit note: or evaluates the left side first and, if that is True, it does not need to evaluate the right side. In this program the right side is a simple variable, so there are no side effects, but you should remember this behavior when the right side is a function call."
+        },
+        {
+          "content": "Common errors and misconceptions: if you forget to convert the input to int earlier, exam_score < 55 will raise a TypeError or behave unexpectedly. Also avoid writing is_failing == (exam_score < 55 or has_cheated) in later checks (redundant) or using bitwise | instead of or, which can give incorrect results with non-boolean types."
+        },
+        {
+          "content": "Best practices: validate exam_score (e.g., ensure it is within 0\u2013100) before this line so your comparison is meaningful. Use clear boolean names like has_cheated and is_failing. You can add parentheses for readability: is_failing = (exam_score < 55) or has_cheated, though they are not required here."
+        },
+        {
+          "content": "Quick examples to check your understanding: if exam_score is 54 and has_cheated is False, the expression is True (failing). If exam_score is 80 and has_cheated is True, it is True. If exam_score is 80 and has_cheated is False, it is False."
+        }
+      ]
+    },
+    "14": {
+      "content": "if is_failing == True :",
+      "commentList": [
+        "Purpose: You use this line to decide which message to print. It checks whether the boolean condition `is_failing` is true so the program knows to run the first print statement (the student fails) or skip to the else branch.",
+        "Syntax breakdown: `if` starts a conditional. The expression `is_failing == True` is evaluated; the trailing `:` begins the indented block that runs when the expression is true. You must keep the next lines indented to belong to this if.",
+        "Semantics: The expression tests equality between `is_failing` and `True`. If that test yields true, the interpreter executes the indented print on the next line; otherwise it continues to the `else` block.",
+        "Common mistakes: You might accidentally write a single `=` (assignment) instead of `==`, which is a syntax error in an if statement. Another common confusion is redundant comparison to True \u2014 it works, but it's unnecessary.",
+        "Type/definition errors to watch for: If `is_failing` was never set or has the wrong name, you'll get a NameError. If it isn't a boolean, the equality may give unexpected results, so make sure you set `is_failing` (as done on line 12).",
+        "Best practice: Instead of `if is_failing == True:`, prefer the clearer and more idiomatic `if is_failing:`. It is shorter, easier to read, and avoids redundant comparison."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: You use this line to decide which message to print. It checks whether the boolean condition `is_failing` is true so the program knows to run the first print statement (the student fails) or skip to the else branch."
+        },
+        {
+          "content": "Syntax breakdown: `if` starts a conditional. The expression `is_failing == True` is evaluated; the trailing `:` begins the indented block that runs when the expression is true. You must keep the next lines indented to belong to this if."
+        },
+        {
+          "content": "Semantics: The expression tests equality between `is_failing` and `True`. If that test yields true, the interpreter executes the indented print on the next line; otherwise it continues to the `else` block."
+        },
+        {
+          "content": "Common mistakes: You might accidentally write a single `=` (assignment) instead of `==`, which is a syntax error in an if statement. Another common confusion is redundant comparison to True \u2014 it works, but it's unnecessary."
+        },
+        {
+          "content": "Type/definition errors to watch for: If `is_failing` was never set or has the wrong name, you'll get a NameError. If it isn't a boolean, the equality may give unexpected results, so make sure you set `is_failing` (as done on line 12)."
+        },
+        {
+          "content": "Best practice: Instead of `if is_failing == True:`, prefer the clearer and more idiomatic `if is_failing:`. It is shorter, easier to read, and avoids redundant comparison."
+        }
+      ]
+    },
+    "15": {
+      "content": "    print(\"Yes! The student fails the course.\")",
+      "commentList": [
+        "Purpose: This line prints the message that tells the user you have determined the student fails the course. It runs only when the if condition on the previous line is true, so it reports the failing result to the instructor.",
+        "Syntax and semantics: print(\"Yes! The student fails the course.\") is a call to Python's print function with a string literal. Because it is indented under the if, Python executes this line only when the condition (is_failing == True) is satisfied.",
+        "Common misconceptions and errors: You might think the print changes program state \u2014 it does not; it only produces output. Also beware of wrong indentation (which would change when this line runs) and misspelling the string (which only affects the displayed message). In Python 3 you must keep the parentheses around the text; omitting them would cause an error.",
+        "About the if test: Using if is_failing == True is redundant. You can simplify to if is_failing: which is clearer and more idiomatic in Python, but the current form still works as written.",
+        "Best practices: Keep output messages clear and consistent for users. If you want more useful feedback, consider printing the actual score or whether cheating was detected. Maintain consistent indentation (use 4 spaces) so you, and others, can easily see this line belongs to the if block.",
+        "Testing tip: When you test the program, try cases where exam_score < 55 and where has_cheated is True separately and together so you can confirm this print happens in every intended failing case."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line prints the message that tells the user you have determined the student fails the course. It runs only when the if condition on the previous line is true, so it reports the failing result to the instructor."
+        },
+        {
+          "content": "Syntax and semantics: print(\"Yes! The student fails the course.\") is a call to Python's print function with a string literal. Because it is indented under the if, Python executes this line only when the condition (is_failing == True) is satisfied."
+        },
+        {
+          "content": "Common misconceptions and errors: You might think the print changes program state \u2014 it does not; it only produces output. Also beware of wrong indentation (which would change when this line runs) and misspelling the string (which only affects the displayed message). In Python 3 you must keep the parentheses around the text; omitting them would cause an error."
+        },
+        {
+          "content": "About the if test: Using if is_failing == True is redundant. You can simplify to if is_failing: which is clearer and more idiomatic in Python, but the current form still works as written."
+        },
+        {
+          "content": "Best practices: Keep output messages clear and consistent for users. If you want more useful feedback, consider printing the actual score or whether cheating was detected. Maintain consistent indentation (use 4 spaces) so you, and others, can easily see this line belongs to the if block."
+        },
+        {
+          "content": "Testing tip: When you test the program, try cases where exam_score < 55 and where has_cheated is True separately and together so you can confirm this print happens in every intended failing case."
+        }
+      ]
+    },
+    "16": {
+      "content": "else:",
+      "commentList": [
+        "Purpose: This else: begins the alternate branch that runs when the preceding if condition is false; here it leads to printing that the student does not fail the course.",
+        "Syntax & semantics: else is a keyword that must immediately follow the if (or if/elif) block and ends with a colon. The indented block under else is executed only when the if condition evaluated to False.",
+        "Common errors & misconceptions: If you forget the colon or the indented block, Python raises a SyntaxError or IndentationError. Don't assume else runs when the condition is true \u2014 it runs for the opposite case. Also avoid placing a condition after else (use elif for additional conditions).",
+        "Best practices: Keep else directly after the related if block and use consistent indentation (typically 4 spaces). Make your branches clear and concise so it's obvious which case each branch handles.",
+        "Tip relating to this program: Because is_failing is already a boolean, you would usually write the if as if is_failing: instead of comparing to True; the else here then cleanly covers the 'not failing' case."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This else: begins the alternate branch that runs when the preceding if condition is false; here it leads to printing that the student does not fail the course."
+        },
+        {
+          "content": "Syntax & semantics: else is a keyword that must immediately follow the if (or if/elif) block and ends with a colon. The indented block under else is executed only when the if condition evaluated to False."
+        },
+        {
+          "content": "Common errors & misconceptions: If you forget the colon or the indented block, Python raises a SyntaxError or IndentationError. Don't assume else runs when the condition is true \u2014 it runs for the opposite case. Also avoid placing a condition after else (use elif for additional conditions)."
+        },
+        {
+          "content": "Best practices: Keep else directly after the related if block and use consistent indentation (typically 4 spaces). Make your branches clear and concise so it's obvious which case each branch handles."
+        },
+        {
+          "content": "Tip relating to this program: Because is_failing is already a boolean, you would usually write the if as if is_failing: instead of comparing to True; the else here then cleanly covers the 'not failing' case."
+        }
+      ]
+    },
+    "17": {
+      "content": "    print(\"No! The student does not fail the course.\")",
+      "commentList": [
+        "Purpose: This line prints the outcome for the case when the program determined the student is not failing. You see this message when the condition in the previous if-statement (is_failing == True) was false.",
+        "How it works (syntax/semantics): print(...) is a function call that sends the given text to the console. The string \"No! The student does not fail the course.\" is exactly what will appear on screen, followed by a newline.",
+        "When this line runs: You reach this line only if is_failing is False. The else block means \"do this when the if condition is not met.\"",
+        "Common errors and misconceptions: A NameError will occur here if is_failing was never defined earlier. A SyntaxError can happen if you forget the closing parenthesis or misindent the line (it must be indented to match the else block). Also avoid thinking this prints a boolean value; it prints a human-readable message.",
+        "Best practices: Prefer using clear, concise messages that match your logic (for example, \"Student passes the course.\" could be clearer). Also prefer testing booleans directly (use if is_failing: ... else: ...) instead of comparing to True or False; that makes your code simpler and less error-prone.",
+        "Alternative phrasing: If you want to show the actual boolean rather than a message, you could print(is_failing) or print(not is_failing) \u2014 but for user-facing output, a descriptive sentence like this is usually better."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line prints the outcome for the case when the program determined the student is not failing. You see this message when the condition in the previous if-statement (is_failing == True) was false."
+        },
+        {
+          "content": "How it works (syntax/semantics): print(...) is a function call that sends the given text to the console. The string \"No! The student does not fail the course.\" is exactly what will appear on screen, followed by a newline."
+        },
+        {
+          "content": "When this line runs: You reach this line only if is_failing is False. The else block means \"do this when the if condition is not met.\""
+        },
+        {
+          "content": "Common errors and misconceptions: A NameError will occur here if is_failing was never defined earlier. A SyntaxError can happen if you forget the closing parenthesis or misindent the line (it must be indented to match the else block). Also avoid thinking this prints a boolean value; it prints a human-readable message."
+        },
+        {
+          "content": "Best practices: Prefer using clear, concise messages that match your logic (for example, \"Student passes the course.\" could be clearer). Also prefer testing booleans directly (use if is_failing: ... else: ...) instead of comparing to True or False; that makes your code simpler and less error-prone."
+        },
+        {
+          "content": "Alternative phrasing: If you want to show the actual boolean rather than a message, you could print(is_failing) or print(not is_failing) \u2014 but for user-facing output, a descriptive sentence like this is usually better."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "is_failing = exam_score < 55 and has_cheated",
+      "description": "You might pick this because you think a student should only fail if they both scored poorly and cheated, i.e., you expect both conditions to be present before declaring failure. Step-by-step: with this line the program checks whether the score is below the threshold AND the cheated flag is true. If either one of those is false, the whole expression is false. That means a student who cheated but scored well will not be marked failing, and a student with a low score who did not cheat will also not be marked failing. This changes which students are classified as failing in a systematic way. The problem with this choice is that it combines the two reasons into a single stricter requirement instead of treating them as independent reasons; it therefore misses valid failure cases that should be handled separately.",
+      "line_number": 0
+    },
+    {
+      "code": "is_failing = exam_score > 55 or has_cheated",
+      "description": "You might choose this because you accidentally reversed the comparison sign, thinking the exam condition should use '>' instead of the other relational operator. Step-by-step: with this line the expression becomes true for students whose score is above the number and for those who cheated. As a result, many high-scoring students will be classified as failing, while students with low scores might not be flagged unless they also cheated. This is a logic inversion of the intended numeric check: the relational operator points in the wrong direction, so the program marks the wrong set of students as failing.",
+      "line_number": 0
+    },
+    {
+      "code": "is_failing = exam_score == 55 or has_cheated",
+      "description": "You might pick this if you misread the requirement and believe the failure condition applies only when the score equals the threshold. Step-by-step: this line makes the program report failure only when the numeric score is exactly that one value or when cheating occurred. That means a student with a score of 54 or 30 would not be marked failing by the numeric check, unless they also cheated. In practice this misses almost all low scores except the single exact value, so many students who should be identified by the score condition will be incorrectly ignored. The issue is using an equality test instead of a relational check that captures all scores on one side of the threshold.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "55 1",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:07.639Z",
+  "updated_at": "2026-09-02T02:58:01.936Z",
+  "stat": {
+    "size": 59211,
+    "lastTimeModified": 1788317882583.7441
+  }
+}

@@ -1,0 +1,553 @@
+{
+  "id": "6a9060c7cbc5a3f2aa638ad1",
+  "user": "moh70@pitt.edu",
+  "name": "Counting the Number of Valid and Banned Product Codes (Case 1) ",
+  "description": "Suppose a hypothetical company uses codes to represent its various products. A product code includes, among other information, a character in the tenth position that represents the zone from which that product was made. Due to some reorganization, products from zone R are banned from being sold.\\nConstruct a program that reads product codes from the user and counts the number of valid and banned codes entered. Make sure that the program handles all possible exceptions.\\nThe program must ask the user for an input until the user enters STOP.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_check_product_code1.py",
+  "code": "#Step 1: Define the function\ndef check_product_code():\n    #Step 1.1: Assign initial values to the variables that we need for counts \n    valid = 0\n    banned = 0\n    #Step 1.2: Ask for a valid input as long as the user does'nt enter STOP; otherwise stop\n    code = input(\"Enter product code: \")\n    while ( code != \"STOP\") :\n        #Step 1.2.1: Enclose the code that might throw an exception within the try block\n        try : \n            zone = code[9]\n            valid += 1\n            if zone == \"R\" :\n                banned += 1\n        #Step 1.2.2: Handle all possible exceptions that may be thrown in the try block \n        except IndexError :                        \n            print(\"Improper code length.\")\n        code = input(\"Enter product code: \")\n    #Step 1.3: Print the result    \n    print(\"# of valid codes entered:\", valid)\n    print(\"# of banned codes entered:\", banned)\n#Step 2: Call the function\ncheck_product_code()",
+  "lines": {
+    "2": {
+      "content": "def check_product_code():",
+      "commentList": [
+        "You define a function named check_product_code to group the program's core logic (reading codes, counting, and printing). This keeps that logic together and lets you run it by calling the function instead of running it as soon as the file loads.",
+        "The word def starts a function definition, check_product_code is the function name, the empty parentheses () mean the function takes no parameters, and the trailing colon : begins the indented block that forms the function body. Python will create a function object and bind it to the name check_product_code, but it will not execute the body yet.",
+        "A common misconception is thinking this line runs the code inside \u2014 it does not. Typical errors here are forgetting the colon or using wrong indentation for the body, which will raise a SyntaxError or IndentationError. Also avoid giving the function a name that shadows Python built-ins.",
+        "As a best practice, choose a clear descriptive name, add a short docstring inside the function so you and others know its purpose, keep the function focused and small, and call it explicitly (for example from an if __name__ == '__main__' block) so the code is easier to test and reuse."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You define a function named check_product_code to group the program's core logic (reading codes, counting, and printing). This keeps that logic together and lets you run it by calling the function instead of running it as soon as the file loads."
+        },
+        {
+          "content": "The word def starts a function definition, check_product_code is the function name, the empty parentheses () mean the function takes no parameters, and the trailing colon : begins the indented block that forms the function body. Python will create a function object and bind it to the name check_product_code, but it will not execute the body yet."
+        },
+        {
+          "content": "A common misconception is thinking this line runs the code inside \u2014 it does not. Typical errors here are forgetting the colon or using wrong indentation for the body, which will raise a SyntaxError or IndentationError. Also avoid giving the function a name that shadows Python built-ins."
+        },
+        {
+          "content": "As a best practice, choose a clear descriptive name, add a short docstring inside the function so you and others know its purpose, keep the function focused and small, and call it explicitly (for example from an if __name__ == '__main__' block) so the code is easier to test and reuse."
+        }
+      ]
+    },
+    "4": {
+      "content": "    valid = 0",
+      "commentList": [
+        "Purpose: You create a counter named valid and set it to 0 so you can count how many product codes are considered valid (i.e., those that have a tenth character).",
+        "Syntax and meaning: This is an assignment statement. The name valid is bound to the integer 0. In Python you do not declare types first; assigning 0 makes valid an integer you can later increment with valid += 1.",
+        "How it fits the program: By initializing valid before the input loop, you ensure every time you find a code with a tenth character you can increase this counter and later print the total, even if the user enters no valid codes at all.",
+        "Common mistakes to avoid: If you forget to initialize valid you will get an error when you try to increment it. If you set it to None or the string '0' instead of the integer 0, attempts to add integers will raise a TypeError.",
+        "Best practices: Use a clear name (e.g., valid_count or valid_codes) so you don't confuse this counter with a boolean named valid. Always initialize counters before the loop that updates them and keep the initialization close to where the loop starts."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: You create a counter named valid and set it to 0 so you can count how many product codes are considered valid (i.e., those that have a tenth character)."
+        },
+        {
+          "content": "Syntax and meaning: This is an assignment statement. The name valid is bound to the integer 0. In Python you do not declare types first; assigning 0 makes valid an integer you can later increment with valid += 1."
+        },
+        {
+          "content": "How it fits the program: By initializing valid before the input loop, you ensure every time you find a code with a tenth character you can increase this counter and later print the total, even if the user enters no valid codes at all."
+        },
+        {
+          "content": "Common mistakes to avoid: If you forget to initialize valid you will get an error when you try to increment it. If you set it to None or the string '0' instead of the integer 0, attempts to add integers will raise a TypeError."
+        },
+        {
+          "content": "Best practices: Use a clear name (e.g., valid_count or valid_codes) so you don't confuse this counter with a boolean named valid. Always initialize counters before the loop that updates them and keep the initialization close to where the loop starts."
+        }
+      ]
+    },
+    "5": {
+      "content": "    banned = 0",
+      "commentList": [
+        "Purpose: This line creates a counter named banned and sets it to 0 so you can count how many product codes are from zone 'R' as the program runs.",
+        "Syntax and meaning: banned is a variable name, = is the assignment operator, and 0 is an integer literal. After this line, banned holds the number 0 and you can later change it (for example banned = banned + 1).",
+        "Possible mistakes to avoid: if you forget to initialize banned before you try to increment it, you will get an error because the name does not exist yet. Also do not use == here (== is for comparison, not assignment).",
+        "Logic note: You must initialize banned outside the input loop (as done here). If you put this line inside the loop it would reset the count to 0 on every iteration and you would never accumulate a total.",
+        "Behavioral note: This counter is separate from valid; valid counts codes of sufficient length while banned is only increased later when you check if the tenth character is 'R'. If the user types STOP immediately, banned will remain 0 and you can safely print it.",
+        "Best practice: Give clear names like banned, initialize counters before use, and keep the counter's type consistent (an integer). For larger programs consider using a dictionary or collections.Counter when tracking many categories."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line creates a counter named banned and sets it to 0 so you can count how many product codes are from zone 'R' as the program runs."
+        },
+        {
+          "content": "Syntax and meaning: banned is a variable name, = is the assignment operator, and 0 is an integer literal. After this line, banned holds the number 0 and you can later change it (for example banned = banned + 1)."
+        },
+        {
+          "content": "Possible mistakes to avoid: if you forget to initialize banned before you try to increment it, you will get an error because the name does not exist yet. Also do not use == here (== is for comparison, not assignment)."
+        },
+        {
+          "content": "Logic note: You must initialize banned outside the input loop (as done here). If you put this line inside the loop it would reset the count to 0 on every iteration and you would never accumulate a total."
+        },
+        {
+          "content": "Behavioral note: This counter is separate from valid; valid counts codes of sufficient length while banned is only increased later when you check if the tenth character is 'R'. If the user types STOP immediately, banned will remain 0 and you can safely print it."
+        },
+        {
+          "content": "Best practice: Give clear names like banned, initialize counters before use, and keep the counter's type consistent (an integer). For larger programs consider using a dictionary or collections.Counter when tracking many categories."
+        }
+      ]
+    },
+    "7": {
+      "content": "    code = input(\"Enter product code: \")",
+      "commentList": [
+        "Purpose: This line asks the user to type a product code and stores whatever they type in the variable code so the program can check it. It is the initial (or \"priming\") read before the while loop starts.",
+        "Syntax and semantics: input(\"Enter product code: \") displays the prompt and returns the typed characters as a string; the = operator assigns that string to the name code. Because this line is indented, it runs inside the function.",
+        "How it contributes to the solution: by getting the first value you let the while (code != \"STOP\") test on the next line decide whether to enter the loop or stop immediately. Without this initial read the loop condition would have no value to check.",
+        "Possible errors and misconceptions: input can raise EOFError or KeyboardInterrupt if the user sends EOF or interrupts; the program later indexes code[9], so if the entered string has fewer than 10 characters an IndexError will occur (the code handles that in the try/except). Also note the comparison to 'STOP' is case- and whitespace-sensitive, so ' stop' or 'stop' will not match.",
+        "Best practices: trim and normalize the input before use (for example code = input(...).strip() and consider code_upper = code.upper() for a case-insensitive STOP test). Also consider catching input-related errors (EOFError/KeyboardInterrupt) if you want a graceful exit or message to the user.",
+        "Tip about indexing: remember string indexing is 0-based, so the tenth character is at index 9; ensuring the input has at least 10 characters avoids the IndexError checked later."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line asks the user to type a product code and stores whatever they type in the variable code so the program can check it. It is the initial (or \"priming\") read before the while loop starts."
+        },
+        {
+          "content": "Syntax and semantics: input(\"Enter product code: \") displays the prompt and returns the typed characters as a string; the = operator assigns that string to the name code. Because this line is indented, it runs inside the function."
+        },
+        {
+          "content": "How it contributes to the solution: by getting the first value you let the while (code != \"STOP\") test on the next line decide whether to enter the loop or stop immediately. Without this initial read the loop condition would have no value to check."
+        },
+        {
+          "content": "Possible errors and misconceptions: input can raise EOFError or KeyboardInterrupt if the user sends EOF or interrupts; the program later indexes code[9], so if the entered string has fewer than 10 characters an IndexError will occur (the code handles that in the try/except). Also note the comparison to 'STOP' is case- and whitespace-sensitive, so ' stop' or 'stop' will not match."
+        },
+        {
+          "content": "Best practices: trim and normalize the input before use (for example code = input(...).strip() and consider code_upper = code.upper() for a case-insensitive STOP test). Also consider catching input-related errors (EOFError/KeyboardInterrupt) if you want a graceful exit or message to the user."
+        },
+        {
+          "content": "Tip about indexing: remember string indexing is 0-based, so the tenth character is at index 9; ensuring the input has at least 10 characters avoids the IndexError checked later."
+        }
+      ]
+    },
+    "8": {
+      "content": "    while ( code != \"STOP\") :",
+      "commentList": [
+        "Purpose: This while line makes the program keep asking for product codes until you enter STOP; it is the loop that controls repeated input and lets the program count many entries instead of just one.",
+        "Syntax and parts: 'while' starts a loop, the condition is code != \"STOP\" which tests inequality, the parentheses around the condition are optional in Python, and the trailing ':' begins the indented block that runs while the condition is True.",
+        "How it works (semantics): Before each iteration Python evaluates code != \"STOP\". If the condition is True the loop body runs; when code equals \"STOP\" the loop ends and the program continues after the loop. Because the condition uses the current value of the variable code, you must update code inside the loop (as done on Line 18) to eventually make the condition False.",
+        "Common errors and misconceptions: The comparison is case-sensitive, so typing 'stop' or ' Stop ' will not match \"STOP\"; you could get an infinite loop if you forget to update code inside the loop; if code had not been assigned before the while you'd get a NameError. Also avoid using 'is' for string comparison \u2014 use == or !=.",
+        "Best practices for you to follow: Normalize input to avoid case/whitespace issues, for example use while code.strip().upper() != \"STOP\": so ' stop ' and 'stop' stop the loop. You can also use a while True loop with a break when you detect the stop condition for clarity."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This while line makes the program keep asking for product codes until you enter STOP; it is the loop that controls repeated input and lets the program count many entries instead of just one."
+        },
+        {
+          "content": "Syntax and parts: 'while' starts a loop, the condition is code != \"STOP\" which tests inequality, the parentheses around the condition are optional in Python, and the trailing ':' begins the indented block that runs while the condition is True."
+        },
+        {
+          "content": "How it works (semantics): Before each iteration Python evaluates code != \"STOP\". If the condition is True the loop body runs; when code equals \"STOP\" the loop ends and the program continues after the loop. Because the condition uses the current value of the variable code, you must update code inside the loop (as done on Line 18) to eventually make the condition False."
+        },
+        {
+          "content": "Common errors and misconceptions: The comparison is case-sensitive, so typing 'stop' or ' Stop ' will not match \"STOP\"; you could get an infinite loop if you forget to update code inside the loop; if code had not been assigned before the while you'd get a NameError. Also avoid using 'is' for string comparison \u2014 use == or !=."
+        },
+        {
+          "content": "Best practices for you to follow: Normalize input to avoid case/whitespace issues, for example use while code.strip().upper() != \"STOP\": so ' stop ' and 'stop' stop the loop. You can also use a while True loop with a break when you detect the stop condition for clarity."
+        }
+      ]
+    },
+    "10": {
+      "content": "        try : ",
+      "commentList": [
+        "Purpose: You start a try block here so Python will attempt to following indented lines and, if an error happens (for example when you try to access a character that isn't there), transfer control to the matching except block instead of crashing the program.",
+        "Syntax: 'try' is a Python keyword and must be followed by a colon. The lines that belong to the try block must be indented under this line. You must also provide at least one except, else, or finally clause after the try block (this code uses 'except IndexError' on line 16).",
+        "What it does in this program: You are protecting the code that reads zone = code[9] and the subsequent checks. If code is shorter than 10 characters, accessing code[9] will raise IndexError and the except block will run to handle that case.",
+        "Common misconceptions / errors: Do not forget the matching except/finally \u2014 a lone 'try' is a syntax error. Also avoid thinking 'try' swallows every problem silently; it only handles exceptions that you explicitly catch (here IndexError). Avoid using a bare 'except:' which hides unexpected bugs.",
+        "Best practices: Put only the statements that may raise the expected exception inside the try block (keep it small). Alternatively, you can check the length first (if len(code) >= 10) to prevent relying on exceptions for normal control flow. Ensure correct indentation so the try and its except are aligned."
+      ],
+      "indentLevel": 2,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: You start a try block here so Python will attempt to following indented lines and, if an error happens (for example when you try to access a character that isn't there), transfer control to the matching except block instead of crashing the program."
+        },
+        {
+          "content": "Syntax: 'try' is a Python keyword and must be followed by a colon. The lines that belong to the try block must be indented under this line. You must also provide at least one except, else, or finally clause after the try block (this code uses 'except IndexError' on line 16)."
+        },
+        {
+          "content": "What it does in this program: You are protecting the code that reads zone = code[9] and the subsequent checks. If code is shorter than 10 characters, accessing code[9] will raise IndexError and the except block will run to handle that case."
+        },
+        {
+          "content": "Common misconceptions / errors: Do not forget the matching except/finally \u2014 a lone 'try' is a syntax error. Also avoid thinking 'try' swallows every problem silently; it only handles exceptions that you explicitly catch (here IndexError). Avoid using a bare 'except:' which hides unexpected bugs."
+        },
+        {
+          "content": "Best practices: Put only the statements that may raise the expected exception inside the try block (keep it small). Alternatively, you can check the length first (if len(code) >= 10) to prevent relying on exceptions for normal control flow. Ensure correct indentation so the try and its except are aligned."
+        }
+      ]
+    },
+    "11": {
+      "content": "            zone = code[9]",
+      "commentList": [
+        "You extract the tenth character of the input string and store it in the variable zone; that character is used to determine the product's zone.",
+        "You are using code[9], which relies on zero-based indexing (index 0 is the first character), so index 9 refers to the tenth character; the = operator assigns that one-character string to zone.",
+        "You must expect an IndexError if the input has fewer than 10 characters; the surrounding try/except is there to catch that and report an improper code length.",
+        "You should be aware of case sensitivity: the later check compares zone to 'R', so if the user types 'r' it won't be treated as banned unless you normalize case (for example by using zone = code[9].upper()).",
+        "You can avoid relying solely on exceptions by validating first (for example, check len(code) >= 10 or use code = code.strip() to remove extra spaces) so indexing is safer and clearer.",
+        "You can assume input() returns a string so no conversion is needed here, but you should ensure the tenth character actually represents the zone according to your input rules before trusting it."
+      ],
+      "indentLevel": 3,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You extract the tenth character of the input string and store it in the variable zone; that character is used to determine the product's zone."
+        },
+        {
+          "content": "You are using code[9], which relies on zero-based indexing (index 0 is the first character), so index 9 refers to the tenth character; the = operator assigns that one-character string to zone."
+        },
+        {
+          "content": "You must expect an IndexError if the input has fewer than 10 characters; the surrounding try/except is there to catch that and report an improper code length."
+        },
+        {
+          "content": "You should be aware of case sensitivity: the later check compares zone to 'R', so if the user types 'r' it won't be treated as banned unless you normalize case (for example by using zone = code[9].upper())."
+        },
+        {
+          "content": "You can avoid relying solely on exceptions by validating first (for example, check len(code) >= 10 or use code = code.strip() to remove extra spaces) so indexing is safer and clearer."
+        },
+        {
+          "content": "You can assume input() returns a string so no conversion is needed here, but you should ensure the tenth character actually represents the zone according to your input rules before trusting it."
+        }
+      ]
+    },
+    "12": {
+      "content": "            valid += 1",
+      "commentList": [
+        "Purpose: This line increases the counter for properly formed codes. You use it to record that the current input had at least ten characters (so it reached the zone character access).",
+        "What it does (syntax & semantics): 'valid += 1' is shorthand for 'valid = valid + 1'. It takes the current integer value in valid and adds one to it, then stores the result back in valid.",
+        "Why it runs here: Because it appears after the code[9] access inside the try block, Python only gets to this line if accessing the tenth character succeeded. That means you only count inputs that are long enough; inputs that are too short raise IndexError and skip this increment.",
+        "Common misconceptions / potential errors: You might expect banned codes (zone 'R') not to be counted as valid. In this program a banned code is counted in both valid and banned. If you don't want that, change the logic (for example, increment valid only when zone != 'R'). Also, if valid were not initialized as an integer before this line you'd get a NameError or TypeError.",
+        "Input issues to watch for: If the user types spaces or a lowercase 'r', the later check (zone == 'R') may behave unexpectedly. You should consider normalizing the input (e.g., using strip() and upper()) before extracting the zone.",
+        "Best practices: Give counters clear names like valid_count, initialize them before use (as done), and add a comment explaining whether banned codes count as valid. If you want different semantics, adjust where you increment valid or banned accordingly."
+      ],
+      "indentLevel": 3,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line increases the counter for properly formed codes. You use it to record that the current input had at least ten characters (so it reached the zone character access)."
+        },
+        {
+          "content": "What it does (syntax & semantics): 'valid += 1' is shorthand for 'valid = valid + 1'. It takes the current integer value in valid and adds one to it, then stores the result back in valid."
+        },
+        {
+          "content": "Why it runs here: Because it appears after the code[9] access inside the try block, Python only gets to this line if accessing the tenth character succeeded. That means you only count inputs that are long enough; inputs that are too short raise IndexError and skip this increment."
+        },
+        {
+          "content": "Common misconceptions / potential errors: You might expect banned codes (zone 'R') not to be counted as valid. In this program a banned code is counted in both valid and banned. If you don't want that, change the logic (for example, increment valid only when zone != 'R'). Also, if valid were not initialized as an integer before this line you'd get a NameError or TypeError."
+        },
+        {
+          "content": "Input issues to watch for: If the user types spaces or a lowercase 'r', the later check (zone == 'R') may behave unexpectedly. You should consider normalizing the input (e.g., using strip() and upper()) before extracting the zone."
+        },
+        {
+          "content": "Best practices: Give counters clear names like valid_count, initialize them before use (as done), and add a comment explaining whether banned codes count as valid. If you want different semantics, adjust where you increment valid or banned accordingly."
+        }
+      ]
+    },
+    "13": {
+      "content": "            if zone == \"R\" :",
+      "commentList": [
+        "Purpose: This line tests whether the character you stored in zone (the 10th character of the product code) is the letter 'R'. If the test is true, the indented block below (Line 14) runs and you count the code as banned.",
+        "Syntax and meaning: if is a conditional statement; zone == \"R\" is a boolean expression using the equality operator (==) that compares zone to the string \"R\"; the trailing colon (:) starts the block that runs when the condition is true.",
+        "Indentation rule: The line that increments banned (Line 14) must be indented under this if. If you do not indent correctly, Python will raise an IndentationError or the logic will not run as you expect.",
+        "Potential misconception: You might think this line makes a code invalid. It does not \u2014 it only checks for a banned zone. In this program valid is already incremented on Line 12, so a banned code is still considered a validly formed code and counted in both totals as intended.",
+        "Common errors to watch for: using a single equals sign (=) here would assign rather than compare and cause a SyntaxError; referring to zone before it exists would cause a NameError (but in this program zone is set inside the try block).",
+        "Case-sensitivity: The comparison is case-sensitive, so 'R' is different from 'r'. If you want to accept either case, normalize zone first (for example, zone = zone.upper()) before this check.",
+        "Best practice suggestions: trim the input (code = code.strip()) and validate length before indexing, or explicitly check len(code) >= 10 before accessing code[9]; consider using a set of banned zones if the list grows (e.g., if zone in {'R', 'X'})."
+      ],
+      "indentLevel": 3,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line tests whether the character you stored in zone (the 10th character of the product code) is the letter 'R'. If the test is true, the indented block below (Line 14) runs and you count the code as banned."
+        },
+        {
+          "content": "Syntax and meaning: if is a conditional statement; zone == \"R\" is a boolean expression using the equality operator (==) that compares zone to the string \"R\"; the trailing colon (:) starts the block that runs when the condition is true."
+        },
+        {
+          "content": "Indentation rule: The line that increments banned (Line 14) must be indented under this if. If you do not indent correctly, Python will raise an IndentationError or the logic will not run as you expect."
+        },
+        {
+          "content": "Potential misconception: You might think this line makes a code invalid. It does not \u2014 it only checks for a banned zone. In this program valid is already incremented on Line 12, so a banned code is still considered a validly formed code and counted in both totals as intended."
+        },
+        {
+          "content": "Common errors to watch for: using a single equals sign (=) here would assign rather than compare and cause a SyntaxError; referring to zone before it exists would cause a NameError (but in this program zone is set inside the try block)."
+        },
+        {
+          "content": "Case-sensitivity: The comparison is case-sensitive, so 'R' is different from 'r'. If you want to accept either case, normalize zone first (for example, zone = zone.upper()) before this check."
+        },
+        {
+          "content": "Best practice suggestions: trim the input (code = code.strip()) and validate length before indexing, or explicitly check len(code) >= 10 before accessing code[9]; consider using a set of banned zones if the list grows (e.g., if zone in {'R', 'X'})."
+        }
+      ]
+    },
+    "14": {
+      "content": "                banned += 1",
+      "commentList": [
+        "Purpose: This line increases the counter for banned products when you have determined that the zone character is 'R'. It updates the program state so you can report how many banned codes were entered.",
+        "Syntax/semantics: 'banned += 1' is a short form for 'banned = banned + 1'. It takes the current integer value in the variable 'banned', adds one, and stores the result back in 'banned'.",
+        "Context: Because this line is inside the 'if zone == \"R\":' block, it only runs when the tenth character (zone) equals the letter 'R'. If the condition is false, this line is skipped and the banned count does not change.",
+        "Common errors/misconceptions: Don't use '==' here \u2014 that's for comparison; using a single '=' would be a syntax error. Also avoid thinking in languages with '++' increment operators; 'banned++' is invalid in Python.",
+        "Edge cases: You rely on the earlier try/except and the 'valid += 1' on line 12 to ensure only properly indexed codes reach this point. If you remove or move those, you might increment banned for inputs you didn't intend to count.",
+        "Best practice: Consider normalizing the zone character (for example, zone = zone.upper()) before comparing so you count both 'R' and 'r' as banned if that is desired. Also keep this increment inside the same guarded block that ensures 'zone' exists.",
+        "Readability: Using '+= 1' is concise and clear for counters; it makes your intent obvious when someone else (or you later) reads the code.",
+        "Behavior note: This line only changes the banned count and has no effect on the 'valid' count; because 'valid' was already incremented on line 12, banned will never exceed valid for codes that passed indexing."
+      ],
+      "indentLevel": 4,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line increases the counter for banned products when you have determined that the zone character is 'R'. It updates the program state so you can report how many banned codes were entered."
+        },
+        {
+          "content": "Syntax/semantics: 'banned += 1' is a short form for 'banned = banned + 1'. It takes the current integer value in the variable 'banned', adds one, and stores the result back in 'banned'."
+        },
+        {
+          "content": "Context: Because this line is inside the 'if zone == \"R\":' block, it only runs when the tenth character (zone) equals the letter 'R'. If the condition is false, this line is skipped and the banned count does not change."
+        },
+        {
+          "content": "Common errors/misconceptions: Don't use '==' here \u2014 that's for comparison; using a single '=' would be a syntax error. Also avoid thinking in languages with '++' increment operators; 'banned++' is invalid in Python."
+        },
+        {
+          "content": "Edge cases: You rely on the earlier try/except and the 'valid += 1' on line 12 to ensure only properly indexed codes reach this point. If you remove or move those, you might increment banned for inputs you didn't intend to count."
+        },
+        {
+          "content": "Best practice: Consider normalizing the zone character (for example, zone = zone.upper()) before comparing so you count both 'R' and 'r' as banned if that is desired. Also keep this increment inside the same guarded block that ensures 'zone' exists."
+        },
+        {
+          "content": "Readability: Using '+= 1' is concise and clear for counters; it makes your intent obvious when someone else (or you later) reads the code."
+        },
+        {
+          "content": "Behavior note: This line only changes the banned count and has no effect on the 'valid' count; because 'valid' was already incremented on line 12, banned will never exceed valid for codes that passed indexing."
+        }
+      ]
+    },
+    "16": {
+      "content": "        except IndexError :                        ",
+      "commentList": [
+        "Purpose: this line begins an exception handler that runs if the code inside the preceding try block raises an IndexError \u2014 for example when code[9] is out of range \u2014 so your program does not crash.",
+        "Syntax and pairing: 'except IndexError :' names the specific exception type to catch; the colon and the following indented block (line 17) are the handler body. It pairs with the nearest open try above it.",
+        "What IndexError means here: IndexError is raised when you try to access a character position that does not exist (the product code is too short). It does not mean a wrong character or format \u2014 only an out-of-range index.",
+        "Common misconception: this only catches IndexError. Other problems (e.g., TypeError if code is None, or KeyboardInterrupt) will not be handled by this except and will still propagate unless you add more handlers.",
+        "Best practice (avoid relying only on exceptions): you could check the length first with if len(code) > 9 before indexing to prevent the exception, or if you keep the try/except, use 'except IndexError as e:' so you can inspect or log the exception.",
+        "Best practice (error handling scope): prefer catching the specific exception as done here (good), avoid a bare 'except:' which hides unexpected bugs, and make your handler give a clear message so you (and users) understand the problem."
+      ],
+      "indentLevel": 2,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: this line begins an exception handler that runs if the code inside the preceding try block raises an IndexError \u2014 for example when code[9] is out of range \u2014 so your program does not crash."
+        },
+        {
+          "content": "Syntax and pairing: 'except IndexError :' names the specific exception type to catch; the colon and the following indented block (line 17) are the handler body. It pairs with the nearest open try above it."
+        },
+        {
+          "content": "What IndexError means here: IndexError is raised when you try to access a character position that does not exist (the product code is too short). It does not mean a wrong character or format \u2014 only an out-of-range index."
+        },
+        {
+          "content": "Common misconception: this only catches IndexError. Other problems (e.g., TypeError if code is None, or KeyboardInterrupt) will not be handled by this except and will still propagate unless you add more handlers."
+        },
+        {
+          "content": "Best practice (avoid relying only on exceptions): you could check the length first with if len(code) > 9 before indexing to prevent the exception, or if you keep the try/except, use 'except IndexError as e:' so you can inspect or log the exception."
+        },
+        {
+          "content": "Best practice (error handling scope): prefer catching the specific exception as done here (good), avoid a bare 'except:' which hides unexpected bugs, and make your handler give a clear message so you (and users) understand the problem."
+        }
+      ]
+    },
+    "17": {
+      "content": "            print(\"Improper code length.\")",
+      "commentList": [
+        "Purpose: This line shows a message to the user when an IndexError occurs \u2014 i.e., when you tried to access the tenth character (index 9) but the entered code was too short. It tells you why that input was not accepted.",
+        "Syntax and semantics: print(\"Improper code length.\") is a function call that writes the given text to the console. Because it is indented under except IndexError:, it runs only when the attempt to read code[9] raised an IndexError (strings are 0-indexed, so the tenth character is index 9).",
+        "What you might misunderstand: This message does not stop the program or mark the code as valid. The loop continues and the counters (valid, banned) are not incremented for this input because the increment happened inside the try block and was skipped when the exception occurred.",
+        "Limitations to be aware of: This except only catches IndexError. Other problems (for example, unexpected input types or keyboard interrupts) are not handled here. The message is also generic and does not tell you how many characters were entered.",
+        "Best practices: Instead of relying only on try/except, you can validate the length before indexing (for example, if len(code) >= 10: ... else: print(...) ). Consider giving a more informative message (e.g., \"Code too short: enter at least 10 characters.\") and normalizing input with .strip() or .upper() before checking."
+      ],
+      "indentLevel": 3,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line shows a message to the user when an IndexError occurs \u2014 i.e., when you tried to access the tenth character (index 9) but the entered code was too short. It tells you why that input was not accepted."
+        },
+        {
+          "content": "Syntax and semantics: print(\"Improper code length.\") is a function call that writes the given text to the console. Because it is indented under except IndexError:, it runs only when the attempt to read code[9] raised an IndexError (strings are 0-indexed, so the tenth character is index 9)."
+        },
+        {
+          "content": "What you might misunderstand: This message does not stop the program or mark the code as valid. The loop continues and the counters (valid, banned) are not incremented for this input because the increment happened inside the try block and was skipped when the exception occurred."
+        },
+        {
+          "content": "Limitations to be aware of: This except only catches IndexError. Other problems (for example, unexpected input types or keyboard interrupts) are not handled here. The message is also generic and does not tell you how many characters were entered."
+        },
+        {
+          "content": "Best practices: Instead of relying only on try/except, you can validate the length before indexing (for example, if len(code) >= 10: ... else: print(...) ). Consider giving a more informative message (e.g., \"Code too short: enter at least 10 characters.\") and normalizing input with .strip() or .upper() before checking."
+        }
+      ]
+    },
+    "18": {
+      "content": "        code = input(\"Enter product code: \")",
+      "commentList": [
+        "Purpose: This line asks the user for the next product code and stores what they type into the variable code so the while condition (code != \"STOP\") can be re-evaluated on the next loop iteration.",
+        "Syntax and semantics: input(\"Enter product code: \") displays the prompt and returns the typed text as a string; the = operator assigns that string to the name code. In Python 3 input() always returns a str.",
+        "Flow importance: Because this assignment is executed at the end of the while loop (after the try/except), it runs on every iteration whether an IndexError occurred or not. If you accidentally put this line only inside the except block, the loop could hang or behave incorrectly.",
+        "Common errors and misconceptions: input() can raise EOFError or KeyboardInterrupt if the user cancels input \u2014 those are not caught here. Also input() does not convert types for you (it always gives a string), and leading/trailing spaces will make STOP checks fail unless you remove them.",
+        "Best practices: You should strip whitespace and optionally normalize case so STOP and zone checks are robust, for example code = input(...).strip().upper() (then compare to 'STOP' or check the 10th char in a case-insensitive way). Also consider catching EOFError/KeyboardInterrupt around input() to handle unexpected user termination cleanly.",
+        "Alternative structure tip: Another clear pattern is to use a while True loop and immediately test the freshly read code for 'STOP' (and break) before attempting to access code[9]; this keeps the sentinel check next to the input and reduces subtle ordering bugs."
+      ],
+      "indentLevel": 2,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line asks the user for the next product code and stores what they type into the variable code so the while condition (code != \"STOP\") can be re-evaluated on the next loop iteration."
+        },
+        {
+          "content": "Syntax and semantics: input(\"Enter product code: \") displays the prompt and returns the typed text as a string; the = operator assigns that string to the name code. In Python 3 input() always returns a str."
+        },
+        {
+          "content": "Flow importance: Because this assignment is executed at the end of the while loop (after the try/except), it runs on every iteration whether an IndexError occurred or not. If you accidentally put this line only inside the except block, the loop could hang or behave incorrectly."
+        },
+        {
+          "content": "Common errors and misconceptions: input() can raise EOFError or KeyboardInterrupt if the user cancels input \u2014 those are not caught here. Also input() does not convert types for you (it always gives a string), and leading/trailing spaces will make STOP checks fail unless you remove them."
+        },
+        {
+          "content": "Best practices: You should strip whitespace and optionally normalize case so STOP and zone checks are robust, for example code = input(...).strip().upper() (then compare to 'STOP' or check the 10th char in a case-insensitive way). Also consider catching EOFError/KeyboardInterrupt around input() to handle unexpected user termination cleanly."
+        },
+        {
+          "content": "Alternative structure tip: Another clear pattern is to use a while True loop and immediately test the freshly read code for 'STOP' (and break) before attempting to access code[9]; this keeps the sentinel check next to the input and reduces subtle ordering bugs."
+        }
+      ]
+    },
+    "20": {
+      "content": "    print(\"# of valid codes entered:\", valid)",
+      "commentList": [
+        "Purpose: This line prints the final number of codes that your program considered \"valid\" after the input loop finishes. It shows the user the result of the counting work you did in the loop.",
+        "Syntax and semantics: print(...) calls Python's print function. The first argument is a string literal \"# of valid codes entered:\" and the second argument is the variable valid. Because they are passed as separate arguments (separated by a comma), Python will convert valid to text if needed and insert a single space between the string and the number when it prints them, then end the line with a newline.",
+        "Common misconceptions and errors: if you tried to join the label and the number with the + operator like \"...\" + valid you would get a TypeError because you can't add a string and an int. Also be aware that if valid had not been defined earlier you would get a NameError \u2014 but in this program valid is defined at the top. Another possible confusion: this line only displays whatever value valid currently holds; if your counting logic is wrong (for example, the code increments valid before checking for a banned zone), the printed number will reflect that logic, not an independently verified count.",
+        "Best practices: you can make the output clearer and harder to break by using an f-string: print(f\"# of valid codes entered: {valid}\"). You might also handle singular/plural wording (\"1 code\" vs \"2 codes\") for nicer output, and keep this print after the loop so you only show results once all input is processed."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line prints the final number of codes that your program considered \"valid\" after the input loop finishes. It shows the user the result of the counting work you did in the loop."
+        },
+        {
+          "content": "Syntax and semantics: print(...) calls Python's print function. The first argument is a string literal \"# of valid codes entered:\" and the second argument is the variable valid. Because they are passed as separate arguments (separated by a comma), Python will convert valid to text if needed and insert a single space between the string and the number when it prints them, then end the line with a newline."
+        },
+        {
+          "content": "Common misconceptions and errors: if you tried to join the label and the number with the + operator like \"...\" + valid you would get a TypeError because you can't add a string and an int. Also be aware that if valid had not been defined earlier you would get a NameError \u2014 but in this program valid is defined at the top. Another possible confusion: this line only displays whatever value valid currently holds; if your counting logic is wrong (for example, the code increments valid before checking for a banned zone), the printed number will reflect that logic, not an independently verified count."
+        },
+        {
+          "content": "Best practices: you can make the output clearer and harder to break by using an f-string: print(f\"# of valid codes entered: {valid}\"). You might also handle singular/plural wording (\"1 code\" vs \"2 codes\") for nicer output, and keep this print after the loop so you only show results once all input is processed."
+        }
+      ]
+    },
+    "21": {
+      "content": "    print(\"# of banned codes entered:\", banned)",
+      "commentList": [
+        "Purpose: This line shows the final number of banned product codes so you can see how many codes came from zone R.",
+        "Syntax and meaning: print(\"# of banned codes entered:\", banned) calls print with two items \u2014 a text label and the variable banned \u2014 so Python prints the label, a space, then the current value of banned.",
+        "Behavior detail: the value shown is whatever the variable banned holds at this point (after the loop finishes), so you will see only codes that were incremented as banned inside the loop.",
+        "Common misconceptions and errors: if banned had not been initialized earlier you would get a NameError, but here banned is set to 0 at the start. Also note that invalid codes that raised IndexError were not counted as banned, which may surprise you if you expected them counted differently.",
+        "Best practices: for clearer output you can use an f-string like print(f\"# of banned codes entered: {banned}\") or format() to avoid the automatic space inserted by the comma and to make the message easier to maintain. Make sure this print stays outside the input loop so it runs only once after inputs end."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line shows the final number of banned product codes so you can see how many codes came from zone R."
+        },
+        {
+          "content": "Syntax and meaning: print(\"# of banned codes entered:\", banned) calls print with two items \u2014 a text label and the variable banned \u2014 so Python prints the label, a space, then the current value of banned."
+        },
+        {
+          "content": "Behavior detail: the value shown is whatever the variable banned holds at this point (after the loop finishes), so you will see only codes that were incremented as banned inside the loop."
+        },
+        {
+          "content": "Common misconceptions and errors: if banned had not been initialized earlier you would get a NameError, but here banned is set to 0 at the start. Also note that invalid codes that raised IndexError were not counted as banned, which may surprise you if you expected them counted differently."
+        },
+        {
+          "content": "Best practices: for clearer output you can use an f-string like print(f\"# of banned codes entered: {banned}\") or format() to avoid the automatic space inserted by the comma and to make the message easier to maintain. Make sure this print stays outside the input loop so it runs only once after inputs end."
+        }
+      ]
+    },
+    "23": {
+      "content": "check_product_code()",
+      "commentList": [
+        "This line actually runs the program: by writing check_product_code() you invoke the function that prompts the user, reads codes in a loop, and prints the counts.",
+        "Syntactically this is a function call \u2014 the name followed by parentheses \u2014 and because there are no arguments in the definition you must call it with empty parentheses; omitting the parentheses would give you the function object instead of executing it.",
+        "If the function name were misspelled or not defined before this line, you would get a NameError at runtime, so you must ensure the def check_product_code(): line is present and correctly spelled above this call.",
+        "The function returns None (you don\u2019t capture a return value here); any uncaught exceptions raised inside the function will propagate and may stop the program, even though IndexError is handled inside the function.",
+        "A common best practice is to protect this call with if __name__ == '__main__': check_product_code() so the code does not run automatically when the file is imported as a module.",
+        "Remember that each time you call the function the counters are reinitialized, so if you need cumulative counts across calls you would change the design; also consider separating input/output from logic to make testing easier."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line actually runs the program: by writing check_product_code() you invoke the function that prompts the user, reads codes in a loop, and prints the counts."
+        },
+        {
+          "content": "Syntactically this is a function call \u2014 the name followed by parentheses \u2014 and because there are no arguments in the definition you must call it with empty parentheses; omitting the parentheses would give you the function object instead of executing it."
+        },
+        {
+          "content": "If the function name were misspelled or not defined before this line, you would get a NameError at runtime, so you must ensure the def check_product_code(): line is present and correctly spelled above this call."
+        },
+        {
+          "content": "The function returns None (you don\u2019t capture a return value here); any uncaught exceptions raised inside the function will propagate and may stop the program, even though IndexError is handled inside the function."
+        },
+        {
+          "content": "A common best practice is to protect this call with if __name__ == '__main__': check_product_code() so the code does not run automatically when the file is imported as a module."
+        },
+        {
+          "content": "Remember that each time you call the function the counters are reinitialized, so if you need cumulative counts across calls you would change the design; also consider separating input/output from logic to make testing easier."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "valid++",
+      "description": "You might select this because many languages use ++ to increase a variable by one and it looks shorter. However, in this language this is not a valid standalone statement for incrementing a variable. If you put this line in the program, the interpreter will raise a syntax error and the program will stop before it can continue asking for codes or print counts. In other words, this choice breaks execution rather than silently producing a wrong numeric result. The mistake here is treating the language as if it had a post/pre-increment operator; that assumption causes a runtime failure instead of the intended update of the counter.",
+      "line_number": 0
+    },
+    {
+      "code": "except ValueError :",
+      "description": "You might pick this because you associate problems with user input with ValueError, or you remember ValueError from other exercises and think it will catch anything that goes wrong with the input. However, the specific error that happens when you try to access a character beyond the end of a string is a different runtime exception, so this handler will not run when that happens. As a result, if a user enters a too-short code the program will raise an uncaught error and stop instead of printing the \"Improper code length.\" message and continuing to ask for input. Using this line therefore leaves the actual out-of-range indexing error unhandled and makes the program crash in the common failure case. The distractor is plausible because it is a real exception type, but it is the wrong one for the situation.",
+      "line_number": 0
+    },
+    {
+      "code": "except :",
+      "description": "You might pick a bare except because it looks like the simplest way to catch any error. But this catches everything, including low-level and system-exiting exceptions, and will also swallow interrupts that the user might expect to work (like stopping the program). By catching every possible exception, you again hide the real cause of failures and respond to very different problems with the same message about code length. This can make the program behave unpredictably and makes it much harder for you to find and fix real bugs. Using a bare except is generally discouraged because it is too blunt and can prevent proper error handling and program termination.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "TRV2475A5Z-14 TRD1704A7R-12 TRV2105A2 TRL2k74A5S-11 STOP",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-27T16:07:35.208Z",
+  "updated_at": "2026-09-02T02:51:14.672Z",
+  "stat": {
+    "size": 121501,
+    "lastTimeModified": 1788317477913.7773
+  }
+}

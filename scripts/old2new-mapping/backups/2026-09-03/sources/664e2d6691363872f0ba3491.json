@@ -1,0 +1,317 @@
+{
+  "id": "6a91ae6332e78ede45c1167b",
+  "user": "moh70@pitt.edu",
+  "name": "Rotating the List Values to the Left by One Position",
+  "description": "Construct a program that has a function that receives a list of values and returns the list rotated to the left by 1 position so that the value at the front of the list goes to the back and the order of the other values stays the same. For example, if the list is [1, 2, 3, 4, 5, 6], the program will change it to [2, 3, 4, 5, 6, 1].",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_list_rotate_left.py",
+  "code": "#Step 1: Define the function\ndef rotate_left(lst):\n    #Step 1.1: Store the value at the front in a local variable\n    first = lst[0] \n    #Step 1.2: Rotate the remaining values of the list to the left \n    for i in range(len(lst)-1):\n        lst[i] = lst[i + 1]\n    #Step 1.3: Move the value at the front to the back of the list\n    lst[len(lst)-1] = first    \n    return lst\n#Step 2: Call the function\nvalues =  [3, 8, 9, 8, 7, 5]\nprint(\"Original list:\", values)\nprint(\"Rotated list: \", rotate_left(values))",
+  "lines": {
+    "2": {
+      "content": "def rotate_left(lst):",
+      "commentList": [
+        "Purpose: this line declares the function named rotate_left that will hold the code to rotate a list by one position; you put the rotating steps under this line (indented) so they run when you call rotate_left.",
+        "Syntax and meaning: def starts a function definition, rotate_left is the function name, (lst) gives one parameter called lst that will refer to the list you pass in, and the trailing : marks the beginning of the indented function body.",
+        "How it affects data: the name lst becomes a local reference to the same list object you pass in \u2014 you do not get an automatic copy. That means the code inside can change the original list unless you explicitly copy it.",
+        "Potential errors and misconceptions: if you call rotate_left with an empty list, later code that uses lst[0] will raise an IndexError; also passing None or a non-list (non-subscriptable) value will cause errors. Many learners expect a new list to be returned, but this function mutates the original list and also returns it.",
+        "Best practices you should follow: add a short docstring under the def explaining what the function does and whether it mutates the input; validate input (for example, if not lst: return lst) to handle empty lists safely; consider type hints like def rotate_left(lst: list) -> list: and avoid naming parameters list (which would shadow the built-in).",
+        "Alternatives worth knowing: you can implement the same behavior without mutating using slicing (lst[1:] + lst[:1]) or use collections.deque.rotate for efficiency on large lists \u2014 choose based on whether you want to modify the original list or create a new one."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: this line declares the function named rotate_left that will hold the code to rotate a list by one position; you put the rotating steps under this line (indented) so they run when you call rotate_left."
+        },
+        {
+          "content": "Syntax and meaning: def starts a function definition, rotate_left is the function name, (lst) gives one parameter called lst that will refer to the list you pass in, and the trailing : marks the beginning of the indented function body."
+        },
+        {
+          "content": "How it affects data: the name lst becomes a local reference to the same list object you pass in \u2014 you do not get an automatic copy. That means the code inside can change the original list unless you explicitly copy it."
+        },
+        {
+          "content": "Potential errors and misconceptions: if you call rotate_left with an empty list, later code that uses lst[0] will raise an IndexError; also passing None or a non-list (non-subscriptable) value will cause errors. Many learners expect a new list to be returned, but this function mutates the original list and also returns it."
+        },
+        {
+          "content": "Best practices you should follow: add a short docstring under the def explaining what the function does and whether it mutates the input; validate input (for example, if not lst: return lst) to handle empty lists safely; consider type hints like def rotate_left(lst: list) -> list: and avoid naming parameters list (which would shadow the built-in)."
+        },
+        {
+          "content": "Alternatives worth knowing: you can implement the same behavior without mutating using slicing (lst[1:] + lst[:1]) or use collections.deque.rotate for efficiency on large lists \u2014 choose based on whether you want to modify the original list or create a new one."
+        }
+      ]
+    },
+    "4": {
+      "content": "    first = lst[0] ",
+      "commentList": [
+        "Purpose: you store the value at the front of the list so it is not lost when you overwrite lst[0] and the other elements while shifting them left; this saved value will be placed at the end to complete the rotation.",
+        "Syntax/semantics: the assignment first = lst[0] reads the element at index 0 from lst and assigns it to the variable first; '=' makes a new reference named first to that element (it does not copy the whole list).",
+        "Potential errors/misconceptions: if lst is empty, lst[0] raises an IndexError, so you must not assume the list always has at least one element. Also, if lst is not a list or not subscriptable, you'll get a TypeError.",
+        "Best practice 1: check for an empty list before this line (for example, if not lst: return lst) so you avoid an IndexError and handle edge cases cleanly.",
+        "Best practice 2: be aware this stores a reference to the element; if the element is a mutable object and you later modify it, both first and the element in the list will reflect that change.",
+        "Alternative note: you could avoid in-place changes by returning a new list using slicing (lst[1:] + [lst[0]]), but that creates a new list instead of modifying the original and has different performance and side-effect behavior."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: you store the value at the front of the list so it is not lost when you overwrite lst[0] and the other elements while shifting them left; this saved value will be placed at the end to complete the rotation."
+        },
+        {
+          "content": "Syntax/semantics: the assignment first = lst[0] reads the element at index 0 from lst and assigns it to the variable first; '=' makes a new reference named first to that element (it does not copy the whole list)."
+        },
+        {
+          "content": "Potential errors/misconceptions: if lst is empty, lst[0] raises an IndexError, so you must not assume the list always has at least one element. Also, if lst is not a list or not subscriptable, you'll get a TypeError."
+        },
+        {
+          "content": "Best practice 1: check for an empty list before this line (for example, if not lst: return lst) so you avoid an IndexError and handle edge cases cleanly."
+        },
+        {
+          "content": "Best practice 2: be aware this stores a reference to the element; if the element is a mutable object and you later modify it, both first and the element in the list will reflect that change."
+        },
+        {
+          "content": "Alternative note: you could avoid in-place changes by returning a new list using slicing (lst[1:] + [lst[0]]), but that creates a new list instead of modifying the original and has different performance and side-effect behavior."
+        }
+      ]
+    },
+    "6": {
+      "content": "    for i in range(len(lst)-1):",
+      "commentList": [
+        "Purpose: this line starts a loop that walks through each index from the front of the list up to the second-to-last item so you can copy the next item into the current position and thereby shift values left.",
+        "Syntax breakdown: 'for i in range(len(lst)-1):' makes i take the values 0, 1, ..., len(lst)-2. range(n) yields 0..n-1, and len(lst)-1 ensures the loop stops before the last index.",
+        "How it works with the code: you use i as the current index so the body can do lst[i] = lst[i+1]. Stopping at len(lst)-2 guarantees lst[i+1] is always a valid index (you won't read past the end).",
+        "Common errors and misconceptions: if you used range(len(lst)) instead, when i equals len(lst)-1 the expression lst[i+1] would try to access lst[len(lst)] and raise an IndexError. Also remember that if lst is empty, line 4 (first = lst[0]) already raises an error, so this loop won't protect you from that.",
+        "Edge cases to note: when len(lst) is 1, range(len(lst)-1) becomes range(0) and the loop body never runs \u2014 that's correct because there is nothing to shift. When len(lst) is 0, range(-1) is empty, but you must still handle the earlier access to lst[0].",
+        "Best practices: before this loop you should check for an empty list (for example: if not lst: return lst) to avoid IndexError. Consider using a clearer variable name (like index) or a slice-based alternative (lst[1:]+lst[:1]) if you prefer more readable code. Also decide whether you want to modify the original list in place (this code does) or return a new rotated list."
+      ],
+      "indentLevel": 1,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: this line starts a loop that walks through each index from the front of the list up to the second-to-last item so you can copy the next item into the current position and thereby shift values left."
+        },
+        {
+          "content": "Syntax breakdown: 'for i in range(len(lst)-1):' makes i take the values 0, 1, ..., len(lst)-2. range(n) yields 0..n-1, and len(lst)-1 ensures the loop stops before the last index."
+        },
+        {
+          "content": "How it works with the code: you use i as the current index so the body can do lst[i] = lst[i+1]. Stopping at len(lst)-2 guarantees lst[i+1] is always a valid index (you won't read past the end)."
+        },
+        {
+          "content": "Common errors and misconceptions: if you used range(len(lst)) instead, when i equals len(lst)-1 the expression lst[i+1] would try to access lst[len(lst)] and raise an IndexError. Also remember that if lst is empty, line 4 (first = lst[0]) already raises an error, so this loop won't protect you from that."
+        },
+        {
+          "content": "Edge cases to note: when len(lst) is 1, range(len(lst)-1) becomes range(0) and the loop body never runs \u2014 that's correct because there is nothing to shift. When len(lst) is 0, range(-1) is empty, but you must still handle the earlier access to lst[0]."
+        },
+        {
+          "content": "Best practices: before this loop you should check for an empty list (for example: if not lst: return lst) to avoid IndexError. Consider using a clearer variable name (like index) or a slice-based alternative (lst[1:]+lst[:1]) if you prefer more readable code. Also decide whether you want to modify the original list in place (this code does) or return a new rotated list."
+        }
+      ]
+    },
+    "7": {
+      "content": "        lst[i] = lst[i + 1]",
+      "commentList": [
+        "Purpose: This line moves each element one position to the left by copying the element at index i+1 into index i; inside the loop it shifts every slot toward the front so the list becomes left-rotated step by step.",
+        "Syntax and semantics: lst[i] = lst[i + 1] uses integer indexing into the mutable list lst. The loop variable i takes values 0..len(lst)-2 (because of range(len(lst)-1)), so i+1 is always a valid index and the assignment overwrites the current position with the next element.",
+        "Potential errors and misconceptions: If you used range(len(lst)) instead, the final iteration would try to read lst[len(lst)] and cause an IndexError \u2014 that's why the loop stops one before the last index. Also remember this modifies the original list in place; if you need a new list instead, you should create and return a copy. If the list is empty or has one element, the loop will not run, but make sure you handle or check those cases earlier (the code already assumes lst[0] exists).",
+        "Best practices: You should check for empty lists or lists of length 1 and return early to avoid errors when accessing lst[0]. If you prefer clearer or more Pythonic code, you can use slicing (for example lst[:] = lst[1:] + lst[:1]) to perform the same rotation in one statement while still modifying the list in place."
+      ],
+      "indentLevel": 2,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line moves each element one position to the left by copying the element at index i+1 into index i; inside the loop it shifts every slot toward the front so the list becomes left-rotated step by step."
+        },
+        {
+          "content": "Syntax and semantics: lst[i] = lst[i + 1] uses integer indexing into the mutable list lst. The loop variable i takes values 0..len(lst)-2 (because of range(len(lst)-1)), so i+1 is always a valid index and the assignment overwrites the current position with the next element."
+        },
+        {
+          "content": "Potential errors and misconceptions: If you used range(len(lst)) instead, the final iteration would try to read lst[len(lst)] and cause an IndexError \u2014 that's why the loop stops one before the last index. Also remember this modifies the original list in place; if you need a new list instead, you should create and return a copy. If the list is empty or has one element, the loop will not run, but make sure you handle or check those cases earlier (the code already assumes lst[0] exists)."
+        },
+        {
+          "content": "Best practices: You should check for empty lists or lists of length 1 and return early to avoid errors when accessing lst[0]. If you prefer clearer or more Pythonic code, you can use slicing (for example lst[:] = lst[1:] + lst[:1]) to perform the same rotation in one statement while still modifying the list in place."
+        }
+      ]
+    },
+    "9": {
+      "content": "    lst[len(lst)-1] = first    ",
+      "commentList": [
+        "Purpose: This line completes the left rotation by placing the value you saved in the variable first into the final slot of the list, so the original front item ends up at the back.",
+        "Syntax and semantics: len(lst)-1 computes the index of the last element because list indexes start at 0, and lst[len(lst)-1] = first assigns the saved value into that last position.",
+        "Potential errors and misconceptions: if the list was empty the earlier first = lst[0] would already have caused an IndexError, so this line assumes at least one item exists. Also, using append instead of assignment would grow the list instead of replacing the last element.",
+        "Behavior note you should know: this changes the original list in place (it does not create a new list). If you wanted a new list, you would use slicing or other techniques instead.",
+        "Best practices: before this line, check that the list is not empty (or handle empty lists). For readability you can write lst[-1] = first instead of lst[len(lst)-1] = first, and as alternative implementations consider lst.append(lst.pop(0)) or lst[1:] + lst[:1] depending on whether you want in-place modification or a new list."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line completes the left rotation by placing the value you saved in the variable first into the final slot of the list, so the original front item ends up at the back."
+        },
+        {
+          "content": "Syntax and semantics: len(lst)-1 computes the index of the last element because list indexes start at 0, and lst[len(lst)-1] = first assigns the saved value into that last position."
+        },
+        {
+          "content": "Potential errors and misconceptions: if the list was empty the earlier first = lst[0] would already have caused an IndexError, so this line assumes at least one item exists. Also, using append instead of assignment would grow the list instead of replacing the last element."
+        },
+        {
+          "content": "Behavior note you should know: this changes the original list in place (it does not create a new list). If you wanted a new list, you would use slicing or other techniques instead."
+        },
+        {
+          "content": "Best practices: before this line, check that the list is not empty (or handle empty lists). For readability you can write lst[-1] = first instead of lst[len(lst)-1] = first, and as alternative implementations consider lst.append(lst.pop(0)) or lst[1:] + lst[:1] depending on whether you want in-place modification or a new list."
+        }
+      ]
+    },
+    "10": {
+      "content": "    return lst",
+      "commentList": [
+        "Purpose: You use `return lst` to send the rotated list back to the code that called the function so the caller can receive and use or print the result.",
+        "What it does (syntax & semantics): `return` ends the function and hands the value `lst` to the caller. Here `lst` is the same list object you changed inside the function (you did not create a new list), so the caller gets that modified list.",
+        "Function flow: Because `return` stops the function, any code after this line would not run. In this program it's the last step, so it simply finishes and returns the result.",
+        "Common misconceptions & errors: Don't assume `return lst` makes a copy \u2014 it does not. If you omit `return`, Python would return `None`, which can cause confusing results when the caller expects a list. Also note the function currently assumes `lst` is non-empty; if `lst` were empty, earlier lines (like `lst[0]`) would raise an IndexError before you even reach the `return`.",
+        "Best practices: Be clear whether your function mutates the input or returns a new object. Either document that it modifies `lst` in place and still returns it, or change the function to return a new rotated list (leaving the original unchanged). Also consider validating input (e.g., `if not lst: return lst`) to handle empty lists safely."
+      ],
+      "indentLevel": 1,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: You use `return lst` to send the rotated list back to the code that called the function so the caller can receive and use or print the result."
+        },
+        {
+          "content": "What it does (syntax & semantics): `return` ends the function and hands the value `lst` to the caller. Here `lst` is the same list object you changed inside the function (you did not create a new list), so the caller gets that modified list."
+        },
+        {
+          "content": "Function flow: Because `return` stops the function, any code after this line would not run. In this program it's the last step, so it simply finishes and returns the result."
+        },
+        {
+          "content": "Common misconceptions & errors: Don't assume `return lst` makes a copy \u2014 it does not. If you omit `return`, Python would return `None`, which can cause confusing results when the caller expects a list. Also note the function currently assumes `lst` is non-empty; if `lst` were empty, earlier lines (like `lst[0]`) would raise an IndexError before you even reach the `return`."
+        },
+        {
+          "content": "Best practices: Be clear whether your function mutates the input or returns a new object. Either document that it modifies `lst` in place and still returns it, or change the function to return a new rotated list (leaving the original unchanged). Also consider validating input (e.g., `if not lst: return lst`) to handle empty lists safely."
+        }
+      ]
+    },
+    "12": {
+      "content": "values =  [3, 8, 9, 8, 7, 5]",
+      "commentList": [
+        "Purpose: this line creates a sample input by assigning the list literal [3, 8, 9, 8, 7, 5] to the variable values so you can call rotate_left(values) and see how the function behaves.",
+        "Syntax breakdown: square brackets [...] define a Python list, commas separate the elements, and the = operator binds that list object to the name values. After this line, values is a reference to a mutable list.",
+        "Potential error: rotate_left accesses lst[0], so if you use an empty list here you'll get an IndexError. Make sure the list is non-empty before calling the function or add a guard in the function.",
+        "Common misconception / mutability: rotate_left modifies the list in place. That means values will be changed by the call. If you want to keep the original, pass a copy (for example values.copy() or values[:]).",
+        "Type caution: the function expects a mutable, indexable sequence (a list). If you pass an immutable type like a tuple, assignments inside the function will raise an error.",
+        "Best practices: pick clear, descriptive test data and names (values is OK for examples). For repeatable checks prefer unit tests or asserts rather than manual print statements."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: this line creates a sample input by assigning the list literal [3, 8, 9, 8, 7, 5] to the variable values so you can call rotate_left(values) and see how the function behaves."
+        },
+        {
+          "content": "Syntax breakdown: square brackets [...] define a Python list, commas separate the elements, and the = operator binds that list object to the name values. After this line, values is a reference to a mutable list."
+        },
+        {
+          "content": "Potential error: rotate_left accesses lst[0], so if you use an empty list here you'll get an IndexError. Make sure the list is non-empty before calling the function or add a guard in the function."
+        },
+        {
+          "content": "Common misconception / mutability: rotate_left modifies the list in place. That means values will be changed by the call. If you want to keep the original, pass a copy (for example values.copy() or values[:])."
+        },
+        {
+          "content": "Type caution: the function expects a mutable, indexable sequence (a list). If you pass an immutable type like a tuple, assignments inside the function will raise an error."
+        },
+        {
+          "content": "Best practices: pick clear, descriptive test data and names (values is OK for examples). For repeatable checks prefer unit tests or asserts rather than manual print statements."
+        }
+      ]
+    },
+    "13": {
+      "content": "print(\"Original list:\", values)",
+      "commentList": [
+        "This line prints the list named values so you can see the list's state before the rotation function is called; it shows the program's 'before' snapshot for comparison with the rotated result.",
+        "Syntax-wise, print(\"Original list:\", values) calls the print function with two arguments: a label string and the list variable. print inserts a space between arguments and uses the list's default string form (its brackets and comma-separated items).",
+        "A common misconception is thinking this print protects the list from later changes \u2014 the printed output is just text. The list itself is mutable, so if you later mutate values (as rotate_left does), the variable changes; to see those changes you must print again after the call.",
+        "Possible runtime issues: if values were not defined before this line you'd get a NameError, so make sure you assigned the list (line 12) or otherwise initialized it before printing.",
+        "Best practices: you can use an f-string for clearer formatting (for example, print(f\"Original list: {values}\")), and if you need to keep an untouched copy of the original list you can print or pass values.copy() (or values[:]) so you don't lose the original when a function mutates the list in-place."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line prints the list named values so you can see the list's state before the rotation function is called; it shows the program's 'before' snapshot for comparison with the rotated result."
+        },
+        {
+          "content": "Syntax-wise, print(\"Original list:\", values) calls the print function with two arguments: a label string and the list variable. print inserts a space between arguments and uses the list's default string form (its brackets and comma-separated items)."
+        },
+        {
+          "content": "A common misconception is thinking this print protects the list from later changes \u2014 the printed output is just text. The list itself is mutable, so if you later mutate values (as rotate_left does), the variable changes; to see those changes you must print again after the call."
+        },
+        {
+          "content": "Possible runtime issues: if values were not defined before this line you'd get a NameError, so make sure you assigned the list (line 12) or otherwise initialized it before printing."
+        },
+        {
+          "content": "Best practices: you can use an f-string for clearer formatting (for example, print(f\"Original list: {values}\")), and if you need to keep an untouched copy of the original list you can print or pass values.copy() (or values[:]) so you don't lose the original when a function mutates the list in-place."
+        }
+      ]
+    },
+    "14": {
+      "content": "print(\"Rotated list: \", rotate_left(values))",
+      "commentList": [
+        "Purpose: This line prints a label and the result of calling rotate_left(values). When you run it, rotate_left is executed and the rotated list is shown after 'Rotated list: '. This is how you display the function's effect to the user.",
+        "Syntax and behavior: print is called with two arguments \u2014 the string 'Rotated list: ' and the value returned by rotate_left(values). Python evaluates rotate_left(values) first (so the list is modified), then print prints both arguments separated by a space because you used a comma.",
+        "Potential errors and misconceptions: if values is empty, rotate_left will raise an IndexError because the function accesses lst[0]. Also don't assume rotate_left returns a new list \u2014 it mutates the original list in place, so values is changed after this call. Note that the comma in print inserts a space before the printed list.",
+        "Best practices: if you want to keep the original list, pass a copy (rotate_left(values.copy()) or rotate_left(values[:])) or change the function to return a new list. Check for an empty list before calling (e.g., if values: ...). For clearer output, consider assigning the result to a variable (rotated = rotate_left(values)) and then printing it, or use an f-string: print(f\"Rotated list: {rotated}\")."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: This line prints a label and the result of calling rotate_left(values). When you run it, rotate_left is executed and the rotated list is shown after 'Rotated list: '. This is how you display the function's effect to the user."
+        },
+        {
+          "content": "Syntax and behavior: print is called with two arguments \u2014 the string 'Rotated list: ' and the value returned by rotate_left(values). Python evaluates rotate_left(values) first (so the list is modified), then print prints both arguments separated by a space because you used a comma."
+        },
+        {
+          "content": "Potential errors and misconceptions: if values is empty, rotate_left will raise an IndexError because the function accesses lst[0]. Also don't assume rotate_left returns a new list \u2014 it mutates the original list in place, so values is changed after this call. Note that the comma in print inserts a space before the printed list."
+        },
+        {
+          "content": "Best practices: if you want to keep the original list, pass a copy (rotate_left(values.copy()) or rotate_left(values[:])) or change the function to return a new list. Check for an empty list before calling (e.g., if values: ...). For clearer output, consider assigning the result to a variable (rotated = rotate_left(values)) and then printing it, or use an f-string: print(f\"Rotated list: {rotated}\")."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "for i in range(len(lst)):",
+      "description": "You might pick this because it feels natural to iterate over every index of the list. If you think every slot needs to be updated once, using range(len(lst)) seems right. However, with the rest of the code unchanged (which uses lst[i + 1] inside the loop), this causes the loop to try to read lst[len(lst)] on the final iteration. That index does not exist and Python raises an IndexError at runtime. In other words, you run one iteration too many. The mistake is an off-by-one error: the loop runs for the last index when it should stop before trying to access i+1. Replacing the correct loop with this line therefore makes the program crash instead of producing a rotated list.",
+      "line_number": 0
+    },
+    {
+      "code": "lst[i+1] = lst[i]",
+      "description": "You might pick this because it looks like you're moving the value at the current position forward into the next position. Step-by-step, what happens if you use this: on the first loop pass you copy the first element into the second slot, then on the next pass you copy that same value into the third slot, and so on. As the loop continues you overwrite later elements with earlier ones. After the loop finishes, the final step (which moves the saved front value to the back) will make many entries identical, so the list ends up filled with the same value instead of being rotated. This line is invalid for the intended left-rotation because it propagates values in the wrong direction \u2014 you are copying each element into the following slot rather than bringing the next element into the current slot \u2014 so the relative order is destroyed instead of shifted left.",
+      "line_number": 0
+    },
+    {
+      "code": "lst[i] = lst[i-1]",
+      "description": "You might choose this because it seems intuitive to fill the current position from the previous one. However, on the first iteration i is 0, so this accesses lst[-1] (the last element) and assigns it to the first slot. Then that value gets copied to subsequent positions, so you quickly get many copies of the last element. After the loop finishes and the saved first element is placed at the end, the list's order is wrong (for example, many positions will contain the old last value). This is incorrect for left-rotation because it uses the element behind the current index (and unintentionally uses Python's wrap-around negative index) instead of moving the next-in-line value into the current position.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:50:59.356Z",
+  "updated_at": "2026-09-02T02:52:24.256Z",
+  "stat": {
+    "size": 58573,
+    "lastTimeModified": 1788317545321.105
+  }
+}

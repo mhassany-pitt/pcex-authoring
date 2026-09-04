@@ -1,0 +1,215 @@
+{
+  "id": "6a91ae6d32e78ede45c11715",
+  "user": "moh70@pitt.edu",
+  "name": "Modifying a List (Case 2)",
+  "description": "Construct a program that swaps pairs of adjacent elements of the list. For example, if the list is [1, 2, 3, 4, 5, 6], the program will change it to [2, 1, 4, 3, 6, 5].\\nThis program assumes that the list has always an even number of elements.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_list_swap_adjacent_elements.py",
+  "code": "#Step 1: Define and initialize the list\nlst = [1, 2, 3, 4, 5, 6]\n#Step 2: Iterate through the pairs of adjacent elements in the list\nfor i in range(0, len(lst), 2):\n    #Step 2.1: Swap the element at index i with the element at index i+1\n    temp = lst[i]\n    lst[i] = lst[i+1]\n    lst[i+1] = temp\n#Step 3: Print the list\nprint(lst)",
+  "lines": {
+    "2": {
+      "content": "lst = [1, 2, 3, 4, 5, 6]",
+      "commentList": [
+        "You create and initialize the variable lst with the list literal [1, 2, 3, 4, 5, 6]; this provides the data that the swap loop will modify.",
+        "You use the assignment operator (=) to bind the name lst to a list written with square brackets and comma-separated values; elements are indexed from 0 so lst[0] is 1, lst[1] is 2, and so on.",
+        "You must define the list before the loop runs; the program assumes an even number of elements\u2014if the list had an odd length the loop would try to access lst[i+1] past the end and raise an IndexError.",
+        "When you later swap elements, you change this same list in place. If you do other = lst earlier, both names refer to the same list, so changes affect both names; if you need to keep the original, make a copy with lst.copy() or lst[:].",
+        "As a best practice, give the variable a clear name (for example numbers) rather than shadowing built-ins like list, and consider validating the length up front (e.g., assert len(lst) % 2 == 0) to catch incorrect input early."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "You create and initialize the variable lst with the list literal [1, 2, 3, 4, 5, 6]; this provides the data that the swap loop will modify."
+        },
+        {
+          "content": "You use the assignment operator (=) to bind the name lst to a list written with square brackets and comma-separated values; elements are indexed from 0 so lst[0] is 1, lst[1] is 2, and so on."
+        },
+        {
+          "content": "You must define the list before the loop runs; the program assumes an even number of elements\u2014if the list had an odd length the loop would try to access lst[i+1] past the end and raise an IndexError."
+        },
+        {
+          "content": "When you later swap elements, you change this same list in place. If you do other = lst earlier, both names refer to the same list, so changes affect both names; if you need to keep the original, make a copy with lst.copy() or lst[:]."
+        },
+        {
+          "content": "As a best practice, give the variable a clear name (for example numbers) rather than shadowing built-ins like list, and consider validating the length up front (e.g., assert len(lst) % 2 == 0) to catch incorrect input early."
+        }
+      ]
+    },
+    "4": {
+      "content": "for i in range(0, len(lst), 2):",
+      "commentList": [
+        "This line starts a loop that visits the first index of each adjacent pair so you can swap that element with the next one. It sets i to 0, 2, 4, ... so each iteration handles one pair.",
+        "Breaking down the syntax: range(0, len(lst), 2) means start at 0, stop before len(lst), and step by 2. The for i in ...: form runs the indented block for each i value; the colon begins that block.",
+        "Be careful about list length: if the list were odd-length, using i+1 inside the loop would raise an IndexError. The problem assumes an even length, so this line is safe; otherwise you should check or adjust the range to avoid going past the end.",
+        "A common mistake is using range(len(lst)) and swapping with i+1 \u2014 that causes elements to be swapped twice or produce wrong results. Stepping by 2 avoids re-swapping the element you just moved.",
+        "Best practices: consider using tuple unpacking to swap without a temporary variable (lst[i], lst[i+1] = lst[i+1], lst[i]) and give the loop variable a clear name like idx. You can also add an assertion (e.g., assert len(lst) % 2 == 0) to document the even-length requirement."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "This line starts a loop that visits the first index of each adjacent pair so you can swap that element with the next one. It sets i to 0, 2, 4, ... so each iteration handles one pair."
+        },
+        {
+          "content": "Breaking down the syntax: range(0, len(lst), 2) means start at 0, stop before len(lst), and step by 2. The for i in ...: form runs the indented block for each i value; the colon begins that block."
+        },
+        {
+          "content": "Be careful about list length: if the list were odd-length, using i+1 inside the loop would raise an IndexError. The problem assumes an even length, so this line is safe; otherwise you should check or adjust the range to avoid going past the end."
+        },
+        {
+          "content": "A common mistake is using range(len(lst)) and swapping with i+1 \u2014 that causes elements to be swapped twice or produce wrong results. Stepping by 2 avoids re-swapping the element you just moved."
+        },
+        {
+          "content": "Best practices: consider using tuple unpacking to swap without a temporary variable (lst[i], lst[i+1] = lst[i+1], lst[i]) and give the loop variable a clear name like idx. You can also add an assertion (e.g., assert len(lst) % 2 == 0) to document the even-length requirement."
+        }
+      ]
+    },
+    "6": {
+      "content": "    temp = lst[i]",
+      "commentList": [
+        "Purpose: You store the current element at index i in the variable temp so you don't lose its value when you overwrite lst[i] in the next line; this lets you complete the swap.",
+        "Syntax and semantics: This is an assignment statement \u2014 Python first evaluates the right-hand side lst[i] and then binds that value to the name temp, so temp now refers to the same object as lst[i].",
+        "Potential errors and misconceptions: If you skip this step and directly assign lst[i] = lst[i+1], you will lose the original value and can't finish the swap. Also, remember that temp is a reference for mutable objects (it's not a deep copy), which is fine here because you only need to keep the reference during the swap.",
+        "Index safety: You must ensure i is a valid index before this line runs. In this program i comes from range(0, len(lst), 2), so lst[i] is safe; if i were out of range this line would raise an IndexError.",
+        "Best practice: Using a temporary variable is clear and fine for learning, but in Python you can also write the swap more concisely as lst[i], lst[i+1] = lst[i+1], lst[i]. If you keep temp, choose simple names like temp or left to make your intent obvious."
+      ],
+      "indentLevel": 1,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: You store the current element at index i in the variable temp so you don't lose its value when you overwrite lst[i] in the next line; this lets you complete the swap."
+        },
+        {
+          "content": "Syntax and semantics: This is an assignment statement \u2014 Python first evaluates the right-hand side lst[i] and then binds that value to the name temp, so temp now refers to the same object as lst[i]."
+        },
+        {
+          "content": "Potential errors and misconceptions: If you skip this step and directly assign lst[i] = lst[i+1], you will lose the original value and can't finish the swap. Also, remember that temp is a reference for mutable objects (it's not a deep copy), which is fine here because you only need to keep the reference during the swap."
+        },
+        {
+          "content": "Index safety: You must ensure i is a valid index before this line runs. In this program i comes from range(0, len(lst), 2), so lst[i] is safe; if i were out of range this line would raise an IndexError."
+        },
+        {
+          "content": "Best practice: Using a temporary variable is clear and fine for learning, but in Python you can also write the swap more concisely as lst[i], lst[i+1] = lst[i+1], lst[i]. If you keep temp, choose simple names like temp or left to make your intent obvious."
+        }
+      ]
+    },
+    "7": {
+      "content": "    lst[i] = lst[i+1]",
+      "commentList": [
+        "Purpose: This line puts the value from index i+1 into index i, so the element that was second in the pair moves into the first position as part of the swap.",
+        "Syntax and semantics: lst[i] = lst[i+1] means: evaluate the right-hand side (the element at index i+1) and assign that value into the slot lst[i]. The variable i comes from the for loop and increases by 2 each iteration, so you are operating on adjacent pairs (i and i+1).",
+        "Potential errors and misconceptions: If the list had an odd length, lst[i+1] would raise an IndexError because that index might not exist. Also note that you must save the original lst[i] (you do that in temp on the previous line) before overwriting it; otherwise you would lose that value.",
+        "Best practices: For clarity and brevity you could swap without a temporary variable using tuple unpacking (lst[i], lst[i+1] = lst[i+1], lst[i]). Also consider asserting that len(lst) is even (e.g., assert len(lst) % 2 == 0) so you avoid accidental IndexError, and use a clear variable name instead of a generic temp if it helps readability."
+      ],
+      "indentLevel": 1,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line puts the value from index i+1 into index i, so the element that was second in the pair moves into the first position as part of the swap."
+        },
+        {
+          "content": "Syntax and semantics: lst[i] = lst[i+1] means: evaluate the right-hand side (the element at index i+1) and assign that value into the slot lst[i]. The variable i comes from the for loop and increases by 2 each iteration, so you are operating on adjacent pairs (i and i+1)."
+        },
+        {
+          "content": "Potential errors and misconceptions: If the list had an odd length, lst[i+1] would raise an IndexError because that index might not exist. Also note that you must save the original lst[i] (you do that in temp on the previous line) before overwriting it; otherwise you would lose that value."
+        },
+        {
+          "content": "Best practices: For clarity and brevity you could swap without a temporary variable using tuple unpacking (lst[i], lst[i+1] = lst[i+1], lst[i]). Also consider asserting that len(lst) is even (e.g., assert len(lst) % 2 == 0) so you avoid accidental IndexError, and use a clear variable name instead of a generic temp if it helps readability."
+        }
+      ]
+    },
+    "8": {
+      "content": "    lst[i+1] = temp",
+      "commentList": [
+        "Purpose: You place the value saved in temp into the position i+1, completing the swap so the original element at index i ends up at index i+1.",
+        "Syntax and semantics: You use assignment (lst[i+1] = temp) where lst[i+1] accesses the list element one position after i (zero-based indexing) and temp holds the original lst[i] value from line 6; the right-hand side is evaluated first and then stored into that list slot.",
+        "Potential errors and misconceptions: If the list length were odd, lst[i+1] could be out of range and raise an IndexError \u2014 make sure your loop and list length guarantee i+1 exists. A common mistake is writing lst[i+1] = lst[i] before saving lst[i] to temp, which would overwrite the original value and lose it.",
+        "Best practices: For brevity and clarity you can swap without a temp using simultaneous assignment: lst[i], lst[i+1] = lst[i+1], lst[i]. Also keep your loop step and variable names clear so you (and others) don't accidentally go out of bounds."
+      ],
+      "indentLevel": 1,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: You place the value saved in temp into the position i+1, completing the swap so the original element at index i ends up at index i+1."
+        },
+        {
+          "content": "Syntax and semantics: You use assignment (lst[i+1] = temp) where lst[i+1] accesses the list element one position after i (zero-based indexing) and temp holds the original lst[i] value from line 6; the right-hand side is evaluated first and then stored into that list slot."
+        },
+        {
+          "content": "Potential errors and misconceptions: If the list length were odd, lst[i+1] could be out of range and raise an IndexError \u2014 make sure your loop and list length guarantee i+1 exists. A common mistake is writing lst[i+1] = lst[i] before saving lst[i] to temp, which would overwrite the original value and lose it."
+        },
+        {
+          "content": "Best practices: For brevity and clarity you can swap without a temp using simultaneous assignment: lst[i], lst[i+1] = lst[i+1], lst[i]. Also keep your loop step and variable names clear so you (and others) don't accidentally go out of bounds."
+        }
+      ]
+    },
+    "10": {
+      "content": "print(lst)",
+      "commentList": [
+        "Purpose: this line shows you the final list after all swaps so you can verify the program produced [2, 1, 4, 3, 6, 5].",
+        "Syntax and semantics: print(lst) calls Python's print function with the list as an argument, which writes the list's textual representation (with brackets and commas) to the console or terminal. It does not change the list itself.",
+        "Common misconceptions and errors: don't think print modifies data \u2014 it only displays it. Also remember in Python 3 you must use parentheses; writing print lst would be a syntax error in Python 3.",
+        "When to avoid print: if this logic is inside a function you plan to reuse or test, prefer returning the list (return lst) instead of printing, because automated tests often check return values rather than console output.",
+        "Best practice for clarity: when you print for debugging, give context like print('Swapped list:', lst) so you and others can easily see what the output represents."
+      ],
+      "indentLevel": 0,
+      "blank": false,
+      "comments": [
+        {
+          "content": "Purpose: this line shows you the final list after all swaps so you can verify the program produced [2, 1, 4, 3, 6, 5]."
+        },
+        {
+          "content": "Syntax and semantics: print(lst) calls Python's print function with the list as an argument, which writes the list's textual representation (with brackets and commas) to the console or terminal. It does not change the list itself."
+        },
+        {
+          "content": "Common misconceptions and errors: don't think print modifies data \u2014 it only displays it. Also remember in Python 3 you must use parentheses; writing print lst would be a syntax error in Python 3."
+        },
+        {
+          "content": "When to avoid print: if this logic is inside a function you plan to reuse or test, prefer returning the list (return lst) instead of printing, because automated tests often check return values rather than console output."
+        },
+        {
+          "content": "Best practice for clarity: when you print for debugging, give context like print('Swapped list:', lst) so you and others can easily see what the output represents."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "temp = i",
+      "description": "Why you might pick this: you might confuse the loop index with the list element and think you should save the index for later. Step-by-step what happens if you use this line: temp holds the numeric index (0, 2, 4, ...). Then you set lst[i] = lst[i+1], which copies the second element into the first. Finally you set lst[i+1] = temp, which writes the index number into the list element. The result is that the second position ends up containing an index value (like 0 or 2) rather than one of the original list elements. This produces incorrect values in the list (but typically no runtime error). The mistake is saving an index instead of saving the actual element value that you need to restore later.",
+      "line_number": 0
+    },
+    {
+      "code": "lst[i+1] = lst[i]",
+      "description": "You might pick this because it looks like you are moving a value between the two positions, and you may think copying the first into the second is the right step. Step-by-step, with this line the code does: temp = lst[i] (save original element at i), then lst[i+1] = lst[i] (copy original i into position i+1), then the existing next line will set lst[i+1] = temp (which is the same value you just copied). The result is that both positions end up holding the original value at index i, so the pair becomes two identical values instead of being swapped. This is a common mistake when you mix up which element should be placed where and forget that the order of assignments matters. Compared to the intended assignment here, this line duplicates the first element into the second rather than moving the second into the first, so the swap fails and you lose the original value that was at i+1.",
+      "line_number": 0
+    },
+    {
+      "code": "lst[i] = temp",
+      "description": "You might pick this if you think temp should be written back into the list at index i. But since temp was set to lst[i], doing lst[i] = temp simply writes the same value back into its original spot (it is redundant). After that, the following line lst[i+1] = temp will set the element at i+1 to the same saved value, so both positions end up containing the original value from index i. In other words, you lose the original element that was at i+1 and get two identical values for the pair. This mistake comes from misunderstanding what the temporary variable holds and how the two assignments must coordinate to perform a swap; this line restores the saved value to the same place instead of bringing the next element into the current slot.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:09.327Z",
+  "updated_at": "2026-09-02T02:59:15.818Z",
+  "stat": {
+    "size": 73889,
+    "lastTimeModified": 1788317959221.1167
+  }
+}

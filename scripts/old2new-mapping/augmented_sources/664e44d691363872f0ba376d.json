@@ -1,0 +1,199 @@
+{
+  "id": "664e44d691363872f0ba376d",
+  "_id": "664e44d691363872f0ba376d",
+  "name": "Determining When a Student Fails a Course (Case 1)",
+  "description": "Construct a program to determine whether a student fails the course based on the inputs that it receives from the instructor. The student fails the course if the exam score is less than 55 or student has more than 2 missing homework.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_fail_course1.py",
+  "code": "#Step 1: Read the instructor inputs\ntext = input(\"Enter the exam score:\")\nexam_score = int(text)\ntext = input(\"Enter number of missing homework:\")\nnumber_of_missing_hw = int(text)\n#Step 2: Write the boolean expression to determine whether the student fails the course\nis_failing = exam_score < 55 or number_of_missing_hw > 2\n#Step 3: Print the result\nif is_failing == True :\n    print(\"Yes! The student fails the course.\")\nelse:\n    print(\"No! The student does not fail the course.\")",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Read the instructor inputs",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "text = input(\"Enter the exam score:\")",
+      "commentList": [
+        "Purpose: This line shows a prompt to the instructor asking for the exam score, waits for the instructor to type something and press Enter, and stores whatever they typed (as text) in the variable named text so you can use it later.",
+        "Syntax and semantics: input(\"Enter the exam score:\") prints the prompt and returns the user input as a string; the = operator assigns that string to the name text. The prompt string is what the user sees on the screen.",
+        "Common mistakes and errors: don't assume input() returns a number \u2014 it returns a string. If the user types letters or leaves the field empty, the later int(text) conversion (line 3) will raise a ValueError. Extra spaces will also cause problems unless you handle them.",
+        "Best practices: give a clear prompt (you already do), then validate and clean the input before converting. For example, use text = input(...).strip() to remove extra spaces, wrap the int conversion in try/except to catch bad input, or combine and validate like: try: exam_score = int(input(...)) except ValueError: handle error. Also consider using a more descriptive variable name (e.g., exam_input) instead of reusing text."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "exam_score = int(text)",
+      "commentList": [
+        "You convert the string stored in text into an integer and save that numeric value in the variable exam_score so you can do numeric comparisons later.",
+        "The expression int(text) calls Python's int() function to parse the input string into an integer; the = operator assigns that integer to exam_score.",
+        "If the user types something that is not a whole-number string (for example 'eighty' or '75.5'), int(text) will raise a ValueError at runtime \u2014 this is a common source of errors you should expect.",
+        "Don't assume int() will 'round' decimal input: int('75.5') will fail; int(75.5) (a float) would truncate, but string input must represent an integer. Also, if you skip converting and try to compare a string with a number, Python will raise a TypeError.",
+        "Best practice: validate or handle conversion errors (for example use try/except around int(text) or clean the input with text.strip()). You can also combine read+convert as exam_score = int(input(...)) for brevity, but separating them like here makes error handling and debugging easier."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "4": {
+      "content": "text = input(\"Enter number of missing homework:\")",
+      "commentList": [
+        "You prompt the instructor to enter the number of missing homework and store whatever they type into the variable text. The input(...) call shows the prompt and then waits for the user to type something; the result is always a string.",
+        "You should know the syntax: input(\"Enter number of missing homework:\") calls Python's input function with the prompt string. The = assigns the returned string to text. This line does not convert the value to a number \u2014 that happens on the next line.",
+        "A common misconception is to expect input() to give an integer. If you try to use text as a number without converting it (with int(...) in line 5), you will get wrong behavior or a TypeError when doing numeric comparisons later.",
+        "Be aware of possible errors: if the user types something that is not a valid integer (e.g., 'two' or an empty string), int(text) on the next line will raise a ValueError. If the user sends EOF (Ctrl+D/Ctrl+Z), input() will raise EOFError.",
+        "Best practices: make the prompt clear about the expected format, validate or handle conversion errors with try/except, and avoid reusing a generic name like text (for example use hw_text or convert immediately with number_of_missing_hw = int(input(...))) to make your code clearer and safer.",
+        "If your program will be run by an automatic grader, consider that the grader may not expect interactive prompts; in that case either remove the prompt string or follow the grader's input format exactly."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "5": {
+      "content": "number_of_missing_hw = int(text)",
+      "commentList": [
+        "This line converts the text you read from the instructor into an integer and stores it in number_of_missing_hw so you can compare it numerically later.",
+        "On the left side you have the variable name number_of_missing_hw; on the right side int(text) calls Python's int function to turn the string stored in text into an integer; the = operator then assigns that integer to the variable.",
+        "Semantically, if the user typed a whole number like '3', int(text) returns 3 and you can correctly evaluate number_of_missing_hw > 2; if you left the value as a string the numeric comparison would not work as intended.",
+        "A common error is ValueError when the input is not a valid integer (for example 'two', '', or '3.5'); you should validate input or use try/except so your program does not crash on bad input.",
+        "Best practice: make sure your prompt asks for an integer, consider using text = text.strip() before converting, and handle invalid or negative values explicitly (for example by re-prompting the user until you get a valid int)."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "6": {
+      "content": "#Step 2: Write the boolean expression to determine whether the student fails the course",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "7": {
+      "content": "is_failing = exam_score < 55 or number_of_missing_hw > 2",
+      "commentList": [
+        "Purpose: This line creates a boolean variable named is_failing that becomes True when the student meets the failure rules (exam score below 55 or more than 2 missing homework). You set up the condition here so the later if/else can decide what message to print.",
+        "Syntax and meaning: The = assigns the result to is_failing. The expressions exam_score < 55 and number_of_missing_hw > 2 each produce True or False. The or operator combines them and yields True if either side is True, otherwise False.",
+        "Evaluation details: exam_score and number_of_missing_hw are integers you parsed earlier, so each comparison returns a boolean. Because or short-circuits, if exam_score < 55 is True Python will not evaluate number_of_missing_hw > 2 \u2014 not important here, but useful to know if the right side had side effects.",
+        "Common errors and misconceptions: Make sure you follow the problem wording exactly \u2014 use < 55 (not <= 55) and > 2 (not >= 2) to match 'less than 55' and 'more than 2'. Also watch out for input conversion: if you forget to convert the inputs to int, these comparisons will not work as intended and may raise errors.",
+        "Best practices: You can add parentheses for clarity: (exam_score < 55) or (number_of_missing_hw > 2). Validate the inputs before this line so you avoid ValueError from int conversion. When using the result, prefer writing if is_failing: instead of if is_failing == True: for cleaner code."
+      ],
+      "indentLevel": 0,
+      "blank": true
+    },
+    "8": {
+      "content": "#Step 3: Print the result",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "9": {
+      "content": "if is_failing == True :",
+      "commentList": [
+        "You use this line to decide which message to show: if the condition is true, the program runs the indented block that follows and prints the failing message.",
+        "You can read the pieces: 'if' starts a conditional, 'is_failing == True' is an equality test between the variable and the boolean literal True, and the trailing ':' ends the header and tells Python that an indented block follows.",
+        "You must keep the colon and the indentation exactly as shown; if you omit the ':' or mis-indent the next lines, Python will raise a syntax or indentation error and your program will not run.",
+        "A common mistake is to write 'if is_failing = True:' \u2014 that uses a single '=' and will cause a SyntaxError because '=' is for assignment, not comparison. You must use '==' to compare values.",
+        "Comparing a boolean to True is redundant in Python; you should prefer the simpler and more idiomatic 'if is_failing:' because it directly tests the truth value and is clearer to readers.",
+        "If 'is_failing' was never created or is misspelled, you'll get a NameError at this line, so ensure you defined the variable earlier (as Line 7 does).",
+        "As a best practice, write 'if is_failing:' and keep boolean variable names descriptive (like is_failing) so you \u2014 and others \u2014 can read the condition easily."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "10": {
+      "content": "    print(\"Yes! The student fails the course.\")",
+      "commentList": [
+        "Purpose: This line prints the failure message when the if condition is True. Because it is indented, it runs only when you determined that the student is failing.",
+        "Syntax: you are calling the Python print function with a string argument 'Yes! The student fails the course.'; the parentheses and quotes form the string literal that is shown on the console.",
+        "Potential errors/misconceptions: you don't need to compare a boolean to True with '== True' \u2014 writing 'if is_failing:' is clearer. Also make sure you keep the indentation correct; wrong indentation will change when the message prints or cause an error. Finally, ensure you include matching quotes and the closing parenthesis.",
+        "Best practices: you should prefer 'if is_failing:' instead of 'if is_failing == True:', keep printed messages short and consistent, and when you debug you can print the boolean value (for example print(is_failing)) to check the logic."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "11": {
+      "content": "else:",
+      "commentList": [
+        "Purpose: You use else: as the fallback branch of the if statement. If the condition (is_failing) is False, the indented code under this else runs so you print the 'does not fail' message.",
+        "Syntax and semantics: else: must follow the if (or an elif) at the same indentation level and ends with a colon. The block of code you write under else must be indented; that indented block is executed when the if condition is not met.",
+        "Common errors and misconceptions: If you forget the colon after else you get a SyntaxError. Wrong indentation can attach the else to the wrong block or cause an IndentationError. Remember else has no condition \u2014 it is not a second check but the default path; writing else when there is no matching if/elif is also a syntax error.",
+        "Best practices: Keep the else block simple and focused on the alternate outcome. Prefer testing the boolean directly earlier (use if is_failing: instead of if is_failing == True :) so the intent is clearer. Add a short comment if the branches are easy to confuse, and make sure your indentation is consistent so you and others can read the flow."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "12": {
+      "content": "    print(\"No! The student does not fail the course.\")",
+      "commentList": [
+        "You use this line to tell the user that the student does not fail; it prints a human-readable confirmation when the program determines the student is passing.",
+        "You are calling Python's print(...) function with a string literal. Because this statement is inside the else block, Python executes it only when the if condition (is_failing) was False.",
+        "Watch for common mistakes: if the indentation is wrong, Python will raise an IndentationError; if you forget the closing quote or parenthesis, you'll get a SyntaxError. Also remember this line does not re-check any conditions\u2014it simply reports the result already stored in is_failing.",
+        "For best practice, keep the message clear and consistent with the problem description, test both branches so you confirm this message appears at the correct time, and ensure the line is indented to match the else block. If you later want more detail, include actual values (score or missing homework) in the printed message."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "cbcea4ad-cf98-4fdc-b379-a3a2942d9dfe",
+      "line": {
+        "number": 0,
+        "content": "is_failing = exam_score < 55 and number_of_missing_hw > 2",
+        "commentList": [
+          "Step-by-step: you might pick this because you think a student should show multiple signs of poor performance before being marked as failing. With this line the program will only say the student fails when both the exam score is low and the missing-homework count is high at the same time. That means many students who actually meet one failing condition (for example, a low exam score but few missing assignments) will be marked as not failing. There is no runtime error here \u2014 the program runs \u2014 but the logic is too strict: it requires both problems together instead of recognizing either problem on its own. Compared to the correct logic for deciding failure, this line omits the possibility that just one of the bad conditions should be enough to fail a student, so it under-reports failures."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "Step-by-step: you might pick this because you think a student should show multiple signs of poor performance before being marked as failing. With this line the program will only say the student fails when both the exam score is low and the missing-homework count is high at the same time. That means many students who actually meet one failing condition (for example, a low exam score but few missing assignments) will be marked as not failing. There is no runtime error here \u2014 the program runs \u2014 but the logic is too strict: it requires both problems together instead of recognizing either problem on its own. Compared to the correct logic for deciding failure, this line omits the possibility that just one of the bad conditions should be enough to fail a student, so it under-reports failures."
+      ]
+    },
+    {
+      "id": "76e01d2c-5094-41aa-b7ac-a179d3f9506a",
+      "line": {
+        "number": 0,
+        "content": "is_failing = exam_score <= 55 or number_of_missing_hw >= 2",
+        "commentList": [
+          "Step-by-step: you might choose this if you are unsure whether the threshold numbers should be included as failing. With this line the program treats a score of 55 as failing and 2 missing homeworks as failing. That changes the behavior for students exactly at those boundary values: students who should be considered passing at a score of 55 or with exactly 2 missing homeworks will now be labeled failing. There is no syntax error; the program will run, but it mis-classifies boundary cases. In short, this line makes the thresholds inclusive when they shouldn't be, so it marks more students as failing than intended."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "Step-by-step: you might choose this if you are unsure whether the threshold numbers should be included as failing. With this line the program treats a score of 55 as failing and 2 missing homeworks as failing. That changes the behavior for students exactly at those boundary values: students who should be considered passing at a score of 55 or with exactly 2 missing homeworks will now be labeled failing. There is no syntax error; the program will run, but it mis-classifies boundary cases. In short, this line makes the thresholds inclusive when they shouldn't be, so it marks more students as failing than intended."
+      ]
+    },
+    {
+      "id": "ec796eec-5885-4c62-acfc-7ed18e6e8ca1",
+      "line": {
+        "number": 0,
+        "content": "is_failing = exam_score + number_of_missing_hw < 57",
+        "commentList": [
+          "Step-by-step: you might pick this because you want a single numeric comparison instead of two separate conditions. With this line the program adds the exam score and the number of missing homeworks and compares the sum to 57. That approach mixes different kinds of data (a percent-style exam score and a small integer count) and produces many incorrect results. For example, a student with a high exam score but too many missing homeworks could still have a sum that passes the test, so they would not be marked failing even though they should. Conversely, a student with a modest score and no missing work might be marked failing because the sum falls below the arbitrary cutoff. There is no syntax error, but the logic is wrong: it reduces two separate failure rules into an unrelated numeric sum, so it misclassifies many students."
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        "Step-by-step: you might pick this because you want a single numeric comparison instead of two separate conditions. With this line the program adds the exam score and the number of missing homeworks and compares the sum to 57. That approach mixes different kinds of data (a percent-style exam score and a small integer count) and produces many incorrect results. For example, a student with a high exam score but too many missing homeworks could still have a sum that passes the test, so they would not be marked failing even though they should. Conversely, a student with a modest score and no missing work might be marked failing because the sum falls below the arbitrary cutoff. There is no syntax error, but the logic is wrong: it reduces two separate failure rules into an unrelated numeric sum, so it misclassifies many students."
+      ]
+    }
+  ],
+  "programInput": "55 4",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

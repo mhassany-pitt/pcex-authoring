@@ -1,0 +1,391 @@
+{
+  "id": "664e3c2a91363872f0ba354b",
+  "_id": "664e3c2a91363872f0ba354b",
+  "name": "The Class for Representing a Bank Account (Case 1)",
+  "description": "Construct a class that represents a basic bank account. This class should contain data representing the name of the account\u2019s owner, the account number, and the account\u2019s current balance; all of which could be accessed or changed only through the getter and setter methods. An instance of the class should be created by specifying three parameters that are used to initialize the instance (i.e., object) data. The other methods of this class should perform various services on the account (making deposits, withdrawals, adding interest to the account). These methods should examine the data passed into them to make sure the requested transaction is valid.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_account1.py",
+  "code": "#Step 1: Define the class\nclass Account1 :\n    #Step 1.1: Initialize the account with the specified values\n    def __init__(self, owner, account, initial) :\n        self.__acct_name = owner\n        self.__acct_number = account\n        self.__balance = initial\n    #Step 1.2: Define a method to perform the deposit transaction\n    def deposit(self, amount) :\n        if (amount > 0) :\n            self.__balance = self.__balance + amount\n        return self.__balance\n    #Step 1.3: Define a method to perform a withdraw transaction\n    def withdraw(self, amount, fee) :\n        if (amount > 0 and fee >= 0 and amount+fee < self.__balance) :\n            self.__balance = self.__balance - amount - fee\n        return self.__balance\n    #Step 1.4: Define a method to add interest to the account\n    def add_interest(self) :\n        self.__balance += (self.__balance * 0.035)\n        return self.__balance\n    #Step 1.5: Define the methods to get the  state of the account \n    def get_name(self) :\n        return self.__acct_name\n    def get_balance(self) :\n        return self.__balance\n    def get_acct_number(self) :\n        return self.__acct_number\n#Step 2: Test the class\nacct1 = Account1(\"Tina Murphy\", 72354, 25.59)\nacct2 = Account1(\"Angelica Adams\", 69713, 500.00)\nacct3 = Account1(\"Edward Demsey\", 93757, 769.32)\nacct1.deposit(44.10)  \nadams_balance = acct2.deposit(75.25)\nprint(\"{:s}'s balance after deposit: {:.2f}\".format(acct2.get_name(), adams_balance))\nprint(\"{:s}'s balance after deposit: {:.2f}\".format(acct2.get_name(), acct2.withdraw (480, 1.50)))\nacct3.withdraw(-100.00, 1.50)  \nacct2.add_interest()\nprint(\"{:s}'s balance after adding interest: {:.2f}\".format(acct2.get_name(), acct2.get_balance()))",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Define the class",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "class Account1 :",
+      "commentList": [
+        "We define the class Account1 to represent a bank account with basic services."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "    #Step 1.1: Initialize the account with the specified values",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "4": {
+      "content": "    def __init__(self, owner, account, initial) :",
+      "commentList": [
+        "To specify the initial state of a bank account, we need to have an __init__ method in the class Account1 that accepts initial values for the bank account. The __init__ accepts the name of the bank account, account number, and initial balance and stores them into the new Account1 object\u2019s acct_name, acct_number, and balance, respectively.",
+        "The __init__ method is run automatically by Python each time an instance is created. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class.",
+        "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, the last three parameters must be passed to the method."
+      ],
+      "indentLevel": 1,
+      "blank": true
+    },
+    "5": {
+      "content": "        self.__acct_name = owner",
+      "commentList": [
+        "This statement sets the instance attribute acct_name to the first parameter value (owner).<br>self is the instance of the class and self.__acct_name is the account name. We start the attribute name by two underscore (self.__acct_name) to prevent accessing the attribute directly from outside of the class."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "6": {
+      "content": "        self.__acct_number = account",
+      "commentList": [
+        "This statement sets instance attribute acct_number to the second parameter value (account).<br>self is the instance of the class and self.__acct_number is the account number. We start the attribute name by two underscore (self.__acct_number) to prevent accessing the attribute directly from outside of the class."
+      ],
+      "indentLevel": 2,
+      "blank": true
+    },
+    "7": {
+      "content": "        self.__balance = initial",
+      "commentList": [
+        "This statement sets instance attribute balance to the third parameter value (initial).<br>self is the instance of the class and self.__balance is the account's balance. We start the attribute name by two underscore (self.__balance) to prevent accessing the attribute directly from outside of the class."
+      ],
+      "indentLevel": 2,
+      "blank": true
+    },
+    "8": {
+      "content": "    #Step 1.2: Define a method to perform the deposit transaction",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "9": {
+      "content": "    def deposit(self, amount) :",
+      "commentList": [
+        "This method deposits the specified amount into this account and returns the new balance. The balance is not modified if the deposit amount is invalid. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class.",
+        "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, only the last parameter (amount) must be passed to the method."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "10": {
+      "content": "        if (amount > 0) :",
+      "commentList": [
+        "Before we add the specified amount to the balance, we need to perform a test to check whether the deposit amount is valid.",
+        "The if statement tests whether the deposit amount is greater than 0. If the deposit amount is greater than 0, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "11": {
+      "content": "            self.__balance = self.__balance + amount",
+      "commentList": [],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "12": {
+      "content": "        return self.__balance",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "13": {
+      "content": "    #Step 1.3: Define a method to perform a withdraw transaction",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "14": {
+      "content": "    def withdraw(self, amount, fee) :",
+      "commentList": [
+        "This method withdraws the specified amount and fee from this account and returns the new balance. The balance is not modified if either the withdraw amount or fee are invalid or the balance is insufficient. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class.",
+        "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, only the last two parameters must be passed to the method."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "15": {
+      "content": "        if (amount > 0 and fee >= 0 and amount+fee < self.__balance) :",
+      "commentList": [
+        "Before we withdraw the specified amount and fee from the account, we need to perform a test to check whether the withdraw amount and fee are valid and the balance is sufficient. ",
+        "The if statement tests whether the withdraw amount is greater than zero, fee is greater than or equal to zero, and the balance is sufficient. If the withdraw amount and fee are valid and the balance is sufficient, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped.",
+        "Note that the and operator yields the result True if both conditions are True."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "16": {
+      "content": "            self.__balance = self.__balance - amount - fee",
+      "commentList": [],
+      "indentLevel": 3,
+      "blank": false
+    },
+    "17": {
+      "content": "        return self.__balance",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "18": {
+      "content": "    #Step 1.4: Define a method to add interest to the account",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "19": {
+      "content": "    def add_interest(self) :",
+      "commentList": [
+        "This method adds interest to this account and returns the new balance. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class.",
+        "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "20": {
+      "content": "        self.__balance += (self.__balance * 0.035)",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "21": {
+      "content": "        return self.__balance",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "22": {
+      "content": "    #Step 1.5: Define the methods to get the  state of the account ",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "23": {
+      "content": "    def get_name(self) :",
+      "commentList": [
+        "This method returns the name of the account.Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class.",
+        "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "24": {
+      "content": "        return self.__acct_name",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "25": {
+      "content": "    def get_balance(self) :",
+      "commentList": [
+        "This method returns the current balance of the account. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class.",
+        "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "26": {
+      "content": "        return self.__balance",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "27": {
+      "content": "    def get_acct_number(self) :",
+      "commentList": [
+        "This method returns the account number of the account. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class.",
+        "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "28": {
+      "content": "        return self.__acct_number",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "29": {
+      "content": "#Step 2: Test the class",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "30": {
+      "content": "acct1 = Account1(\"Tina Murphy\", 72354, 25.59)",
+      "commentList": [
+        "We create an instance of the class Account1 to demonstrate the creation and use of Account1 instances",
+        "This statement creates a Account1 instance with the specified account name, account number, and account balance.",
+        "Note that we can create an Account1 object with the specified account name, account number, and account balance only when we have a __init__ method in the Account1 class that accepts these parameters in the order that they are specified."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "31": {
+      "content": "acct2 = Account1(\"Angelica Adams\", 69713, 500.00)",
+      "commentList": [
+        "This statement creates a Account1 instance with the specified account name, account number, and account balance.",
+        "Note that we can create an Account1 object with the specified account name, account number, and account balance only when we have a __init__ method in the Account1 class that accepts these parameters in the order that they are specified."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "32": {
+      "content": "acct3 = Account1(\"Edward Demsey\", 93757, 769.32)",
+      "commentList": [
+        "This statement creates a Account1 instance with the specified account name, account number, and account balance.",
+        "Note that we can create an Account1 object with the specified account name, account number, and account balance only when we have a __init__ method in the Account1 class that accepts these parameters in the order that they are specified."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "33": {
+      "content": "acct1.deposit(44.10)  ",
+      "commentList": [
+        "This statement invokes the method deposit of the acct1 to deposit $44.10. Note that acct1 is the implied subject (instance) passed to self. Also note that it's possible to ignore the return value from a method if the returned value is not going to be used. In this case, the deposit method will still execute normally, updating the account balance with the specified amount."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "34": {
+      "content": "adams_balance = acct2.deposit(75.25)",
+      "commentList": [
+        "This statement invokes the method deposit of the acct2 to deposit $75.25. Note that acct2 is the implied subject (instance) passed to self. Here, the value that is returned from the deposit method is assigned to variable adams_balance."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "35": {
+      "content": "print(\"{:s}'s balance after deposit: {:.2f}\".format(acct2.get_name(), adams_balance))",
+      "commentList": [
+        "This statement prints the balance of acct2 after the deposit transaction using the format function.<br>{:s} is replaced by the account name. We invoke the method get_name of acct2 to get the account's name. Note that acct2 is the implied subject (instance) passed to self.<br>{:.2f} prints the balance with two decimal digits.",
+        "Note that we do not necessarily have to store the returned value from the invoked method in a variable. We could use the returned values directly in the format method.",
+        "The format function returns the result of replacing each {\u2026} placeholder in the template string with its corresponding argument passed to the format function. Anything else, which is not contained in curly braces will be literally printed, i.e. without any changes.",
+        "The format specification inside a pair of curly braces starts with a : and followed by the text that specifies the data type. The data type s requires a string argument and the data type f requires a floating-point argument. An error will occur if the argument is not the expected data type."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "36": {
+      "content": "print(\"{:s}'s balance after deposit: {:.2f}\".format(acct2.get_name(), acct2.withdraw (480, 1.50)))",
+      "commentList": [
+        "This statement prints the balance of acct2 after the withdraw transaction using the format function.<br>{:s} is replaced by the account name. We invoke the method get_name of acct2 to get the account's name. Also, we withdraw the money from acct2 by invoking the method withdraw of acct2. Note that acct2 is the implied subject (instance) passed to self in both methods.<br>{:.2f} prints the balance with two decimal digits.",
+        "The format function returns the result of replacing each {\u2026} placeholder in the template string with its corresponding argument passed to the format function. Anything else, which is not contained in curly braces will be literally printed, i.e. without any changes.",
+        "The format specification inside a pair of curly braces starts with a : and followed by the text that specifies the data type. The data type s requires a string argument and the data type f requires a floating-point argument. An error will occur if the argument is not the expected data type."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "37": {
+      "content": "acct3.withdraw(-100.00, 1.50)  ",
+      "commentList": [
+        "This statement invokes the method withdraw of acct3 to withdraw $-100 with a fee of $1.50. Here, acct3 is the implied subject (instance) passed to self.<br>Note that it's possible to ignore the return value from a method if the returned value is not going to be used. In this case, the withdraw method will still execute normally. However, since the method withdraw prevents the withdrawal of a negative amount, this transaction is considered to be invalid and acct3's balance will not be updated."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "38": {
+      "content": "acct2.add_interest()",
+      "commentList": [
+        "This statement invokes the method add_interest of the acct2. Here, acct2 is the implied subject (instance) passed to self. Also note that it's possible to ignore the return value from a method if the returned value is not going to be used. In this case, the add_interest method will still execute normally, adding the interest earned to the balance."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "39": {
+      "content": "print(\"{:s}'s balance after adding interest: {:.2f}\".format(acct2.get_name(), acct2.get_balance()))",
+      "commentList": [
+        "This statement prints the balance of acct2 after the interest is added to the account.<br>{:s} is replaced by the account name. We invoke the method get_name of acct2 to get the account's name. We invoke the method get_balance to get the account's balance. Note that acct2 is the implied subject (instance) passed to self in both methods.<br>{:.2f} prints balance with two decimal digits.",
+        "Note that we do not necessarily have to store the returned value from the invoked methods in a variable. We could use the returned values directly in the format method.",
+        "The format function returns the result of replacing each {\u2026} placeholder in the template string with its corresponding argument passed to the format function. Anything else, which is not contained in curly braces will be literally printed, i.e. without any changes.",
+        "The format specification inside a pair of curly braces starts with a : and followed by the text that specifies the data type. The data type s requires a string argument and the data type f requires a floating-point argument. An error will occur if the argument is not the expected data type."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "28091c07-dc32-48e8-9926-26b722f56a44",
+      "line": {
+        "number": 0,
+        "content": "def init(self, owner, account, initial) :",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    },
+    {
+      "id": "2fbea9e5-b4ef-491e-aa8f-b299e36307e5",
+      "line": {
+        "number": 0,
+        "content": "def __init__(owner, account, initial) :",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    },
+    {
+      "id": "abb17e48-2abe-4805-9a74-449cfb604b19",
+      "line": {
+        "number": 0,
+        "content": "def __init__(self, owner, account) :",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    },
+    {
+      "id": "3559e6c8-6645-48a0-beae-aaca3e787372",
+      "line": {
+        "number": 0,
+        "content": "initial = balance",
+        "commentList": [
+          ""
+        ],
+        "indentLevel": 0
+      },
+      "helpList": [
+        ""
+      ]
+    }
+  ],
+  "programInput": "",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}

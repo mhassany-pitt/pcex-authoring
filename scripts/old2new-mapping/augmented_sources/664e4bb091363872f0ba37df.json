@@ -1,0 +1,530 @@
+{
+  "id": "664e4bb091363872f0ba37df",
+  "_id": "664e4bb091363872f0ba37df",
+  "name": "The Class for Representing a Loan (Case 1)",
+  "description": "Construct a class that represents a loan. This class should contain data representing the interest rate, loan amount, and the length of loan period (in years); all of which could be accessed or changed only through the getter and setter methods. An instance of the class should be created by specifying annual interest rate, length of loan period, and loan amount.\\nThe other method of the this class should calculate the amount of monthly payments on the loan.",
+  "language": "PYTHON",
+  "iso_language_code": "en",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "filename": "py_loan1.py",
+  "code": "#Step 1: Define the class\nclass Loan1 :\n    #Step 1.1: Initialize the loan with the specified values \n    def __init__(self, annual_interest_rate, number_of_years, loan_amount) :\n        self.__annual_interest_rate = annual_interest_rate\n        self.__number_of_years = number_of_years\n        self.__loan_amount = loan_amount\n    #Step 1.2: Define the method that calculates the amount of monthly payments on the loan\n    def get_monthly_payment(self) :\n        monthly_interest_rate = self.__annual_interest_rate / 12\n        monthly_payment = self.__loan_amount * monthly_interest_rate / (1 -\n                (1 / (1 + monthly_interest_rate) ** (self.__number_of_years * 12) ))\n        return monthly_payment    \n    #Step 1.3: Define the methods to get/set the properties of the loan\n    def get_annual_interest_rate(self) :\n        return self.__annual_interest_rate\n    def set_annual_interest_rate(self, annual_interest_rate) :\n        self.__annual_interest_rate = annual_interest_rate\n    def get_number_of_years(self) :\n        return self.__number_of_years\n    def set_number_of_years(self, number_of_years) :\n        self.__number_of_years = number_of_years\n    def get_loan_amount(self) :\n        return self.__loan_amount\n    def set_loan_amount(self, loan_amount) :\n        self.__loan_amount = loan_amount\n#Step 2: Test the class\nannual_interest_rate = float(input(\"Enter the annual interest rate: \"))\nnumber_of_years = int(input(\"Enter the number of years for the loan period: \"))\nloan_amount = (float(input(\"Enter the loan amount: \")))\nloan1 = Loan1(annual_interest_rate, number_of_years, loan_amount)\nprint(\"The monthly payment for the loan is: {:.2f} \".format(loan1.get_monthly_payment()))",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Define the class",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "2": {
+      "content": "class Loan1 :",
+      "commentList": [
+        "You are declaring a new class named Loan1 so you can group the loan\u2019s data and its related methods together under one type.",
+        "Syntax breakdown: the keyword class starts the declaration, Loan1 is the class identifier, and the trailing colon (:) is required to begin the indented class body. Parentheses are optional here (e.g. class Loan1: or class Loan1(object):).",
+        "If you forget the colon or fail to indent the following lines, Python will raise a SyntaxError or place the methods outside the class \u2014 so you must put the methods and attributes on indented lines beneath this header.",
+        "Naming notes and pitfalls: Loan1 is a valid identifier, but you should avoid names that start with a digit or match Python keywords. By convention use CapWords (e.g. Loan) and pick a clear, descriptive name so other readers understand the purpose immediately.",
+        "A common misconception: declaring the class doesn\u2019t run the methods or create an instance. You still need to call Loan1(...) to make an object. Also note that in this program the instance attributes use double underscores, which causes Python to mangle the names; for most cases a single leading underscore is simpler and clearer.",
+        "Best practices: give the class a short docstring under this line to describe its purpose, consider adding type hints to the constructor, and follow PEP8 style (no extra space before the colon and use a clear class name)."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "3": {
+      "content": "    #Step 1.1: Initialize the loan with the specified values ",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "4": {
+      "content": "    def __init__(self, annual_interest_rate, number_of_years, loan_amount) :",
+      "commentList": [
+        "Purpose: This line defines the constructor method for the Loan1 class. When you create a new Loan1(annual_interest_rate, number_of_years, loan_amount) object, Python runs this method to set up that instance.",
+        "Syntax breakdown: 'def' starts a function definition, '__init__' is the special name Python uses for constructors, the parentheses list parameters (the first must be 'self' to refer to the instance), and the trailing ':' begins the indented body where you put initialization code.",
+        "Role of parameters: 'self' is the instance you are initializing; 'annual_interest_rate', 'number_of_years', and 'loan_amount' are the values you must pass in so the constructor can store them on the object.",
+        "Common mistakes and errors: if you forget 'self' or put it later, Python will raise an error. If you call Loan1 with the wrong number or wrong order of arguments, you'll get a TypeError or incorrect setup. Also, passing the interest rate as '5' instead of '0.05' (percent vs decimal) will produce wrong monthly payments.",
+        "Practical expectations: annual_interest_rate should be a decimal (e.g., 0.05 for 5%), number_of_years should be an integer, and loan_amount should be a numeric value. Be clear about these units when you create the object.",
+        "Best practices: document or validate the expected input units (especially the interest rate), keep parameter names clear, and consider checking values (e.g., non-negative amounts and years) either here or right after creation so you catch bad input early."
+      ],
+      "indentLevel": 1,
+      "blank": true
+    },
+    "5": {
+      "content": "        self.__annual_interest_rate = annual_interest_rate",
+      "commentList": [
+        "Purpose: this line stores the annual interest rate you pass into the constructor on the specific Loan1 object so the rest of the methods (like monthly payment) can use it.",
+        "Syntax and meaning: self refers to the current instance, and the assignment self.__annual_interest_rate = annual_interest_rate creates an instance attribute named __annual_interest_rate and sets it to the value of the parameter annual_interest_rate you provided when creating the object.",
+        "Name-mangling and access: the double leading underscores trigger Python name-mangling (the attribute is stored internally as _Loan1__annual_interest_rate). This makes accidental external access harder \u2014 you should use the provided getter/setter methods instead of trying to read loan1.__annual_interest_rate directly (that would raise an AttributeError).",
+        "Common mistakes to watch for: you must be careful about the units you pass in. The class expects an interest rate in the same numeric form used in the formula (e.g., 0.05 for 5%). If you enter 5 thinking it means 5%, your monthly calculation will be wrong. Also ensure you pass a numeric type (float), not a string.",
+        "Best practices: validate and document the expected format (percent vs decimal) and value range (non-negative) either in __init__ or in the setter. In Python, consider using properties (with @property) instead of explicit getters/setters, and avoid unnecessary double-underscore attributes unless you need name-mangling."
+      ],
+      "indentLevel": 2,
+      "blank": true
+    },
+    "6": {
+      "content": "        self.__number_of_years = number_of_years",
+      "commentList": [
+        "Purpose: this line saves the loan length you were given (number_of_years) on the specific Loan1 object so other methods (like get_monthly_payment) and your getters/setters can use it later. Without this assignment the instance would not remember how many years the loan lasts.",
+        "Syntax and meaning: 'self' refers to the current object, the left side 'self.__number_of_years' is the instance attribute you are creating, and the right side 'number_of_years' is the parameter passed into __init__. The '=' stores the parameter value on the object.",
+        "Common mistakes to watch for: if you forget 'self.' you would only create a local variable named number_of_years inside __init__, and the object would not retain the value. Also be careful if you expect months but pass years (unit mismatch), or pass a non-numeric string \u2014 that will cause errors later when you do arithmetic.",
+        "Edge-case error to note: if you set number_of_years to 0 you can cause a division-by-zero error later when computing monthly payments, so you should ensure this value is positive before storing it.",
+        "Best practices: you should validate and possibly convert the input (e.g., ensure it's a positive integer or float) before assigning it, document that the unit is years, and consider using property decorators or a single underscore for a 'protected' attribute if you don't need strict name-mangling. Remember double underscores trigger Python's name-mangling (internally stored like _Loan1__number_of_years), so it's not truly private but harder to access accidentally."
+      ],
+      "indentLevel": 2,
+      "blank": true
+    },
+    "7": {
+      "content": "        self.__loan_amount = loan_amount",
+      "commentList": [
+        "Purpose: This line stores the loan_amount you passed into the constructor on the new object so your Loan1 instance remembers the loan amount for later calculations (for example, get_monthly_payment uses this value).",
+        "Syntax/semantics: self.__loan_amount = loan_amount assigns the constructor parameter loan_amount to an instance attribute named __loan_amount. The name is attached to the specific object referenced by self, so each instance keeps its own value.",
+        "Potential errors & misconceptions: If you omit self (writing __loan_amount = loan_amount) you create a local variable instead of an attribute and later access to self.__loan_amount will raise AttributeError. If you mistype the attribute name here or in your getters/setters (different underscores or spelling) you will create a separate attribute and cause bugs. Also be aware that double leading underscores trigger name-mangling (the attribute becomes something like _Loan1__loan_amount), which can confuse you when debugging or accessing it from outside the class.",
+        "Best practices: Validate the value you assign (ensure it's numeric and non-negative) before storing it. Prefer consistent naming \u2014 many developers use a single leading underscore (_loan_amount) for 'private' attributes unless you specifically need name-mangling. You can also add type hints (loan_amount: float) or use property decorators to control access and validation in one place."
+      ],
+      "indentLevel": 2,
+      "blank": true
+    },
+    "8": {
+      "content": "    #Step 1.2: Define the method that calculates the amount of monthly payments on the loan",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "9": {
+      "content": "    def get_monthly_payment(self) :",
+      "commentList": [
+        "Purpose: This line starts the method that calculates the monthly payment for a loan \u2014 you call loan_instance.get_monthly_payment() to run the calculation that follows in the method body.",
+        "Syntax breakdown: def declares a function, get_monthly_payment is the method name, the parentheses contain self which is required so you can access the instance's attributes, and the colon begins the indented block that forms the method body.",
+        "Semantics: Because you included self as the first parameter, this becomes an instance method tied to each Loan1 object; when you call it, the method will use the object's stored values (like self.__annual_interest_rate and self.__loan_amount) to compute and return the monthly payment.",
+        "Common errors and misconceptions: If you forget the self parameter you'll get a TypeError when calling the method; wrong indentation will make it a standalone function instead of a class method; also be careful about the units \u2014 the method assumes the annual interest rate is a decimal (e.g., 0.05), not a percent like 5, so if you pass 5 the result will be incorrect.",
+        "Best practices: You should add a short docstring on this line (or first line of the method) saying what inputs/units are expected and what it returns, consider adding a type hint (-> float) and input validation inside the method, and keep the method free of input/output so it only performs the calculation."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "10": {
+      "content": "        monthly_interest_rate = self.__annual_interest_rate / 12",
+      "commentList": [
+        "Purpose: This line computes the monthly interest rate from the stored annual interest rate so you can use it in the monthly-payment formula.",
+        "Syntax and semantics: It assigns to the variable monthly_interest_rate the result of dividing self.__annual_interest_rate by 12. The self. part means you read the instance's attribute; the expression produces a float in Python 3.",
+        "About the private attribute: __annual_interest_rate is defined with double underscores to keep it class-private. You access it here with self.__annual_interest_rate (inside the class) to get the value you stored in the constructor or via a setter.",
+        "Common misconception / likely error: If the annual interest rate is entered as a percent (for example 7.5 for 7.5%), this line alone will treat it as 7.5 (not 0.075). You usually need to divide the annual rate by 100 as well (monthly_interest_rate = self.__annual_interest_rate / 100 / 12) to get the correct decimal monthly rate.",
+        "Edge case to watch: If the interest rate is zero, monthly_interest_rate becomes 0 and the loan formula that follows will divide by zero. You should handle the zero-rate case separately (monthly payment = loan_amount / (years * 12)). Also check for negative rates and validate input.",
+        "Best practices: Convert and validate the annual rate early (e.g., store it as a decimal like 0.075), use a clear variable name (annual_rate_decimal), and add comments or input checks so you and others don't confuse percent vs decimal."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "11": {
+      "content": "        monthly_payment = self.__loan_amount * monthly_interest_rate / (1 -",
+      "commentList": [
+        "Purpose: this line starts the calculation of the monthly payment amount using the standard loan amortization formula. It sets monthly_payment = principal * monthly_rate / (1 - ...), where principal is self.__loan_amount and monthly_rate is the value you computed on the previous line.",
+        "Syntax and grouping: you see multiplication and division operators. The division has a parenthesized denominator that begins on this line with (1 - ...). Because the denominator is wrapped in parentheses, you can safely continue the expression on the next line. The complete formula implemented is: P * r / (1 - (1 + r)^(-n)).",
+        "How the parts map to the loan terms: P is self.__loan_amount, r is monthly_interest_rate, and n is the total number of monthly payments (self.__number_of_years * 12) which appears in the continued expression. The (1 / (1 + r) ** n) term on the next line equals (1 + r)^(-n).",
+        "Common errors and misconceptions: make sure the annual interest rate is given as a decimal (for example 0.05 for 5%). If you pass 5 instead of 0.05, monthly_interest_rate will be wrong. Also, if the interest rate is 0, the denominator becomes 0 and you'll get a division-by-zero error \u2014 handle the zero-rate case separately by returning loan_amount / (years * 12).",
+        "Best practices: for clarity, compute intermediate names like P, r, and n first (e.g., n = self.__number_of_years * 12), and then compute denominator = 1 - (1 + r) ** -n before computing monthly_payment. Validate inputs (nonnegative years and amount, and a correctly scaled interest rate). That makes the code easier to read and less error-prone.",
+        "Line-continuation note: Python allows the expression to continue onto the next line because you opened a parenthesis here. If you remove that parenthesis you would need an explicit backslash or a different layout to avoid a syntax error."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "12": {
+      "content": "                (1 / (1 + monthly_interest_rate) ** (self.__number_of_years * 12) ))",
+      "commentList": [],
+      "indentLevel": 4,
+      "blank": false
+    },
+    "13": {
+      "content": "        return monthly_payment    ",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "14": {
+      "content": "    #Step 1.3: Define the methods to get/set the properties of the loan",
+      "commentList": [],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "15": {
+      "content": "    def get_annual_interest_rate(self) :",
+      "commentList": [
+        "Purpose: this line defines a getter method named get_annual_interest_rate so you can read the loan's annual interest rate from outside the class without accessing the private attribute directly.",
+        "Syntax breakdown: 'def' starts a function definition, 'get_annual_interest_rate' is the method name, '(self)' means the method receives the instance so you can access instance data, and the trailing ':' begins the method body (the next indented lines are the method body).",
+        "Relation to the private attribute: this getter is paired with the private attribute self.__annual_interest_rate (set in __init__). Because that attribute uses double underscores (name mangling), the getter gives you a simple, stable way to obtain the value.",
+        "Common errors and misconceptions: if you omit 'self' you will get a runtime error when calling the method; wrong indentation or a missing ':' causes a SyntaxError; double underscores do not make the attribute truly inaccessible \u2014 they only mangle the name, so this getter is about controlled access, not absolute privacy.",
+        "Best practices: consider using a Pythonic @property instead of an explicit get_... method so you can access the value as loan.annual_interest_rate; add a short docstring and (optionally) a return type hint like '-> float' for clarity.",
+        "Usage note: be sure you store the annual interest rate in a consistent format (usually as a decimal, e.g. 0.05 for 5%). If you use a percentage (5), the rest of the loan calculations that expect a decimal will be incorrect."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "16": {
+      "content": "        return self.__annual_interest_rate",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "17": {
+      "content": "    def set_annual_interest_rate(self, annual_interest_rate) :",
+      "commentList": [
+        "Purpose: This line defines a setter method so you can change an instance's annual interest rate after the Loan1 object has been created. Calling loan.set_annual_interest_rate(x) will let you update the stored rate (the actual assignment happens on the next line).",
+        "Syntax breakdown: def starts a function definition, set_annual_interest_rate is the method name, (self, annual_interest_rate) lists parameters where self is the instance you are working on and annual_interest_rate is the new value you pass in, and the trailing : begins the indented method body that follows.",
+        "Role of self: you must include self as the first parameter so you can access and modify the instance attribute (self.__annual_interest_rate). When you call the method on an object, Python automatically supplies self for you.",
+        "Type and units warning: you should pass a numeric value (typically a float). Be careful whether you pass a decimal (e.g., 0.05 for 5%) or a percent (e.g., 5). The rest of the code divides the annual rate by 12 directly, so if you pass 5 (percent) you'll get a wrong result. Consider converting percent-to-decimal inside this setter or clearly document the expected unit.",
+        "Validation and errors: you should validate the input here (for example ensure it's a number and not negative) and raise a clear error (ValueError) if it's invalid. Without validation, invalid values can lead to incorrect monthly payments or later runtime errors.",
+        "Privacy and naming: the class stores the rate in self.__annual_interest_rate (double underscore). That makes it intended as private, so you should use this setter rather than accessing the mangled attribute directly.",
+        "Best practice: in modern Python, consider using a @property with a setter instead of explicit get_/set_ methods to make the API more Pythonic and to centralize validation and conversion logic in one place.",
+        "Common mistakes: forgetting to include self causes a TypeError when the method is called; missing the colon or wrong indentation will cause a SyntaxError; and confusing percent vs decimal is a frequent logical error\u2014always check and handle units here."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "18": {
+      "content": "        self.__annual_interest_rate = annual_interest_rate",
+      "commentList": [
+        "Purpose: This line stores the value you passed into set_annual_interest_rate into the loan object's internal annual interest rate so you can change the rate through the setter instead of touching the attribute directly.",
+        "Syntax and meaning: self.__annual_interest_rate refers to the instance's attribute (the leading double underscore makes it an internal/private name in Python), = is the assignment operator, and annual_interest_rate is the parameter passed into the method \u2014 this line simply assigns that parameter to the object's attribute.",
+        "Common errors and misconceptions: If you forget to write self. you would create a local variable named annual_interest_rate and not update the object's attribute; also be careful about units \u2014 the program expects a decimal rate (for example 0.05 for 5%), not the percent number 5, otherwise monthly payments will be calculated incorrectly; passing non-numeric or negative values will also cause wrong results or runtime errors.",
+        "Best practices: Before assigning, you should validate the input (check it is numeric and non-negative) and consider automatically converting a percent input to a decimal (for example, if the value is greater than 1, divide by 100). For more idiomatic Python, you can use @property and @<name>.setter instead of explicit get_/set_ methods and add a short comment or docstring to say what unit (decimal vs percent) you expect."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "19": {
+      "content": "    def get_number_of_years(self) :",
+      "commentList": [
+        "Purpose: This line defines a getter method named get_number_of_years so you can read the loan period stored in the private attribute. It implements controlled access (encapsulation) to the core data the class manages.",
+        "Syntax breakdown: def declares a function, get_number_of_years is the method name, (self) is the required parameter that gives the method access to the instance, and the trailing colon starts the indented block that contains the method body (the return is on the next line).",
+        "How it works: When you call loan.get_number_of_years() you invoke this method on that instance; inside the method self refers to that specific loan object and lets the method return the stored value (see Line 20).",
+        "Common errors and misconceptions: If you forget to include self in the parameter list you'll get a TypeError when calling the method. Another common confusion is thinking you can access this method like an attribute (without parentheses) unless you use @property; you must call it with parentheses as written.",
+        "Private attribute note: The class uses a double-underscore name (self.__number_of_years) for privacy; that does not make the value unreachable \u2014 this getter is the intended public way for you to obtain it.",
+        "Best practices: Prefer using the @property decorator to provide attribute-like access (loan.number_of_years) for cleaner code. Keep getters simple (no heavy computation) and put validation in setters. Add a short docstring to describe what the method returns so you and others understand its purpose."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "20": {
+      "content": "        return self.__number_of_years",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "21": {
+      "content": "    def set_number_of_years(self, number_of_years) :",
+      "commentList": [
+        "This line declares the setter method set_number_of_years(self, number_of_years): it defines where you will provide a new loan period so the object can update its stored number of years.",
+        "Syntax and meaning: def starts a method definition, set_number_of_years is the method name, self is the instance reference, number_of_years is the parameter you pass in, and the trailing colon begins the indented method body where the actual assignment happens.",
+        "Common errors and misconceptions: if you forget to use self when assigning (e.g., write number_of_years = number_of_years) you will only create a local variable and not change the object's state; also watch for passing non-integers or negative values; finally remember the attribute uses double underscores so direct external access may be name-mangled.",
+        "Best practices for you: validate the input inside this setter (convert to int if appropriate and check it is positive), raise a ValueError for invalid inputs, and consider using @property/@<name>.setter to provide a cleaner, more Pythonic interface.",
+        "Note about privacy: because the class stores the value as self.__number_of_years (double underscore), you must assign to that exact attribute inside the setter (as the next line does) to update the internal value."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "22": {
+      "content": "        self.__number_of_years = number_of_years",
+      "commentList": [
+        "Purpose: This line stores the new loan period value on the specific loan object so that other methods (like get_number_of_years and get_monthly_payment) can use the updated number of years.",
+        "Syntax and meaning: 'self.__number_of_years' refers to the instance's attribute (the double underscore starts name-mangling to make it harder to access from outside), and '= number_of_years' assigns the method parameter's value to that attribute. 'self' means you are changing the value on this particular object.",
+        "Common mistakes and errors: If you forget 'self.' you'd create a local variable and the object's value wouldn't change. Also, assigning an invalid value (like 0, a negative number, or a non-numeric string) can later cause errors \u2014 for example a zero or negative loan period can lead to a division-by-zero or meaningless payment calculation in get_monthly_payment.",
+        "Best practices: You should validate the input before assigning (e.g., ensure number_of_years is a positive integer and convert types as needed), and consider raising a ValueError for invalid values. Also think whether you need double-underscore privacy; a single underscore is often enough in simple classes."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "23": {
+      "content": "    def get_loan_amount(self) :",
+      "commentList": [
+        "Purpose: This line declares a getter method named get_loan_amount so you can read the loan amount stored on an instance without accessing the internal variable directly (self.__loan_amount).",
+        "Syntax and meaning: def introduces a function, get_loan_amount is the method name, (self) means the method operates on the instance so you can use self.__loan_amount inside it, and the trailing : starts the method body (which must be indented).",
+        "Common mistakes to watch for: if you forget the self parameter you'll get errors when you call the method; forgetting the colon or wrong indentation will cause a SyntaxError; and be careful not to assume this line returns a value by itself \u2014 the return statement is on the next line.",
+        "Name\u2011mangling note you should know: the attribute uses double underscores (self.__loan_amount) which Python mangles; that keeps it from being accidentally accessed from outside, so calling obj.get_loan_amount() is the correct way to retrieve it.",
+        "Best practices: you can add a short docstring or a type hint (e.g., def get_loan_amount(self) -> float:) to make the method clearer to users and tools. In modern Python you might prefer using @property to expose the value more naturally, but this explicit getter is fine for teaching encapsulation."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "24": {
+      "content": "        return self.__loan_amount",
+      "commentList": [],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "25": {
+      "content": "    def set_loan_amount(self, loan_amount) :",
+      "commentList": [
+        "You are defining a setter method called set_loan_amount so you can change an instance's loan amount through a controlled interface rather than accessing the attribute directly (this supports encapsulation).",
+        "Syntax breakdown: 'def' declares a function, 'set_loan_amount' is the method name, 'self' refers to the object instance you're modifying, 'loan_amount' is the input parameter you supply, and the trailing ':' starts the indented method body where the assignment occurs.",
+        "Common mistakes to watch for: if you omit 'self' you'll get a TypeError when calling the method; using the same name for the parameter and the attribute is okay because you assign to self.__loan_amount in the body; note that attributes with '__' are name-mangled (not truly private), which can confuse beginners.",
+        "Best practices: validate and convert the input inside this setter (for example ensure loan_amount is a non-negative number and cast to float, and raise ValueError on bad input). Also consider using Python's @property/@setter for a more idiomatic and user-friendly interface."
+      ],
+      "indentLevel": 1,
+      "blank": false
+    },
+    "26": {
+      "content": "        self.__loan_amount = loan_amount",
+      "commentList": [
+        "Purpose: This line updates the loan object's stored loan amount so that the rest of the object (for example get_monthly_payment) uses the new value you provided through the setter.",
+        "Syntax/semantics: 'self' refers to the current instance, '__loan_amount' is the instance attribute (the double underscore makes it name-mangled/treated as private), '=' assigns the value from the setter parameter 'loan_amount' to that attribute.",
+        "Potential errors and misconceptions: If you forget 'self.' you would create a local variable instead of changing the instance attribute. Also, this line does no validation \u2014 if you pass a string or a negative number here, the assignment succeeds but later calculations may fail or give wrong results.",
+        "Best practices: Before assigning, you should validate or convert the input (e.g., ensure it's a non-negative float). Consider using Python properties or a single leading underscore for simpler encapsulation. Keep the setter focused on safe assignment and clear error messages if input is invalid."
+      ],
+      "indentLevel": 2,
+      "blank": false
+    },
+    "27": {
+      "content": "#Step 2: Test the class",
+      "commentList": [],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "28": {
+      "content": "annual_interest_rate = float(input(\"Enter the annual interest rate: \"))",
+      "commentList": [
+        "Purpose: this line asks the user for the annual interest rate, converts the text they type into a floating\u2011point number, and stores it in the variable annual_interest_rate so you can use it later to create the Loan1 object and compute payments.",
+        "Syntax and meaning: input(\"...\") prints the prompt and returns a string; float(...) converts that string to a number with possible decimals; the = assigns that numeric value to the name annual_interest_rate. The nested call float(input(...)) means input runs first, then float converts the result.",
+        "Common errors and misconceptions: if the user types non-numeric text (or leaves it blank) float(...) raises a ValueError and your program will crash. Also be careful about units \u2014 this code expects the rate as a decimal (for example 0.05 for 5%). If you or your users enter 5 thinking it means 5%, the calculation will be wrong.",
+        "Best practices: make the prompt explicit (for example: \"Enter the annual interest rate (0.05 for 5%): \"), validate the input with try/except to catch ValueError, and check the value is within a sensible range (e.g., non-negative). If you prefer percent input, convert it by dividing by 100 before using it."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "29": {
+      "content": "number_of_years = int(input(\"Enter the number of years for the loan period: \"))",
+      "commentList": [
+        "Purpose: This line prompts the user to enter the loan period in years, converts that user input into an integer, and stores it in the variable number_of_years so the program can use it when computing monthly payments.",
+        "Syntax and semantics: input(\"...\") displays the prompt and returns a string; int(...) tries to convert that string into an integer; the = operator assigns the resulting integer to the name number_of_years.",
+        "Common errors and misconceptions: if the user types a non-integer (e.g., 'five' or '3.5') the int(...) conversion will raise a ValueError and the program will crash. int() does not round decimal text \u2014 a string like '3.5' is invalid for int(). Also remember input() returns a string in Python 3.",
+        "Best practices: validate the input. Wrap the conversion in a try/except to catch ValueError, check that the resulting integer is positive (number_of_years > 0), and re-prompt until the user supplies a valid value.",
+        "Alternative choices: if you want to allow fractional years (e.g., 1.5 years), parse the input with float(...) instead and handle decimals in the payment formula; if you only want whole years but want to accept '3.0', parse to float then explicitly convert or validate before using int().",
+        "Small tip: trailing or leading spaces are fine (int(' 4 ') works), but empty input will raise ValueError, so always handle or guard against invalid input before proceeding."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "30": {
+      "content": "loan_amount = (float(input(\"Enter the loan amount: \")))",
+      "commentList": [
+        "You prompt the user to enter the loan amount, convert the typed text into a floating-point number with float(...), and store that numeric value in the variable loan_amount for later use when creating the Loan1 object.",
+        "You should read this as three steps: input(\"...\") displays the message and returns a string, float(...) converts that string into a float, and the = assignment saves the result in loan_amount. The outer parentheses around float(...) are redundant and do not change the behavior.",
+        "You can run into errors if the user types non-numeric characters: float(...) will raise a ValueError if the input contains letters, currency symbols like '$', or uses commas as thousands/decimal separators. Also remember that float uses binary floating-point, so it can introduce small rounding differences for money.",
+        "You should validate the input: use a try/except loop to re-prompt until the user provides a valid, positive number; strip or remove common characters like '$' and ',' before conversion; and check loan_amount > 0 so you don't create an invalid loan.",
+        "You should be consistent about formats across the program: document what the user should enter (e.g., plain numbers like 10000.00) and consider using the Decimal type for precise currency calculations if you need exact money handling."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "31": {
+      "content": "loan1 = Loan1(annual_interest_rate, number_of_years, loan_amount)",
+      "commentList": [
+        "Purpose: this line creates a new Loan1 object using the values you read from input and assigns that object to the variable loan1 so you can call its methods (like get_monthly_payment) later.",
+        "Syntax and semantics: the = stores the result of calling Loan1(annual_interest_rate, number_of_years, loan_amount) into loan1. Calling Loan1(...) invokes the class constructor (__init__) with the three arguments in the given order (annual_interest_rate first, then number_of_years, then loan_amount).",
+        "Common mistakes: if you pass the arguments in the wrong order or forget one, Python will raise a TypeError. If the class name Loan1 is misspelled or not defined yet, you'll get a NameError. Also note you don't access the private attributes (the double-underscore names) directly here \u2014 the constructor sets them for you.",
+        "Data-type and semantic gotcha: the code later divides annual_interest_rate by 12 to get a monthly rate. If you entered a percent like 5 (for 5%), that division is wrong \u2014 you must convert percent to a decimal first (e.g., 5 -> 0.05, or divide by 100). Otherwise your monthly payment will be far too large.",
+        "Best practices: before creating the object, validate and convert inputs (ensure numbers are non-negative, convert percent to decimal if needed). Consider wrapping input conversion in try/except, use clear variable names, and keep money calculations precise (e.g., use rounding or the decimal module when necessary)."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    },
+    "32": {
+      "content": "print(\"The monthly payment for the loan is: {:.2f} \".format(loan1.get_monthly_payment()))",
+      "commentList": [
+        "Purpose: This line prints the monthly payment to the screen, calling loan1.get_monthly_payment() to get the numeric result and showing it formatted to two decimal places.",
+        "Syntax breakdown: the string uses a replacement field {:.2f} which means 'format the next argument as a floating\u2011point number with 2 digits after the decimal point'. .format(loan1.get_monthly_payment()) supplies that value. loan1.get_monthly_payment() is a method call \u2014 the parentheses execute the method and return the payment amount.",
+        "What you must ensure about the input: annual_interest_rate must be a decimal (for example 0.05 for 5%) if you want correct results. If you enter 5 instead of 0.05, the monthly payment will be wrong. Also, if the user input failed earlier or loan1 was not created, this line will raise an error because loan1 would not exist.",
+        "Edge case to watch: if the annual interest rate is exactly 0, the formula used in get_monthly_payment will lead to a division by zero. You should handle the zero\u2011interest case separately (monthly payment = loan_amount / (number_of_years * 12)).",
+        "Common misconception: formatting here only changes how the number looks, not its internal value. If you need the rounded value for further calculations, assign and round it before printing.",
+        "Best practices: (1) validate inputs (check for nonnumeric or negative values). (2) Convert percentages to decimals explicitly (e.g., divide by 100 if the user enters 5 for 5%). (3) Consider storing the result in a variable first (payment = loan1.get_monthly_payment()) so you can reuse or test it. (4) In modern Python you can use an f-string for clarity: print(f\"The monthly payment for the loan is: {payment:.2f}\").",
+        "Minor note: the printed string currently has a trailing space before the closing quote; it's harmless but unnecessary \u2014 you can remove it for a cleaner output."
+      ],
+      "indentLevel": 0,
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "id": "0b1df4b8-5a2c-498a-9ced-9df660a455cb",
+      "line": {
+        "number": 0,
+        "content": "def __init__(annual_interest_rate, number_of_years, loan_amount) :",
+        "commentList": [
+          "You might pick this because you think __init__ only needs the values you want to store and that the object reference is implicit. If you use this line, Python will still pass the new instance automatically when you create an object, so the parameter count will not match and you'll get a TypeError when you try to instantiate the class. Even if the interpreter didn't raise that error, you would not have a name to refer to the instance inside the method, so you couldn't assign attributes like the loan amount or interest rate. In short, this line removes the required handle to the instance (self), causing an immediate runtime error and preventing the initialization code that follows from working. The missing element here is the explicit instance parameter that methods need to access or set attributes on the object."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might pick this because you think __init__ only needs the values you want to store and that the object reference is implicit. If you use this line, Python will still pass the new instance automatically when you create an object, so the parameter count will not match and you'll get a TypeError when you try to instantiate the class. Even if the interpreter didn't raise that error, you would not have a name to refer to the instance inside the method, so you couldn't assign attributes like the loan amount or interest rate. In short, this line removes the required handle to the instance (self), causing an immediate runtime error and preventing the initialization code that follows from working. The missing element here is the explicit instance parameter that methods need to access or set attributes on the object."
+      ]
+    },
+    {
+      "id": "3273aa8d-0137-4413-a455-8fa6609cdc28",
+      "line": {
+        "number": 0,
+        "content": "def __init__(self, loan_amount, annual_interest_rate, number_of_years) :",
+        "commentList": [
+          "You might choose this because the order of parameters seems arbitrary or you prefer putting the loan amount first. However, when callers create a Loan1 object using positional arguments (as the test code does), the values you pass are assigned by position, not by parameter name. With this signature, the first value passed will be treated as the loan amount, the second as the interest rate, and the third as years \u2014 which is the wrong mapping for the way the class is used. That will make the stored fields hold swapped values, so monthly payment calculations will produce incorrect results (or look nonsensical). This line changes the expected positional ordering, leading to wrong assignments rather than a syntax error; the program will run but give incorrect outputs. The mistake is reordering parameters without ensuring callers supply matching positional arguments or using keyword arguments consistently."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might choose this because the order of parameters seems arbitrary or you prefer putting the loan amount first. However, when callers create a Loan1 object using positional arguments (as the test code does), the values you pass are assigned by position, not by parameter name. With this signature, the first value passed will be treated as the loan amount, the second as the interest rate, and the third as years \u2014 which is the wrong mapping for the way the class is used. That will make the stored fields hold swapped values, so monthly payment calculations will produce incorrect results (or look nonsensical). This line changes the expected positional ordering, leading to wrong assignments rather than a syntax error; the program will run but give incorrect outputs. The mistake is reordering parameters without ensuring callers supply matching positional arguments or using keyword arguments consistently."
+      ]
+    },
+    {
+      "id": "ccc2d579-3394-4607-95ea-39d8623cb9b8",
+      "line": {
+        "number": 0,
+        "content": "def __init__(self, annual_interest_rate=0.0, number_of_years=1, loan_amount=0.0) :",
+        "commentList": [
+          "You might think giving defaults makes the class easier to use if someone forgets to pass a value. But these defaults violate the requirement that instances be created by specifying the interest, years, and amount explicitly. Worse, using a default annual interest rate of 0.0 can cause the monthly-payment formula later to hit a division-by-zero situation or produce meaningless output, masking problems instead of surfacing them. Also, allowing defaults can hide bugs in code that accidentally constructs a loan without the intended values. This line changes the contract of object creation and introduces subtle runtime problems that are hard to detect, so it's not suitable even though it's syntactically valid."
+        ],
+        "indentLevel": 1
+      },
+      "helpList": [
+        "You might think giving defaults makes the class easier to use if someone forgets to pass a value. But these defaults violate the requirement that instances be created by specifying the interest, years, and amount explicitly. Worse, using a default annual interest rate of 0.0 can cause the monthly-payment formula later to hit a division-by-zero situation or produce meaningless output, masking problems instead of surfacing them. Also, allowing defaults can hide bugs in code that accidentally constructs a loan without the intended values. This line changes the contract of object creation and introduces subtle runtime problems that are hard to detect, so it's not suitable even though it's syntactically valid."
+      ]
+    },
+    {
+      "id": "dc577956-8ad0-4e1e-80fc-6eac94980ff2",
+      "line": {
+        "number": 0,
+        "content": "self.annual_interest_rate = annual_interest_rate",
+        "commentList": [
+          "You might write this because you think a simple attribute name is fine and that the program will still work. The line you chose creates a public attribute named annual_interest_rate instead of the private attribute the rest of the class expects. As a result, when other methods try to read the private version of the interest rate, that private attribute is still unset and the program will crash with an attribute error at runtime. In other words, the value you store goes to the wrong place: it exists on the object, but the rest of the class doesn't look there. This makes the program fail when it later tries to use the loan's interest rate. The problem here is not the value itself but the attribute name you used \u2014 you exposed the data in a different attribute and left the expected (private) attribute uninitialized."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might write this because you think a simple attribute name is fine and that the program will still work. The line you chose creates a public attribute named annual_interest_rate instead of the private attribute the rest of the class expects. As a result, when other methods try to read the private version of the interest rate, that private attribute is still unset and the program will crash with an attribute error at runtime. In other words, the value you store goes to the wrong place: it exists on the object, but the rest of the class doesn't look there. This makes the program fail when it later tries to use the loan's interest rate. The problem here is not the value itself but the attribute name you used \u2014 you exposed the data in a different attribute and left the expected (private) attribute uninitialized."
+      ]
+    },
+    {
+      "id": "50cdaf65-11c3-49b5-b5e0-147e3509e965",
+      "line": {
+        "number": 0,
+        "content": "self.__annual_interest_rate = annual_interest_rate / 12",
+        "commentList": [
+          "You might pick this because you think it makes sense to store the monthly interest rate right away so later computations are simpler. The line you chose divides the incoming annual rate by 12 and stores that result. However, the class later divides the stored value by 12 again when calculating monthly payments. That means the stored value will be divided twice, producing an interest rate far too small and resulting in an incorrect monthly payment. The mistake is storing a transformed value when the rest of the class expects the original annual rate. Instead of fixing the later calculation, this change misaligns the representation and yields wrong numeric results (but it won't raise an immediate error)."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might pick this because you think it makes sense to store the monthly interest rate right away so later computations are simpler. The line you chose divides the incoming annual rate by 12 and stores that result. However, the class later divides the stored value by 12 again when calculating monthly payments. That means the stored value will be divided twice, producing an interest rate far too small and resulting in an incorrect monthly payment. The mistake is storing a transformed value when the rest of the class expects the original annual rate. Instead of fixing the later calculation, this change misaligns the representation and yields wrong numeric results (but it won't raise an immediate error)."
+      ]
+    },
+    {
+      "id": "b42314d7-424c-423e-9394-f0a31f286c87",
+      "line": {
+        "number": 0,
+        "content": "self.__annual_interest_rate == annual_interest_rate",
+        "commentList": [
+          "You might mistakenly use the equality operator because you confuse it with assignment or think you are 'setting' the value. This line only compares the private attribute with the parameter and evaluates to True or False, then discards that result. It does not store the interest rate anywhere. Because the private attribute remains uninitialized, the program will later fail when a method tries to read it, typically raising an attribute error. This is a common syntax/semantics slip: the code runs (no syntax error), but it doesn't do what you intended. The core issue is that you performed a comparison rather than an assignment, so the object's state is never updated."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might mistakenly use the equality operator because you confuse it with assignment or think you are 'setting' the value. This line only compares the private attribute with the parameter and evaluates to True or False, then discards that result. It does not store the interest rate anywhere. Because the private attribute remains uninitialized, the program will later fail when a method tries to read it, typically raising an attribute error. This is a common syntax/semantics slip: the code runs (no syntax error), but it doesn't do what you intended. The core issue is that you performed a comparison rather than an assignment, so the object's state is never updated."
+      ]
+    },
+    {
+      "id": "102ffbf1-4b1d-49c2-b198-5a8d42416ba8",
+      "line": {
+        "number": 0,
+        "content": "self.number_of_years = number_of_years",
+        "commentList": [
+          "You might pick this because it looks simpler \u2014 you think an attribute without underscores is perfectly fine and that the getters/setters will still work. However, methods in the class refer to a different attribute name (one that uses double underscores). By creating self.number_of_years you leave the hidden attribute that the methods expect unset. When get_monthly_payment (or get_number_of_years) tries to read the 'private' attribute, the program will fail because that specific attribute wasn't assigned. In other words, you created a different variable than the one the rest of the class uses. This is why this choice is plausible but incorrect: it looks like you're storing the value, but you actually broke the link between the constructor and the class methods that rely on the specially named attribute."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might pick this because it looks simpler \u2014 you think an attribute without underscores is perfectly fine and that the getters/setters will still work. However, methods in the class refer to a different attribute name (one that uses double underscores). By creating self.number_of_years you leave the hidden attribute that the methods expect unset. When get_monthly_payment (or get_number_of_years) tries to read the 'private' attribute, the program will fail because that specific attribute wasn't assigned. In other words, you created a different variable than the one the rest of the class uses. This is why this choice is plausible but incorrect: it looks like you're storing the value, but you actually broke the link between the constructor and the class methods that rely on the specially named attribute."
+      ]
+    },
+    {
+      "id": "66c99810-c7a4-423a-a3fe-174076fff33c",
+      "line": {
+        "number": 0,
+        "content": "self.__number_of_years = number_of_years * 12",
+        "commentList": [
+          "You might choose this because you think storing the loan period in months will simplify monthly-payment math. But the class methods already expect the stored value to be in years and then multiply by 12 when they need months. By storing months here, the code later multiplies by 12 again and uses an exponent 12 times too large. That doesn't crash the program, but it makes the monthly-payment calculation wildly incorrect (the term that raises (1 + monthly_interest_rate) to a power will be far too large, producing the wrong denominator and a wrong payment). This mistake is believable because unit-conversion errors are common, but it changes the meaning of the stored data and leads to incorrect results."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might choose this because you think storing the loan period in months will simplify monthly-payment math. But the class methods already expect the stored value to be in years and then multiply by 12 when they need months. By storing months here, the code later multiplies by 12 again and uses an exponent 12 times too large. That doesn't crash the program, but it makes the monthly-payment calculation wildly incorrect (the term that raises (1 + monthly_interest_rate) to a power will be far too large, producing the wrong denominator and a wrong payment). This mistake is believable because unit-conversion errors are common, but it changes the meaning of the stored data and leads to incorrect results."
+      ]
+    },
+    {
+      "id": "887d3cb1-9ebc-4310-a92d-0a89e4f9dc6b",
+      "line": {
+        "number": 0,
+        "content": "self.__number_of_years = loan_amount",
+        "commentList": [
+          "You might accidentally pick this line if you confuse the constructor parameters or copy-paste the wrong variable name. It assigns the loan amount to the years field, so the rest of the class uses the loan amount where it expects a number of years. The code will still run (since both are numeric), but the monthly payment calculation becomes meaningless: the exponent and term that should depend on the loan period now depend on the loan amount, producing drastically wrong results (and in some cases numerically unstable behavior). This is a subtle bug because the program doesn't necessarily crash, but the logic is broken \u2014 you've stored the wrong piece of data in the years attribute."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might accidentally pick this line if you confuse the constructor parameters or copy-paste the wrong variable name. It assigns the loan amount to the years field, so the rest of the class uses the loan amount where it expects a number of years. The code will still run (since both are numeric), but the monthly payment calculation becomes meaningless: the exponent and term that should depend on the loan period now depend on the loan amount, producing drastically wrong results (and in some cases numerically unstable behavior). This is a subtle bug because the program doesn't necessarily crash, but the logic is broken \u2014 you've stored the wrong piece of data in the years attribute."
+      ]
+    },
+    {
+      "id": "afcab719-44f8-41c0-97d7-26564e065a76",
+      "line": {
+        "number": 0,
+        "content": "self.loan_amount = loan_amount",
+        "commentList": [
+          "You might pick this because it looks simpler and you think the leading underscores are just a style choice. Step by step: this line creates an attribute named loan_amount (no underscores). Later methods in the class expect a different attribute name, so they will not find the value you just set. As a result, when the code that calculates the monthly payment tries to read the expected attribute, it will be missing and the program will fail at runtime. In other words, you end up with two different attributes \u2014 one you set and a different one the methods try to use \u2014 rather than sharing the same storage. This is wrong because the rest of the class relies on the original attribute name; using a different name breaks that link and leads to an error. The distractor is plausible because beginners often think underscores are only for readability, but here the attribute name must exactly match what other methods use."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might pick this because it looks simpler and you think the leading underscores are just a style choice. Step by step: this line creates an attribute named loan_amount (no underscores). Later methods in the class expect a different attribute name, so they will not find the value you just set. As a result, when the code that calculates the monthly payment tries to read the expected attribute, it will be missing and the program will fail at runtime. In other words, you end up with two different attributes \u2014 one you set and a different one the methods try to use \u2014 rather than sharing the same storage. This is wrong because the rest of the class relies on the original attribute name; using a different name breaks that link and leads to an error. The distractor is plausible because beginners often think underscores are only for readability, but here the attribute name must exactly match what other methods use."
+      ]
+    },
+    {
+      "id": "2875c2e3-8893-4724-90f9-c3b78a6ea2c6",
+      "line": {
+        "number": 0,
+        "content": "self.__loan_amount == loan_amount",
+        "commentList": [
+          "You might choose this if you confuse the assignment operator with the equality operator. What this line actually does is compare the existing attribute to the provided value and produce True or False, then immediately discard that result. It does not store anything. Step by step: the comparison runs (or raises an error if the attribute does not yet exist), but no assignment happens, so the attribute the rest of the class expects remains unset. That means later when the monthly-payment method tries to use the stored loan amount, it will not find the value and the program will fail. This is a common beginner mistake \u2014 using == instead of = \u2014 and it looks similar to the correct code, which is why it is a plausible but incorrect choice."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might choose this if you confuse the assignment operator with the equality operator. What this line actually does is compare the existing attribute to the provided value and produce True or False, then immediately discard that result. It does not store anything. Step by step: the comparison runs (or raises an error if the attribute does not yet exist), but no assignment happens, so the attribute the rest of the class expects remains unset. That means later when the monthly-payment method tries to use the stored loan amount, it will not find the value and the program will fail. This is a common beginner mistake \u2014 using == instead of = \u2014 and it looks similar to the correct code, which is why it is a plausible but incorrect choice."
+      ]
+    },
+    {
+      "id": "683b41aa-3829-48e1-826a-ea6e0da6b9be",
+      "line": {
+        "number": 0,
+        "content": "self.__loanAmount = loan_amount",
+        "commentList": [
+          "You might pick this because it only changes the spelling slightly and seems to follow another common naming style. Step by step: this creates an attribute named __loanAmount (camelCase), which is a different name from the one other methods expect. Because attribute names must match exactly, the code that looks up the loan value will still look for the original attribute name and won't find it. The result is the same as leaving the loan amount unset for the methods that need it: runtime failure when the program tries to compute the monthly payment. Beginners often mix naming styles or mistype attribute names and assume they are equivalent; this distractor exploits that misconception even though the change breaks the class's internal consistency."
+        ],
+        "indentLevel": 2
+      },
+      "helpList": [
+        "You might pick this because it only changes the spelling slightly and seems to follow another common naming style. Step by step: this creates an attribute named __loanAmount (camelCase), which is a different name from the one other methods expect. Because attribute names must match exactly, the code that looks up the loan value will still look for the original attribute name and won't find it. The result is the same as leaving the loan amount unset for the methods that need it: runtime failure when the program tries to compute the monthly payment. Beginners often mix naming styles or mistype attribute names and assume they are equivalent; this distractor exploits that misconception even though the change breaks the class's internal consistency."
+      ]
+    }
+  ],
+  "programInput": "0.03 5 1000",
+  "user": "moh70@pitt.edu",
+  "author": {
+    "fullname": "Mohammad Hassany",
+    "email": "moh70@pitt.edu"
+  },
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ]
+}
