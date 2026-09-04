@@ -1,0 +1,917 @@
+{
+  "id": "6a91ae6832e78ede45c116c9",
+  "user": "moh70@pitt.edu",
+  "name": "The Class for Representing a TV (Case 1)",
+  "description": "Construct a class that represents a TV. The class should contain data that represents the TV's state (power on or off, current channel). The state of the TV could be accessed or changed only through the getter and setter methods. The class should also include methods to change the state of the TV (turn on/off, change channels). Assume that the valid channel range is from 1 to 120 (both inclusive).",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_tv1.py",
+  "code": "#Step 1: Define the class\nclass TV1 :\n    #Step 1.1: Initialize the state of the TV\n    def __init__(self):\n        self.__on = False\n        self.__channel = 1   \n    #Step 1.2: Define the methods to change the on/off state of the TV \n    def turn_on(self) :\n        self.__on = True\n    def turn_off(self) :\n        self.__on = False\n    #Step 1.3: Define the methods to change the channel of the TV \n    def set_channel(self, new_channel) :\n        if self.__on and new_channel >= 1 and new_channel <= 120 :\n            self.__channel = new_channel\n    def channel_up(self) :\n        if self.__on and self.__channel < 120 :\n            self.__channel += 1\n    def channel_down(self) :\n        if self.__on and self.__channel > 1 :\n            self.__channel -= 1\n    #Step 1.4: Define the methods to get the current state of the TV \n    def get_channel(self) :\n        return self.__channel\n    def is_on(self) :\n        return self.__on\n#Step 2: Test the class\ntv1 = TV1()\ntv1.turn_on()\ntv1.set_channel(30)\ntv2 = TV1()\ntv2.turn_on()\ntv2.channel_up()\ntv2.channel_up()\ntv2.channel_down()\nprint(\"tv1's channel is \" + str(tv1.get_channel()))\nprint(\"tv2's channel is \" + str(tv2.get_channel()))",
+  "lines": {
+    "2": {
+      "content": "class TV1 :",
+      "commentList": [
+        "Purpose: This line declares a new class named TV1 \u2014 a blueprint that you will use to create TV objects with their own state and behavior.",
+        "Syntax and semantics: The keyword class followed by the class name and a colon starts a new indented block. Everything indented under this line becomes part of the TV1 class (its attributes and methods).",
+        "What it means at runtime: When Python executes this line it creates the class object TV1; methods are not run yet. Later you create instances with tv = TV1() to get a usable TV object.",
+        "Common errors and misconceptions: If you forget the colon or use wrong indentation you'll get a SyntaxError or IndentationError. Putting a digit first in the class name (e.g., 1TV) is invalid. If the class body were empty you must write pass to avoid an error.",
+        "Best practices: Use a clear, descriptive name in CamelCase (TV1 is okay but TV would be clearer). Do not put a space before the colon (write class TV1:). Add a short docstring under this line to explain the class purpose, and avoid names that shadow built-in identifiers.",
+        "Inheritance note (simple): You don't need to write (object) in Python 3 \u2014 class TV1: already creates a new-style class. If you do want to inherit from another class you would put the parent(s) in parentheses after the name.",
+        "Visibility hint: This line only defines the class; the private attributes (like __on) and methods you see later are defined inside the class body and control how users interact with each TV instance."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line declares a new class named TV1 \u2014 a blueprint that you will use to create TV objects with their own state and behavior."
+        },
+        {
+          "content": "Syntax and semantics: The keyword class followed by the class name and a colon starts a new indented block. Everything indented under this line becomes part of the TV1 class (its attributes and methods)."
+        },
+        {
+          "content": "What it means at runtime: When Python executes this line it creates the class object TV1; methods are not run yet. Later you create instances with tv = TV1() to get a usable TV object."
+        },
+        {
+          "content": "Common errors and misconceptions: If you forget the colon or use wrong indentation you'll get a SyntaxError or IndentationError. Putting a digit first in the class name (e.g., 1TV) is invalid. If the class body were empty you must write pass to avoid an error."
+        },
+        {
+          "content": "Best practices: Use a clear, descriptive name in CamelCase (TV1 is okay but TV would be clearer). Do not put a space before the colon (write class TV1:). Add a short docstring under this line to explain the class purpose, and avoid names that shadow built-in identifiers."
+        },
+        {
+          "content": "Inheritance note (simple): You don't need to write (object) in Python 3 \u2014 class TV1: already creates a new-style class. If you do want to inherit from another class you would put the parent(s) in parentheses after the name."
+        },
+        {
+          "content": "Visibility hint: This line only defines the class; the private attributes (like __on) and methods you see later are defined inside the class body and control how users interact with each TV instance."
+        }
+      ]
+    },
+    "4": {
+      "content": "    def __init__(self):",
+      "commentList": [
+        "This line defines the constructor method that runs automatically when you create a TV1 object \u2014 it sets up the object's initial state so the rest of the methods can work.",
+        "Breakdown of the syntax: 'def' starts a function definition, '__init__' is the special constructor name Python looks for, '(self)' means the method receives the instance you're creating, and the trailing ':' begins the indented body that follows.",
+        "You must include 'self' as the first parameter so you can store attributes on that specific instance (for example, self.__on and self.__channel). If you forget 'self' you'll get errors when you try to use instance attributes.",
+        "Common mistakes to watch for: missing the colon or incorrect indentation produces a SyntaxError; trying to return a value from __init__ is incorrect (it should return None); and failing to initialize attributes here can make other methods fail later.",
+        "Best practices: keep __init__ focused on creating and initializing the instance attributes that other methods expect, initialize every attribute you will use, and choose your attribute naming convention (double underscore triggers name-mangling for stronger privacy, but a single underscore is often enough and simpler)."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "This line defines the constructor method that runs automatically when you create a TV1 object \u2014 it sets up the object's initial state so the rest of the methods can work."
+        },
+        {
+          "content": "Breakdown of the syntax: 'def' starts a function definition, '__init__' is the special constructor name Python looks for, '(self)' means the method receives the instance you're creating, and the trailing ':' begins the indented body that follows."
+        },
+        {
+          "content": "You must include 'self' as the first parameter so you can store attributes on that specific instance (for example, self.__on and self.__channel). If you forget 'self' you'll get errors when you try to use instance attributes."
+        },
+        {
+          "content": "Common mistakes to watch for: missing the colon or incorrect indentation produces a SyntaxError; trying to return a value from __init__ is incorrect (it should return None); and failing to initialize attributes here can make other methods fail later."
+        },
+        {
+          "content": "Best practices: keep __init__ focused on creating and initializing the instance attributes that other methods expect, initialize every attribute you will use, and choose your attribute naming convention (double underscore triggers name-mangling for stronger privacy, but a single underscore is often enough and simpler)."
+        }
+      ]
+    },
+    "5": {
+      "content": "        self.__on = False",
+      "commentList": [
+        "You are creating an instance attribute that records whether the TV is powered on; setting it to False makes the TV start in the OFF state.",
+        "You can read the pieces: self is the current object, __on is the attribute name (double underscore triggers name mangling), = is the assignment operator, and False is the boolean value assigned.",
+        "You should understand the effect: this line actually creates the attribute on each TV1 object and subsequent methods (turn_on, turn_off, is_on, and the channel-change guards) read or change this value to control behavior.",
+        "You might make mistakes like omitting self (which would create a local variable instead of an attribute), using lowercase false (which is a NameError), or expecting double-underscore to make the attribute truly inaccessible (it only name-mangles it; external access is still possible via _TV1__on).",
+        "For best practice, you should initialize all instance state in __init__, prefer clear boolean names (e.g., is_on) for readability, and access this attribute only through the provided getter/setter methods rather than manipulating the mangled name directly."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "You are creating an instance attribute that records whether the TV is powered on; setting it to False makes the TV start in the OFF state."
+        },
+        {
+          "content": "You can read the pieces: self is the current object, __on is the attribute name (double underscore triggers name mangling), = is the assignment operator, and False is the boolean value assigned."
+        },
+        {
+          "content": "You should understand the effect: this line actually creates the attribute on each TV1 object and subsequent methods (turn_on, turn_off, is_on, and the channel-change guards) read or change this value to control behavior."
+        },
+        {
+          "content": "You might make mistakes like omitting self (which would create a local variable instead of an attribute), using lowercase false (which is a NameError), or expecting double-underscore to make the attribute truly inaccessible (it only name-mangles it; external access is still possible via _TV1__on)."
+        },
+        {
+          "content": "For best practice, you should initialize all instance state in __init__, prefer clear boolean names (e.g., is_on) for readability, and access this attribute only through the provided getter/setter methods rather than manipulating the mangled name directly."
+        }
+      ]
+    },
+    "6": {
+      "content": "        self.__channel = 1   ",
+      "commentList": [
+        "You are setting the TV's current channel to a safe default value (1) so every new TV object starts with a known channel.",
+        "You are assigning an integer to an instance attribute: 'self' means the attribute belongs to this TV object, '__channel' is the attribute name, and '= 1' stores the value 1 there.",
+        "You should know that the double leading underscores trigger name mangling in Python (the attribute is stored as _TV1__channel). This is not true privacy \u2014 if you try to use tv.__channel directly you will get an AttributeError.",
+        "Be careful about the 'magic number' 1: it must lie inside your valid channel range (1\u2013120). If you later change the valid range, remember to update this default or use a named constant like MIN_CHANNEL.",
+        "As a best practice, always initialize all state variables (so methods like channel_up/channel_down can rely on them). Consider using a constant for the default, or a single underscore and properties if you want a clearer, more Pythonic indication of 'internal' attributes."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "You are setting the TV's current channel to a safe default value (1) so every new TV object starts with a known channel."
+        },
+        {
+          "content": "You are assigning an integer to an instance attribute: 'self' means the attribute belongs to this TV object, '__channel' is the attribute name, and '= 1' stores the value 1 there."
+        },
+        {
+          "content": "You should know that the double leading underscores trigger name mangling in Python (the attribute is stored as _TV1__channel). This is not true privacy \u2014 if you try to use tv.__channel directly you will get an AttributeError."
+        },
+        {
+          "content": "Be careful about the 'magic number' 1: it must lie inside your valid channel range (1\u2013120). If you later change the valid range, remember to update this default or use a named constant like MIN_CHANNEL."
+        },
+        {
+          "content": "As a best practice, always initialize all state variables (so methods like channel_up/channel_down can rely on them). Consider using a constant for the default, or a single underscore and properties if you want a clearer, more Pythonic indication of 'internal' attributes."
+        }
+      ]
+    },
+    "8": {
+      "content": "    def turn_on(self) :",
+      "commentList": [
+        "Purpose: This line defines a method named turn_on inside the TV1 class. You call this method when you want the TV object to switch its power state to 'on'.",
+        "Syntax and semantics: def introduces a function, turn_on is the method name, and (self) means the method receives the instance so you can access or change that instance's attributes. The trailing colon starts the indented method body.",
+        "How it works in the program: when you call tv.turn_on() Python runs the indented code below this line (line 9) which sets the TV's internal power flag to True, so you should use this method rather than changing the flag directly.",
+        "Common mistakes to watch for: if you forget the self parameter, calling the method on an instance will raise a TypeError. Missing the colon or wrong indentation will cause a SyntaxError/IndentationError. Also remember to call tv.turn_on() with parentheses \u2014 referencing tv.turn_on without () gives you the method object, not the effect.",
+        "Behavior note: this method is used for its side effect (changing state) and does not return a value. If you need to check the result, you should call the is_on() getter afterwards; do not expect tv.turn_on() to return True.",
+        "Best practices: give the method a clear name (turn_on is good), consider adding a short docstring to explain usage, and rely on this method to change the private attribute (__on) rather than manipulating the attribute directly from outside the class."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: This line defines a method named turn_on inside the TV1 class. You call this method when you want the TV object to switch its power state to 'on'."
+        },
+        {
+          "content": "Syntax and semantics: def introduces a function, turn_on is the method name, and (self) means the method receives the instance so you can access or change that instance's attributes. The trailing colon starts the indented method body."
+        },
+        {
+          "content": "How it works in the program: when you call tv.turn_on() Python runs the indented code below this line (line 9) which sets the TV's internal power flag to True, so you should use this method rather than changing the flag directly."
+        },
+        {
+          "content": "Common mistakes to watch for: if you forget the self parameter, calling the method on an instance will raise a TypeError. Missing the colon or wrong indentation will cause a SyntaxError/IndentationError. Also remember to call tv.turn_on() with parentheses \u2014 referencing tv.turn_on without () gives you the method object, not the effect."
+        },
+        {
+          "content": "Behavior note: this method is used for its side effect (changing state) and does not return a value. If you need to check the result, you should call the is_on() getter afterwards; do not expect tv.turn_on() to return True."
+        },
+        {
+          "content": "Best practices: give the method a clear name (turn_on is good), consider adding a short docstring to explain usage, and rely on this method to change the private attribute (__on) rather than manipulating the attribute directly from outside the class."
+        }
+      ]
+    },
+    "9": {
+      "content": "        self.__on = True",
+      "commentList": [
+        "You set the TV object's power state to on by assigning the boolean value True to the instance attribute __on; this is what actually makes the TV behave as powered on for other methods.",
+        "You are using an assignment statement: self.__on = True. 'self' refers to the current TV instance, '__on' is the attribute name (the double underscores signal a private attribute that Python name-mangles), and True is the boolean value stored there.",
+        "Be careful not to assume this changes every TV or a class-level variable \u2014 because you use self, only this particular instance is changed. Also avoid trying to access __on directly from outside the class; use the provided is_on() getter instead.",
+        "As a best practice, keep the power change encapsulated in this method rather than setting the attribute from outside. It's fine if calling turn_on when the TV is already on does nothing extra (idempotent). Consider adding a brief docstring or return value if you want to signal whether the state actually changed."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "You set the TV object's power state to on by assigning the boolean value True to the instance attribute __on; this is what actually makes the TV behave as powered on for other methods."
+        },
+        {
+          "content": "You are using an assignment statement: self.__on = True. 'self' refers to the current TV instance, '__on' is the attribute name (the double underscores signal a private attribute that Python name-mangles), and True is the boolean value stored there."
+        },
+        {
+          "content": "Be careful not to assume this changes every TV or a class-level variable \u2014 because you use self, only this particular instance is changed. Also avoid trying to access __on directly from outside the class; use the provided is_on() getter instead."
+        },
+        {
+          "content": "As a best practice, keep the power change encapsulated in this method rather than setting the attribute from outside. It's fine if calling turn_on when the TV is already on does nothing extra (idempotent). Consider adding a brief docstring or return value if you want to signal whether the state actually changed."
+        }
+      ]
+    },
+    "10": {
+      "content": "    def turn_off(self) :",
+      "commentList": [
+        "You are declaring the turn_off method for the TV1 class: this line names the method that, when called, will perform the action of turning the TV off (the actual state change happens in the following indented line).",
+        "You use the def keyword to define a function; turn_off is the method name; (self) means the method receives the specific TV instance so you can access and modify its attributes; the trailing : starts the method body which must be indented.",
+        "You should not forget self \u2014 if you omit it you'll get an error when you call the method because Python will pass the instance automatically but the header won't accept it. Also be careful with the colon and indentation: missing either causes a SyntaxError.",
+        "You should give the method a clear, descriptive name and keep its job single and small. It's good practice to put a short docstring on the next line to explain what the method does and to use this method (rather than direct attribute access) to change the TV's private state."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "You are declaring the turn_off method for the TV1 class: this line names the method that, when called, will perform the action of turning the TV off (the actual state change happens in the following indented line)."
+        },
+        {
+          "content": "You use the def keyword to define a function; turn_off is the method name; (self) means the method receives the specific TV instance so you can access and modify its attributes; the trailing : starts the method body which must be indented."
+        },
+        {
+          "content": "You should not forget self \u2014 if you omit it you'll get an error when you call the method because Python will pass the instance automatically but the header won't accept it. Also be careful with the colon and indentation: missing either causes a SyntaxError."
+        },
+        {
+          "content": "You should give the method a clear, descriptive name and keep its job single and small. It's good practice to put a short docstring on the next line to explain what the method does and to use this method (rather than direct attribute access) to change the TV's private state."
+        }
+      ]
+    },
+    "11": {
+      "content": "        self.__on = False",
+      "commentList": [
+        "You set the TV's power flag to off here: when turn_off() runs, this line changes the object's internal state so the TV is considered powered down.",
+        "You are assigning the boolean value False to the attribute __on on the current instance (self).__ The '=' operator does assignment; the double underscore triggers name-mangling to make the attribute private to the class.",
+        "Be careful: if you forget 'self.' you'll create a local variable instead of changing the instance attribute; using '==' would only compare values (no change); and assigning the string 'False' (with quotes) would be wrong because the code expects a boolean.",
+        "As a best practice, you should change power only through methods like turn_off()/turn_on() rather than modifying attributes directly elsewhere. Also consider whether single underscore (_on) is enough for privacy in simple code, and keep boolean names clear so you (and others) understand the state easily."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "You set the TV's power flag to off here: when turn_off() runs, this line changes the object's internal state so the TV is considered powered down."
+        },
+        {
+          "content": "You are assigning the boolean value False to the attribute __on on the current instance (self).__ The '=' operator does assignment; the double underscore triggers name-mangling to make the attribute private to the class."
+        },
+        {
+          "content": "Be careful: if you forget 'self.' you'll create a local variable instead of changing the instance attribute; using '==' would only compare values (no change); and assigning the string 'False' (with quotes) would be wrong because the code expects a boolean."
+        },
+        {
+          "content": "As a best practice, you should change power only through methods like turn_off()/turn_on() rather than modifying attributes directly elsewhere. Also consider whether single underscore (_on) is enough for privacy in simple code, and keep boolean names clear so you (and others) understand the state easily."
+        }
+      ]
+    },
+    "13": {
+      "content": "    def set_channel(self, new_channel) :",
+      "commentList": [
+        "You are defining a method named set_channel that belongs to the TV1 class; it takes two parameters: self (the instance you are working on) and new_channel (the desired channel number), and the trailing colon starts the method body.",
+        "You should understand that self is required so the method can access and modify the instance's state (like the private __channel attribute); when you call tv1.set_channel(30) Python passes the instance as self automatically.",
+        "You must know this line only declares the method \u2014 the actual checks and assignment happen inside the method body (see the next lines that verify the TV is on and the channel is within 1\u2013120 before changing __channel).",
+        "You can run into errors or surprises if you forget self (you will get a TypeError), or if you pass a bad value for new_channel (a non-integer or out-of-range value will be ignored by the following if); also you cannot access __channel from outside the class because of name mangling.",
+        "You should follow best practices: validate the new_channel type (for example check it's an int), document whether the method returns a success value or raises an exception, and consider using clear names or constants for the allowed range (e.g., MIN_CHANNEL, MAX_CHANNEL) so you keep the code easy to maintain."
+      ],
+      "indentLevel": 1,
+      "blank": true,
+      "comments": [
+        {
+          "content": "You are defining a method named set_channel that belongs to the TV1 class; it takes two parameters: self (the instance you are working on) and new_channel (the desired channel number), and the trailing colon starts the method body."
+        },
+        {
+          "content": "You should understand that self is required so the method can access and modify the instance's state (like the private __channel attribute); when you call tv1.set_channel(30) Python passes the instance as self automatically."
+        },
+        {
+          "content": "You must know this line only declares the method \u2014 the actual checks and assignment happen inside the method body (see the next lines that verify the TV is on and the channel is within 1\u2013120 before changing __channel)."
+        },
+        {
+          "content": "You can run into errors or surprises if you forget self (you will get a TypeError), or if you pass a bad value for new_channel (a non-integer or out-of-range value will be ignored by the following if); also you cannot access __channel from outside the class because of name mangling."
+        },
+        {
+          "content": "You should follow best practices: validate the new_channel type (for example check it's an int), document whether the method returns a success value or raises an exception, and consider using clear names or constants for the allowed range (e.g., MIN_CHANNEL, MAX_CHANNEL) so you keep the code easy to maintain."
+        }
+      ]
+    },
+    "14": {
+      "content": "        if self.__on and new_channel >= 1 and new_channel <= 120 :",
+      "commentList": [
+        "Purpose: This line guards the channel change so that you only set a new channel when the TV is turned on (self.__on) and the requested channel is inside the allowed range 1 to 120.",
+        "Syntax/semantics: it is an if statement that requires all three conditions to be true (self.__on and new_channel >= 1 and new_channel <= 120). The 'and' operator means Python evaluates left to right and stops early if one condition is false (short-circuit evaluation).",
+        "Common errors & misconceptions: if new_channel is not a number (for example a string) the comparisons can raise a TypeError; using 'or' instead of 'and' would let invalid inputs through; also remember this method currently silently does nothing when the check fails, which can confuse you if you expect feedback.",
+        "Best practices: consider using the chained comparison 1 <= new_channel <= 120 for readability, validate or convert the input type (or raise a ValueError) instead of failing silently, and store 1 and 120 in named constants (e.g., MIN_CHANNEL, MAX_CHANNEL) so you and others can change limits easily."
+      ],
+      "indentLevel": 2,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line guards the channel change so that you only set a new channel when the TV is turned on (self.__on) and the requested channel is inside the allowed range 1 to 120."
+        },
+        {
+          "content": "Syntax/semantics: it is an if statement that requires all three conditions to be true (self.__on and new_channel >= 1 and new_channel <= 120). The 'and' operator means Python evaluates left to right and stops early if one condition is false (short-circuit evaluation)."
+        },
+        {
+          "content": "Common errors & misconceptions: if new_channel is not a number (for example a string) the comparisons can raise a TypeError; using 'or' instead of 'and' would let invalid inputs through; also remember this method currently silently does nothing when the check fails, which can confuse you if you expect feedback."
+        },
+        {
+          "content": "Best practices: consider using the chained comparison 1 <= new_channel <= 120 for readability, validate or convert the input type (or raise a ValueError) instead of failing silently, and store 1 and 120 in named constants (e.g., MIN_CHANNEL, MAX_CHANNEL) so you and others can change limits easily."
+        }
+      ]
+    },
+    "15": {
+      "content": "            self.__channel = new_channel",
+      "commentList": [
+        "This line stores the new channel number into the TV object's internal channel state so you actually change which channel the TV will use.",
+        "Syntax: 'self.__channel' refers to the channel attribute on this particular instance, '=' is the assignment operator, and 'new_channel' is the value being placed into that attribute.",
+        "Semantics: this assignment only happens when the previous if-condition is true (the TV is on and the channel is within 1..120), so if that condition fails the channel remains unchanged.",
+        "The double underscore (__channel) signals that you intend this attribute to be private to the class, so you should access or modify it through the class methods (like this setter) rather than from outside the class.",
+        "Common mistakes to avoid: don't write '==' here (that would compare values, not assign), don't forget the correct indentation so the assignment is inside the if-block, and don't assume this line runs when the TV is off or the channel is out of range.",
+        "Best practices: you might also check that new_channel is an integer or return/raise an error when input is invalid instead of silently doing nothing\u2014this makes it clearer to you (the caller) why the channel did not change."
+      ],
+      "indentLevel": 3,
+      "blank": true,
+      "comments": [
+        {
+          "content": "This line stores the new channel number into the TV object's internal channel state so you actually change which channel the TV will use."
+        },
+        {
+          "content": "Syntax: 'self.__channel' refers to the channel attribute on this particular instance, '=' is the assignment operator, and 'new_channel' is the value being placed into that attribute."
+        },
+        {
+          "content": "Semantics: this assignment only happens when the previous if-condition is true (the TV is on and the channel is within 1..120), so if that condition fails the channel remains unchanged."
+        },
+        {
+          "content": "The double underscore (__channel) signals that you intend this attribute to be private to the class, so you should access or modify it through the class methods (like this setter) rather than from outside the class."
+        },
+        {
+          "content": "Common mistakes to avoid: don't write '==' here (that would compare values, not assign), don't forget the correct indentation so the assignment is inside the if-block, and don't assume this line runs when the TV is off or the channel is out of range."
+        },
+        {
+          "content": "Best practices: you might also check that new_channel is an integer or return/raise an error when input is invalid instead of silently doing nothing\u2014this makes it clearer to you (the caller) why the channel did not change."
+        }
+      ]
+    },
+    "16": {
+      "content": "    def channel_up(self) :",
+      "commentList": [
+        "Purpose: This line defines the channel_up method that you can call on a TV1 object to move the channel up by one; it establishes the name and signature of the operation that the following indented lines implement.",
+        "Syntax and parts: 'def' introduces a function, 'channel_up' is the method name, '(self)' means the method receives the instance so you can access its attributes, and the trailing ':' starts the indented method body. You must keep this line indented inside the class.",
+        "Semantics: Because the method takes only self, it acts on the specific TV instance (self.__channel and self.__on are used in the body). The method does not return a value (it returns None implicitly) and is intended to change object state, not produce a result.",
+        "Common errors and misconceptions: If you forget to include self you will get a TypeError when calling the method; wrong indentation can make the definition outside the class; omitting the ':' causes a syntax error; and you might expect this method to work even when the TV is off \u2014 the body checks self.__on, so it will do nothing when the TV is off.",
+        "Best practices: Give the method a clear name (channel_up is good), add a short docstring on the next line so callers know its behavior, and keep the method focused on a single task. Also consider using a named constant for the max channel (instead of the literal 120) so you can change limits easily."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: This line defines the channel_up method that you can call on a TV1 object to move the channel up by one; it establishes the name and signature of the operation that the following indented lines implement."
+        },
+        {
+          "content": "Syntax and parts: 'def' introduces a function, 'channel_up' is the method name, '(self)' means the method receives the instance so you can access its attributes, and the trailing ':' starts the indented method body. You must keep this line indented inside the class."
+        },
+        {
+          "content": "Semantics: Because the method takes only self, it acts on the specific TV instance (self.__channel and self.__on are used in the body). The method does not return a value (it returns None implicitly) and is intended to change object state, not produce a result."
+        },
+        {
+          "content": "Common errors and misconceptions: If you forget to include self you will get a TypeError when calling the method; wrong indentation can make the definition outside the class; omitting the ':' causes a syntax error; and you might expect this method to work even when the TV is off \u2014 the body checks self.__on, so it will do nothing when the TV is off."
+        },
+        {
+          "content": "Best practices: Give the method a clear name (channel_up is good), add a short docstring on the next line so callers know its behavior, and keep the method focused on a single task. Also consider using a named constant for the max channel (instead of the literal 120) so you can change limits easily."
+        }
+      ]
+    },
+    "17": {
+      "content": "        if self.__on and self.__channel < 120 :",
+      "commentList": [
+        "Purpose: This line makes sure the TV is turned on and the current channel is less than 120 before allowing the channel to increase. You only proceed to change the channel when both conditions are true.",
+        "Syntax and meaning: 'if' starts a conditional. 'self.__on' is the private boolean attribute that tells you whether the TV is on. 'and' requires both sides to be True (it short-circuits). 'self.__channel < 120' checks the upper channel limit. The ':' starts the block that runs when the whole condition is True.",
+        "Common mistakes and pitfalls: You might accidentally write '<= 120', which would allow the channel to become 121 after incrementing. If you forget to check 'self.__on', you could change channels while the TV is off. Also be careful about types \u2014 comparing a non-integer channel to 120 could raise a TypeError.",
+        "Best practices: Use a named constant (for example MAX_CHANNEL = 120) instead of the magic number 120 so you can change the range easily. Consider handling the else case (e.g., return a status or log a message) so you know when a channel change was ignored. Always use the class methods to enforce rules rather than accessing attributes directly.",
+        "Behavior note: Because 'and' short-circuits, if the TV is off the second check (channel < 120) won't run. This is efficient and prevents unnecessary checks, but keep it in mind if you later add expressions with side effects."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "Purpose: This line makes sure the TV is turned on and the current channel is less than 120 before allowing the channel to increase. You only proceed to change the channel when both conditions are true."
+        },
+        {
+          "content": "Syntax and meaning: 'if' starts a conditional. 'self.__on' is the private boolean attribute that tells you whether the TV is on. 'and' requires both sides to be True (it short-circuits). 'self.__channel < 120' checks the upper channel limit. The ':' starts the block that runs when the whole condition is True."
+        },
+        {
+          "content": "Common mistakes and pitfalls: You might accidentally write '<= 120', which would allow the channel to become 121 after incrementing. If you forget to check 'self.__on', you could change channels while the TV is off. Also be careful about types \u2014 comparing a non-integer channel to 120 could raise a TypeError."
+        },
+        {
+          "content": "Best practices: Use a named constant (for example MAX_CHANNEL = 120) instead of the magic number 120 so you can change the range easily. Consider handling the else case (e.g., return a status or log a message) so you know when a channel change was ignored. Always use the class methods to enforce rules rather than accessing attributes directly."
+        },
+        {
+          "content": "Behavior note: Because 'and' short-circuits, if the TV is off the second check (channel < 120) won't run. This is efficient and prevents unnecessary checks, but keep it in mind if you later add expressions with side effects."
+        }
+      ]
+    },
+    "18": {
+      "content": "            self.__channel += 1",
+      "commentList": [
+        "Purpose: You increase the TV's current channel by one, so calling this when the TV is on moves the channel up a step.",
+        "Syntax and semantics: self.__channel += 1 uses the augmented assignment operator (+=) to add 1 to the instance attribute __channel; 'self' refers to this TV object and '__channel' is the attribute that stores the numeric channel value.",
+        "Potential errors and misconceptions: This line assumes the preceding if check passed (the TV is on and channel < 120). If you remove that guard you could increment past the allowed range or change the channel while the TV is off. Also make sure __channel is an integer \u2014 otherwise '+=' with 1 will raise a TypeError.",
+        "Privacy/name-mangling note: The double underscore makes __channel name-mangled in Python, so you shouldn't try to access or change it from outside the class as tv.__channel; use the provided methods instead.",
+        "Best practices: Keep the guard that checks the TV is on and the upper limit. Consider using a named constant for the maximum channel (e.g., MAX_CHANNEL = 120) and encapsulate channel changes in methods so validation is always applied."
+      ],
+      "indentLevel": 3,
+      "comments": [
+        {
+          "content": "Purpose: You increase the TV's current channel by one, so calling this when the TV is on moves the channel up a step."
+        },
+        {
+          "content": "Syntax and semantics: self.__channel += 1 uses the augmented assignment operator (+=) to add 1 to the instance attribute __channel; 'self' refers to this TV object and '__channel' is the attribute that stores the numeric channel value."
+        },
+        {
+          "content": "Potential errors and misconceptions: This line assumes the preceding if check passed (the TV is on and channel < 120). If you remove that guard you could increment past the allowed range or change the channel while the TV is off. Also make sure __channel is an integer \u2014 otherwise '+=' with 1 will raise a TypeError."
+        },
+        {
+          "content": "Privacy/name-mangling note: The double underscore makes __channel name-mangled in Python, so you shouldn't try to access or change it from outside the class as tv.__channel; use the provided methods instead."
+        },
+        {
+          "content": "Best practices: Keep the guard that checks the TV is on and the upper limit. Consider using a named constant for the maximum channel (e.g., MAX_CHANNEL = 120) and encapsulate channel changes in methods so validation is always applied."
+        }
+      ]
+    },
+    "19": {
+      "content": "    def channel_down(self) :",
+      "commentList": [
+        "Purpose: This line declares the channel_down method for the TV1 class. When you call tv.channel_down(), this method (whose body follows) implements the behavior to lower the current channel by one as part of the TV's channel-changing functionality.",
+        "Syntax and semantics: 'def' starts a function definition, 'channel_down' is the method name, and 'self' is the required parameter that refers to the particular TV instance. The trailing colon begins the indented block that defines the method body. Because it is inside the class, you must call it on an instance (for example tv.channel_down()).",
+        "Common errors and misconceptions: If you omit 'self' you will get a TypeError when the method is called. Wrong indentation or a missing colon will cause a SyntaxError. Also, don't assume this header alone changes the channel\u2014if the TV is off or already at channel 1, the subsequent if-statement prevents any change.",
+        "Best practices: Use a clear name like channel_down (which you already have) and consider adding a short docstring on the next line to explain what callers should expect. Keep validation inside the method (or raise a clear error) so that you don't silently ignore invalid calls; this makes debugging easier."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: This line declares the channel_down method for the TV1 class. When you call tv.channel_down(), this method (whose body follows) implements the behavior to lower the current channel by one as part of the TV's channel-changing functionality."
+        },
+        {
+          "content": "Syntax and semantics: 'def' starts a function definition, 'channel_down' is the method name, and 'self' is the required parameter that refers to the particular TV instance. The trailing colon begins the indented block that defines the method body. Because it is inside the class, you must call it on an instance (for example tv.channel_down())."
+        },
+        {
+          "content": "Common errors and misconceptions: If you omit 'self' you will get a TypeError when the method is called. Wrong indentation or a missing colon will cause a SyntaxError. Also, don't assume this header alone changes the channel\u2014if the TV is off or already at channel 1, the subsequent if-statement prevents any change."
+        },
+        {
+          "content": "Best practices: Use a clear name like channel_down (which you already have) and consider adding a short docstring on the next line to explain what callers should expect. Keep validation inside the method (or raise a clear error) so that you don't silently ignore invalid calls; this makes debugging easier."
+        }
+      ]
+    },
+    "20": {
+      "content": "        if self.__on and self.__channel > 1 :",
+      "commentList": [
+        "You are checking two conditions before allowing the channel to go down: the TV must be on (self.__on) and the current channel must be greater than 1 (self.__channel > 1). Only if both are true will the following line decrement the channel.",
+        "You use an if statement with a boolean expression made of two parts joined by the word and. self.__on is the instance attribute that should be True when the TV is powered; self.__channel > 1 is a numeric comparison. The trailing colon starts the indented block that runs when the condition is met.",
+        "Watch out for common mistakes: do not use && (that\u2019s from other languages) \u2014 Python uses and. The > 1 check prevents an off-by-one error that would let the channel drop below the valid minimum (1). Also note that Python evaluates the left side first and short-circuits: if self.__on is False the right side won\u2019t change the outcome.",
+        "Be aware of name-mangling for double-underscore attributes: __on and __channel are intended as private, but you can access them inside the class as shown. Also ensure these attributes hold expected types (boolean for __on, int for __channel) because unexpected types can make the condition behave oddly.",
+        "Best practice suggestions for you: use a named constant like MIN_CHANNEL = 1 instead of the literal 1 for clarity, keep the power check first to avoid unnecessary work, and consider returning a status (True/False) from channel_down so callers know whether the change happened."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "You are checking two conditions before allowing the channel to go down: the TV must be on (self.__on) and the current channel must be greater than 1 (self.__channel > 1). Only if both are true will the following line decrement the channel."
+        },
+        {
+          "content": "You use an if statement with a boolean expression made of two parts joined by the word and. self.__on is the instance attribute that should be True when the TV is powered; self.__channel > 1 is a numeric comparison. The trailing colon starts the indented block that runs when the condition is met."
+        },
+        {
+          "content": "Watch out for common mistakes: do not use && (that\u2019s from other languages) \u2014 Python uses and. The > 1 check prevents an off-by-one error that would let the channel drop below the valid minimum (1). Also note that Python evaluates the left side first and short-circuits: if self.__on is False the right side won\u2019t change the outcome."
+        },
+        {
+          "content": "Be aware of name-mangling for double-underscore attributes: __on and __channel are intended as private, but you can access them inside the class as shown. Also ensure these attributes hold expected types (boolean for __on, int for __channel) because unexpected types can make the condition behave oddly."
+        },
+        {
+          "content": "Best practice suggestions for you: use a named constant like MIN_CHANNEL = 1 instead of the literal 1 for clarity, keep the power check first to avoid unnecessary work, and consider returning a status (True/False) from channel_down so callers know whether the change happened."
+        }
+      ]
+    },
+    "21": {
+      "content": "            self.__channel -= 1",
+      "commentList": [
+        "Purpose: this line actually moves the TV one channel down by decreasing the stored channel number by 1, so it implements the core action of channel_down.",
+        "Syntax and meaning: self.__channel -= 1 is shorthand for self.__channel = self.__channel - 1. It reads the current channel value, subtracts one, and stores the result back in the object's channel attribute.",
+        "Context and guard: because this line is inside the preceding if (self.__on and self.__channel > 1), it only runs when the TV is turned on and the channel is greater than 1. That check prevents the channel from going below the valid minimum.",
+        "Common misconceptions and errors: you might expect the channel to wrap from 1 to 120, but this code does not wrap \u2014 it simply refuses to go below 1. Also, you should not try to change __channel directly from outside the class because the double underscore is intended to keep the attribute private; use the provided methods instead.",
+        "Best practices: consider using named constants for the minimum and maximum channel (e.g., CHANNEL_MIN = 1) so you can change limits in one place. You might also return a status or raise an informative error if a change is not allowed, so callers know whether the channel actually changed."
+      ],
+      "indentLevel": 3,
+      "comments": [
+        {
+          "content": "Purpose: this line actually moves the TV one channel down by decreasing the stored channel number by 1, so it implements the core action of channel_down."
+        },
+        {
+          "content": "Syntax and meaning: self.__channel -= 1 is shorthand for self.__channel = self.__channel - 1. It reads the current channel value, subtracts one, and stores the result back in the object's channel attribute."
+        },
+        {
+          "content": "Context and guard: because this line is inside the preceding if (self.__on and self.__channel > 1), it only runs when the TV is turned on and the channel is greater than 1. That check prevents the channel from going below the valid minimum."
+        },
+        {
+          "content": "Common misconceptions and errors: you might expect the channel to wrap from 1 to 120, but this code does not wrap \u2014 it simply refuses to go below 1. Also, you should not try to change __channel directly from outside the class because the double underscore is intended to keep the attribute private; use the provided methods instead."
+        },
+        {
+          "content": "Best practices: consider using named constants for the minimum and maximum channel (e.g., CHANNEL_MIN = 1) so you can change limits in one place. You might also return a status or raise an informative error if a change is not allowed, so callers know whether the channel actually changed."
+        }
+      ]
+    },
+    "23": {
+      "content": "    def get_channel(self) :",
+      "commentList": [
+        "This line defines a getter method named get_channel so you can read the TV's current channel from outside the class without accessing the internal variable directly.",
+        "The syntax def get_channel(self): declares a function bound to each TV1 instance; you must include self as the first parameter so the method can access the instance's data, and the colon starts the indented block that follows.",
+        "Semantically, this method is read-only: when you call tv.get_channel() it should return the stored channel value and should not change any TV state.",
+        "A common error is forgetting the self parameter (you would get a TypeError when calling the method) or misplacing the colon/indentation (which causes a syntax error). Also remember the attribute is named __channel with double underscores \u2014 that makes it private, so you cannot access it from outside as instance.__channel, which is why this getter is needed.",
+        "A common misconception is expecting the getter to only work when the TV is on; in this implementation it returns the channel regardless of power state. If you want different behavior (for example, returning None or raising an error when the TV is off), you must change the method.",
+        "Best practices: keep the getter simple and side-effect free, consider adding a short docstring or type hint to explain the return value to users, or use Python's @property decorator if you want attribute-like access while still controlling reads."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "This line defines a getter method named get_channel so you can read the TV's current channel from outside the class without accessing the internal variable directly."
+        },
+        {
+          "content": "The syntax def get_channel(self): declares a function bound to each TV1 instance; you must include self as the first parameter so the method can access the instance's data, and the colon starts the indented block that follows."
+        },
+        {
+          "content": "Semantically, this method is read-only: when you call tv.get_channel() it should return the stored channel value and should not change any TV state."
+        },
+        {
+          "content": "A common error is forgetting the self parameter (you would get a TypeError when calling the method) or misplacing the colon/indentation (which causes a syntax error). Also remember the attribute is named __channel with double underscores \u2014 that makes it private, so you cannot access it from outside as instance.__channel, which is why this getter is needed."
+        },
+        {
+          "content": "A common misconception is expecting the getter to only work when the TV is on; in this implementation it returns the channel regardless of power state. If you want different behavior (for example, returning None or raising an error when the TV is off), you must change the method."
+        },
+        {
+          "content": "Best practices: keep the getter simple and side-effect free, consider adding a short docstring or type hint to explain the return value to users, or use Python's @property decorator if you want attribute-like access while still controlling reads."
+        }
+      ]
+    },
+    "24": {
+      "content": "        return self.__channel",
+      "commentList": [
+        "This line returns the current channel number stored in the TV object so that code outside the class can read the channel by calling get_channel().",
+        "The return keyword sends a value back to the caller; self.__channel accesses the instance's attribute named __channel. The double underscore marks it as a private attribute (Python will name-mangle it), so you should not access that attribute directly from outside the class.",
+        "When you call tv.get_channel() you receive the integer channel value; this method only reads and returns the value and does not change any TV state.",
+        "Common misconceptions and errors: this line does not print the channel \u2014 it returns it, so you must print or otherwise use the returned value (the test code converts it to a string). Also, trying to access __channel directly from outside the class will not work as expected; always use the getter.",
+        "Best practices: keep getters simple like this to preserve encapsulation. If you want the channel to be available only when the TV is on, you could check self.__on and return None or raise an error. You can also consider using @property to expose the value with attribute-like syntax while still controlling access."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "This line returns the current channel number stored in the TV object so that code outside the class can read the channel by calling get_channel()."
+        },
+        {
+          "content": "The return keyword sends a value back to the caller; self.__channel accesses the instance's attribute named __channel. The double underscore marks it as a private attribute (Python will name-mangle it), so you should not access that attribute directly from outside the class."
+        },
+        {
+          "content": "When you call tv.get_channel() you receive the integer channel value; this method only reads and returns the value and does not change any TV state."
+        },
+        {
+          "content": "Common misconceptions and errors: this line does not print the channel \u2014 it returns it, so you must print or otherwise use the returned value (the test code converts it to a string). Also, trying to access __channel directly from outside the class will not work as expected; always use the getter."
+        },
+        {
+          "content": "Best practices: keep getters simple like this to preserve encapsulation. If you want the channel to be available only when the TV is on, you could check self.__on and return None or raise an error. You can also consider using @property to expose the value with attribute-like syntax while still controlling access."
+        }
+      ]
+    },
+    "25": {
+      "content": "    def is_on(self) :",
+      "commentList": [
+        "Purpose: This line defines an instance method named is_on so you can check whether the TV is powered on; it is a getter and does not change the TV state.",
+        "Syntax and meaning: def starts a function definition, is_on is the method name, self is the required reference to the instance, and the colon begins the method body (the method body returns the private __on attribute on the next line).",
+        "Common errors and misconceptions: if you forget the self parameter you'll get a TypeError; calling tv.is_on without parentheses gives you the method object instead of the boolean\u2014use tv.is_on() to get True/False; also avoid trying to read tv.__on directly because the double underscore uses name-mangling to make the attribute private.",
+        "Best practices: using the is_ prefix makes it clear this returns a boolean; keep this getter side-effect-free. If you prefer property-style access, consider using @property so users can write tv.is_on instead of tv.is_on()."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: This line defines an instance method named is_on so you can check whether the TV is powered on; it is a getter and does not change the TV state."
+        },
+        {
+          "content": "Syntax and meaning: def starts a function definition, is_on is the method name, self is the required reference to the instance, and the colon begins the method body (the method body returns the private __on attribute on the next line)."
+        },
+        {
+          "content": "Common errors and misconceptions: if you forget the self parameter you'll get a TypeError; calling tv.is_on without parentheses gives you the method object instead of the boolean\u2014use tv.is_on() to get True/False; also avoid trying to read tv.__on directly because the double underscore uses name-mangling to make the attribute private."
+        },
+        {
+          "content": "Best practices: using the is_ prefix makes it clear this returns a boolean; keep this getter side-effect-free. If you prefer property-style access, consider using @property so users can write tv.is_on instead of tv.is_on()."
+        }
+      ]
+    },
+    "26": {
+      "content": "        return self.__on",
+      "commentList": [
+        "Purpose: this line returns the TV's power state so you can check whether the TV is on (True) or off (False). You call tv.is_on() to get that information.",
+        "Syntax and semantics: return self.__on sends back the value of the instance attribute __on from the current object (self). The value is a boolean because __on is set to False or True elsewhere in the class.",
+        "Potential errors and misconceptions: you might be tempted to access tv.__on directly from outside the class, but __on is intended to be private (name-mangled). You should use this is_on() method instead. Also note this method only reports state; it does not change it\u2014calling it will not turn the TV on or off.",
+        "Best practices: keep the attribute private and provide a simple, side-effect-free getter like is_on(). Use a clear boolean-returning name (is_on) so callers know to expect True/False, and avoid performing I/O or changing state inside a getter."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "Purpose: this line returns the TV's power state so you can check whether the TV is on (True) or off (False). You call tv.is_on() to get that information."
+        },
+        {
+          "content": "Syntax and semantics: return self.__on sends back the value of the instance attribute __on from the current object (self). The value is a boolean because __on is set to False or True elsewhere in the class."
+        },
+        {
+          "content": "Potential errors and misconceptions: you might be tempted to access tv.__on directly from outside the class, but __on is intended to be private (name-mangled). You should use this is_on() method instead. Also note this method only reports state; it does not change it\u2014calling it will not turn the TV on or off."
+        },
+        {
+          "content": "Best practices: keep the attribute private and provide a simple, side-effect-free getter like is_on(). Use a clear boolean-returning name (is_on) so callers know to expect True/False, and avoid performing I/O or changing state inside a getter."
+        }
+      ]
+    },
+    "28": {
+      "content": "tv1 = TV1()",
+      "commentList": [
+        "Purpose: This line creates a new TV1 object and stores it in the variable tv1 so you can call the TV methods (turn_on, set_channel, etc.) on that specific TV instance.",
+        "Syntax and semantics: TV1() calls the class constructor (the __init__ method) to make a new instance; the = operator assigns that newly created object to the name tv1 in the current scope.",
+        "Potential errors / misconceptions: If you write tv1 = TV1 (without parentheses) you bind the class itself to tv1 instead of an instance, so instance methods will not work. Also, if you overwrite tv1 later, you lose the reference to this instance.",
+        "Best practices: Use a clear, lowercase variable name (like tv1) for instances. Instantiate the object before calling its methods (e.g., turn_on or set_channel). If a class required arguments, make sure you pass them to the parentheses to avoid a TypeError."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line creates a new TV1 object and stores it in the variable tv1 so you can call the TV methods (turn_on, set_channel, etc.) on that specific TV instance."
+        },
+        {
+          "content": "Syntax and semantics: TV1() calls the class constructor (the __init__ method) to make a new instance; the = operator assigns that newly created object to the name tv1 in the current scope."
+        },
+        {
+          "content": "Potential errors / misconceptions: If you write tv1 = TV1 (without parentheses) you bind the class itself to tv1 instead of an instance, so instance methods will not work. Also, if you overwrite tv1 later, you lose the reference to this instance."
+        },
+        {
+          "content": "Best practices: Use a clear, lowercase variable name (like tv1) for instances. Instantiate the object before calling its methods (e.g., turn_on or set_channel). If a class required arguments, make sure you pass them to the parentheses to avoid a TypeError."
+        }
+      ]
+    },
+    "29": {
+      "content": "tv1.turn_on()",
+      "commentList": [
+        "Purpose: This line turns the first TV object (tv1) on so that it can change channels and respond to other stateful methods. By calling turn_on(), you change the TV's internal power state from False to True.",
+        "Syntax and semantics: tv1.turn_on() calls the turn_on method on the instance tv1. The parentheses mean you are invoking the method (no arguments are passed). Under the hood Python finds the bound method, passes tv1 as self, and executes the code that sets the private attribute __on to True.",
+        "Potential errors and common misconceptions: If tv1 did not exist (for example you forgot Line 28), you would get a NameError. If you try to access or set the private attribute directly (tv1.__on), it will not work as expected because of name mangling; you must use the provided method. Also remember turn_on() has no return value \u2014 it only changes internal state.",
+        "Best practices: You should use the provided turn_on() method rather than touching internal variables. After turning the TV on, you can call is_on() to check the state or call set_channel(...) safely. Keep method calls clear and in the right order (create instance, turn on, then change channel).",
+        "Behavioral note: Calling turn_on() when the TV is already on is harmless (idempotent) \u2014 it just sets the flag to True again. This is normal and you don\u2019t need to guard against repeated calls unless you want to track redundant actions."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line turns the first TV object (tv1) on so that it can change channels and respond to other stateful methods. By calling turn_on(), you change the TV's internal power state from False to True."
+        },
+        {
+          "content": "Syntax and semantics: tv1.turn_on() calls the turn_on method on the instance tv1. The parentheses mean you are invoking the method (no arguments are passed). Under the hood Python finds the bound method, passes tv1 as self, and executes the code that sets the private attribute __on to True."
+        },
+        {
+          "content": "Potential errors and common misconceptions: If tv1 did not exist (for example you forgot Line 28), you would get a NameError. If you try to access or set the private attribute directly (tv1.__on), it will not work as expected because of name mangling; you must use the provided method. Also remember turn_on() has no return value \u2014 it only changes internal state."
+        },
+        {
+          "content": "Best practices: You should use the provided turn_on() method rather than touching internal variables. After turning the TV on, you can call is_on() to check the state or call set_channel(...) safely. Keep method calls clear and in the right order (create instance, turn on, then change channel)."
+        },
+        {
+          "content": "Behavioral note: Calling turn_on() when the TV is already on is harmless (idempotent) \u2014 it just sets the flag to True again. This is normal and you don\u2019t need to guard against repeated calls unless you want to track redundant actions."
+        }
+      ]
+    },
+    "30": {
+      "content": "tv1.set_channel(30)",
+      "commentList": [
+        "Purpose: You call the set_channel method on the tv1 object to request that tv1 switch its channel to 30 so that later when you check tv1.get_channel() it reflects the desired channel.",
+        "Syntax and semantics: tv1.set_channel(30) uses the dot operator to call the set_channel method defined in the TV1 class; the number 30 is passed as the new_channel argument and the method runs with self bound to tv1.",
+        "How it actually works here: Inside set_channel the code checks two things \u2014 the TV must be on (self.__on is True) and the channel must be between 1 and 120 \u2014 only then will self.__channel be updated to 30. Because you called tv1.turn_on() on line 29, the update will succeed.",
+        "Common errors and misconceptions: If tv1 were off, or if you passed 0, 121, or another out-of-range number, the channel would not change. If you pass a non-integer (for example a string), the comparison new_channel >= 1 will raise a TypeError in Python 3. You also should not try to change __channel directly from outside the class \u2014 that's why the setter exists.",
+        "Best practices: Before calling set_channel you should ensure the TV is on (or call turn_on), avoid using magic numbers by defining a named constant for the max/min channel, and validate or cast input to int if it may come from user input. Remember set_channel mutates the object and returns None, so use get_channel() to confirm the change."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: You call the set_channel method on the tv1 object to request that tv1 switch its channel to 30 so that later when you check tv1.get_channel() it reflects the desired channel."
+        },
+        {
+          "content": "Syntax and semantics: tv1.set_channel(30) uses the dot operator to call the set_channel method defined in the TV1 class; the number 30 is passed as the new_channel argument and the method runs with self bound to tv1."
+        },
+        {
+          "content": "How it actually works here: Inside set_channel the code checks two things \u2014 the TV must be on (self.__on is True) and the channel must be between 1 and 120 \u2014 only then will self.__channel be updated to 30. Because you called tv1.turn_on() on line 29, the update will succeed."
+        },
+        {
+          "content": "Common errors and misconceptions: If tv1 were off, or if you passed 0, 121, or another out-of-range number, the channel would not change. If you pass a non-integer (for example a string), the comparison new_channel >= 1 will raise a TypeError in Python 3. You also should not try to change __channel directly from outside the class \u2014 that's why the setter exists."
+        },
+        {
+          "content": "Best practices: Before calling set_channel you should ensure the TV is on (or call turn_on), avoid using magic numbers by defining a named constant for the max/min channel, and validate or cast input to int if it may come from user input. Remember set_channel mutates the object and returns None, so use get_channel() to confirm the change."
+        }
+      ]
+    },
+    "31": {
+      "content": "tv2 = TV1()",
+      "commentList": [
+        "Purpose: You create a new TV object and store it in the variable tv2 so you can control a second, independent TV in the program.",
+        "Syntax: tv2 is a variable name, = is the assignment operator, and TV1() calls the TV1 class constructor (the parentheses invoke __init__).",
+        "Semantics: After this line, tv2 refers to a fresh TV1 instance whose initial state is __on = False and __channel = 1 as set in __init__.",
+        "Potential errors / misconceptions: If you write tv2 = TV1 (no parentheses) you assign the class itself, not an instance, and method calls like tv2.turn_on() will fail. Also, creating a new instance does not copy tv1's state \u2014 tv1 and tv2 are separate objects.",
+        "Behavior note relevant to nearby lines: Because the new tv2 starts turned off, calling channel_up() on it will do nothing until you turn it on (which is why the next line calls tv2.turn_on()).",
+        "Best practices: Use a clear variable name, avoid accidentally reusing/overwriting existing variables, and consider adding a type hint (e.g., tv2: TV1 = TV1()) so you and tools can recognize that tv2 is a TV instance."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: You create a new TV object and store it in the variable tv2 so you can control a second, independent TV in the program."
+        },
+        {
+          "content": "Syntax: tv2 is a variable name, = is the assignment operator, and TV1() calls the TV1 class constructor (the parentheses invoke __init__)."
+        },
+        {
+          "content": "Semantics: After this line, tv2 refers to a fresh TV1 instance whose initial state is __on = False and __channel = 1 as set in __init__."
+        },
+        {
+          "content": "Potential errors / misconceptions: If you write tv2 = TV1 (no parentheses) you assign the class itself, not an instance, and method calls like tv2.turn_on() will fail. Also, creating a new instance does not copy tv1's state \u2014 tv1 and tv2 are separate objects."
+        },
+        {
+          "content": "Behavior note relevant to nearby lines: Because the new tv2 starts turned off, calling channel_up() on it will do nothing until you turn it on (which is why the next line calls tv2.turn_on())."
+        },
+        {
+          "content": "Best practices: Use a clear variable name, avoid accidentally reusing/overwriting existing variables, and consider adding a type hint (e.g., tv2: TV1 = TV1()) so you and tools can recognize that tv2 is a TV instance."
+        }
+      ]
+    },
+    "32": {
+      "content": "tv2.turn_on()",
+      "commentList": [
+        "Purpose: This line calls the turn_on() method on the tv2 object so you switch that TV instance to the 'on' state. After this, channel-changing methods (channel_up, channel_down, set_channel) will be allowed to change tv2's channel.",
+        "Syntax and semantics: tv2.turn_on() is a method call where tv2 is the instance and turn_on is looked up and invoked with parentheses. Inside the method, self.__on is set to True for that specific instance (self refers to tv2). The method has no return value (it returns None).",
+        "Common mistakes and pitfalls: If you forget the parentheses (tv2.turn_on) you get a method object instead of calling it. Turning on tv2 does not affect tv1 \u2014 each TV instance has its own state. Also, channel_up/channel_down will do nothing if the TV is off, so you must turn it on first. Avoid trying to access tv2.__on directly because the attribute is name-mangled/private.",
+        "Best practices: Make sure you have created the instance (tv2 = TV1()) before calling methods. Always use the provided methods (turn_on, is_on, get_channel, set_channel) rather than touching internal attributes. After calling turn_on(), you can optionally check tv2.is_on() to confirm the state before performing further actions."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line calls the turn_on() method on the tv2 object so you switch that TV instance to the 'on' state. After this, channel-changing methods (channel_up, channel_down, set_channel) will be allowed to change tv2's channel."
+        },
+        {
+          "content": "Syntax and semantics: tv2.turn_on() is a method call where tv2 is the instance and turn_on is looked up and invoked with parentheses. Inside the method, self.__on is set to True for that specific instance (self refers to tv2). The method has no return value (it returns None)."
+        },
+        {
+          "content": "Common mistakes and pitfalls: If you forget the parentheses (tv2.turn_on) you get a method object instead of calling it. Turning on tv2 does not affect tv1 \u2014 each TV instance has its own state. Also, channel_up/channel_down will do nothing if the TV is off, so you must turn it on first. Avoid trying to access tv2.__on directly because the attribute is name-mangled/private."
+        },
+        {
+          "content": "Best practices: Make sure you have created the instance (tv2 = TV1()) before calling methods. Always use the provided methods (turn_on, is_on, get_channel, set_channel) rather than touching internal attributes. After calling turn_on(), you can optionally check tv2.is_on() to confirm the state before performing further actions."
+        }
+      ]
+    },
+    "33": {
+      "content": "tv2.channel_up()",
+      "commentList": [
+        "Purpose: This line calls the channel_up method on the tv2 object. You are asking that TV instance to increase its channel by one; the method will only actually change the channel if the TV is on and the current channel is less than 120.",
+        "Syntax and semantics: tv2.channel_up() is a method call. 'tv2' is the instance, 'channel_up' is the method name, and the parentheses mean you invoke it with no arguments. Inside that method the code checks self.__on and self.__channel < 120 and, if both are true, does self.__channel += 1.",
+        "Potential errors and misconceptions: If tv2 is off, this call does nothing \u2014 you might mistakenly expect it to turn the TV on or to wrap around past 120, but it doesn't. If you write tv2.channel_up (without parentheses) you will get a method object instead of executing it. Also this affects only tv2; it does not change tv1.",
+        "Best practices: Make sure the TV is on before calling (for example check tv2.is_on() or call tv2.turn_on()). If you need different behavior (wrap-around, error on out-of-range), modify the method to return a status or raise an error so you get clear feedback instead of silent no-ops."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line calls the channel_up method on the tv2 object. You are asking that TV instance to increase its channel by one; the method will only actually change the channel if the TV is on and the current channel is less than 120."
+        },
+        {
+          "content": "Syntax and semantics: tv2.channel_up() is a method call. 'tv2' is the instance, 'channel_up' is the method name, and the parentheses mean you invoke it with no arguments. Inside that method the code checks self.__on and self.__channel < 120 and, if both are true, does self.__channel += 1."
+        },
+        {
+          "content": "Potential errors and misconceptions: If tv2 is off, this call does nothing \u2014 you might mistakenly expect it to turn the TV on or to wrap around past 120, but it doesn't. If you write tv2.channel_up (without parentheses) you will get a method object instead of executing it. Also this affects only tv2; it does not change tv1."
+        },
+        {
+          "content": "Best practices: Make sure the TV is on before calling (for example check tv2.is_on() or call tv2.turn_on()). If you need different behavior (wrap-around, error on out-of-range), modify the method to return a status or raise an error so you get clear feedback instead of silent no-ops."
+        }
+      ]
+    },
+    "34": {
+      "content": "tv2.channel_up()",
+      "commentList": [
+        "Purpose: You are calling the channel_up() method on the tv2 object so the TV's channel should increase by one (if the TV is on and not already at the maximum channel).",
+        "Syntax: tv2.channel_up() is a method call on the instance tv2. The name before the dot is the object, the name after the dot is the method, and the parentheses () invoke the method with no arguments.",
+        "Semantics: Inside channel_up() the code checks self.__on and self.__channel < 120; if both are true it increments the private attribute __channel by 1. So the call has an effect only when the TV is powered on and the channel is below 120.",
+        "Context: Because you turned tv2 on (Line 32) and already called channel_up() once on Line 33 (which moved the channel from the default 1 to 2), this second call on Line 34 will increment the channel from 2 to 3 (before the subsequent channel_down()).",
+        "Common misconceptions / errors: If tv2 were off this call would do nothing \u2014 it will not raise an error but the channel will not change. The method does not return a value (it returns None), so if you expect the new channel you must call get_channel() afterward. Also avoid trying to access or modify tv2.__channel directly, since __channel is intended as a private attribute.",
+        "Best practices: If you need to know whether the change succeeded, you can check tv2.is_on() first or modify the class to have channel_up() return True/False. Use named constants for minimum and maximum channels instead of magic numbers like 1 and 120, and rely on the provided setter/getter methods rather than touching internal attributes directly."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: You are calling the channel_up() method on the tv2 object so the TV's channel should increase by one (if the TV is on and not already at the maximum channel)."
+        },
+        {
+          "content": "Syntax: tv2.channel_up() is a method call on the instance tv2. The name before the dot is the object, the name after the dot is the method, and the parentheses () invoke the method with no arguments."
+        },
+        {
+          "content": "Semantics: Inside channel_up() the code checks self.__on and self.__channel < 120; if both are true it increments the private attribute __channel by 1. So the call has an effect only when the TV is powered on and the channel is below 120."
+        },
+        {
+          "content": "Context: Because you turned tv2 on (Line 32) and already called channel_up() once on Line 33 (which moved the channel from the default 1 to 2), this second call on Line 34 will increment the channel from 2 to 3 (before the subsequent channel_down())."
+        },
+        {
+          "content": "Common misconceptions / errors: If tv2 were off this call would do nothing \u2014 it will not raise an error but the channel will not change. The method does not return a value (it returns None), so if you expect the new channel you must call get_channel() afterward. Also avoid trying to access or modify tv2.__channel directly, since __channel is intended as a private attribute."
+        },
+        {
+          "content": "Best practices: If you need to know whether the change succeeded, you can check tv2.is_on() first or modify the class to have channel_up() return True/False. Use named constants for minimum and maximum channels instead of magic numbers like 1 and 120, and rely on the provided setter/getter methods rather than touching internal attributes directly."
+        }
+      ]
+    },
+    "35": {
+      "content": "tv2.channel_down()",
+      "commentList": [
+        "Purpose: You are calling the channel_down method on the tv2 object so the TV will try to decrease its current channel by 1 (this changes tv2's internal state if the action is allowed).",
+        "Syntax and semantics: tv2.channel_down() is a method call on the instance tv2; the empty parentheses mean you actually run the method now. Inside the method, self refers to tv2, so the code modifies tv2's private channel attribute.",
+        "Potential errors and misconceptions: If tv2 is turned off, nothing will happen because the method checks the on state; if the channel is already 1, it will not go below 1. Also, if you write tv2.channel_down (without parentheses) you will get a reference to the function instead of executing it, and you should not expect this call to return any value (it returns None).",
+        "Best practices: Before calling channel_down you should ensure the TV is on (for example, call tv2.turn_on() or check tv2.is_on()). Use the provided method rather than trying to access or modify tv2.__channel directly, and rely on get_channel() to read the channel after the change."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: You are calling the channel_down method on the tv2 object so the TV will try to decrease its current channel by 1 (this changes tv2's internal state if the action is allowed)."
+        },
+        {
+          "content": "Syntax and semantics: tv2.channel_down() is a method call on the instance tv2; the empty parentheses mean you actually run the method now. Inside the method, self refers to tv2, so the code modifies tv2's private channel attribute."
+        },
+        {
+          "content": "Potential errors and misconceptions: If tv2 is turned off, nothing will happen because the method checks the on state; if the channel is already 1, it will not go below 1. Also, if you write tv2.channel_down (without parentheses) you will get a reference to the function instead of executing it, and you should not expect this call to return any value (it returns None)."
+        },
+        {
+          "content": "Best practices: Before calling channel_down you should ensure the TV is on (for example, call tv2.turn_on() or check tv2.is_on()). Use the provided method rather than trying to access or modify tv2.__channel directly, and rely on get_channel() to read the channel after the change."
+        }
+      ]
+    },
+    "36": {
+      "content": "print(\"tv1's channel is \" + str(tv1.get_channel()))",
+      "commentList": [
+        "You are printing the current channel of the tv1 object so you can see the result of the test steps.",
+        "You call print(...) which sends text to the console. Inside, \"tv1's channel is \" is a string literal, the + operator concatenates strings, str(...) converts the numeric channel to text, and tv1.get_channel() calls the getter method that returns the channel number.",
+        "You should know the evaluation order: tv1.get_channel() runs first and returns an int, str(...) converts that int to a string, the strings are concatenated, and then print outputs the final string. The call to get_channel() does not change the TV state.",
+        "You can get a TypeError if you remove str(...) and try to concatenate a string with an int. You can also get a NameError if tv1 was never created. Note: in Python 2 print is different; this code uses Python 3 print(...) syntax.",
+        "You can write this more cleanly and safely with an f-string or by passing multiple arguments to print, e.g. print(f\"tv1's channel is {tv1.get_channel()}\") or print(\"tv1's channel is\", tv1.get_channel()), which avoid manual string conversion.",
+        "You are using the getter method (get_channel()) which respects encapsulation; avoid accessing the private attribute (like tv1._TV1__channel) directly so you keep the class's internal state safe."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "You are printing the current channel of the tv1 object so you can see the result of the test steps."
+        },
+        {
+          "content": "You call print(...) which sends text to the console. Inside, \"tv1's channel is \" is a string literal, the + operator concatenates strings, str(...) converts the numeric channel to text, and tv1.get_channel() calls the getter method that returns the channel number."
+        },
+        {
+          "content": "You should know the evaluation order: tv1.get_channel() runs first and returns an int, str(...) converts that int to a string, the strings are concatenated, and then print outputs the final string. The call to get_channel() does not change the TV state."
+        },
+        {
+          "content": "You can get a TypeError if you remove str(...) and try to concatenate a string with an int. You can also get a NameError if tv1 was never created. Note: in Python 2 print is different; this code uses Python 3 print(...) syntax."
+        },
+        {
+          "content": "You can write this more cleanly and safely with an f-string or by passing multiple arguments to print, e.g. print(f\"tv1's channel is {tv1.get_channel()}\") or print(\"tv1's channel is\", tv1.get_channel()), which avoid manual string conversion."
+        },
+        {
+          "content": "You are using the getter method (get_channel()) which respects encapsulation; avoid accessing the private attribute (like tv1._TV1__channel) directly so you keep the class's internal state safe."
+        }
+      ]
+    },
+    "37": {
+      "content": "print(\"tv2's channel is \" + str(tv2.get_channel()))",
+      "commentList": [
+        "Purpose: This line prints a user-friendly message that shows tv2's current channel by calling tv2.get_channel() and putting the result into the output string so you can see the TV's state.",
+        "Syntax breakdown: print(...) calls the print function; \"tv2's channel is \" is a string literal; + concatenates strings; str(...) converts the numeric channel to a string; tv2.get_channel() calls the get_channel method on the tv2 object (the dot accesses the method and the trailing () invokes it).",
+        "Potential error / common misconception: If you omit str(...) and try to do \"...\" + tv2.get_channel(), Python will raise a TypeError because you cannot concatenate a str and an int. Also remember + here is string concatenation, not numeric addition.",
+        "Logical issue to watch for: get_channel() always returns the stored channel number even if the TV is off. If you want to avoid showing a channel when the TV is off, check tv2.is_on() first (for example, print a different message when tv2.is_on() is False). Also ensure tv2 exists and is a TV1 instance or you'll get a NameError or AttributeError.",
+        "Best practice: Prefer f-strings for readability and automatic conversion, e.g. print(f\"tv2's channel is {tv2.get_channel()}\"). This avoids explicit str() and is clearer. You can also consider using a property for channel access or making get_channel return a clear value when the TV is off."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line prints a user-friendly message that shows tv2's current channel by calling tv2.get_channel() and putting the result into the output string so you can see the TV's state."
+        },
+        {
+          "content": "Syntax breakdown: print(...) calls the print function; \"tv2's channel is \" is a string literal; + concatenates strings; str(...) converts the numeric channel to a string; tv2.get_channel() calls the get_channel method on the tv2 object (the dot accesses the method and the trailing () invokes it)."
+        },
+        {
+          "content": "Potential error / common misconception: If you omit str(...) and try to do \"...\" + tv2.get_channel(), Python will raise a TypeError because you cannot concatenate a str and an int. Also remember + here is string concatenation, not numeric addition."
+        },
+        {
+          "content": "Logical issue to watch for: get_channel() always returns the stored channel number even if the TV is off. If you want to avoid showing a channel when the TV is off, check tv2.is_on() first (for example, print a different message when tv2.is_on() is False). Also ensure tv2 exists and is a TV1 instance or you'll get a NameError or AttributeError."
+        },
+        {
+          "content": "Best practice: Prefer f-strings for readability and automatic conversion, e.g. print(f\"tv2's channel is {tv2.get_channel()}\"). This avoids explicit str() and is clearer. You can also consider using a property for channel access or making get_channel return a clear value when the TV is off."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "def set_channel(new_channel) :",
+      "description": "You might write this because you think Python will pass the instance automatically and you only need to list the data you want to set. If you use this line, calling tv1.set_channel(30) will raise a TypeError at runtime saying the method was given 2 arguments but only expects 1. That happens because when you call an instance method Python implicitly passes the instance as the first argument; by omitting 'self' you have the wrong number of parameters. This prevents the method from running at all, so the channel will never be changed and your program will crash when you try to set a channel. The problem here is the missing explicit reference to the instance: you haven't declared a parameter that receives the TV object, so the method signature doesn't match how instance methods are called in Python.",
+      "line_number": 0
+    },
+    {
+      "code": "if new_channel >= 1 or new_channel <= 120 and self.__on :",
+      "description": "You might pick this because you think using 'or' will still check both range ends, or you expect the power check to be applied somewhere in the expression. However, due to operator precedence this is evaluated in an unexpected way: the 'and' binds tighter than 'or', so the expression behaves like (new_channel >= 1) or ((new_channel <= 120) and self.__on). That means many values (for example any channel >= 1) will satisfy the condition regardless of whether the TV is on. As a result, the program could set the channel even when the TV is off or accept clearly out-of-intended-range values without the power check being enforced. This distractor is wrong because it mixes operators so the power-state check is not reliably applied to the whole range check.",
+      "line_number": 0
+    },
+    {
+      "code": "self.channel = new_channel",
+      "description": "Why you might pick this: you may think that using a simpler attribute name is fine and that the rest of the class will see the change. It's tempting because it looks like an assignment that updates the channel.\n\nWhat this line actually does: it creates or updates a different attribute named channel (a public attribute) on the object. The class's getter get_channel returns the private attribute with the original name, so that getter will keep returning the old value. The class methods that check or change the channel expect the private attribute, so your change will be invisible to them.\n\nHow it affects the program: the channel appears unchanged when you call get_channel or use other TV methods, even though a new attribute exists on the object. The program runs without errors, but the setter silently fails to update the TV's real state.\n\nWhy this is invalid here: the code relies on a specially named private attribute to store the TV state. By writing to a different attribute you don't update that state. The missing piece is that you're not assigning to the same attribute the rest of the class uses, so the change has no effect.",
+      "line_number": 0
+    },
+    {
+      "code": "    def set_channel(self) :",
+      "description": "You might pick this because you imagine the method will fetch the new channel some other way and so you don't need to pass it in. If you keep this line but leave the rest of the method using the name new_channel, two things can happen: if you call tv1.set_channel(30) you'll immediately get a TypeError because you're passing an extra argument; if you instead call tv1.set_channel() the method body will try to use new_channel but that name doesn't exist, causing a NameError. Either way, the setter won't work and the channel won't be updated. The mistake is removing the parameter that the method needs to receive the value to set; without that parameter the method can't get the new channel value in a safe, predictable way.",
+      "line_number": 0
+    },
+    {
+      "code": "    def set_channel(new_channel, self) :",
+      "description": "You might use this because you know both the instance and the new value must be parameters but you don't realize the instance must be first. If you define the method this way, Python will still bind the instance as the first argument when you call tv1.set_channel(30). That means inside the method 'new_channel' will actually refer to the TV object and 'self' will be the number 30. When the method tries to access self.__on or self.__channel it will fail with an AttributeError because an integer (30) doesn't have those attributes. The code will therefore crash when it tries to read or set attributes. The core issue is that the instance parameter must come first so that the method's internal variable names refer to the expected objects.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:04.421Z",
+  "updated_at": "2026-09-02T02:55:54.739Z",
+  "stat": {
+    "size": 150332,
+    "lastTimeModified": 1788317758757.1423
+  }
+}

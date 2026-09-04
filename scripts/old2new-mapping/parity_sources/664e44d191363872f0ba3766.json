@@ -1,0 +1,308 @@
+{
+  "id": "6a91ae6b32e78ede45c116f5",
+  "user": "moh70@pitt.edu",
+  "name": "Finding Adjacent Numbers in Ascending Order in a Sequence of Numbers",
+  "description": "Construct a program that checks whether a sequence of non-zero numbers, entered one at a time, contains adjacent numbers in ascending order. Numbers are said to be in ascending order when they are arranged from the smallest to the largest number. For example, 5, 9, 13, 17 and 21 are arranged in ascending order.\\nNote that you need to think what value should the program use to indicate the end of the input.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_adjacent_greater.py",
+  "code": "#Step 1: Read the first number that the user enters\ntext = input(\"Enter a number: \")\nnum = float(text)\n#Step 2: Read the rest of the numbers that the user enters and check for adjacent numbers in ascending order\nwhile num != 0 :\n    previous = num\n    text = input(\"Enter a number: \")\n    num = float(text)     \n    if num != 0 and num > previous :\n        print(previous,\"and\", num, \"are in ascending order.\") ",
+  "lines": {
+    "2": {
+      "content": "text = input(\"Enter a number: \")",
+      "commentList": [
+        "Purpose: You show the prompt \"Enter a number: \" and read what the user types, storing that text in the variable text so you can convert or check it next.",
+        "Syntax and meaning: input(...) is a built-in that displays the prompt and returns the characters the user types (as a string). The = stores that string in the name text.",
+        "Potential errors and misconceptions: The value you get here is a string, not a number; if the user types non-numeric text, converting it to float on the next line will raise a ValueError. Also, if the user sends an EOF (for example Ctrl+D or Ctrl+Z), input will raise an EOFError.",
+        "Best practices: Make the prompt clearer about the sentinel (for example \"Enter a number (0 to stop): \") so the user knows how to finish. You can also call .strip() on the input or validate it and use try/except around the float conversion to handle bad input gracefully."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: You show the prompt \"Enter a number: \" and read what the user types, storing that text in the variable text so you can convert or check it next."
+        },
+        {
+          "content": "Syntax and meaning: input(...) is a built-in that displays the prompt and returns the characters the user types (as a string). The = stores that string in the name text."
+        },
+        {
+          "content": "Potential errors and misconceptions: The value you get here is a string, not a number; if the user types non-numeric text, converting it to float on the next line will raise a ValueError. Also, if the user sends an EOF (for example Ctrl+D or Ctrl+Z), input will raise an EOFError."
+        },
+        {
+          "content": "Best practices: Make the prompt clearer about the sentinel (for example \"Enter a number (0 to stop): \") so the user knows how to finish. You can also call .strip() on the input or validate it and use try/except around the float conversion to handle bad input gracefully."
+        }
+      ]
+    },
+    "3": {
+      "content": "num = float(text)",
+      "commentList": [
+        "You convert the string returned by input() into a numeric value and store it in num so you can perform numeric checks (for example, the num > previous test that follows).",
+        "float(text) parses the text string into a Python floating-point number and the = operator assigns that value to the variable num. For example, '5' becomes 5.0 and '3.2' becomes 3.2.",
+        "If the user types something that is not a valid number (letters, punctuation, or an empty string), float(text) will raise a ValueError and the program will crash unless you handle it.",
+        "Because you use 0 as the end-of-input sentinel, entering '0' or '0.0' becomes 0.0 and the later check num != 0 works as intended. Be aware that float arithmetic can introduce tiny rounding errors, but checking for an exact zero from user input is safe here.",
+        "Best practices: remove surrounding whitespace with text.strip() before conversion, wrap the conversion in try/except to handle invalid input and reprompt the user, and use int(text) instead of float(text) if you want to allow only whole numbers."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "You convert the string returned by input() into a numeric value and store it in num so you can perform numeric checks (for example, the num > previous test that follows)."
+        },
+        {
+          "content": "float(text) parses the text string into a Python floating-point number and the = operator assigns that value to the variable num. For example, '5' becomes 5.0 and '3.2' becomes 3.2."
+        },
+        {
+          "content": "If the user types something that is not a valid number (letters, punctuation, or an empty string), float(text) will raise a ValueError and the program will crash unless you handle it."
+        },
+        {
+          "content": "Because you use 0 as the end-of-input sentinel, entering '0' or '0.0' becomes 0.0 and the later check num != 0 works as intended. Be aware that float arithmetic can introduce tiny rounding errors, but checking for an exact zero from user input is safe here."
+        },
+        {
+          "content": "Best practices: remove surrounding whitespace with text.strip() before conversion, wrap the conversion in try/except to handle invalid input and reprompt the user, and use int(text) instead of float(text) if you want to allow only whole numbers."
+        }
+      ]
+    },
+    "5": {
+      "content": "while num != 0 :",
+      "commentList": [
+        "This line starts a loop that keeps running as long as the current number (num) is not 0. You are using 0 as the sentinel value that signals the end of input, so the loop processes numbers until the user enters 0.",
+        "Syntax-wise, 'while' begins a pre-check loop: the condition 'num != 0' is evaluated before each iteration and the colon ':' starts the indented block that follows. If the condition is True, the indented lines run; if False, the loop stops.",
+        "Because you already converted the first user input to a float (Line 3), this check uses that first value as the initial condition. If the very first number is 0, the loop body will not execute and the program ends immediately.",
+        "A common error is to forget to update 'num' inside the loop. If you never change 'num' within the loop, you'll create an infinite loop. In this program you must reassign 'num' (Line 8) each iteration so the loop can eventually stop.",
+        "Another possible misconception is about what 'adjacent' means: this loop structure makes you compare only consecutive numbers because you set 'previous = num' at the start of each iteration and then read a new 'num'. You are not comparing non-adjacent numbers.",
+        "Be careful with input errors: if the user types non-numeric text, the earlier float(text) conversion will raise an error before this check. For a more robust program you should validate input (for example, use try/except) and maybe use a named sentinel like SENTINEL = 0 to make the meaning clearer.",
+        "Small style tips: keep spaces around '!=' for readability, ensure the colon and indentation are correct so the loop block is clear, and consider alternatives like 'while True' with an explicit break if that makes the control flow easier for you to read."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "This line starts a loop that keeps running as long as the current number (num) is not 0. You are using 0 as the sentinel value that signals the end of input, so the loop processes numbers until the user enters 0."
+        },
+        {
+          "content": "Syntax-wise, 'while' begins a pre-check loop: the condition 'num != 0' is evaluated before each iteration and the colon ':' starts the indented block that follows. If the condition is True, the indented lines run; if False, the loop stops."
+        },
+        {
+          "content": "Because you already converted the first user input to a float (Line 3), this check uses that first value as the initial condition. If the very first number is 0, the loop body will not execute and the program ends immediately."
+        },
+        {
+          "content": "A common error is to forget to update 'num' inside the loop. If you never change 'num' within the loop, you'll create an infinite loop. In this program you must reassign 'num' (Line 8) each iteration so the loop can eventually stop."
+        },
+        {
+          "content": "Another possible misconception is about what 'adjacent' means: this loop structure makes you compare only consecutive numbers because you set 'previous = num' at the start of each iteration and then read a new 'num'. You are not comparing non-adjacent numbers."
+        },
+        {
+          "content": "Be careful with input errors: if the user types non-numeric text, the earlier float(text) conversion will raise an error before this check. For a more robust program you should validate input (for example, use try/except) and maybe use a named sentinel like SENTINEL = 0 to make the meaning clearer."
+        },
+        {
+          "content": "Small style tips: keep spaces around '!=' for readability, ensure the colon and indentation are correct so the loop block is clear, and consider alternatives like 'while True' with an explicit break if that makes the control flow easier for you to read."
+        }
+      ]
+    },
+    "6": {
+      "content": "    previous = num",
+      "commentList": [
+        "You store the current number in the variable previous so that you can compare it with the next number entered on the following loop iteration; this is the core setup for checking adjacent pairs.",
+        "This line is a simple assignment (previous = num). It creates or updates the name previous and makes it refer to the same numeric value that num currently holds. Because it is indented inside the while loop, it happens every time the loop repeats.",
+        "If you forget this assignment, you will keep comparing the new input to an old value (or an uninitialized name), so your adjacent-number checks will be wrong. Also be careful not to accidentally write previous == num (a comparison) instead of previous = num (an assignment).",
+        "Remember that this line assumes num already contains a valid numeric value (converted with float). If input conversion can fail in your program, validate or use try/except before this assignment to avoid runtime errors.",
+        "For clarity, use descriptive names (e.g., previous_number) and keep this assignment before reading the next input \u2014 if you place it after reading the next number, you will overwrite the value you need for comparison."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "You store the current number in the variable previous so that you can compare it with the next number entered on the following loop iteration; this is the core setup for checking adjacent pairs."
+        },
+        {
+          "content": "This line is a simple assignment (previous = num). It creates or updates the name previous and makes it refer to the same numeric value that num currently holds. Because it is indented inside the while loop, it happens every time the loop repeats."
+        },
+        {
+          "content": "If you forget this assignment, you will keep comparing the new input to an old value (or an uninitialized name), so your adjacent-number checks will be wrong. Also be careful not to accidentally write previous == num (a comparison) instead of previous = num (an assignment)."
+        },
+        {
+          "content": "Remember that this line assumes num already contains a valid numeric value (converted with float). If input conversion can fail in your program, validate or use try/except before this assignment to avoid runtime errors."
+        },
+        {
+          "content": "For clarity, use descriptive names (e.g., previous_number) and keep this assignment before reading the next input \u2014 if you place it after reading the next number, you will overwrite the value you need for comparison."
+        }
+      ]
+    },
+    "7": {
+      "content": "    text = input(\"Enter a number: \")",
+      "commentList": [
+        "Purpose: You read the next value the user types and store it as a string in text so the loop can process the next number; together with the following float conversion it advances the sequence you are checking.",
+        "Syntax: input(\"Enter a number: \") displays the prompt and returns what the user types as a string, and the assignment text = ... saves that string in the variable text.",
+        "You must remember input() returns a string, not a numeric type; because of that you convert it to float on the next line\u2014if you forget conversion, numeric comparisons will fail or behave unexpectedly.",
+        "Common error: if the user types something that is not a valid number (for example letters or an empty line), the later float(text) will raise a ValueError; you should validate the string or use try/except to give a friendly error message.",
+        "Best practice: make the prompt clear (for example mention that entering 0 stops input), consider stripping whitespace with text = input(...).strip(), and handle conversion errors with try/except so your program does not crash on bad input.",
+        "Flow note: this line must be inside the while loop and indented as shown; without reading a new input here you would never update num and risk an infinite loop."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: You read the next value the user types and store it as a string in text so the loop can process the next number; together with the following float conversion it advances the sequence you are checking."
+        },
+        {
+          "content": "Syntax: input(\"Enter a number: \") displays the prompt and returns what the user types as a string, and the assignment text = ... saves that string in the variable text."
+        },
+        {
+          "content": "You must remember input() returns a string, not a numeric type; because of that you convert it to float on the next line\u2014if you forget conversion, numeric comparisons will fail or behave unexpectedly."
+        },
+        {
+          "content": "Common error: if the user types something that is not a valid number (for example letters or an empty line), the later float(text) will raise a ValueError; you should validate the string or use try/except to give a friendly error message."
+        },
+        {
+          "content": "Best practice: make the prompt clear (for example mention that entering 0 stops input), consider stripping whitespace with text = input(...).strip(), and handle conversion errors with try/except so your program does not crash on bad input."
+        },
+        {
+          "content": "Flow note: this line must be inside the while loop and indented as shown; without reading a new input here you would never update num and risk an infinite loop."
+        }
+      ]
+    },
+    "8": {
+      "content": "    num = float(text)     ",
+      "commentList": [
+        "Purpose: You convert the text the user typed into a numeric value and store it in num so the program can compare this current number with the previous one.",
+        "Syntax/semantics: float(text) calls Python's float constructor to turn the string in text into a floating-point number, and the = operator assigns that numeric value to the variable num.",
+        "Common error: If the user types something that is not a valid number (for example letters or an empty string), float(text) raises a ValueError \u2014 you should handle or validate input to avoid a crash.",
+        "Loop logic: This line advances the loop by updating num with the newly entered value; if you omitted this assignment the loop could become infinite because num would never change.",
+        "Sentinel note: When the user enters 0, float('0') becomes 0.0 and the outer while condition (num != 0) will stop the loop as intended; comparing 0.0 to 0 works correctly in Python.",
+        "Best practices: You should strip whitespace from text before conversion, consider using try/except to catch bad input and re-prompt the user, and use a clearly named sentinel constant (e.g., SENTINEL = 0.0) if it makes your code clearer."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: You convert the text the user typed into a numeric value and store it in num so the program can compare this current number with the previous one."
+        },
+        {
+          "content": "Syntax/semantics: float(text) calls Python's float constructor to turn the string in text into a floating-point number, and the = operator assigns that numeric value to the variable num."
+        },
+        {
+          "content": "Common error: If the user types something that is not a valid number (for example letters or an empty string), float(text) raises a ValueError \u2014 you should handle or validate input to avoid a crash."
+        },
+        {
+          "content": "Loop logic: This line advances the loop by updating num with the newly entered value; if you omitted this assignment the loop could become infinite because num would never change."
+        },
+        {
+          "content": "Sentinel note: When the user enters 0, float('0') becomes 0.0 and the outer while condition (num != 0) will stop the loop as intended; comparing 0.0 to 0 works correctly in Python."
+        },
+        {
+          "content": "Best practices: You should strip whitespace from text before conversion, consider using try/except to catch bad input and re-prompt the user, and use a clearly named sentinel constant (e.g., SENTINEL = 0.0) if it makes your code clearer."
+        }
+      ]
+    },
+    "9": {
+      "content": "    if num != 0 and num > previous :",
+      "commentList": [
+        "You are checking two things at once: that the new number is not the end-of-input sentinel (num != 0) and that it is strictly larger than the previous number (num > previous). If both are true, the program will report an ascending adjacent pair.",
+        "The if condition uses the logical operator and, so both comparisons must be true. Python evaluates left to right and short-circuits: if num != 0 is false, Python will not evaluate num > previous.",
+        "Because num was converted to float, you are doing a floating-point comparison. That works for typical inputs, but be aware that very small rounding differences can affect equality checks\u2014using > (strictly greater) avoids some equality issues.",
+        "A common misconception is thinking you can omit the sentinel check; if you skip num != 0 you might incorrectly report a pair that includes the ending 0. The sentinel check prevents any output involving the terminator.",
+        "Another common error is using >= instead of >. If you used >= you would treat equal adjacent numbers as ascending; use > here because the problem asks for ascending (strictly increasing) order.",
+        "If the user types a non-number, converting to float earlier will raise a ValueError before this line runs. You should consider wrapping input conversion in try/except so your program can handle bad input gracefully.",
+        "For clarity and maintainability, consider defining the sentinel as a named constant (for example SENTINEL = 0) and add a short comment so you (and others) immediately understand why you check num != 0.",
+        "Note the edge case: if the first number entered is 0, the while loop body (and therefore this line) never runs\u2014this correctly results in no comparisons being made."
+      ],
+      "indentLevel": 1,
+      "blank": true,
+      "comments": [
+        {
+          "content": "You are checking two things at once: that the new number is not the end-of-input sentinel (num != 0) and that it is strictly larger than the previous number (num > previous). If both are true, the program will report an ascending adjacent pair."
+        },
+        {
+          "content": "The if condition uses the logical operator and, so both comparisons must be true. Python evaluates left to right and short-circuits: if num != 0 is false, Python will not evaluate num > previous."
+        },
+        {
+          "content": "Because num was converted to float, you are doing a floating-point comparison. That works for typical inputs, but be aware that very small rounding differences can affect equality checks\u2014using > (strictly greater) avoids some equality issues."
+        },
+        {
+          "content": "A common misconception is thinking you can omit the sentinel check; if you skip num != 0 you might incorrectly report a pair that includes the ending 0. The sentinel check prevents any output involving the terminator."
+        },
+        {
+          "content": "Another common error is using >= instead of >. If you used >= you would treat equal adjacent numbers as ascending; use > here because the problem asks for ascending (strictly increasing) order."
+        },
+        {
+          "content": "If the user types a non-number, converting to float earlier will raise a ValueError before this line runs. You should consider wrapping input conversion in try/except so your program can handle bad input gracefully."
+        },
+        {
+          "content": "For clarity and maintainability, consider defining the sentinel as a named constant (for example SENTINEL = 0) and add a short comment so you (and others) immediately understand why you check num != 0."
+        },
+        {
+          "content": "Note the edge case: if the first number entered is 0, the while loop body (and therefore this line) never runs\u2014this correctly results in no comparisons being made."
+        }
+      ]
+    },
+    "10": {
+      "content": "        print(previous,\"and\", num, \"are in ascending order.\") ",
+      "commentList": [
+        "You use this line to inform the user that the two most recent values (previous and num) are adjacent and in ascending order; it prints those values alongside the message.",
+        "You are calling Python's print function with multiple arguments separated by commas: print(previous, \"and\", num, \"are in ascending order.\"). Python converts each argument to a string, inserts single spaces between them by default, and then adds a newline at the end.",
+        "Be aware of common pitfalls: if the earlier input conversion to float failed, you would never reach this line because a ValueError would have been raised already. Also note that floating point values can display unexpected digits (e.g., 1.2 may show as 1.2000000000000002), which can confuse users.",
+        "Don't confuse the commas in print with string concatenation \u2014 the commas create separate print arguments and automatic spaces. Also remember the sentinel 0 is not reported here because the if condition requires num != 0.",
+        "For clearer or more controlled output, you could use an f-string and formatting (for example: print(f\"{previous} and {num} are in ascending order.\") or format numeric precision), which makes the intent and format explicit and avoids accidental extra spaces."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "You use this line to inform the user that the two most recent values (previous and num) are adjacent and in ascending order; it prints those values alongside the message."
+        },
+        {
+          "content": "You are calling Python's print function with multiple arguments separated by commas: print(previous, \"and\", num, \"are in ascending order.\"). Python converts each argument to a string, inserts single spaces between them by default, and then adds a newline at the end."
+        },
+        {
+          "content": "Be aware of common pitfalls: if the earlier input conversion to float failed, you would never reach this line because a ValueError would have been raised already. Also note that floating point values can display unexpected digits (e.g., 1.2 may show as 1.2000000000000002), which can confuse users."
+        },
+        {
+          "content": "Don't confuse the commas in print with string concatenation \u2014 the commas create separate print arguments and automatic spaces. Also remember the sentinel 0 is not reported here because the if condition requires num != 0."
+        },
+        {
+          "content": "For clearer or more controlled output, you could use an f-string and formatting (for example: print(f\"{previous} and {num} are in ascending order.\") or format numeric precision), which makes the intent and format explicit and avoids accidental extra spaces."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "while num > 0 :",
+      "description": "You might pick this because you assume the user will only enter positive numbers and so use > 0 to continue. If you use this line, the loop will stop as soon as a non-positive number (zero or any negative) appears. That means if the sequence contains negative non-zero numbers you wanted to process, the program will incorrectly stop and miss later inputs and comparisons. In other words, you silently disallow valid negative inputs. This distractor fails because it only accepts positive values rather than checking for the intended stop condition, so it changes which numbers get examined and can prematurely end the loop.",
+      "line_number": 0
+    },
+    {
+      "code": "if num > previous :",
+      "description": "You might drop the explicit sentinel check because you assume the loop already prevents 0 from being considered. Step-by-step: the loop sets previous = num, then you read the next num; if that next num is the sentinel 0, this line has no explicit check and will compare 0 to previous. If previous is negative (for example previous = -5) then num > previous is true and the program will print that \"-5 and 0 are in ascending order.\" This is wrong because 0 was meant to stop input, not to be treated as a data value. Using this distractor makes the program produce false positive messages when the sentinel value satisfies the comparison. The key missing piece is the explicit guard against the sentinel after reading the new number; without it, you can mistakenly report pairs that include the end-marker.",
+      "line_number": 0
+    },
+    {
+      "code": "if num != 0 and num >= previous :",
+      "description": "You might use >= because you think equal adjacent numbers should be considered ascending. Step-by-step: the line still avoids using the sentinel (it checks num != 0), so it won't treat 0 as a data value. However, with >= you will also print a message when two adjacent numbers are equal. For example, if previous = 7 and the next num = 7, this condition is true and the program will report \"7 and 7 are in ascending order.\" That contradicts the usual meaning of ascending (which requires going from smaller to larger). Using this distractor makes the program accept equal pairs as ascending, producing incorrect outputs for sequences with repeated values. The issue is the choice of comparison operator \u2014 it allows equality where the problem requires a strict increase.",
+      "line_number": 0
+    },
+    {
+      "code": "while num == 0 :",
+      "description": "You might choose this if you confuse the idea of a sentinel value with the loop's continuation condition and think the loop should run when the sentinel is seen. If you use this line, the loop will only run when the current number equals zero. That means if the first number is non-zero (the usual case), the loop body won't run at all and no adjacent comparisons will be made. Conversely, if the first input is zero, the loop runs unexpectedly. This reverses the intended logic: instead of continuing while inputs are regular values and stopping at the sentinel, it continues only at the sentinel value, producing no useful processing in typical cases.",
+      "line_number": 0
+    },
+    {
+      "code": "while num != '0' :",
+      "description": "You might pick this because you remember typing '0' as the end marker when prompted and compare against that exact token. However, in this program num is a float (a numeric value), so comparing it to the string '0' never matches. As a result, the condition stays true for every numeric input and the loop does not stop when the user types 0 \u2014 leading to an effectively infinite loop (until you forcibly terminate the program). This distractor shows a type-mismatch mistake: you're comparing a numeric variable to a string literal, which prevents the intended stop check from working.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "-10 -30 -2 -9 -10 3 5 6 -1 0",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:07.380Z",
+  "updated_at": "2026-09-02T02:57:51.406Z",
+  "stat": {
+    "size": 57159,
+    "lastTimeModified": 1788317872461.695
+  }
+}

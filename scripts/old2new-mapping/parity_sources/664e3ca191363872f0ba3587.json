@@ -1,0 +1,419 @@
+{
+  "id": "6a91ae6632e78ede45c116a7",
+  "user": "moh70@pitt.edu",
+  "name": "Calculating the Winning Percentage of a Sports Team (Case 2) ",
+  "description": "Construct a program that receives from the user the number of games in a tournament and the number of the games that a sports team won in the tournament, and calculates the winning percentage of that sports team. The program must ask the user for each of the two inputs until the user enters a valid number.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_win_percentage_input.py",
+  "code": "#Step 1: Read the number of games in the tournament\ntext = input(\"Enter the number of games in the tournament: \")\ntotal_games = int(text)       \n#Step 2: Validate the user input for the number of games in the tournament, ask for a valid input as long as the user enters an invalid number; otherwise stop\nwhile total_games <= 0 :\n    text = input(\"Enter the number of games in the tournament: \")\n    total_games = int(text)\n#Step 3: Read the number of games that the sports team won in the tournament\ntext = input(\"Enter the number of games that the sports team won in the tournament: \")\nwins = int(text)      \n#Step 4: Validate the user input for the number of games that the sports team won in the tournament, ask for a valid input as long as the user enters an invalid number; otherwise stop\nwhile wins < 0 or wins > total_games :\n    text = input(\"Enter the number of games that the sports team won in the tournament: \")\n    wins = int(text)\n#Step 5: Calculate and print the percentage of games won by a team\nratio = wins / total_games\nprint(\"Winning percentage:\", ratio)",
+  "lines": {
+    "2": {
+      "content": "text = input(\"Enter the number of games in the tournament: \")",
+      "commentList": [
+        "Purpose: You show a prompt asking the user for the number of tournament games and store whatever they type in the variable text so the program can use it next.",
+        "Syntax/structure: input(\"...\") displays the prompt and returns the user's response as a string; the = operator assigns that string to the name text.",
+        "Runtime behavior: input() pauses the program until the user presses Enter; no matter what the user types (digits, letters, or nothing), input() returns a string value.",
+        "Common errors/misconceptions: You might expect text to be a number, but it is a string. If the user types non-numeric text (or a decimal like '3.5'), converting it to int later will cause an error. Empty input is also possible.",
+        "Best practices: Use a more descriptive name (e.g., games_str or user_input), consider calling .strip() to remove extra spaces, and handle conversion errors by checking the string or using try/except around int() so you can re-prompt the user instead of crashing. Also make the prompt clear about the expected input (for example, 'Enter a positive integer:')."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: You show a prompt asking the user for the number of tournament games and store whatever they type in the variable text so the program can use it next."
+        },
+        {
+          "content": "Syntax/structure: input(\"...\") displays the prompt and returns the user's response as a string; the = operator assigns that string to the name text."
+        },
+        {
+          "content": "Runtime behavior: input() pauses the program until the user presses Enter; no matter what the user types (digits, letters, or nothing), input() returns a string value."
+        },
+        {
+          "content": "Common errors/misconceptions: You might expect text to be a number, but it is a string. If the user types non-numeric text (or a decimal like '3.5'), converting it to int later will cause an error. Empty input is also possible."
+        },
+        {
+          "content": "Best practices: Use a more descriptive name (e.g., games_str or user_input), consider calling .strip() to remove extra spaces, and handle conversion errors by checking the string or using try/except around int() so you can re-prompt the user instead of crashing. Also make the prompt clear about the expected input (for example, 'Enter a positive integer:')."
+        }
+      ]
+    },
+    "3": {
+      "content": "total_games = int(text)       ",
+      "commentList": [
+        "This line converts the text you read from the user into an integer and stores it in the variable total_games so you can do numeric checks and arithmetic later.",
+        "int(text) is a call to Python's built-in int() function which parses the string text to produce an integer; the '=' operator then assigns that integer value to total_games.",
+        "If the user entered something that is not a valid integer string (for example letters, an empty string, or a decimal like '3.5'), int(text) will raise a ValueError and your program will crash unless you handle that case.",
+        "int() does not check that the number is positive or within any range \u2014 it only converts the format. The program validates positivity later with the while loop, so converting here does not guarantee a valid tournament size.",
+        "Best practice: strip whitespace from the input first (text = text.strip()) and protect the conversion with a try/except or a validation loop so you keep asking the user until int(text) succeeds. This prevents crashes and gives a clearer experience for the user.",
+        "If you expect fractional game counts (unusual), use float() and decide how to handle fractions; otherwise insist on integers because number of games should be a whole number."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "This line converts the text you read from the user into an integer and stores it in the variable total_games so you can do numeric checks and arithmetic later."
+        },
+        {
+          "content": "int(text) is a call to Python's built-in int() function which parses the string text to produce an integer; the '=' operator then assigns that integer value to total_games."
+        },
+        {
+          "content": "If the user entered something that is not a valid integer string (for example letters, an empty string, or a decimal like '3.5'), int(text) will raise a ValueError and your program will crash unless you handle that case."
+        },
+        {
+          "content": "int() does not check that the number is positive or within any range \u2014 it only converts the format. The program validates positivity later with the while loop, so converting here does not guarantee a valid tournament size."
+        },
+        {
+          "content": "Best practice: strip whitespace from the input first (text = text.strip()) and protect the conversion with a try/except or a validation loop so you keep asking the user until int(text) succeeds. This prevents crashes and gives a clearer experience for the user."
+        },
+        {
+          "content": "If you expect fractional game counts (unusual), use float() and decide how to handle fractions; otherwise insist on integers because number of games should be a whole number."
+        }
+      ]
+    },
+    "5": {
+      "content": "while total_games <= 0 :",
+      "commentList": [
+        "Purpose: This while line starts a validation loop that keeps asking the user for the number of games until you get a positive number (greater than 0). You need this because zero or negative games are invalid and would later cause a division-by-zero or meaningless result.",
+        "Syntax and structure: 'while' is the loop keyword, 'total_games <= 0' is the boolean condition being tested, and the trailing ':' marks the start of the indented loop body (lines 6\u20137). The body runs repeatedly as long as the condition is true; when the condition becomes false, execution continues after the loop.",
+        "Behavior detail: On each check the program evaluates whether total_games is less than or equal to zero. If it is, the code inside the loop runs and you prompt the user again. If total_games is already a positive integer when this line is reached, the loop is skipped once and the program proceeds.",
+        "Common errors and misconceptions: If you used '< 0' instead of '<= 0' you would allow 0 as valid input and later divide by zero. Forgetting the ':' or incorrect indentation will cause a syntax error. If you forget to update total_games inside the loop (lines 6\u20137), you'll create an infinite loop.",
+        "Input errors to watch for: Converting the user's text to int can raise a ValueError if the user types non-numeric input. As written, such an input will crash the program when int(text) runs. You should handle this (for example with try/except) so the loop can continue asking instead of crashing.",
+        "Best practice suggestions: Make the prompt tell the user what you expect (e.g., 'Enter a positive integer for number of games:'). Validate conversion safely with try/except or use a helper function that keeps asking until you successfully parse a positive integer. This keeps your loop robust and user-friendly."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This while line starts a validation loop that keeps asking the user for the number of games until you get a positive number (greater than 0). You need this because zero or negative games are invalid and would later cause a division-by-zero or meaningless result."
+        },
+        {
+          "content": "Syntax and structure: 'while' is the loop keyword, 'total_games <= 0' is the boolean condition being tested, and the trailing ':' marks the start of the indented loop body (lines 6\u20137). The body runs repeatedly as long as the condition is true; when the condition becomes false, execution continues after the loop."
+        },
+        {
+          "content": "Behavior detail: On each check the program evaluates whether total_games is less than or equal to zero. If it is, the code inside the loop runs and you prompt the user again. If total_games is already a positive integer when this line is reached, the loop is skipped once and the program proceeds."
+        },
+        {
+          "content": "Common errors and misconceptions: If you used '< 0' instead of '<= 0' you would allow 0 as valid input and later divide by zero. Forgetting the ':' or incorrect indentation will cause a syntax error. If you forget to update total_games inside the loop (lines 6\u20137), you'll create an infinite loop."
+        },
+        {
+          "content": "Input errors to watch for: Converting the user's text to int can raise a ValueError if the user types non-numeric input. As written, such an input will crash the program when int(text) runs. You should handle this (for example with try/except) so the loop can continue asking instead of crashing."
+        },
+        {
+          "content": "Best practice suggestions: Make the prompt tell the user what you expect (e.g., 'Enter a positive integer for number of games:'). Validate conversion safely with try/except or use a helper function that keeps asking until you successfully parse a positive integer. This keeps your loop robust and user-friendly."
+        }
+      ]
+    },
+    "6": {
+      "content": "    text = input(\"Enter the number of games in the tournament: \")",
+      "commentList": [
+        "Purpose: this line asks the user again for the number of games and stores what they type into the variable text when the loop finds the current total_games is invalid. You are re-prompting inside the validation loop.",
+        "Syntax and behavior: input(\"...\") displays the prompt and returns a string; that string is assigned to text. Because this line is indented under the while, it runs repeatedly until the loop condition becomes false.",
+        "What it does not do: this line only collects a string \u2014 it does not convert the answer to an integer. The actual conversion happens on the next line (total_games = int(text)), so don\u2019t assume text is a number yet.",
+        "Possible errors and misconceptions: if the user types something that is not an integer (letters, decimals, empty text), the conversion on the next line will raise an error and the program will crash. Also, if the user keeps entering invalid values, the loop will keep repeating.",
+        "Best practices you can apply: make the prompt explicit (for example: \"Enter the number of games (positive integer): \"), and handle bad input before converting \u2014 e.g. strip the text and use a try/except around int(text) or check characters first \u2014 so the program can give a clear error message instead of crashing.",
+        "User experience tip: consider printing a short message before re-prompting (like \"Invalid input \u2014 please enter a positive integer\") so the user understands why they are being asked again."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: this line asks the user again for the number of games and stores what they type into the variable text when the loop finds the current total_games is invalid. You are re-prompting inside the validation loop."
+        },
+        {
+          "content": "Syntax and behavior: input(\"...\") displays the prompt and returns a string; that string is assigned to text. Because this line is indented under the while, it runs repeatedly until the loop condition becomes false."
+        },
+        {
+          "content": "What it does not do: this line only collects a string \u2014 it does not convert the answer to an integer. The actual conversion happens on the next line (total_games = int(text)), so don\u2019t assume text is a number yet."
+        },
+        {
+          "content": "Possible errors and misconceptions: if the user types something that is not an integer (letters, decimals, empty text), the conversion on the next line will raise an error and the program will crash. Also, if the user keeps entering invalid values, the loop will keep repeating."
+        },
+        {
+          "content": "Best practices you can apply: make the prompt explicit (for example: \"Enter the number of games (positive integer): \"), and handle bad input before converting \u2014 e.g. strip the text and use a try/except around int(text) or check characters first \u2014 so the program can give a clear error message instead of crashing."
+        },
+        {
+          "content": "User experience tip: consider printing a short message before re-prompting (like \"Invalid input \u2014 please enter a positive integer\") so the user understands why they are being asked again."
+        }
+      ]
+    },
+    "7": {
+      "content": "    total_games = int(text)",
+      "commentList": [
+        "Purpose: This line converts the most recent user input (a string stored in text) into an integer and stores it in total_games so the while loop can re-check whether the value is valid.",
+        "Syntax and behavior: int(text) calls Python's built-in converter to turn the string in text into an int, and the = assignment puts that integer into the variable total_games. Because this line is indented inside the while loop, it updates the loop variable on each iteration.",
+        "Common errors and misconceptions: If the user types something that is not a valid integer literal (for example \"five\" or \"3.5\"), int(text) will raise a ValueError and the program will crash. Leading/trailing spaces are OK (int(\" 5 \") works), but decimal numbers or words are not.",
+        "Logical pitfall: If you omit this line (or otherwise don't update total_games inside the loop), the loop condition (total_games <= 0) will never change and you'll get an infinite loop. So you must update the loop variable each time you prompt the user.",
+        "Best practices: Protect this conversion with validation, e.g. use a try/except around int(text) and re-prompt on ValueError, or verify the string represents an integer before converting. Also make the prompt clear (ask for a positive integer) so users know what input is expected."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: This line converts the most recent user input (a string stored in text) into an integer and stores it in total_games so the while loop can re-check whether the value is valid."
+        },
+        {
+          "content": "Syntax and behavior: int(text) calls Python's built-in converter to turn the string in text into an int, and the = assignment puts that integer into the variable total_games. Because this line is indented inside the while loop, it updates the loop variable on each iteration."
+        },
+        {
+          "content": "Common errors and misconceptions: If the user types something that is not a valid integer literal (for example \"five\" or \"3.5\"), int(text) will raise a ValueError and the program will crash. Leading/trailing spaces are OK (int(\" 5 \") works), but decimal numbers or words are not."
+        },
+        {
+          "content": "Logical pitfall: If you omit this line (or otherwise don't update total_games inside the loop), the loop condition (total_games <= 0) will never change and you'll get an infinite loop. So you must update the loop variable each time you prompt the user."
+        },
+        {
+          "content": "Best practices: Protect this conversion with validation, e.g. use a try/except around int(text) and re-prompt on ValueError, or verify the string represents an integer before converting. Also make the prompt clear (ask for a positive integer) so users know what input is expected."
+        }
+      ]
+    },
+    "9": {
+      "content": "text = input(\"Enter the number of games that the sports team won in the tournament: \")",
+      "commentList": [
+        "You prompt the user to enter how many games the team won; input(...) displays the message and returns the user's response so you can process it next.",
+        "You call input with a string prompt and store the returned value (always a string) in the variable text so that Line 10 can convert it to an integer.",
+        "Be aware that this line alone won't fail on bad input \u2014 if the user types letters, a decimal, or leaves it blank, the conversion on Line 10 will raise a ValueError; also the value might be outside the allowed range (handled later by the validation loop).",
+        "As a best practice, consider trimming whitespace (e.g., input(...).strip()), showing the valid range in the prompt (0 to total_games) to guide the user, or performing the int conversion inside a try/except so you can show a friendly error instead of crashing.",
+        "You reuse the variable name text here which works, but using a clearer name like wins_text can make the code easier for you and others to read and maintain."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "You prompt the user to enter how many games the team won; input(...) displays the message and returns the user's response so you can process it next."
+        },
+        {
+          "content": "You call input with a string prompt and store the returned value (always a string) in the variable text so that Line 10 can convert it to an integer."
+        },
+        {
+          "content": "Be aware that this line alone won't fail on bad input \u2014 if the user types letters, a decimal, or leaves it blank, the conversion on Line 10 will raise a ValueError; also the value might be outside the allowed range (handled later by the validation loop)."
+        },
+        {
+          "content": "As a best practice, consider trimming whitespace (e.g., input(...).strip()), showing the valid range in the prompt (0 to total_games) to guide the user, or performing the int conversion inside a try/except so you can show a friendly error instead of crashing."
+        },
+        {
+          "content": "You reuse the variable name text here which works, but using a clearer name like wins_text can make the code easier for you and others to read and maintain."
+        }
+      ]
+    },
+    "10": {
+      "content": "wins = int(text)      ",
+      "commentList": [
+        "Purpose: This line converts the text you got from input into an integer and stores that number in the variable wins, which represents how many games the team won.",
+        "Syntax and meaning: int(text) attempts to parse the string in text as a base-10 integer; the = assigns the resulting integer value to the name wins so you can use it later in the program.",
+        "Potential errors and pitfalls: if text does not contain a valid integer literal (for example 'three', '4.5', or an empty string), int(text) will raise a ValueError and the program will crash unless you handle that case. Note that strings with surrounding spaces (e.g. ' 3 ') are fine, but '3.0' is not.",
+        "Common misconceptions: you might think int('3.0') will give 3, but it will fail; converting a float value like int(3.7) truncates the float, which is different from parsing a string. Also int('-1') succeeds (giving -1) even though a negative number may be invalid for wins \u2014 the later validation loop checks that.",
+        "Best practices: to avoid crashes you should validate or wrap the conversion in a try/except block and re-prompt the user on failure, or perform the conversion inside the input-validation loop. You can also use text.strip() before converting to remove extra whitespace.",
+        "How it fits the solution: this is the essential step that turns the user's text input into a numeric value you can compare against total_games and use to compute the winning percentage."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line converts the text you got from input into an integer and stores that number in the variable wins, which represents how many games the team won."
+        },
+        {
+          "content": "Syntax and meaning: int(text) attempts to parse the string in text as a base-10 integer; the = assigns the resulting integer value to the name wins so you can use it later in the program."
+        },
+        {
+          "content": "Potential errors and pitfalls: if text does not contain a valid integer literal (for example 'three', '4.5', or an empty string), int(text) will raise a ValueError and the program will crash unless you handle that case. Note that strings with surrounding spaces (e.g. ' 3 ') are fine, but '3.0' is not."
+        },
+        {
+          "content": "Common misconceptions: you might think int('3.0') will give 3, but it will fail; converting a float value like int(3.7) truncates the float, which is different from parsing a string. Also int('-1') succeeds (giving -1) even though a negative number may be invalid for wins \u2014 the later validation loop checks that."
+        },
+        {
+          "content": "Best practices: to avoid crashes you should validate or wrap the conversion in a try/except block and re-prompt the user on failure, or perform the conversion inside the input-validation loop. You can also use text.strip() before converting to remove extra whitespace."
+        },
+        {
+          "content": "How it fits the solution: this is the essential step that turns the user's text input into a numeric value you can compare against total_games and use to compute the winning percentage."
+        }
+      ]
+    },
+    "12": {
+      "content": "while wins < 0 or wins > total_games :",
+      "commentList": [
+        "You use this while condition to keep asking for the number of wins until the input is valid: the loop continues when wins is less than 0 or greater than total_games, and it stops when wins is in the inclusive range 0..total_games.",
+        "You can read 'wins < 0 or wins > total_games' as two separate checks joined by the logical operator or; if either check is true the whole condition is true and the loop body runs to re-prompt the user.",
+        "A common mistake is to use and instead of or \u2014 if you used and, almost no invalid number would be caught because a number can't be both < 0 and > total_games at the same time. Also be careful not to change the comparison signs in a way that accidentally rejects valid edge cases like 0 or total_games.",
+        "You should be aware that this condition assumes wins is already an integer. To avoid a crash on non-numeric input, you should perform the int conversion inside a try/except (or otherwise validate conversion) when you read the user's input.",
+        "As a best practice, make your prompt explicit about the allowed range (for example: 'Enter wins (0 to X):') and keep the range check here exactly matching that message so users clearly know what is valid."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "You use this while condition to keep asking for the number of wins until the input is valid: the loop continues when wins is less than 0 or greater than total_games, and it stops when wins is in the inclusive range 0..total_games."
+        },
+        {
+          "content": "You can read 'wins < 0 or wins > total_games' as two separate checks joined by the logical operator or; if either check is true the whole condition is true and the loop body runs to re-prompt the user."
+        },
+        {
+          "content": "A common mistake is to use and instead of or \u2014 if you used and, almost no invalid number would be caught because a number can't be both < 0 and > total_games at the same time. Also be careful not to change the comparison signs in a way that accidentally rejects valid edge cases like 0 or total_games."
+        },
+        {
+          "content": "You should be aware that this condition assumes wins is already an integer. To avoid a crash on non-numeric input, you should perform the int conversion inside a try/except (or otherwise validate conversion) when you read the user's input."
+        },
+        {
+          "content": "As a best practice, make your prompt explicit about the allowed range (for example: 'Enter wins (0 to X):') and keep the range check here exactly matching that message so users clearly know what is valid."
+        }
+      ]
+    },
+    "13": {
+      "content": "    text = input(\"Enter the number of games that the sports team won in the tournament: \")",
+      "commentList": [
+        "You are asking the user for another answer while the validation loop is running: this line displays the prompt and stores whatever the user types into the variable text so the loop can check the new value.",
+        "You are using the input(...) function with a prompt string; input shows that message to the user and returns the characters they type as a string, which you then assign to text with =.",
+        "You must remember that this line only reads a string \u2014 it does not convert or validate the number. The actual numeric check and conversion happen on the next line (wins = int(text)), so a non-numeric response will cause a ValueError when you try to convert it.",
+        "You should watch for a common misconception: calling input again does not by itself ensure the value is within 0..total_games. You still need the while condition (or additional checks) to enforce that range.",
+        "For better practice, you can guide the user and avoid errors by making the prompt show the allowed range (for example \"Enter wins (0 - total_games):\") and by wrapping the conversion in a try/except block or validating the string before calling int() so you handle non-integer input gracefully."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "You are asking the user for another answer while the validation loop is running: this line displays the prompt and stores whatever the user types into the variable text so the loop can check the new value."
+        },
+        {
+          "content": "You are using the input(...) function with a prompt string; input shows that message to the user and returns the characters they type as a string, which you then assign to text with =."
+        },
+        {
+          "content": "You must remember that this line only reads a string \u2014 it does not convert or validate the number. The actual numeric check and conversion happen on the next line (wins = int(text)), so a non-numeric response will cause a ValueError when you try to convert it."
+        },
+        {
+          "content": "You should watch for a common misconception: calling input again does not by itself ensure the value is within 0..total_games. You still need the while condition (or additional checks) to enforce that range."
+        },
+        {
+          "content": "For better practice, you can guide the user and avoid errors by making the prompt show the allowed range (for example \"Enter wins (0 - total_games):\") and by wrapping the conversion in a try/except block or validating the string before calling int() so you handle non-integer input gracefully."
+        }
+      ]
+    },
+    "14": {
+      "content": "    wins = int(text)",
+      "commentList": [
+        "You convert the latest user response stored in text into an integer and assign it to the variable wins so the loop can re-check whether this new value is valid.",
+        "You use the int(...) function to parse the string text into an integer and the = operator to store that integer in wins; after this line the while condition (wins < 0 or wins > total_games) will use the new numeric value.",
+        "If the user typed something that is not a valid integer (for example 'abc' or '3.5') int(text) will raise a ValueError and the program will crash \u2014 entering a negative number will parse fine but may be rejected by the loop condition.",
+        "You should guard this conversion with a try/except so you can handle invalid input gracefully (for example: try: wins = int(text) except ValueError: print('Please enter an integer') and continue the loop).",
+        "As a small improvement, you can call text = text.strip() before converting to remove extra spaces, and only assign to wins after you have both successfully parsed the number and confirmed it lies between 0 and total_games."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "You convert the latest user response stored in text into an integer and assign it to the variable wins so the loop can re-check whether this new value is valid."
+        },
+        {
+          "content": "You use the int(...) function to parse the string text into an integer and the = operator to store that integer in wins; after this line the while condition (wins < 0 or wins > total_games) will use the new numeric value."
+        },
+        {
+          "content": "If the user typed something that is not a valid integer (for example 'abc' or '3.5') int(text) will raise a ValueError and the program will crash \u2014 entering a negative number will parse fine but may be rejected by the loop condition."
+        },
+        {
+          "content": "You should guard this conversion with a try/except so you can handle invalid input gracefully (for example: try: wins = int(text) except ValueError: print('Please enter an integer') and continue the loop)."
+        },
+        {
+          "content": "As a small improvement, you can call text = text.strip() before converting to remove extra spaces, and only assign to wins after you have both successfully parsed the number and confirmed it lies between 0 and total_games."
+        }
+      ]
+    },
+    "16": {
+      "content": "ratio = wins / total_games",
+      "commentList": [
+        "Purpose: this line calculates the fraction of games the team won by dividing wins by total_games and stores that result in the variable ratio so you can print or use it later.",
+        "Syntax: '=' assigns the value on the right to the name on the left; '/' is the division operator that computes wins divided by total_games.",
+        "Behavior note: in current Python (3.x) '/' returns a floating-point number (so ratio will include decimals like 0.75). If you wanted a percent, you must multiply this value by 100 before printing.",
+        "Possible error / misconception: dividing by zero would crash the program, but your earlier validation prevents total_games being 0. Another common misconception is thinking this already gives a percent \u2014 it gives a fraction (0 to 1), not a percentage (0 to 100).",
+        "Best practice: be explicit about types if it helps readability, e.g. ratio = float(wins) / total_games, and when showing a percentage format the output (for example: print(f\"Winning percentage: {ratio * 100:.2f}%\") ) so you present a clear, rounded percent to users.",
+        "Naming tip: ratio is fine for the fractional result; if you store a percent value use a more descriptive name like winning_percentage to avoid confusion."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: this line calculates the fraction of games the team won by dividing wins by total_games and stores that result in the variable ratio so you can print or use it later."
+        },
+        {
+          "content": "Syntax: '=' assigns the value on the right to the name on the left; '/' is the division operator that computes wins divided by total_games."
+        },
+        {
+          "content": "Behavior note: in current Python (3.x) '/' returns a floating-point number (so ratio will include decimals like 0.75). If you wanted a percent, you must multiply this value by 100 before printing."
+        },
+        {
+          "content": "Possible error / misconception: dividing by zero would crash the program, but your earlier validation prevents total_games being 0. Another common misconception is thinking this already gives a percent \u2014 it gives a fraction (0 to 1), not a percentage (0 to 100)."
+        },
+        {
+          "content": "Best practice: be explicit about types if it helps readability, e.g. ratio = float(wins) / total_games, and when showing a percentage format the output (for example: print(f\"Winning percentage: {ratio * 100:.2f}%\") ) so you present a clear, rounded percent to users."
+        },
+        {
+          "content": "Naming tip: ratio is fine for the fractional result; if you store a percent value use a more descriptive name like winning_percentage to avoid confusion."
+        }
+      ]
+    },
+    "17": {
+      "content": "print(\"Winning percentage:\", ratio)",
+      "commentList": [
+        "You print the final result so the user can see the outcome; this line is the program's output step that displays the calculated winning ratio.",
+        "You call Python's print function with two items: a label ('Winning percentage:') and the value ratio; print converts ratio to text and inserts a space between the items by default.",
+        "You should know ratio is a float produced by wins / total_games, so the printed value will be a decimal between 0 and 1 unless you convert it to a percentage (multiply by 100).",
+        "You won't get a ZeroDivisionError here because you validated total_games earlier, but if ratio were missing (e.g., earlier code failed) you'd get a NameError\u2014so make sure ratio is defined before this line.",
+        "You might prefer nicer output formatting: for a human-friendly percent and controlled decimals you can do, for example, print(f'Winning percentage: {ratio*100:.1f}%') to show one decimal place and a percent sign.",
+        "You should avoid relying on the default spacing when you need exact formatting; using f-strings or format() gives you clear, predictable results. Also note: in Python 2, division could behave differently (integer division), but in Python 3 wins/total_games yields a float."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "You print the final result so the user can see the outcome; this line is the program's output step that displays the calculated winning ratio."
+        },
+        {
+          "content": "You call Python's print function with two items: a label ('Winning percentage:') and the value ratio; print converts ratio to text and inserts a space between the items by default."
+        },
+        {
+          "content": "You should know ratio is a float produced by wins / total_games, so the printed value will be a decimal between 0 and 1 unless you convert it to a percentage (multiply by 100)."
+        },
+        {
+          "content": "You won't get a ZeroDivisionError here because you validated total_games earlier, but if ratio were missing (e.g., earlier code failed) you'd get a NameError\u2014so make sure ratio is defined before this line."
+        },
+        {
+          "content": "You might prefer nicer output formatting: for a human-friendly percent and controlled decimals you can do, for example, print(f'Winning percentage: {ratio*100:.1f}%') to show one decimal place and a percent sign."
+        },
+        {
+          "content": "You should avoid relying on the default spacing when you need exact formatting; using f-strings or format() gives you clear, predictable results. Also note: in Python 2, division could behave differently (integer division), but in Python 3 wins/total_games yields a float."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "while total_games < 0 :",
+      "description": "You might pick this because you think only negative numbers are impossible, so you wrote a check that rejects negatives but accepts zero. The problem is that allowing total_games to be 0 is incorrect for this program: later the code divides by total_games to compute a percentage, so if total_games stays 0 the program will raise a division-by-zero error. In other words, with this line a user entering 0 would not be asked again and the program would crash when calculating the ratio. This distractor misses the needed validation of zero and thus does not prevent an important runtime error.",
+      "line_number": 0
+    },
+    {
+      "code": "while total_games == 0 :",
+      "description": "You might choose this because you think only exactly zero should be treated as invalid, so you wrote a loop that repeats only on total_games == 0. The flaw is that negative values would pass this check (the loop would not run) and the program would accept a nonsensical negative number of games. Accepting a negative total can break later logic (for example, winning percentage could become negative or the wins validation behaves incorrectly), producing wrong results even if the program does not crash. This distractor therefore fails to catch all invalid inputs by only testing equality with zero.",
+      "line_number": 0
+    },
+    {
+      "code": "while total_games <= 0 or wins < 0 :",
+      "description": "You might think it's efficient to check both the total_games and wins conditions in one loop, so you combine them with an 'or'. However, at this point in the program wins has not been read or defined yet. Referencing wins here will cause a NameError when Python evaluates the condition the first time. Even if wins were defined earlier, combining both checks here mixes validation for two different inputs and would cause confusing behavior (the loop could repeat asking for total_games because wins is invalid, or vice versa). This distractor is invalid because it uses a variable that doesn't exist yet and improperly couples two separate validation steps.",
+      "line_number": 0
+    },
+    {
+      "code": "while total_games >= 0 :",
+      "description": "This condition inverts the loop continuation logic. By using 'while total_games >= 0', the loop will continue repeating for any valid, non-negative input entered by the user, creating an infinite input loop. A student might pick this thinking >= 0 prevents negative numbers, but it actually keeps prompting on valid values and exits only on invalid negative inputs.",
+      "line_number": 0
+    },
+    {
+      "code": "if total_games < 0 :",
+      "description": "This distractor combines two common misconceptions: using an if-statement instead of a while-loop, and checking strictly < 0 rather than validating positive values. Using an if-statement allows only a single re-prompt rather than continually prompting until valid input is received. Furthermore, it treats 0 as valid, which could subsequently cause a division-by-zero error.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "-1 0 10 -1 11 7",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:02.164Z",
+  "updated_at": "2026-09-02T02:54:22.493Z",
+  "stat": {
+    "size": 57717,
+    "lastTimeModified": 1788317663205.678
+  }
+}

@@ -1,0 +1,382 @@
+{
+  "id": "6a9060c5cbc5a3f2aa638aad",
+  "user": "moh70@pitt.edu",
+  "name": "Determining the Maximum Rating for Each Soda in The Survey",
+  "description": "Suppose a soda manufacturer held a taste test for four new flavors to determine if people liked them. The manufacturer got 10 people to try each new flavor and give it a score from 1 to 5, where 1 equals poor and 5 equals excellent. The results of that survey is stored in a matrix. Each row of the matrix holds the responses that all testers gave for one particular soda flavor, and each column holds the responses of one person for all sodas.\\nConstruct a program that determines the maximum rating that each of the four new flavors of soda received.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_soda_survey_soda_max.py",
+  "code": "#Step 1: Define a 4x10 two-dimensional list\nratings_data = [[3, 4, 5, 2, 1, 4, 3, 2, 4, 4],\n                [2, 4, 3, 4, 3, 3, 2, 1, 2, 2],\n                [3, 5, 4, 5, 5, 3, 2, 5, 5, 5],\n                [1, 1, 1, 3, 1, 2, 1, 3, 2, 4]]\n#Step 2: Get the dimensions of the list that stores the ratings data\nnum_sodas = len(ratings_data)\nnum_respondents = len(ratings_data[0])\n#Step 3: Create a list to store the maximum rating of each soda flavor\nsoda_max = [0] * num_sodas\n#Step 4: Iterate through the sodas \nfor i in range(num_sodas):\n    #Step 4.1: Find the maximum rating of soda i+1 by iterating through its ratings \n    for j in range(num_respondents):\n        if ratings_data[i][j] > soda_max[i] :\n            soda_max[i] = ratings_data[i][j]\n#Step 5: Print the maximum rating for each soda\nprint(\"Maximums:\")   \nfor i in range(num_sodas):\n    print(\"Soda # {:d} : {:d}\".format((i+1), soda_max[i]))",
+  "lines": {
+    "2": {
+      "content": "ratings_data = [[3, 4, 5, 2, 1, 4, 3, 2, 4, 4],",
+      "commentList": [
+        "Purpose: This line creates the main data structure ratings_data and assigns it a list whose first element is the first row of survey scores. You use this variable later to find maxima for each soda flavor.",
+        "Syntax & semantics: ratings_data = [[3, 4, 5, 2, 1, 4, 3, 2, 4, 4], starts an assignment of a list-of-lists (a two-dimensional list). The outer [ begins the whole matrix and the inner [ ... ] is the first row (a list of ten integer ratings). The trailing comma means more rows follow on subsequent lines.",
+        "How you will use it: Each inner list represents one soda flavor, so ratings_data[0] is the first flavor's ratings and ratings_data[0][0] is the first person's rating for that flavor (the 3 in this row). You rely on this structure when iterating by soda and respondent indices.",
+        "Common errors & misconceptions: If you forget a bracket or comma you will get a SyntaxError. If inner lists have different lengths you might get IndexError later when you assume every row has num_respondents entries. Also note this line shows only the first row \u2014 the full matrix requires the other rows to be present and properly closed with ] on the last line.",
+        "Best practices: Give the variable a clear name (ratings_data is good). Keep each row on its own line for readability (as done here). Consider validating the shape (for example, check all rows have the same length with len) before you iterate, especially when data may come from input or a file.",
+        "Alternatives & notes: If the data should never change, you could use tuples for the inner rows to signal immutability. For larger or external data, load it from a file or use constants instead of hard-coding the numbers inside the source."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line creates the main data structure ratings_data and assigns it a list whose first element is the first row of survey scores. You use this variable later to find maxima for each soda flavor."
+        },
+        {
+          "content": "Syntax & semantics: ratings_data = [[3, 4, 5, 2, 1, 4, 3, 2, 4, 4], starts an assignment of a list-of-lists (a two-dimensional list). The outer [ begins the whole matrix and the inner [ ... ] is the first row (a list of ten integer ratings). The trailing comma means more rows follow on subsequent lines."
+        },
+        {
+          "content": "How you will use it: Each inner list represents one soda flavor, so ratings_data[0] is the first flavor's ratings and ratings_data[0][0] is the first person's rating for that flavor (the 3 in this row). You rely on this structure when iterating by soda and respondent indices."
+        },
+        {
+          "content": "Common errors & misconceptions: If you forget a bracket or comma you will get a SyntaxError. If inner lists have different lengths you might get IndexError later when you assume every row has num_respondents entries. Also note this line shows only the first row \u2014 the full matrix requires the other rows to be present and properly closed with ] on the last line."
+        },
+        {
+          "content": "Best practices: Give the variable a clear name (ratings_data is good). Keep each row on its own line for readability (as done here). Consider validating the shape (for example, check all rows have the same length with len) before you iterate, especially when data may come from input or a file."
+        },
+        {
+          "content": "Alternatives & notes: If the data should never change, you could use tuples for the inner rows to signal immutability. For larger or external data, load it from a file or use constants instead of hard-coding the numbers inside the source."
+        }
+      ]
+    },
+    "7": {
+      "content": "num_sodas = len(ratings_data)",
+      "commentList": [
+        "Purpose: You assign num_sodas to the number of soda flavors by taking the length of ratings_data, so you know how many rows (flavors) to loop over later.",
+        "Syntax and semantics: len(ratings_data) returns an integer count of the top-level elements in the list (each top-level element is a row of ratings for one soda), and the = stores that count in the variable num_sodas.",
+        "Potential errors and misconceptions: If ratings_data is empty, len(ratings_data) will be 0 and later code that uses ratings_data[0] will raise an IndexError; also remember that num_sodas counts rows only, it does not check that each row has the same number of responses.",
+        "Best practices: Before this line you should validate that ratings_data is a non-empty list of lists. Use clear variable names (like num_sodas or number_of_flavors) and consider checking row lengths (or using max(len(row) for row in ratings_data)) if responses per person might vary to avoid surprises."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: You assign num_sodas to the number of soda flavors by taking the length of ratings_data, so you know how many rows (flavors) to loop over later."
+        },
+        {
+          "content": "Syntax and semantics: len(ratings_data) returns an integer count of the top-level elements in the list (each top-level element is a row of ratings for one soda), and the = stores that count in the variable num_sodas."
+        },
+        {
+          "content": "Potential errors and misconceptions: If ratings_data is empty, len(ratings_data) will be 0 and later code that uses ratings_data[0] will raise an IndexError; also remember that num_sodas counts rows only, it does not check that each row has the same number of responses."
+        },
+        {
+          "content": "Best practices: Before this line you should validate that ratings_data is a non-empty list of lists. Use clear variable names (like num_sodas or number_of_flavors) and consider checking row lengths (or using max(len(row) for row in ratings_data)) if responses per person might vary to avoid surprises."
+        }
+      ]
+    },
+    "8": {
+      "content": "num_respondents = len(ratings_data[0])",
+      "commentList": [
+        "Purpose: You are storing the number of respondents (the number of columns) in num_respondents so you can loop over each tester's score for a soda in the inner loop.",
+        "Syntax and semantics: ratings_data[0] picks the first row (the list of scores for soda #1). len(...) returns how many items are in that row, so num_respondents becomes an integer equal to the count of scores in each row.",
+        "How it is used: Later you call range(num_respondents) to visit each column index j for every soda i, so this line determines how many times the inner loop runs.",
+        "Common error / misconception: If ratings_data is empty, ratings_data[0] will raise an IndexError. Also, if different rows have different lengths, using the first row's length may not reflect the true number of responses for other sodas.",
+        "Best practice: Before this line, check that ratings_data is not empty and that all rows are the same length. Alternatively, use a safer calculation like num_respondents = max(len(row) for row in ratings_data) or validate rows with: if not ratings_data or any(len(row) != len(ratings_data[0]) for row in ratings_data): handle error.",
+        "Note on intent vs. alternatives: You already set num_sodas = len(ratings_data) for the number of rows. Do not confuse the two\u2014len(ratings_data) counts sodas, while len(ratings_data[0]) counts respondents per soda."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: You are storing the number of respondents (the number of columns) in num_respondents so you can loop over each tester's score for a soda in the inner loop."
+        },
+        {
+          "content": "Syntax and semantics: ratings_data[0] picks the first row (the list of scores for soda #1). len(...) returns how many items are in that row, so num_respondents becomes an integer equal to the count of scores in each row."
+        },
+        {
+          "content": "How it is used: Later you call range(num_respondents) to visit each column index j for every soda i, so this line determines how many times the inner loop runs."
+        },
+        {
+          "content": "Common error / misconception: If ratings_data is empty, ratings_data[0] will raise an IndexError. Also, if different rows have different lengths, using the first row's length may not reflect the true number of responses for other sodas."
+        },
+        {
+          "content": "Best practice: Before this line, check that ratings_data is not empty and that all rows are the same length. Alternatively, use a safer calculation like num_respondents = max(len(row) for row in ratings_data) or validate rows with: if not ratings_data or any(len(row) != len(ratings_data[0]) for row in ratings_data): handle error."
+        },
+        {
+          "content": "Note on intent vs. alternatives: You already set num_sodas = len(ratings_data) for the number of rows. Do not confuse the two\u2014len(ratings_data) counts sodas, while len(ratings_data[0]) counts respondents per soda."
+        }
+      ]
+    },
+    "10": {
+      "content": "soda_max = [0] * num_sodas",
+      "commentList": [
+        "Purpose: This line creates a one-dimensional list named soda_max with one slot for each soda so you have somewhere to store the maximum rating you find for each flavor as you scan the data.",
+        "What it does (syntax): [0] * num_sodas makes a list by repeating the value 0 num_sodas times. So if num_sodas is 4 you get [0, 0, 0, 0]. It's equivalent to writing [0 for _ in range(num_sodas)].",
+        "Why 0 is chosen: Because ratings run from 1 to 5, starting each maximum at 0 guarantees that the first real rating you compare will replace the placeholder. If ratings could be negative you would need a smaller initial value (for example float('-inf')).",
+        "Common misconceptions / potential errors: If you used a mutable object (like a list) instead of 0, e.g. [[]] * n, all slots would reference the same inner list and updates would affect every slot. Also, if num_sodas is 0 you'll get an empty list (which is valid but may indicate a problem with your input).",
+        "Best practice suggestions: For clarity you can use a list comprehension ([0 for _ in range(num_sodas)]) or, when you only need the per-row maximum, compute it directly with the built-in max function (soda_max[i] = max(ratings_data[i])) instead of manual initialization and loops."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line creates a one-dimensional list named soda_max with one slot for each soda so you have somewhere to store the maximum rating you find for each flavor as you scan the data."
+        },
+        {
+          "content": "What it does (syntax): [0] * num_sodas makes a list by repeating the value 0 num_sodas times. So if num_sodas is 4 you get [0, 0, 0, 0]. It's equivalent to writing [0 for _ in range(num_sodas)]."
+        },
+        {
+          "content": "Why 0 is chosen: Because ratings run from 1 to 5, starting each maximum at 0 guarantees that the first real rating you compare will replace the placeholder. If ratings could be negative you would need a smaller initial value (for example float('-inf'))."
+        },
+        {
+          "content": "Common misconceptions / potential errors: If you used a mutable object (like a list) instead of 0, e.g. [[]] * n, all slots would reference the same inner list and updates would affect every slot. Also, if num_sodas is 0 you'll get an empty list (which is valid but may indicate a problem with your input)."
+        },
+        {
+          "content": "Best practice suggestions: For clarity you can use a list comprehension ([0 for _ in range(num_sodas)]) or, when you only need the per-row maximum, compute it directly with the built-in max function (soda_max[i] = max(ratings_data[i])) instead of manual initialization and loops."
+        }
+      ]
+    },
+    "12": {
+      "content": "for i in range(num_sodas):",
+      "commentList": [
+        "Purpose: this line starts the outer loop so you process each soda flavor one by one; 'i' will identify which soda (row) you are working on.",
+        "Syntax breakdown: 'for' begins the loop, 'i' is the loop variable, 'range(num_sodas)' generates the sequence of indices, and the trailing ':' starts the indented block that runs for each index.",
+        "Behavior detail: range(num_sodas) produces 0, 1, ..., num_sodas - 1, so if num_sodas is 4 you will get i = 0, 1, 2, 3 (you do not get num_sodas itself).",
+        "How it fits the program: you use i to index ratings_data[i] so the inner loop can examine all respondent scores for that particular soda and update soda_max[i].",
+        "Common mistakes to watch for: do not expect i to start at 1 (Python indexes start at 0); don\u2019t accidentally write range(num_respondents) here or you will iterate the wrong dimension.",
+        "Potential errors: if num_sodas was computed incorrectly (for example not matching len(ratings_data)) you might skip rows or later get an IndexError when accessing ratings_data[i]. If num_sodas is 0, the loop body simply won\u2019t run.",
+        "Best practices: consider using a clearer name like 'soda_index' instead of 'i' for readability; keep the inner loop indented under this line so the nesting is correct; avoid changing num_sodas inside the loop."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: this line starts the outer loop so you process each soda flavor one by one; 'i' will identify which soda (row) you are working on."
+        },
+        {
+          "content": "Syntax breakdown: 'for' begins the loop, 'i' is the loop variable, 'range(num_sodas)' generates the sequence of indices, and the trailing ':' starts the indented block that runs for each index."
+        },
+        {
+          "content": "Behavior detail: range(num_sodas) produces 0, 1, ..., num_sodas - 1, so if num_sodas is 4 you will get i = 0, 1, 2, 3 (you do not get num_sodas itself)."
+        },
+        {
+          "content": "How it fits the program: you use i to index ratings_data[i] so the inner loop can examine all respondent scores for that particular soda and update soda_max[i]."
+        },
+        {
+          "content": "Common mistakes to watch for: do not expect i to start at 1 (Python indexes start at 0); don\u2019t accidentally write range(num_respondents) here or you will iterate the wrong dimension."
+        },
+        {
+          "content": "Potential errors: if num_sodas was computed incorrectly (for example not matching len(ratings_data)) you might skip rows or later get an IndexError when accessing ratings_data[i]. If num_sodas is 0, the loop body simply won\u2019t run."
+        },
+        {
+          "content": "Best practices: consider using a clearer name like 'soda_index' instead of 'i' for readability; keep the inner loop indented under this line so the nesting is correct; avoid changing num_sodas inside the loop."
+        }
+      ]
+    },
+    "14": {
+      "content": "    for j in range(num_respondents):",
+      "commentList": [
+        "Purpose: This line starts the inner loop that visits each respondent's rating for the current soda (i). By iterating j from 0 to num_respondents - 1, you will examine every ratings_data[i][j] so you can find the maximum score for that soda.",
+        "Syntax and semantics: 'for j in range(num_respondents):' creates a loop variable j. range(n) produces integers 0..n-1, the colon begins the indented loop body, and you use j as the column index into the 2D list so ratings_data[i][j] refers to the j-th person's score for soda i.",
+        "Potential errors and misconceptions: If ratings_data is empty or some rows are shorter than num_respondents you will get an IndexError when you access ratings_data[i][j]. Also avoid off-by-one mistakes (for example using range(num_respondents + 1) or '<='), which would try to access a non-existent index.",
+        "Best practices: To make your code safer and clearer, consider iterating directly over the row values (for rating in ratings_data[i]:) instead of using an index, or initialize soda_max[i] from the first element of the row so you don't rely on a hard-coded 0. Also use a descriptive name like respondent or col for j, and keep the if-statement properly indented inside this loop."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: This line starts the inner loop that visits each respondent's rating for the current soda (i). By iterating j from 0 to num_respondents - 1, you will examine every ratings_data[i][j] so you can find the maximum score for that soda."
+        },
+        {
+          "content": "Syntax and semantics: 'for j in range(num_respondents):' creates a loop variable j. range(n) produces integers 0..n-1, the colon begins the indented loop body, and you use j as the column index into the 2D list so ratings_data[i][j] refers to the j-th person's score for soda i."
+        },
+        {
+          "content": "Potential errors and misconceptions: If ratings_data is empty or some rows are shorter than num_respondents you will get an IndexError when you access ratings_data[i][j]. Also avoid off-by-one mistakes (for example using range(num_respondents + 1) or '<='), which would try to access a non-existent index."
+        },
+        {
+          "content": "Best practices: To make your code safer and clearer, consider iterating directly over the row values (for rating in ratings_data[i]:) instead of using an index, or initialize soda_max[i] from the first element of the row so you don't rely on a hard-coded 0. Also use a descriptive name like respondent or col for j, and keep the if-statement properly indented inside this loop."
+        }
+      ]
+    },
+    "15": {
+      "content": "        if ratings_data[i][j] > soda_max[i] :",
+      "commentList": [
+        "Purpose: this line checks whether the current rating (the j-th response for soda i) is larger than the maximum you have stored so far for soda i; if it is, the program will update that maximum on the next line.",
+        "Syntax and semantics: ratings_data[i][j] gets the integer rating at row i and column j, soda_max[i] gets the current maximum for row i, and the > operator tests if the left value is greater than the right. The if and colon start a conditional block that executes the indented assignment below when the comparison is true.",
+        "How it fits in the loops: because this line is inside the nested loops (over i and j), it runs once for every rating. You are comparing each rating to the running maximum for that soda so you end up with the true maximum after the inner loop finishes.",
+        "Common errors and misconceptions: you must ensure soda_max was initialized sensibly (here it is 0). If ratings could be 0 or negative, initializing with 0 can give wrong results. Also if the rows have different lengths, indexing ratings_data[i][j] can raise an IndexError because num_respondents was taken from the first row.",
+        "Best practices: instead of initializing soda_max with zeros, you can initialize each soda_max[i] to the first element of that row or simply use Python's built-in max(ratings_data[i]) to get the maximum more clearly. Also keep proper indentation so the if applies to the intended block.",
+        "Minor note about equality: using > means you only update when you find a strictly larger value; using >= would also update on equal values (usually not needed when only the max value matters)."
+      ],
+      "indentLevel": 2,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: this line checks whether the current rating (the j-th response for soda i) is larger than the maximum you have stored so far for soda i; if it is, the program will update that maximum on the next line."
+        },
+        {
+          "content": "Syntax and semantics: ratings_data[i][j] gets the integer rating at row i and column j, soda_max[i] gets the current maximum for row i, and the > operator tests if the left value is greater than the right. The if and colon start a conditional block that executes the indented assignment below when the comparison is true."
+        },
+        {
+          "content": "How it fits in the loops: because this line is inside the nested loops (over i and j), it runs once for every rating. You are comparing each rating to the running maximum for that soda so you end up with the true maximum after the inner loop finishes."
+        },
+        {
+          "content": "Common errors and misconceptions: you must ensure soda_max was initialized sensibly (here it is 0). If ratings could be 0 or negative, initializing with 0 can give wrong results. Also if the rows have different lengths, indexing ratings_data[i][j] can raise an IndexError because num_respondents was taken from the first row."
+        },
+        {
+          "content": "Best practices: instead of initializing soda_max with zeros, you can initialize each soda_max[i] to the first element of that row or simply use Python's built-in max(ratings_data[i]) to get the maximum more clearly. Also keep proper indentation so the if applies to the intended block."
+        },
+        {
+          "content": "Minor note about equality: using > means you only update when you find a strictly larger value; using >= would also update on equal values (usually not needed when only the max value matters)."
+        }
+      ]
+    },
+    "16": {
+      "content": "            soda_max[i] = ratings_data[i][j]",
+      "commentList": [
+        "This line updates the stored maximum for soda i when you find a higher rating: it replaces soda_max[i] with the current rating ratings_data[i][j].",
+        "Breakdown: soda_max[i] means the element for soda i in the soda_max list; = is the assignment operator; ratings_data[i][j] accesses the j-th respondent's score for the i-th soda (rows = sodas, columns = respondents).",
+        "Watch out for common mistakes: if soda_max was not initialized appropriately (for example, to 0 or to the first rating of each row) you might get wrong results when ratings can be negative or if you used a sentinel that is too large. Also ensure your indices i and j match the intended dimensions to avoid IndexError on uneven rows.",
+        "A common misconception is thinking this line compares values \u2014 the comparison happens in the if on the previous line; this line only performs the assignment when that comparison is true.",
+        "Best practices: for clarity, you can store the current rating in a temporary variable before comparing, initialize soda_max using each row's first element, or simply use Python's built-in max like soda_max[i] = max(ratings_data[i]) to get the maximum more directly."
+      ],
+      "indentLevel": 3,
+      "blank": true,
+      "comments": [
+        {
+          "content": "This line updates the stored maximum for soda i when you find a higher rating: it replaces soda_max[i] with the current rating ratings_data[i][j]."
+        },
+        {
+          "content": "Breakdown: soda_max[i] means the element for soda i in the soda_max list; = is the assignment operator; ratings_data[i][j] accesses the j-th respondent's score for the i-th soda (rows = sodas, columns = respondents)."
+        },
+        {
+          "content": "Watch out for common mistakes: if soda_max was not initialized appropriately (for example, to 0 or to the first rating of each row) you might get wrong results when ratings can be negative or if you used a sentinel that is too large. Also ensure your indices i and j match the intended dimensions to avoid IndexError on uneven rows."
+        },
+        {
+          "content": "A common misconception is thinking this line compares values \u2014 the comparison happens in the if on the previous line; this line only performs the assignment when that comparison is true."
+        },
+        {
+          "content": "Best practices: for clarity, you can store the current rating in a temporary variable before comparing, initialize soda_max using each row's first element, or simply use Python's built-in max like soda_max[i] = max(ratings_data[i]) to get the maximum more directly."
+        }
+      ]
+    },
+    "18": {
+      "content": "print(\"Maximums:\")   ",
+      "commentList": [
+        "Purpose: This line prints a heading \"Maximums:\" so you (or anyone running the program) know that the lines that follow will list the maximum ratings for each soda. It improves the readability of the output.",
+        "Syntax and semantics: print(\"Maximums:\") calls Python's print() function with a string literal. The parentheses are required in Python 3, and print will write the string to standard output followed by a newline by default.",
+        "How it contributes to the program: The line does not change any computed values \u2014 the maxima have already been found and stored in soda_max \u2014 but it separates the computation phase from the display phase so the output is clearer.",
+        "Common errors and misconceptions: If you try to write print \"Maximums:\" (Python 2 style) it will be a syntax error in Python 3. Also avoid naming a variable print earlier in your code \u2014 if you overwrite the built-in name, this call will fail.",
+        "Best practices: Use a clear, descriptive heading like \"Maximum ratings for each soda:\" or add a blank line before this print to separate output blocks. If another program will parse the output, prefer structured output (e.g., CSV or JSON) instead of a free-form header."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line prints a heading \"Maximums:\" so you (or anyone running the program) know that the lines that follow will list the maximum ratings for each soda. It improves the readability of the output."
+        },
+        {
+          "content": "Syntax and semantics: print(\"Maximums:\") calls Python's print() function with a string literal. The parentheses are required in Python 3, and print will write the string to standard output followed by a newline by default."
+        },
+        {
+          "content": "How it contributes to the program: The line does not change any computed values \u2014 the maxima have already been found and stored in soda_max \u2014 but it separates the computation phase from the display phase so the output is clearer."
+        },
+        {
+          "content": "Common errors and misconceptions: If you try to write print \"Maximums:\" (Python 2 style) it will be a syntax error in Python 3. Also avoid naming a variable print earlier in your code \u2014 if you overwrite the built-in name, this call will fail."
+        },
+        {
+          "content": "Best practices: Use a clear, descriptive heading like \"Maximum ratings for each soda:\" or add a blank line before this print to separate output blocks. If another program will parse the output, prefer structured output (e.g., CSV or JSON) instead of a free-form header."
+        }
+      ]
+    },
+    "19": {
+      "content": "for i in range(num_sodas):",
+      "commentList": [
+        "Purpose: This line starts a loop that lets you go through each soda (by index) so you can print its maximum rating. Without this loop you couldn't print a line for every soda flavor.",
+        "Syntax and semantics: 'for i in range(num_sodas):' uses the for keyword, an index variable i, and range(num_sodas) which generates integers 0 through num_sodas-1. The trailing ':' begins the indented block that will run once per soda. You then use i as the index to fetch soda_max[i] in the loop body.",
+        "Indexing detail and common misconception: Python uses 0-based indexing, so i starts at 0. That's why the program prints (i+1) for the human-friendly soda number. A common mistake is using range(num_sodas+1) which would cause an IndexError because you would try to access soda_max at an out-of-range index.",
+        "Potential errors to watch for: If num_sodas is 0 the loop body never runs (so nothing is printed). If soda_max has fewer entries than num_sodas you will get an IndexError. Also note that if ratings_data were empty, earlier code (len(ratings_data[0])) would have already raised an error \u2014 you should validate input before this loop.",
+        "Best practices: To make your code clearer you can use enumerate(soda_max, start=1) to get both the 1-based soda number and its max value directly (avoiding i+1). Use a descriptive name like soda_index instead of i, and prefer f-strings (if your Python version supports them) for readable formatting when printing."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line starts a loop that lets you go through each soda (by index) so you can print its maximum rating. Without this loop you couldn't print a line for every soda flavor."
+        },
+        {
+          "content": "Syntax and semantics: 'for i in range(num_sodas):' uses the for keyword, an index variable i, and range(num_sodas) which generates integers 0 through num_sodas-1. The trailing ':' begins the indented block that will run once per soda. You then use i as the index to fetch soda_max[i] in the loop body."
+        },
+        {
+          "content": "Indexing detail and common misconception: Python uses 0-based indexing, so i starts at 0. That's why the program prints (i+1) for the human-friendly soda number. A common mistake is using range(num_sodas+1) which would cause an IndexError because you would try to access soda_max at an out-of-range index."
+        },
+        {
+          "content": "Potential errors to watch for: If num_sodas is 0 the loop body never runs (so nothing is printed). If soda_max has fewer entries than num_sodas you will get an IndexError. Also note that if ratings_data were empty, earlier code (len(ratings_data[0])) would have already raised an error \u2014 you should validate input before this loop."
+        },
+        {
+          "content": "Best practices: To make your code clearer you can use enumerate(soda_max, start=1) to get both the 1-based soda number and its max value directly (avoiding i+1). Use a descriptive name like soda_index instead of i, and prefer f-strings (if your Python version supports them) for readable formatting when printing."
+        }
+      ]
+    },
+    "20": {
+      "content": "    print(\"Soda # {:d} : {:d}\".format((i+1), soda_max[i]))",
+      "commentList": [
+        "You print one line of output for the current soda that shows its human-friendly number and the maximum rating you found for it.",
+        "You call print() with a format string and use .format((i+1), soda_max[i]) to fill the placeholders. {:d} is a format specifier that expects an integer; (i+1) converts the loop index i (which starts at 0) into soda number 1..4, and soda_max[i] supplies the maximum rating for that soda.",
+        "Be careful of a few common errors: if i is outside the range of soda_max you will get an IndexError; if soda_max[i] is not an integer (for example a float or None) the {:d} specifier will raise a ValueError/TypeError; and if you forget (i+1) you will show zero-based numbering, which can confuse users.",
+        "For clearer and safer code, consider using enumerate to get both index and value (so you avoid manual indexing), or use an f-string like f\"Soda # {i+1} : {max_val}\". Also, you can use {} instead of {:d} if you want to accept non-integer values without formatting errors."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "You print one line of output for the current soda that shows its human-friendly number and the maximum rating you found for it."
+        },
+        {
+          "content": "You call print() with a format string and use .format((i+1), soda_max[i]) to fill the placeholders. {:d} is a format specifier that expects an integer; (i+1) converts the loop index i (which starts at 0) into soda number 1..4, and soda_max[i] supplies the maximum rating for that soda."
+        },
+        {
+          "content": "Be careful of a few common errors: if i is outside the range of soda_max you will get an IndexError; if soda_max[i] is not an integer (for example a float or None) the {:d} specifier will raise a ValueError/TypeError; and if you forget (i+1) you will show zero-based numbering, which can confuse users."
+        },
+        {
+          "content": "For clearer and safer code, consider using enumerate to get both index and value (so you avoid manual indexing), or use an f-string like f\"Soda # {i+1} : {max_val}\". Also, you can use {} instead of {:d} if you want to accept non-integer values without formatting errors."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "soda_max = []",
+      "description": "You might think an empty list is fine because you'll fill it later, but in this program the code expects to access soda_max by index (soda_max[i]) for each soda. With an empty list there are no elements at those indices, so when the loop tries to read or write soda_max[i] you will get an IndexError at runtime. In other words, the program lacks fixed storage slots for each soda flavor. Because of that missing per-soda storage, the comparisons and assignments that follow cannot work. This makes the line a plausible but incorrect choice: it looks minimal and simple, but it fails to provide the indexed slots the rest of the code relies on.",
+      "line_number": 0
+    },
+    {
+      "code": "if ratings_data[i][j] > soda_max :",
+      "description": "You might be tempted to omit the index because you think soda_max already refers to the current soda's maximum. In reality soda_max is a list, so this line compares an integer (a rating) to a list object. In Python 3 that comparison is not allowed and will raise a TypeError at runtime. Even if the language allowed some comparison, you wouldn't be updating the right element of soda_max because you never reference soda_max[i]. The correct approach must compare the rating to the scalar stored for the specific soda (i-th element) and not to the whole list.",
+      "line_number": 0
+    },
+    {
+      "code": "soda_max[i] = j",
+      "description": "You might pick this line if you accidentally treat the inner loop variable j as the rating itself instead of an index into the ratings list. If you use this line, you assign the index of the respondent (a number from 0 to 9) to soda_max[i] rather than the respondent's rating. That means your program will end up reporting index values (positions) instead of actual ratings, so the output won't reflect the maximum ratings at all. This error hides the real data and produces meaningless results. The key problem is using the loop counter instead of accessing the list element at that counter; the code should retrieve a value from ratings_data using j, not store j itself.",
+      "line_number": 0
+    },
+    {
+      "code": "soda_max = [0] * num_respondents",
+      "description": "You might pick this because both num_respondents and num_sodas are integers and initializing a zero list with either looks syntactically fine, so it\u2019s an easy mix\u2011up of row vs. column counts. It\u2019s a plausible distractor because when num_respondents is equal to or larger than the number of flavors the program will still run and produce the expected numbers, making the mistake hard to spot. The problem is a semantic mismatch: you need one maximum value per soda flavor (rows), not one per respondent (columns). Using the respondents count can leave extra unused entries or, worse, cause an IndexError if there are fewer respondents than sodas. In short, this choice confuses the dimensions of the data (rows vs. columns), so it\u2019s logically incorrect even if it sometimes appears to work.",
+      "line_number": 0
+    },
+    {
+      "code": "if ratings_data[j][i] > soda_max[j] :",
+      "description": "You might pick this distractor because it swaps the row/column indices and seems to match the inner loop variable j with the index into the max list \u2014 a tempting symmetry if you confuse which loop tracks sodas vs. respondents. The problem is that it accesses ratings_data[j][i] and soda_max[j], which does not keep the comparisons aligned to the current soda and will compare values from the wrong rows. In this specific data set it will also cause a runtime IndexError once j exceeds the number of sodas (because soda_max has one entry per soda, not per respondent). Even if sizes matched, using j here would compute maxima across the wrong dimension, so the computed \u201cmaximums\u201d would be incorrect. In short: the distractor misuses the loop indices and the max-list index, producing wrong results or crashing.",
+      "line_number": 0
+    },
+    {
+      "code": "if ratings_data[i][j] < soda_max[i] :",
+      "description": "You might pick this because you confuse the direction of comparison when looking for the largest value. If you use '<' here, you're asking whether the current rating is less than the stored value. Because soda_max was initialized to 0 and all ratings are between 1 and 5, that test will never be true, so soda_max entries will never be updated and will remain 0. The program will therefore report incorrect maxima (zeros) for every soda. This is wrong because you should be updating the stored value when you find a rating that is larger than the current stored value; the distractor flips that logic and prevents any updates.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-27T16:07:33.065Z",
+  "updated_at": "2026-09-02T02:49:35.360Z",
+  "stat": {
+    "size": 95928,
+    "lastTimeModified": 1788317378700.295
+  }
+}

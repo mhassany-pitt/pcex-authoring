@@ -1,0 +1,316 @@
+{
+  "id": "6a91ae6b32e78ede45c116f1",
+  "user": "moh70@pitt.edu",
+  "name": "Finding Adjacent Duplicates in a Sequence of Numbers",
+  "description": "Construct a program that checks whether a sequence of numbers, entered one at a time, contains adjacent duplicates. The user enters -1 to indicate the end of the input.\\nFor example, 4 is a duplicate in the sequence of numbers 1, 3, 4, 4, -1.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_adjacent_duplicates.py",
+  "code": "#Step 1: Read the first number that the user enters\ntext = input(\"Enter a number: \")\nnum = float(text)\n#Step 2: Read the rest of the numbers that the user enters and check for adjacent duplicates\nwhile num != -1 :\n    previous = num\n    text = input(\"Enter a number: \")\n    num = float(text)    \n    if num == previous :\n        print(\"Duplicate input for number:\", num) ",
+  "lines": {
+    "2": {
+      "content": "text = input(\"Enter a number: \")",
+      "commentList": [
+        "You display the prompt \"Enter a number: \" and wait for the user to type something; the input(...) call returns the characters the user types as a string.",
+        "You assign that returned string to the variable text using =, so text now holds the raw user input for later use.",
+        "You should remember that input returns a string, not a numeric type, which is why the next line converts text to a float; a common misconception is to expect input to give you a number directly.",
+        "You can run into errors if the user types something that is not a valid number (or just presses Enter); the later float(text) will raise an error in that case, so consider validating or using try/except before conversion.",
+        "You might want to make the prompt clearer by including the sentinel (for example: \"Enter a number (-1 to stop): \") and you can also call text = text.strip() before converting to remove extra spaces."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "You display the prompt \"Enter a number: \" and wait for the user to type something; the input(...) call returns the characters the user types as a string."
+        },
+        {
+          "content": "You assign that returned string to the variable text using =, so text now holds the raw user input for later use."
+        },
+        {
+          "content": "You should remember that input returns a string, not a numeric type, which is why the next line converts text to a float; a common misconception is to expect input to give you a number directly."
+        },
+        {
+          "content": "You can run into errors if the user types something that is not a valid number (or just presses Enter); the later float(text) will raise an error in that case, so consider validating or using try/except before conversion."
+        },
+        {
+          "content": "You might want to make the prompt clearer by including the sentinel (for example: \"Enter a number (-1 to stop): \") and you can also call text = text.strip() before converting to remove extra spaces."
+        }
+      ]
+    },
+    "3": {
+      "content": "num = float(text)",
+      "commentList": [
+        "Purpose: This line converts the text you read from the user into a numeric value and stores it in the variable num so you can do numeric comparisons (like checking for the -1 sentinel and comparing adjacent numbers).",
+        "Syntax and simple breakdown: the left side (num) is a variable name, the equals sign assigns a value, and float(text) calls Python's float function to turn the string stored in text into a floating-point number.",
+        "How it works (semantics): float(text) parses the characters in text and returns a float object (for example, '4' becomes 4.0). That float is then assigned to num so later comparisons like num != -1 and num == previous work as numeric checks, not string checks.",
+        "Common errors and misconceptions: input() returns a string, not a number \u2014 if you skip this conversion and compare strings you'll get wrong results. Also float(text) will raise a ValueError if the user types something that isn't a valid number (like 'four' or '3,5').",
+        "Best practices: wrap this conversion in a try/except block to catch invalid input and ask the user again. If you only want whole numbers, consider int(text) instead. Also be consistent with the sentinel type (using -1 or -1.0 is fine because Python compares ints and floats by value).",
+        "A note about equality: comparing float values for equality can be risky after arithmetic, but here you're converting direct user input (e.g., '-1' \u2192 -1.0), so checking num == -1 will work as expected."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line converts the text you read from the user into a numeric value and stores it in the variable num so you can do numeric comparisons (like checking for the -1 sentinel and comparing adjacent numbers)."
+        },
+        {
+          "content": "Syntax and simple breakdown: the left side (num) is a variable name, the equals sign assigns a value, and float(text) calls Python's float function to turn the string stored in text into a floating-point number."
+        },
+        {
+          "content": "How it works (semantics): float(text) parses the characters in text and returns a float object (for example, '4' becomes 4.0). That float is then assigned to num so later comparisons like num != -1 and num == previous work as numeric checks, not string checks."
+        },
+        {
+          "content": "Common errors and misconceptions: input() returns a string, not a number \u2014 if you skip this conversion and compare strings you'll get wrong results. Also float(text) will raise a ValueError if the user types something that isn't a valid number (like 'four' or '3,5')."
+        },
+        {
+          "content": "Best practices: wrap this conversion in a try/except block to catch invalid input and ask the user again. If you only want whole numbers, consider int(text) instead. Also be consistent with the sentinel type (using -1 or -1.0 is fine because Python compares ints and floats by value)."
+        },
+        {
+          "content": "A note about equality: comparing float values for equality can be risky after arithmetic, but here you're converting direct user input (e.g., '-1' \u2192 -1.0), so checking num == -1 will work as expected."
+        }
+      ]
+    },
+    "5": {
+      "content": "while num != -1 :",
+      "commentList": [
+        "Purpose: This line starts a loop that keeps reading and checking numbers as long as the current number is not the end-of-input marker -1. It controls the repeated checking for adjacent duplicates.",
+        "Syntax and meaning: 'while' begins a loop, 'num != -1' is the loop condition meaning 'continue while num is not equal to -1', and the ':' starts the indented block that runs each iteration.",
+        "Pre-check behavior: The condition is tested before each iteration. If the first number you read is -1, the loop body will not run and no duplicate checks will be performed.",
+        "Update requirement: For the loop to finish, you must change num inside the loop (Line 8 does this). If you forget to update num, the condition stays true and you get an infinite loop.",
+        "Type and comparison caution: num is a float here; comparing it to -1 (an int) works in Python (e.g. -1 == -1.0). However, if you accidentally compare the raw input string to -1 or use floating-point results from calculations, equality checks can be incorrect or fail.",
+        "Common error to watch for: If input conversion to float fails (non-numeric text), you'll get a ValueError before reaching the loop body. You should validate or handle exceptions if you expect bad input.",
+        "Best practice: Avoid magic numbers \u2014 consider naming the sentinel (e.g., SENTINEL = -1) or clearly comment its role. Another common pattern is using 'while True' with an explicit 'break' when you see the sentinel; both approaches are fine if you keep the loop update and checks clear."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line starts a loop that keeps reading and checking numbers as long as the current number is not the end-of-input marker -1. It controls the repeated checking for adjacent duplicates."
+        },
+        {
+          "content": "Syntax and meaning: 'while' begins a loop, 'num != -1' is the loop condition meaning 'continue while num is not equal to -1', and the ':' starts the indented block that runs each iteration."
+        },
+        {
+          "content": "Pre-check behavior: The condition is tested before each iteration. If the first number you read is -1, the loop body will not run and no duplicate checks will be performed."
+        },
+        {
+          "content": "Update requirement: For the loop to finish, you must change num inside the loop (Line 8 does this). If you forget to update num, the condition stays true and you get an infinite loop."
+        },
+        {
+          "content": "Type and comparison caution: num is a float here; comparing it to -1 (an int) works in Python (e.g. -1 == -1.0). However, if you accidentally compare the raw input string to -1 or use floating-point results from calculations, equality checks can be incorrect or fail."
+        },
+        {
+          "content": "Common error to watch for: If input conversion to float fails (non-numeric text), you'll get a ValueError before reaching the loop body. You should validate or handle exceptions if you expect bad input."
+        },
+        {
+          "content": "Best practice: Avoid magic numbers \u2014 consider naming the sentinel (e.g., SENTINEL = -1) or clearly comment its role. Another common pattern is using 'while True' with an explicit 'break' when you see the sentinel; both approaches are fine if you keep the loop update and checks clear."
+        }
+      ]
+    },
+    "6": {
+      "content": "    previous = num",
+      "commentList": [
+        "Purpose: you store the current number (num) into the variable previous so you can compare it with the next number entered and detect adjacent duplicates.",
+        "Syntax & semantics: 'previous = num' is an assignment statement \u2014 it copies the numeric value held in num into the name previous. For immutable numbers this creates a snapshot of the value.",
+        "How it fits the logic: by saving the current value before you read the next input, you implement a sliding 'one-step' comparison: after you read the next num you can test if num == previous.",
+        "Common mistake: if you forget to read and set num before entering the loop, previous = num will raise a NameError because num is undefined. Make sure the initial input (Lines 2\u20133) runs first.",
+        "Possible confusion: '=' assigns a value; '==' compares values. If you accidentally write 'previous == num' you won't set previous and the comparison will be lost.",
+        "Sentinel note: because the loop runs only when num != -1, previous will never be the sentinel value -1. This prevents treating the sentinel as part of the data in this code structure.",
+        "Best practices: use a clearer name like previous_num or prev; validate input with try/except before assigning; and if you expect integers prefer int() to avoid float-equality issues (or use a tolerance for real numbers)."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: you store the current number (num) into the variable previous so you can compare it with the next number entered and detect adjacent duplicates."
+        },
+        {
+          "content": "Syntax & semantics: 'previous = num' is an assignment statement \u2014 it copies the numeric value held in num into the name previous. For immutable numbers this creates a snapshot of the value."
+        },
+        {
+          "content": "How it fits the logic: by saving the current value before you read the next input, you implement a sliding 'one-step' comparison: after you read the next num you can test if num == previous."
+        },
+        {
+          "content": "Common mistake: if you forget to read and set num before entering the loop, previous = num will raise a NameError because num is undefined. Make sure the initial input (Lines 2\u20133) runs first."
+        },
+        {
+          "content": "Possible confusion: '=' assigns a value; '==' compares values. If you accidentally write 'previous == num' you won't set previous and the comparison will be lost."
+        },
+        {
+          "content": "Sentinel note: because the loop runs only when num != -1, previous will never be the sentinel value -1. This prevents treating the sentinel as part of the data in this code structure."
+        },
+        {
+          "content": "Best practices: use a clearer name like previous_num or prev; validate input with try/except before assigning; and if you expect integers prefer int() to avoid float-equality issues (or use a tolerance for real numbers)."
+        }
+      ]
+    },
+    "7": {
+      "content": "    text = input(\"Enter a number: \")",
+      "commentList": [
+        "Purpose: this line prompts the user and reads the next piece of input during the loop, storing the raw text you typed into the variable text so the program can process the next number.",
+        "How it fits the solution: you read a new value each iteration so you can compare it (after conversion) to previous and therefore detect adjacent duplicates in the sequence.",
+        "Syntax and semantics: input(\"Enter a number: \") displays the prompt and returns a string; the = operator assigns that string to text. Note that this line does not convert the input to a numeric type \u2014 that happens on the next line (num = float(text)).",
+        "Common errors and misconceptions: input always returns a string \u2014 if you forget the float conversion on the next line, you would compare a string to a float and get wrong results or a type error. Also, if the user types non-numeric text, the later float(text) will raise a ValueError.",
+        "Best practices: give a clearer prompt (for example: \"Enter a number (-1 to stop): \"), strip whitespace (text = input(...).strip()), and validate or handle conversion errors with try/except so your program doesn't crash when the user types invalid input. You can also convert immediately with float(input(...)) inside a try block if you prefer fewer lines."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: this line prompts the user and reads the next piece of input during the loop, storing the raw text you typed into the variable text so the program can process the next number."
+        },
+        {
+          "content": "How it fits the solution: you read a new value each iteration so you can compare it (after conversion) to previous and therefore detect adjacent duplicates in the sequence."
+        },
+        {
+          "content": "Syntax and semantics: input(\"Enter a number: \") displays the prompt and returns a string; the = operator assigns that string to text. Note that this line does not convert the input to a numeric type \u2014 that happens on the next line (num = float(text))."
+        },
+        {
+          "content": "Common errors and misconceptions: input always returns a string \u2014 if you forget the float conversion on the next line, you would compare a string to a float and get wrong results or a type error. Also, if the user types non-numeric text, the later float(text) will raise a ValueError."
+        },
+        {
+          "content": "Best practices: give a clearer prompt (for example: \"Enter a number (-1 to stop): \"), strip whitespace (text = input(...).strip()), and validate or handle conversion errors with try/except so your program doesn't crash when the user types invalid input. You can also convert immediately with float(input(...)) inside a try block if you prefer fewer lines."
+        }
+      ]
+    },
+    "8": {
+      "content": "    num = float(text)    ",
+      "commentList": [
+        "Purpose: you convert the raw input string stored in text into a number and save it in num so the program can compare this new value with the previous value.",
+        "Syntax/semantics: float(text) attempts to turn the characters in text into a floating-point number; the = operator assigns that numeric value to the variable num for later use.",
+        "Common errors/misconceptions: if the user types something that is not a valid number (for example letters or an empty line), float(text) will raise an error (ValueError). Also be aware that float converts '-1' to -1.0 (the sentinel still works), and comparing floats for exact equality can be surprising in other contexts.",
+        "Best practices: you should strip whitespace (text = text.strip()) and handle bad input with a try/except block so the program can ask the user again instead of crashing. If you expect only integers, consider using int(text) to avoid floating-point issues.",
+        "Behavior note related to the sentinel: because you convert every entered line to a number here, you detect the end marker (-1) after conversion. If you want to avoid treating the sentinel as a data value at all, you can check text == '-1' before converting (but that will miss other numeric forms like '-1.0').",
+        "Why this line is essential: without converting to a numeric type you would be comparing strings (which can give wrong results for numeric comparisons and for values like '10' vs '10.0'), so this assignment is required for the adjacent-duplicate check to work correctly."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: you convert the raw input string stored in text into a number and save it in num so the program can compare this new value with the previous value."
+        },
+        {
+          "content": "Syntax/semantics: float(text) attempts to turn the characters in text into a floating-point number; the = operator assigns that numeric value to the variable num for later use."
+        },
+        {
+          "content": "Common errors/misconceptions: if the user types something that is not a valid number (for example letters or an empty line), float(text) will raise an error (ValueError). Also be aware that float converts '-1' to -1.0 (the sentinel still works), and comparing floats for exact equality can be surprising in other contexts."
+        },
+        {
+          "content": "Best practices: you should strip whitespace (text = text.strip()) and handle bad input with a try/except block so the program can ask the user again instead of crashing. If you expect only integers, consider using int(text) to avoid floating-point issues."
+        },
+        {
+          "content": "Behavior note related to the sentinel: because you convert every entered line to a number here, you detect the end marker (-1) after conversion. If you want to avoid treating the sentinel as a data value at all, you can check text == '-1' before converting (but that will miss other numeric forms like '-1.0')."
+        },
+        {
+          "content": "Why this line is essential: without converting to a numeric type you would be comparing strings (which can give wrong results for numeric comparisons and for values like '10' vs '10.0'), so this assignment is required for the adjacent-duplicate check to work correctly."
+        }
+      ]
+    },
+    "9": {
+      "content": "    if num == previous :",
+      "commentList": [
+        "Purpose: This line checks whether the number you just read (num) is equal to the previous number; if it is, the program has found adjacent duplicates and the indented print will run.",
+        "Syntax and meaning: 'if' starts a conditional, 'num == previous' uses the equality operator (==) to compare the two numeric values, and the trailing ':' begins the block that runs when the condition is true. Indentation matters: the print beneath runs only when this condition holds.",
+        "Common mistakes to avoid: do not use '=' here (that would be assignment, not comparison). Also avoid using 'is' for numeric equality. If you forgot to convert input to a number and left them as strings, comparisons could give surprising results.",
+        "Sentinel note: because the code reads the new number before this check, the sentinel value (-1) will be compared too. In this program that is safe, but as a best practice you might first check for the sentinel and skip the duplicate test so you never treat the end marker as data.",
+        "Best practices: consider handling bad input with a try/except when converting to float, use int instead of float if only integers are expected, and if you ever compare computed floating-point results (not direct user input) use a small tolerance instead of ==."
+      ],
+      "indentLevel": 1,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line checks whether the number you just read (num) is equal to the previous number; if it is, the program has found adjacent duplicates and the indented print will run."
+        },
+        {
+          "content": "Syntax and meaning: 'if' starts a conditional, 'num == previous' uses the equality operator (==) to compare the two numeric values, and the trailing ':' begins the block that runs when the condition is true. Indentation matters: the print beneath runs only when this condition holds."
+        },
+        {
+          "content": "Common mistakes to avoid: do not use '=' here (that would be assignment, not comparison). Also avoid using 'is' for numeric equality. If you forgot to convert input to a number and left them as strings, comparisons could give surprising results."
+        },
+        {
+          "content": "Sentinel note: because the code reads the new number before this check, the sentinel value (-1) will be compared too. In this program that is safe, but as a best practice you might first check for the sentinel and skip the duplicate test so you never treat the end marker as data."
+        },
+        {
+          "content": "Best practices: consider handling bad input with a try/except when converting to float, use int instead of float if only integers are expected, and if you ever compare computed floating-point results (not direct user input) use a small tolerance instead of ==."
+        }
+      ]
+    },
+    "10": {
+      "content": "        print(\"Duplicate input for number:\", num) ",
+      "commentList": [
+        "Purpose: This line tells the user that you found two equal numbers in a row by printing a clear message plus the actual number that was duplicated.",
+        "How it works (syntax): print() is called with two arguments: the string \"Duplicate input for number:\" and the variable num. print() converts num to text and inserts a space between the string and the number when it prints them.",
+        "Role in the program: This line runs only when the if condition (num == previous) is true, so it directly signals the program's success in detecting an adjacent duplicate \u2014 it is the user-facing output of the core check.",
+        "Common misconception / sentinel handling: You might worry that the sentinel -1 will be reported as a duplicate. With the current loop structure, the sentinel does not get counted as previous, so -1 will not be printed as a duplicate here.",
+        "Potential error with types: num is a float because you used float(text). That means the printed value may look like 4.0 instead of 4. If you expect whole numbers, convert to int or parse as int earlier to avoid confusing output.",
+        "Floating-point caution: Comparing floats for equality can sometimes be unreliable for non-exact decimal values (due to rounding). If users enter decimal numbers where tiny differences matter, consider a tolerance-based comparison instead of ==.",
+        "Best practice / clearer formatting: Use an f-string or explicit formatting for clearer output, for example: print(f\"Duplicate input for number: {num}\") or print(\"Duplicate input for number:\", int(num)) if you want no decimal part. Also decide whether you want to stop after the first duplicate (use break) or report all duplicates (leave as is)."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "Purpose: This line tells the user that you found two equal numbers in a row by printing a clear message plus the actual number that was duplicated."
+        },
+        {
+          "content": "How it works (syntax): print() is called with two arguments: the string \"Duplicate input for number:\" and the variable num. print() converts num to text and inserts a space between the string and the number when it prints them."
+        },
+        {
+          "content": "Role in the program: This line runs only when the if condition (num == previous) is true, so it directly signals the program's success in detecting an adjacent duplicate \u2014 it is the user-facing output of the core check."
+        },
+        {
+          "content": "Common misconception / sentinel handling: You might worry that the sentinel -1 will be reported as a duplicate. With the current loop structure, the sentinel does not get counted as previous, so -1 will not be printed as a duplicate here."
+        },
+        {
+          "content": "Potential error with types: num is a float because you used float(text). That means the printed value may look like 4.0 instead of 4. If you expect whole numbers, convert to int or parse as int earlier to avoid confusing output."
+        },
+        {
+          "content": "Floating-point caution: Comparing floats for equality can sometimes be unreliable for non-exact decimal values (due to rounding). If users enter decimal numbers where tiny differences matter, consider a tolerance-based comparison instead of ==."
+        },
+        {
+          "content": "Best practice / clearer formatting: Use an f-string or explicit formatting for clearer output, for example: print(f\"Duplicate input for number: {num}\") or print(\"Duplicate input for number:\", int(num)) if you want no decimal part. Also decide whether you want to stop after the first duplicate (use break) or report all duplicates (leave as is)."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "while num == -1 :",
+      "description": "If you use while num == -1 :, you are asking the program to enter the loop only when the current number equals the sentinel. Because most inputs are not -1, the loop will usually never run and you won't read any additional numbers or check for adjacent duplicates. Conversely, if the very first number is -1, you'll enter the loop even though -1 is meant to signal end-of-input; then the code will try to treat -1 as a valid value, read more inputs, and carry on when it should stop. You might choose this because you misread the sentinel logic and think the loop should trigger on the sentinel rather than stop at it. This line flips the intended meaning of the condition and so prevents the program from terminating or continuing in the right cases.",
+      "line_number": 0
+    },
+    {
+      "code": "while True :",
+      "description": "Using while True : creates an infinite loop unless you include an explicit break inside the loop body. In the given code there is no break, so replacing the condition with while True : will cause the program to keep prompting the user forever even after they enter -1. You might pick this because you think the loop will naturally stop when num becomes -1, but without a break or a loop condition the loop control never checks that value to exit. The result is an endless series of prompts (or a program that only stops if you forcibly terminate it), so the input sentinel no longer serves its purpose.",
+      "line_number": 0
+    },
+    {
+      "code": "if num is previous :",
+      "description": "You might choose this because the word 'is' reads naturally (\"if this number is the previous one\") and might seem like a good way to test sameness. Step-by-step, this uses an identity test rather than a value equality test: it checks whether the two variables refer to the exact same object in memory. For small integers you might sometimes see it appear to work because of implementation details, which can reinforce the mistaken idea that it is equivalent to an equality check. However, with floats (and in general) the identity test is not reliable for determining whether two numbers have the same value. If you use this line, the program will sometimes miss duplicates or behave inconsistently, so adjacent equal numbers might not be detected. In short, this distractor uses the wrong notion of \"sameness\": it checks identity instead of comparing the numeric values, which prevents the program from reliably detecting duplicates.",
+      "line_number": 0
+    },
+    {
+      "code": "while text != \"-1\":",
+      "description": "Checking the raw input string (text) against \"-1\" can seem to work at first because text holds what the user typed. However, this approach is fragile: it only stops when the user types exactly \"-1\" as characters. If the user types \"-1.0\", adds whitespace, or uses another numeric representation, text != \"-1\" will be true even though the numeric value becomes -1 after conversion. That means the loop may continue when you intended it to stop, or stop incorrectly if input formatting differs. You might choose this because you see text already available and assume comparing it is simpler, but comparing the string rather than the numeric value mixes data types and opens subtle bugs in how the sentinel is recognized.",
+      "line_number": 0
+    },
+    {
+      "code": "if num = previous :",
+      "description": "You might pick this because in many everyday uses you type x = 5 to store a value, and you may think you can write the same symbol to check equality. Step-by-step, what this line does when you try to run it: Python does not allow the use of the single equals sign inside an if condition as a comparison, so the program will raise a syntax error and will not run. If you came from a language where assignment inside conditions is allowed (or where students often confuse '=' and '=='), you may assume this is valid \u2014 that is the misconception targeted. Using this line breaks the program immediately rather than checking whether the new number matches the previous one. Compared with a correct equality test, this distractor does not perform a boolean comparison at all; it attempts an assignment in a context where assignment is not permitted, so the core goal (detecting adjacent duplicates) is never reached.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "1 3 3 1 1 -2 4 4 -1",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:07.127Z",
+  "updated_at": "2026-09-02T02:57:40.895Z",
+  "stat": {
+    "size": 55590,
+    "lastTimeModified": 1788317862047.6443
+  }
+}

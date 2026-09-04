@@ -1,0 +1,290 @@
+{
+  "id": "6a91ae6b32e78ede45c116f3",
+  "user": "moh70@pitt.edu",
+  "name": "Finding Adjacent Consecutive Numbers in a Sequence of Integers",
+  "description": "Construct a program that checks whether a sequence of integers, entered one at a time, contains adjacent integers that are consecutive. The user enters -1 to indicate the end of the input.\\nNote that integers which follow each other in order, without gaps, from smallest to largest are consecutive numbers. For example, 12, 13, 14 and 15 are consecutive numbers.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_adjacent_consecutive.py",
+  "code": "#Step 1: Read the first integer that the user enters\ntext = input(\"Enter an integer: \")\nnum = int(text)\n#Step 2: Read the rest of the integers that the user enters and check for adjacent consecutive numbers\nwhile num != -1 :\n    previous = num\n    text = input(\"Enter an integer: \")\n    num = int(text)\n    if num != -1 and num - previous == 1 :\n        print(previous, \"and\", num, \"are consecutive.\") ",
+  "lines": {
+    "2": {
+      "content": "text = input(\"Enter an integer: \")",
+      "commentList": [
+        "You use this line to read what the user types for the very first number; the prompt \"Enter an integer: \" is shown and the user must press Enter.",
+        "You assign the result of input(...) to the variable text; input() returns the raw characters the user typed as a string, and the = operator stores that string in text.",
+        "You should know input() only reads text \u2014 it does not convert to a number. The actual numeric conversion happens on the next line (num = int(text)).",
+        "You might see an error later if the user types something that is not an integer (for example letters or an empty line). That will cause int(text) to raise a ValueError unless you check or handle it.",
+        "A good practice is to trim extra spaces (for example text = input(...).strip()) and validate the string before converting. You can also wrap the conversion in try/except to give a friendly message if the input is invalid.",
+        "For clarity while learning, keeping the read and the convert as two lines (text then int(text)) helps you separate reading, checking, and converting. If you prefer shorter code, you could write num = int(input(...)), but then you lose the chance to inspect or validate the raw text first."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "You use this line to read what the user types for the very first number; the prompt \"Enter an integer: \" is shown and the user must press Enter."
+        },
+        {
+          "content": "You assign the result of input(...) to the variable text; input() returns the raw characters the user typed as a string, and the = operator stores that string in text."
+        },
+        {
+          "content": "You should know input() only reads text \u2014 it does not convert to a number. The actual numeric conversion happens on the next line (num = int(text))."
+        },
+        {
+          "content": "You might see an error later if the user types something that is not an integer (for example letters or an empty line). That will cause int(text) to raise a ValueError unless you check or handle it."
+        },
+        {
+          "content": "A good practice is to trim extra spaces (for example text = input(...).strip()) and validate the string before converting. You can also wrap the conversion in try/except to give a friendly message if the input is invalid."
+        },
+        {
+          "content": "For clarity while learning, keeping the read and the convert as two lines (text then int(text)) helps you separate reading, checking, and converting. If you prefer shorter code, you could write num = int(input(...)), but then you lose the chance to inspect or validate the raw text first."
+        }
+      ]
+    },
+    "3": {
+      "content": "num = int(text)",
+      "commentList": [
+        "Purpose: convert the text you read from input into an integer and store it in the variable num so you can use it in numeric comparisons and arithmetic later (for example, num - previous == 1).",
+        "Syntax/semantics: int(text) parses the string text as a base-10 integer, and the = operator assigns that integer value to the name num.",
+        "Why it matters here: the while loop and the consecutive check need numbers, not strings; without this conversion you would be comparing text instead of numeric values.",
+        "Common errors/misconceptions: if the user types something that is not a valid integer (for example 'five', '3.5', or an empty string), int(text) raises a ValueError and the program will crash.",
+        "Best practices: clean and validate input first (for example text = text.strip()), or wrap the conversion in a try/except to handle invalid entries and re-prompt the user instead of letting the program fail.",
+        "Note about the sentinel: converting '-1' to the integer -1 lets the program correctly detect the end-of-input marker in the subsequent while check.",
+        "Alternative option: if you wanted to allow decimal numbers you would use float(text), but for detecting adjacent consecutive integers you should use int."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: convert the text you read from input into an integer and store it in the variable num so you can use it in numeric comparisons and arithmetic later (for example, num - previous == 1)."
+        },
+        {
+          "content": "Syntax/semantics: int(text) parses the string text as a base-10 integer, and the = operator assigns that integer value to the name num."
+        },
+        {
+          "content": "Why it matters here: the while loop and the consecutive check need numbers, not strings; without this conversion you would be comparing text instead of numeric values."
+        },
+        {
+          "content": "Common errors/misconceptions: if the user types something that is not a valid integer (for example 'five', '3.5', or an empty string), int(text) raises a ValueError and the program will crash."
+        },
+        {
+          "content": "Best practices: clean and validate input first (for example text = text.strip()), or wrap the conversion in a try/except to handle invalid entries and re-prompt the user instead of letting the program fail."
+        },
+        {
+          "content": "Note about the sentinel: converting '-1' to the integer -1 lets the program correctly detect the end-of-input marker in the subsequent while check."
+        },
+        {
+          "content": "Alternative option: if you wanted to allow decimal numbers you would use float(text), but for detecting adjacent consecutive integers you should use int."
+        }
+      ]
+    },
+    "5": {
+      "content": "while num != -1 :",
+      "commentList": [
+        "Purpose: This while-statement starts the loop that keeps reading numbers and checking adjacent pairs until the user signals the end with -1. As long as num is not -1, the loop body runs to process the next input and compare it to the previous value.",
+        "Syntax and semantics: 'while' begins a pre-test loop; the condition 'num != -1' tests whether the integer stored in num is different from the sentinel -1. The trailing ':' marks the start of the indented block that will repeat while the condition is true.",
+        "How it fits the program flow: On the first iteration num holds the first user value read on Line 3. The loop sets previous = num, then reads and converts a new num; this structure ensures you always compare each newly entered integer with the one immediately before it.",
+        "Common errors and misconceptions: If you forget to update num inside the loop you will get an infinite loop. If num were still a string (not converted to int) the comparison would be incorrect or raise an error. Also note that when the user enters -1 the loop does not run (or stops), so -1 is only a sentinel and will not be treated as a data value to compare.",
+        "Best practices: Avoid the magic number by giving the sentinel a name, e.g. SENTINEL = -1 and use 'while num != SENTINEL'. Make sure num is converted to int before this check, keep the loop body properly indented, and consider input validation or an explicit 'while True' with a clear break for readability."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This while-statement starts the loop that keeps reading numbers and checking adjacent pairs until the user signals the end with -1. As long as num is not -1, the loop body runs to process the next input and compare it to the previous value."
+        },
+        {
+          "content": "Syntax and semantics: 'while' begins a pre-test loop; the condition 'num != -1' tests whether the integer stored in num is different from the sentinel -1. The trailing ':' marks the start of the indented block that will repeat while the condition is true."
+        },
+        {
+          "content": "How it fits the program flow: On the first iteration num holds the first user value read on Line 3. The loop sets previous = num, then reads and converts a new num; this structure ensures you always compare each newly entered integer with the one immediately before it."
+        },
+        {
+          "content": "Common errors and misconceptions: If you forget to update num inside the loop you will get an infinite loop. If num were still a string (not converted to int) the comparison would be incorrect or raise an error. Also note that when the user enters -1 the loop does not run (or stops), so -1 is only a sentinel and will not be treated as a data value to compare."
+        },
+        {
+          "content": "Best practices: Avoid the magic number by giving the sentinel a name, e.g. SENTINEL = -1 and use 'while num != SENTINEL'. Make sure num is converted to int before this check, keep the loop body properly indented, and consider input validation or an explicit 'while True' with a clear break for readability."
+        }
+      ]
+    },
+    "6": {
+      "content": "    previous = num",
+      "commentList": [
+        "You save the current value of num into the variable previous so you can compare that saved number with the next number the user enters.",
+        "This is a simple assignment statement: you copy the integer value stored in num into previous. For integers this copies the value, so previous becomes an independent snapshot of the last input.",
+        "If you omit this line or move it after reading the next input, you will lose the last number and the adjacent-number check (num - previous) will be wrong. Also make sure num was converted to an int earlier so previous receives an integer.",
+        "Because this line runs at the start of each loop iteration, you always preserve the most recent entered number for the upcoming comparison; keep the assignment before reading the next input to compare adjacent entries correctly.",
+        "Best practice: use clear variable names (like previous and num) and a short comment so you or others immediately understand that you are storing the last input for adjacency checks."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "You save the current value of num into the variable previous so you can compare that saved number with the next number the user enters."
+        },
+        {
+          "content": "This is a simple assignment statement: you copy the integer value stored in num into previous. For integers this copies the value, so previous becomes an independent snapshot of the last input."
+        },
+        {
+          "content": "If you omit this line or move it after reading the next input, you will lose the last number and the adjacent-number check (num - previous) will be wrong. Also make sure num was converted to an int earlier so previous receives an integer."
+        },
+        {
+          "content": "Because this line runs at the start of each loop iteration, you always preserve the most recent entered number for the upcoming comparison; keep the assignment before reading the next input to compare adjacent entries correctly."
+        },
+        {
+          "content": "Best practice: use clear variable names (like previous and num) and a short comment so you or others immediately understand that you are storing the last input for adjacency checks."
+        }
+      ]
+    },
+    "7": {
+      "content": "    text = input(\"Enter an integer: \")",
+      "commentList": [
+        "You prompt the user to enter the next integer and save whatever they type into the variable text; this happens once each time the while loop runs so you get a new value to check.",
+        "You use input(\"Enter an integer: \") which displays the message and returns the user\u2019s response as a string; the assignment text = ... stores that string so the next line can convert it to a number.",
+        "You must remember that input() returns text, not a number \u2014 if you try to use text in arithmetic you will be wrong; the program converts text to an integer on the following line with int(text).",
+        "You should watch for bad input: if the user types something that is not a valid integer (for example letters or an empty line), the conversion int(text) will cause a runtime error; to avoid this you can validate the text or catch the error before converting.",
+        "You placed this prompt inside the loop so the program keeps asking until the sentinel -1 is entered; this ensures you always have a new number to compare with the previous one.",
+        "You can improve the line by trimming extra spaces (for example using .strip()) or by converting immediately (num = int(input(...))) if you handle conversion errors, and choose clear variable names so your code is easier to read."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "You prompt the user to enter the next integer and save whatever they type into the variable text; this happens once each time the while loop runs so you get a new value to check."
+        },
+        {
+          "content": "You use input(\"Enter an integer: \") which displays the message and returns the user\u2019s response as a string; the assignment text = ... stores that string so the next line can convert it to a number."
+        },
+        {
+          "content": "You must remember that input() returns text, not a number \u2014 if you try to use text in arithmetic you will be wrong; the program converts text to an integer on the following line with int(text)."
+        },
+        {
+          "content": "You should watch for bad input: if the user types something that is not a valid integer (for example letters or an empty line), the conversion int(text) will cause a runtime error; to avoid this you can validate the text or catch the error before converting."
+        },
+        {
+          "content": "You placed this prompt inside the loop so the program keeps asking until the sentinel -1 is entered; this ensures you always have a new number to compare with the previous one."
+        },
+        {
+          "content": "You can improve the line by trimming extra spaces (for example using .strip()) or by converting immediately (num = int(input(...))) if you handle conversion errors, and choose clear variable names so your code is easier to read."
+        }
+      ]
+    },
+    "8": {
+      "content": "    num = int(text)",
+      "commentList": [
+        "Purpose: This line converts the text you just read from input into an integer and stores it in the variable num. You update the current number so the loop can compare it with previous to detect consecutive numbers or see the -1 sentinel that ends input.",
+        "Syntax and semantics: int(text) calls Python's int() function to parse the string in text into an integer; the = operator assigns that integer value to num. If text has leading or trailing spaces int(text) will still work, but the string must represent a whole integer like '12' or '-1'.",
+        "Potential errors and misconceptions: If the user types something that is not a valid integer (for example 'abc' or '3.5'), int(text) raises a ValueError and your program will crash. A common misconception is thinking input() already returns an integer \u2014 it returns a string, so you must convert it before numeric comparison.",
+        "Best practices: You should validate the input before converting, for example use try/except around int(text) to handle invalid entries and prompt the user again instead of crashing. You can also use text.strip() before conversion (or check text.strip() == '-1' to handle the sentinel) and consider clearer variable names like current and previous for readability."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: This line converts the text you just read from input into an integer and stores it in the variable num. You update the current number so the loop can compare it with previous to detect consecutive numbers or see the -1 sentinel that ends input."
+        },
+        {
+          "content": "Syntax and semantics: int(text) calls Python's int() function to parse the string in text into an integer; the = operator assigns that integer value to num. If text has leading or trailing spaces int(text) will still work, but the string must represent a whole integer like '12' or '-1'."
+        },
+        {
+          "content": "Potential errors and misconceptions: If the user types something that is not a valid integer (for example 'abc' or '3.5'), int(text) raises a ValueError and your program will crash. A common misconception is thinking input() already returns an integer \u2014 it returns a string, so you must convert it before numeric comparison."
+        },
+        {
+          "content": "Best practices: You should validate the input before converting, for example use try/except around int(text) to handle invalid entries and prompt the user again instead of crashing. You can also use text.strip() before conversion (or check text.strip() == '-1' to handle the sentinel) and consider clearer variable names like current and previous for readability."
+        }
+      ]
+    },
+    "9": {
+      "content": "    if num != -1 and num - previous == 1 :",
+      "commentList": [
+        "Purpose: This line tests whether the newly read number (num) is not the end marker (-1) and is exactly one greater than the previous number; if both are true, you have found an adjacent ascending consecutive pair and the program will print that fact.",
+        "Syntax and semantics: The if statement combines two conditions with and. The left condition num != -1 checks the sentinel, the right condition num - previous == 1 checks that the difference is exactly 1. Both conditions must be True for the indented print to run.",
+        "Order and short-circuiting: Python evaluates the left condition first and, because of short-circuiting, will skip evaluating the right condition if num == -1. This is helpful because you explicitly exclude the sentinel from being treated as a valid number to check.",
+        "Common misconceptions and errors: Remember == is comparison, not assignment. This check only finds ascending consecutive pairs (previous followed by num). It will not detect descending consecutive pairs (e.g., 14 then 13). Also ensure num and previous are integers; if input conversion failed earlier, you could get an exception before reaching this line.",
+        "Best practices: Keep the sentinel check first as written so you don't consider the -1 input. If you want to allow either ascending or descending consecutives, use abs(num - previous) == 1. For clearer code, you might use variable names like current instead of num and handle invalid user input with try/except around the int conversion."
+      ],
+      "indentLevel": 1,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line tests whether the newly read number (num) is not the end marker (-1) and is exactly one greater than the previous number; if both are true, you have found an adjacent ascending consecutive pair and the program will print that fact."
+        },
+        {
+          "content": "Syntax and semantics: The if statement combines two conditions with and. The left condition num != -1 checks the sentinel, the right condition num - previous == 1 checks that the difference is exactly 1. Both conditions must be True for the indented print to run."
+        },
+        {
+          "content": "Order and short-circuiting: Python evaluates the left condition first and, because of short-circuiting, will skip evaluating the right condition if num == -1. This is helpful because you explicitly exclude the sentinel from being treated as a valid number to check."
+        },
+        {
+          "content": "Common misconceptions and errors: Remember == is comparison, not assignment. This check only finds ascending consecutive pairs (previous followed by num). It will not detect descending consecutive pairs (e.g., 14 then 13). Also ensure num and previous are integers; if input conversion failed earlier, you could get an exception before reaching this line."
+        },
+        {
+          "content": "Best practices: Keep the sentinel check first as written so you don't consider the -1 input. If you want to allow either ascending or descending consecutives, use abs(num - previous) == 1. For clearer code, you might use variable names like current instead of num and handle invalid user input with try/except around the int conversion."
+        }
+      ]
+    },
+    "10": {
+      "content": "        print(previous, \"and\", num, \"are consecutive.\") ",
+      "commentList": [
+        "You display a message to the user saying that the two most recent numbers (previous and num) are consecutive when the if condition on the previous line is true.",
+        "You are calling print(...) with several comma-separated arguments. Python converts each value to text and inserts a single space between arguments, so if previous is 12 and num is 13 the output will look like: 12 and 13 are consecutive.",
+        "Be careful: using commas in print adds spaces automatically. If you had used string concatenation with + you would need to convert the integers to strings first (e.g., str(previous) + ' and ' + str(num) + ' are consecutive'). Also note this line never runs when num == -1 because the if checks num != -1 first, and previous must be defined earlier in the loop.",
+        "A clearer and more modern way to format the message is to use an f-string: print(f\"{previous} and {num} are consecutive.\") \u2014 this avoids accidental spacing or the need to convert types manually.",
+        "Think about the program goal: this line prints every adjacent ascending consecutive pair. If you only need to know whether any consecutive pair exists, you could set a flag or break out of the loop after the first print to avoid extra output."
+      ],
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "You display a message to the user saying that the two most recent numbers (previous and num) are consecutive when the if condition on the previous line is true."
+        },
+        {
+          "content": "You are calling print(...) with several comma-separated arguments. Python converts each value to text and inserts a single space between arguments, so if previous is 12 and num is 13 the output will look like: 12 and 13 are consecutive."
+        },
+        {
+          "content": "Be careful: using commas in print adds spaces automatically. If you had used string concatenation with + you would need to convert the integers to strings first (e.g., str(previous) + ' and ' + str(num) + ' are consecutive'). Also note this line never runs when num == -1 because the if checks num != -1 first, and previous must be defined earlier in the loop."
+        },
+        {
+          "content": "A clearer and more modern way to format the message is to use an f-string: print(f\"{previous} and {num} are consecutive.\") \u2014 this avoids accidental spacing or the need to convert types manually."
+        },
+        {
+          "content": "Think about the program goal: this line prints every adjacent ascending consecutive pair. If you only need to know whether any consecutive pair exists, you could set a flag or break out of the loop after the first print to avoid extra output."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "if num != -1 and abs(num - previous) == 1 :",
+      "description": "You might pick this because taking the absolute difference (abs(num - previous)) seems to check that the two numbers are next to each other on the number line. Step-by-step: the condition computes the positive distance between the two numbers and compares it to 1, so it will be true for pairs like (4,5) and also for (5,4). That means the program will announce pairs that go down by 1 as well as those that go up by 1. In the context of this task, that is a mistake: the requirement is to detect numbers that follow each other from smallest to largest, not in either direction. Replacing the line with this distractor therefore makes the program accept decreasing adjacent numbers as valid consecutive pairs, which is an unintended behavior and does not enforce the specified ordering.",
+      "line_number": 0
+    },
+    {
+      "code": "if num != -1 or num - previous == 1 :",
+      "description": "You might be tempted to use 'or' because you think the program should allow either 'not the sentinel' or 'consecutive' to be true. Step-by-step: this condition is true whenever at least one of its parts is true. Since most entered numbers are not -1, the left side (num != -1) will nearly always be true, so the whole condition is almost always true regardless of whether num and previous differ by 1. That makes the program print that two numbers are consecutive even when they are not. Also, because the two checks are joined with 'or', the intended gating effect (that you only test consecutiveness for non-sentinel numbers) is lost. Using this line produces many false positives and fails to enforce the intended consecutive check.",
+      "line_number": 0
+    },
+    {
+      "code": "if num != -1 and previous - num == 1 :",
+      "description": "You might choose this because it still compares the two numbers and looks for a difference of 1. Step-by-step: this condition is true when the previous number is exactly one greater than the current number (previous - num == 1). That means the program will report pairs where the sequence goes down by one (for example, 5 followed by 4) as consecutive, but it will not report the intended upward pairs (for example, 4 followed by 5). In other words, you have reversed the order of subtraction and changed the direction of consecutiveness being detected. This misimplementation makes the program detect decreasing adjacent values instead of the specified increasing adjacent values.",
+      "line_number": 0
+    },
+    {
+      "code": "if num != -1 and num - previous = 1 :",
+      "description": "A student might pick this recognizing that the input must not be -1 and must differ from previous by 1. However, it uses the single equals sign (=), which is the assignment operator, instead of the equality comparison operator (==). In Python, assignment inside a conditional statement is a SyntaxError, preventing the program from running.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "12 9 2 6 7 6 3 -2 -1",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:07.259Z",
+  "updated_at": "2026-09-02T02:57:46.163Z",
+  "stat": {
+    "size": 44232,
+    "lastTimeModified": 1788317866855.6677
+  }
+}

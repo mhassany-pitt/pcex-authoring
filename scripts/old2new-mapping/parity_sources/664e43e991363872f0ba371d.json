@@ -1,0 +1,259 @@
+{
+  "id": "6a91ae6a32e78ede45c116e3",
+  "user": "moh70@pitt.edu",
+  "name": "Receiving Input Integers Until a Certain Condition is Met (Case 4)",
+  "description": "Construct a program that receives an integer from the user, outputs that integer, and stops receiving integers when the user enters an even integer less than 10.",
+  "tags": [
+    "gpt5mini;color=purple",
+    "llm_expl+dist&expl;color=blue",
+    "validation-pending;color=orange"
+  ],
+  "iso_language_code": "en",
+  "language": "PYTHON",
+  "filename": "py_input4.py",
+  "code": "#Step 1: Read the first integer that the user enters\ntext = input(\"Enter an integer:\")\nnum = int(text)\n#Step 2: Print the integer that the user has entered, then receive the next integers as long as the user enters an integer that is not even or is not less than 10; otherwise stop\nwhile num % 2 != 0 or num >= 10 :\n    print(\"The integer entered is:\", num)\n    text = input(\"Enter an integer:\")\n    num = int(text)\nprint(\"End of input.\")",
+  "lines": {
+    "2": {
+      "content": "text = input(\"Enter an integer:\")",
+      "commentList": [
+        "Purpose: This line prompts the user with \"Enter an integer:\" and saves whatever they type into the variable text \u2014 it gets the raw input the program will work with.",
+        "How it works (syntax): input(\"Enter an integer:\") displays the prompt and returns the typed characters as a string; the = operator assigns that string to the name text.",
+        "How it contributes: you later convert this string to an integer (line 3). Without this line you would have no user value to print or to test for the stopping condition.",
+        "Common misconception and error: input() returns a string, not an integer. If the user types something that is not a valid integer (letters, punctuation, etc.), int(text) on the next line will fail and raise an error when you try to convert it.",
+        "Pitfalls to watch: extra spaces are returned too (though int() usually tolerates them), and in very old Python versions (Python 2) input behaved differently \u2014 in modern Python (3.x) input is safe but still returns a string.",
+        "Best practices: use a descriptive variable name like user_input, consider calling text = text.strip() to remove accidental spaces, and handle invalid input with a try/except or a validation loop so you can re-prompt the user instead of crashing."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line prompts the user with \"Enter an integer:\" and saves whatever they type into the variable text \u2014 it gets the raw input the program will work with."
+        },
+        {
+          "content": "How it works (syntax): input(\"Enter an integer:\") displays the prompt and returns the typed characters as a string; the = operator assigns that string to the name text."
+        },
+        {
+          "content": "How it contributes: you later convert this string to an integer (line 3). Without this line you would have no user value to print or to test for the stopping condition."
+        },
+        {
+          "content": "Common misconception and error: input() returns a string, not an integer. If the user types something that is not a valid integer (letters, punctuation, etc.), int(text) on the next line will fail and raise an error when you try to convert it."
+        },
+        {
+          "content": "Pitfalls to watch: extra spaces are returned too (though int() usually tolerates them), and in very old Python versions (Python 2) input behaved differently \u2014 in modern Python (3.x) input is safe but still returns a string."
+        },
+        {
+          "content": "Best practices: use a descriptive variable name like user_input, consider calling text = text.strip() to remove accidental spaces, and handle invalid input with a try/except or a validation loop so you can re-prompt the user instead of crashing."
+        }
+      ]
+    },
+    "3": {
+      "content": "num = int(text)",
+      "commentList": [
+        "Purpose: You convert the text returned by input() into an integer and store that integer in the variable num so you can do numeric checks and arithmetic (used later in the while condition).",
+        "Syntax and semantics: int(text) calls Python's int() conversion on the string text, and the = operator assigns the resulting integer value to the name num.",
+        "Common error: If text does not represent a valid integer (for example 'five', '', or '3.5'), int(text) raises a ValueError and the program will crash unless you handle that exception.",
+        "Common misconception: input() always returns a string \u2014 you must convert it to an integer before using num in numeric expressions. Also note that strings with leading/trailing spaces are accepted by int(), but decimal strings like '3.5' are not.",
+        "Best practice: You should validate or wrap this conversion in a try/except block and re-prompt the user on invalid input (or use a helper function that repeats input until a valid integer is entered). If you check the string first, avoid relying solely on text.isdigit() because it won't accept negative numbers."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: You convert the text returned by input() into an integer and store that integer in the variable num so you can do numeric checks and arithmetic (used later in the while condition)."
+        },
+        {
+          "content": "Syntax and semantics: int(text) calls Python's int() conversion on the string text, and the = operator assigns the resulting integer value to the name num."
+        },
+        {
+          "content": "Common error: If text does not represent a valid integer (for example 'five', '', or '3.5'), int(text) raises a ValueError and the program will crash unless you handle that exception."
+        },
+        {
+          "content": "Common misconception: input() always returns a string \u2014 you must convert it to an integer before using num in numeric expressions. Also note that strings with leading/trailing spaces are accepted by int(), but decimal strings like '3.5' are not."
+        },
+        {
+          "content": "Best practice: You should validate or wrap this conversion in a try/except block and re-prompt the user on invalid input (or use a helper function that repeats input until a valid integer is entered). If you check the string first, avoid relying solely on text.isdigit() because it won't accept negative numbers."
+        }
+      ]
+    },
+    "5": {
+      "content": "while num % 2 != 0 or num >= 10 :",
+      "commentList": [
+        "Purpose: This line starts a loop that keeps asking for and printing numbers while the current number does NOT meet the stopping rule. In this program you keep looping as long as the number is odd or it is 10 or larger.",
+        "Syntax breakdown: 'while' begins the loop, the condition is 'num % 2 != 0 or num >= 10', and the final ':' starts the indented loop body. 'num % 2 != 0' checks whether num is odd; 'num >= 10' checks whether num is at least 10; 'or' means the loop continues if either test is true.",
+        "How it matches the problem: The problem says stop when the user enters an even integer less than 10. This condition continues until that exact case happens. The loop only ends when both tests are false \u2014 i.e., the number is even AND it is less than 10.",
+        "Common mistakes to watch for: students often write 'and' instead of 'or' here \u2014 that would be wrong because 'and' would stop too early. Also don't use a single '=' (assignment) in a condition \u2014 Python will error. Remember the trailing ':' is mandatory.",
+        "Edge cases and modulo note: using 'num % 2 != 0' is a safe way in Python to test oddness, including negative odd numbers, because Python's % gives a non-negative remainder. Make sure 'num' is an integer (converted earlier) or you'll get a TypeError.",
+        "Best practices: make the logic clearer by adding parentheses: while (num % 2 != 0) or (num >= 10): or by writing the equivalent explicitly: while not (num % 2 == 0 and num < 10):. Add a short comment so you (and others) can read the intent at a glance.",
+        "Indentation reminder: everything that should repeat must be indented under this line (the print and the next input). If you forget to indent, Python will raise an IndentationError."
+      ],
+      "indentLevel": 0,
+      "blank": true,
+      "comments": [
+        {
+          "content": "Purpose: This line starts a loop that keeps asking for and printing numbers while the current number does NOT meet the stopping rule. In this program you keep looping as long as the number is odd or it is 10 or larger."
+        },
+        {
+          "content": "Syntax breakdown: 'while' begins the loop, the condition is 'num % 2 != 0 or num >= 10', and the final ':' starts the indented loop body. 'num % 2 != 0' checks whether num is odd; 'num >= 10' checks whether num is at least 10; 'or' means the loop continues if either test is true."
+        },
+        {
+          "content": "How it matches the problem: The problem says stop when the user enters an even integer less than 10. This condition continues until that exact case happens. The loop only ends when both tests are false \u2014 i.e., the number is even AND it is less than 10."
+        },
+        {
+          "content": "Common mistakes to watch for: students often write 'and' instead of 'or' here \u2014 that would be wrong because 'and' would stop too early. Also don't use a single '=' (assignment) in a condition \u2014 Python will error. Remember the trailing ':' is mandatory."
+        },
+        {
+          "content": "Edge cases and modulo note: using 'num % 2 != 0' is a safe way in Python to test oddness, including negative odd numbers, because Python's % gives a non-negative remainder. Make sure 'num' is an integer (converted earlier) or you'll get a TypeError."
+        },
+        {
+          "content": "Best practices: make the logic clearer by adding parentheses: while (num % 2 != 0) or (num >= 10): or by writing the equivalent explicitly: while not (num % 2 == 0 and num < 10):. Add a short comment so you (and others) can read the intent at a glance."
+        },
+        {
+          "content": "Indentation reminder: everything that should repeat must be indented under this line (the print and the next input). If you forget to indent, Python will raise an IndentationError."
+        }
+      ]
+    },
+    "6": {
+      "content": "    print(\"The integer entered is:\", num)",
+      "commentList": [
+        "You use this line to show the current integer back to the user; it is the output step inside the loop body that tells the user what value was just read.",
+        "You are calling Python's print function with two arguments: a string \"The integer entered is:\" and the integer variable num. print converts num to text, inserts a space between the arguments (the default separator), and adds a newline at the end.",
+        "You should understand that this print does not change the loop condition or the value of num \u2014 it only produces output. Also note that because the print is inside the while loop, the terminating value (an even integer less than 10) will not be printed, since the loop condition is false for that value and the body does not execute.",
+        "Watch out for misconceptions and errors: print itself won't raise a ValueError \u2014 that would happen earlier when you call int(text). If you tried to concatenate with + instead of using multiple print arguments (e.g. \"...\" + num) you'd get a TypeError unless you convert num to a string first.",
+        "As a best practice, you might prefer a clearer formatting style such as an f-string: print(f\"The integer entered is: {num}\"). Also keep the indentation exactly as shown so this line remains part of the while loop body."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "You use this line to show the current integer back to the user; it is the output step inside the loop body that tells the user what value was just read."
+        },
+        {
+          "content": "You are calling Python's print function with two arguments: a string \"The integer entered is:\" and the integer variable num. print converts num to text, inserts a space between the arguments (the default separator), and adds a newline at the end."
+        },
+        {
+          "content": "You should understand that this print does not change the loop condition or the value of num \u2014 it only produces output. Also note that because the print is inside the while loop, the terminating value (an even integer less than 10) will not be printed, since the loop condition is false for that value and the body does not execute."
+        },
+        {
+          "content": "Watch out for misconceptions and errors: print itself won't raise a ValueError \u2014 that would happen earlier when you call int(text). If you tried to concatenate with + instead of using multiple print arguments (e.g. \"...\" + num) you'd get a TypeError unless you convert num to a string first."
+        },
+        {
+          "content": "As a best practice, you might prefer a clearer formatting style such as an f-string: print(f\"The integer entered is: {num}\"). Also keep the indentation exactly as shown so this line remains part of the while loop body."
+        }
+      ]
+    },
+    "7": {
+      "content": "    text = input(\"Enter an integer:\")",
+      "commentList": [
+        "Purpose: This line asks the user for the next input and stores what they type in the variable text so the loop can read a fresh value on each iteration; without it you would keep testing the same number and likely create an infinite loop.",
+        "Syntax and semantics: input(\"Enter an integer:\") displays the prompt \"Enter an integer:\" and returns the user's response as a string; the = operator assigns that string to the variable text.",
+        "Potential errors and misconceptions: input() always returns a string \u2014 it does not produce an int. If you forget that and try to use text as a number you will get wrong behavior. Also, converting that string to int (done on the next line) can raise ValueError if the user types non-numeric text, and input() can raise EOFError if the input stream is closed.",
+        "Best practices: Keep the prompt clear and consistent. Strip extra spaces if you need (e.g., text = input(...).strip()). Handle bad input with a try/except when converting to int (for example, try: num = int(text) except ValueError: ... ). You can also combine reading and conversion into one line (num = int(input(...))) if you prefer, but be sure to handle conversion errors."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: This line asks the user for the next input and stores what they type in the variable text so the loop can read a fresh value on each iteration; without it you would keep testing the same number and likely create an infinite loop."
+        },
+        {
+          "content": "Syntax and semantics: input(\"Enter an integer:\") displays the prompt \"Enter an integer:\" and returns the user's response as a string; the = operator assigns that string to the variable text."
+        },
+        {
+          "content": "Potential errors and misconceptions: input() always returns a string \u2014 it does not produce an int. If you forget that and try to use text as a number you will get wrong behavior. Also, converting that string to int (done on the next line) can raise ValueError if the user types non-numeric text, and input() can raise EOFError if the input stream is closed."
+        },
+        {
+          "content": "Best practices: Keep the prompt clear and consistent. Strip extra spaces if you need (e.g., text = input(...).strip()). Handle bad input with a try/except when converting to int (for example, try: num = int(text) except ValueError: ... ). You can also combine reading and conversion into one line (num = int(input(...))) if you prefer, but be sure to handle conversion errors."
+        }
+      ]
+    },
+    "8": {
+      "content": "    num = int(text)",
+      "commentList": [
+        "Purpose: This line converts the most recent user input (the string stored in text) into an integer and assigns that integer to num so the loop can test the new value on the next iteration.",
+        "Syntax and semantics: int(text) calls Python's integer constructor to parse the string text into an int; the result is stored in the variable num with the = assignment. This updates the loop variable so the while condition uses the latest number you entered.",
+        "Potential errors and misconceptions: If the user types something that is not a valid integer (for example 'abc' or '3.5') int(text) will raise a ValueError and the program will crash. If you omitted this line (or forgot to convert) num would not change and you could get an infinite loop or type errors.",
+        "Best practices: You should validate or wrap this conversion in a try/except block to catch ValueError and prompt the user again with a clear message. You can also use text.strip() to remove extra spaces (though int handles leading/trailing whitespace) and use clear variable names so the flow of input \u2192 text \u2192 num is easy to follow."
+      ],
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Purpose: This line converts the most recent user input (the string stored in text) into an integer and assigns that integer to num so the loop can test the new value on the next iteration."
+        },
+        {
+          "content": "Syntax and semantics: int(text) calls Python's integer constructor to parse the string text into an int; the result is stored in the variable num with the = assignment. This updates the loop variable so the while condition uses the latest number you entered."
+        },
+        {
+          "content": "Potential errors and misconceptions: If the user types something that is not a valid integer (for example 'abc' or '3.5') int(text) will raise a ValueError and the program will crash. If you omitted this line (or forgot to convert) num would not change and you could get an infinite loop or type errors."
+        },
+        {
+          "content": "Best practices: You should validate or wrap this conversion in a try/except block to catch ValueError and prompt the user again with a clear message. You can also use text.strip() to remove extra spaces (though int handles leading/trailing whitespace) and use clear variable names so the flow of input \u2192 text \u2192 num is easy to follow."
+        }
+      ]
+    },
+    "9": {
+      "content": "print(\"End of input.\")",
+      "commentList": [
+        "Purpose: This line displays the message \"End of input.\" so that the user knows the program has stopped asking for integers and the input phase is finished.",
+        "When it runs: Because this print statement is not indented, it runs only after the while loop has exited. In this program the loop exits when the user enters an even integer that is less than 10, and then you see this message.",
+        "Syntax and semantics: print(\"End of input.\") calls Python's print function to show the string literal End of input. The text must be inside quotes and the parentheses are required in Python 3.",
+        "Common mistakes to watch for: If you accidentally indent this line, it will run inside the loop and print on every iteration. Also remember that earlier input conversions (int(text)) can raise errors (ValueError on bad input or EOFError if input stops), which would prevent this line from running unless you handle them.",
+        "Best practice suggestions: Make the message clear and user-friendly. To ensure the program always exits cleanly, consider validating input with try/except so that unexpected input doesn't crash the program before this final message is shown.",
+        "Clarification about output formatting: print automatically adds a newline after the message, so you don't need to add one yourself unless you want different formatting."
+      ],
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Purpose: This line displays the message \"End of input.\" so that the user knows the program has stopped asking for integers and the input phase is finished."
+        },
+        {
+          "content": "When it runs: Because this print statement is not indented, it runs only after the while loop has exited. In this program the loop exits when the user enters an even integer that is less than 10, and then you see this message."
+        },
+        {
+          "content": "Syntax and semantics: print(\"End of input.\") calls Python's print function to show the string literal End of input. The text must be inside quotes and the parentheses are required in Python 3."
+        },
+        {
+          "content": "Common mistakes to watch for: If you accidentally indent this line, it will run inside the loop and print on every iteration. Also remember that earlier input conversions (int(text)) can raise errors (ValueError on bad input or EOFError if input stops), which would prevent this line from running unless you handle them."
+        },
+        {
+          "content": "Best practice suggestions: Make the message clear and user-friendly. To ensure the program always exits cleanly, consider validating input with try/except so that unexpected input doesn't crash the program before this final message is shown."
+        },
+        {
+          "content": "Clarification about output formatting: print automatically adds a newline after the message, so you don't need to add one yourself unless you want different formatting."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "while num % 2 != 0 and num >= 10 :",
+      "description": "You might pick this because you think the loop should continue only when both properties hold together. Step-by-step: this condition requires num to be odd AND at least 10 to keep looping. If either part is false, the loop stops. For example, if you enter 9 (odd but less than 10), the second part is false so the loop stops \u2014 even though 9 should make the program ask for more input. Using this line makes the loop stop too early whenever one of the two checks fails. The key mistake is the logical connector: this line forces both tests to be true to continue, rather than allowing continuation when either test indicates the input isn't the special stopping case. That change in logic breaks the intended stopping behavior.",
+      "line_number": 0
+    },
+    {
+      "code": "while num % 2 == 0 or num >= 10 :",
+      "description": "You might choose this because you reversed the parity check. Step-by-step: this condition continues when the number is even OR when it is at least 10. That means if the user types an even number that is less than 10, the loop still continues \u2014 so the program will not stop on the very inputs that were supposed to end input. For example, entering 8 (even and less than 10) would keep the loop going instead of stopping. Using this line therefore prevents the intended stopping inputs from ending the loop and can cause the program to keep asking indefinitely for those inputs. The mistake is the inverted parity test: it treats the evenness as a reason to continue rather than as part of the stopping rule.",
+      "line_number": 0
+    },
+    {
+      "code": "while num % 2 != 0 or num > 10 :",
+      "description": "You might pick this because you changed the comparison boundary by one. Step-by-step: this condition continues while the number is odd OR strictly greater than 10. If the user enters 10 (which is even and not greater than 10), both parts become false and the loop stops. That is a problem because entering 10 should not stop the program under the stated requirement. Using this line makes the program stop incorrectly at the boundary value 10. The error is a boundary-condition mistake: the relational operator does not correctly treat the '10' case, so the loop will terminate when it shouldn't for that value.",
+      "line_number": 0
+    },
+    {
+      "code": "while num % 2 == 0 and num < 10 :",
+      "description": "The condition 'num % 2 == 0 and num < 10' runs the loop only when num is both even and under 10. This inverts the stopping criteria: it requires the stopping condition to be true in order to continue looping, rather than halting when that condition is encountered. It fails to continue processing odd numbers or values >= 10.",
+      "line_number": 0
+    }
+  ],
+  "programInput": "16 10 3 1 4",
+  "extraFiles": [],
+  "collaborator_emails": [
+    "rah225@pitt.edu",
+    "peterb@pitt.edu",
+    "arl122@pitt.edu",
+    "quinnkwolter@pitt.edu",
+    "hua1007.yu@connect.polyu.hk"
+  ],
+  "created_at": "2026-08-28T15:51:06.224Z",
+  "updated_at": "2026-09-02T02:57:04.025Z",
+  "stat": {
+    "size": 41512,
+    "lastTimeModified": 1788317824707.463
+  }
+}
