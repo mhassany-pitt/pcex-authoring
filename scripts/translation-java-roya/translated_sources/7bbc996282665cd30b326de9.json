@@ -1,0 +1,560 @@
+{
+  "id": "7bbc996282665cd30b326de9",
+  "user": "rah225@pitt.edu",
+  "name": "Comparando la lista de palabras de dos archivos",
+  "untr_name": "Comparing the List of Words from Two Files",
+  "description": "Construya un programa que lea dos archivos de texto y cree una lista de las palabras que contiene cada uno de estos archivos, ignorando el uso de mayusculas y minusculas. El programa debe determinar que lista es mayor en tamaño, es decir, cual lista tiene mas palabras.\\nAsuma que todas las palabras en estos archivos de texto estan separadas por un solo caracter de espacio.",
+  "untr_description": "Construct a program that reads two text files and creates a list of the words that each of these files contains, ignoring the case of the letters. The program should determine which list is larger in size, i.e., which list has more words.\\nAssume that all of the words in these text files are separated by a single space characters.",
+  "language": "JAVA",
+  "iso_language_code": "es",
+  "filename": "JVocabulary2.java",
+  "code": "import java.util.*;\nimport java.io.*;\npublic class JVocabulary2 {\n\tpublic static void main(String[] args) throws FileNotFoundException {\n\t\tJVocabulary2 v2 = new JVocabulary2();\n\t\tArrayList<String> lst1 = v2.getWords(\"archivo1.txt\");\n\t\tSystem.out.println(\"lista1 palabras = \" + lst1);\n\t\tArrayList<String> lst2 = v2.getWords(\"archivo2.txt\");\n\t\tSystem.out.println(\"lista2 palabras = \" + lst2);\n\t\tv2.compareLists(lst1, lst2);\n\t}\n\t//Paso 1: Definir el metodo que compara dos listas para encontrar la mas grande\n\tpublic void compareLists(ArrayList<String> list1, ArrayList<String> list2 ) {\n\t\tif ( list1.size() > list2.size() ) {\n\t\t\tSystem.out.println(\"lista1 tiene mas palabras.\");\n\t\t} else if ( list2.size() > list1.size() ) {\n\t\t\tSystem.out.println(\"lista2 tiene mas palabras\");\n\t\t} else {\n\t\t\tSystem.out.println(\"lista1 y lista2 tienen el mismo numero de palabras.\");\n\t\t}\n\t}\n\t//Paso 2: Definir el metodo que crea una lista de palabras a partir de un archivo\n\tpublic ArrayList<String> getWords(String fileName) {\n\t\t//Paso 2.1: Crear una lista vacia para almacenar las palabras\n\t\tArrayList<String> words = new ArrayList<String>();\n\t\t//Paso 2.2: Encerrar el codigo que puede lanzar una excepcion dentro del bloque try\n\t\ttry {\n\t\t\t//Paso 2.2.1: Envolver un BufferedReader alrededor de un FileReader\n\t\t\tFileReader fr = new FileReader(fileName); \n\t\t\tBufferedReader br = new BufferedReader(fr); \n\t\t\t//Paso 2.2.2: Usar el objeto BufferedReader para leer una linea a la vez\n\t\t\tString line = null;\n\t\t\twhile ( ( line = br.readLine() ) != null) {\n\t\t\t\t//Dividir la linea en palabras, ignorando mayusculas/minusculas\n\t\t\t\tString[] tokens = line.toLowerCase().split(\" \");\n\t\t\t\t//Agregar cada palabra de la linea a la lista\n\t\t\t\tfor (String token : tokens) {\n\t\t\t\t\twords.add(token);\n\t\t\t\t}\n\t\t\t}\n\t\t\t//Paso 2.2.3: Cerrar el objeto BufferedReader asociado al archivo\n\t\t\tbr.close();\n\t\t//Paso 2.3: Manejar todas las excepciones posibles que puedan ser lanzadas en el bloque try\n\t\t} catch (FileNotFoundException ex) {\n\t\t\tSystem.out.println(\"Archivo no encontrado\");\n\t\t} catch (IOException ex ) {\n\t\t\tSystem.out.println(\"Problema con el archivo!\");\n\t\t}\n\t\t//Paso 2.4: retornar la lista\n\t\treturn words;\n\t}\n}",
+  "untr_code": "import java.util.*;\nimport java.io.*;\npublic class JVocabulary2 {\n\tpublic static void main(String[] args) throws FileNotFoundException {\n\t\tJVocabulary2 v2 = new JVocabulary2();\n\t\tArrayList<String> lst1 = v2.getWords(\"test1.txt\");\n\t\tSystem.out.println(\"list1 words = \" + lst1);\n\t\tArrayList<String> lst2 = v2.getWords(\"test2.txt\");\n\t\tSystem.out.println(\"list2 words = \" + lst2);\n\t\tv2.compareLists(lst1, lst2);\n\t}\n\t//Step 1: Define the method that compares two lists to find the largest one\n\tpublic void compareLists(ArrayList<String> list1, ArrayList<String> list2 ) {\n\t\tif ( list1.size() > list2.size() ) {\n\t\t\tSystem.out.println(\"list1 has more words.\");\n\t\t} else if ( list2.size() > list1.size() ) {\n\t\t\tSystem.out.println(\"list2 has more words\");\n\t\t} else {\n\t\t\tSystem.out.println(\"list1 and list2 have the same number of words.\");\n\t\t}\n\t}\n\t//Step 2: Define the method that creates a list of words from a file\n\tpublic ArrayList<String> getWords(String fileName) {\n\t\t//Step 2.1: Create an empty list to store the words\n\t\tArrayList<String> words = new ArrayList<String>();\n\t\t//Step 2.2: Enclose the code that might throw an exception within the try block\n\t\ttry {\n\t\t\t//Step 2.2.1: Wrap a BufferedReader around a FileReader\n\t\t\tFileReader fr = new FileReader(fileName); \n\t\t\tBufferedReader br = new BufferedReader(fr); \n\t\t\t//Step 2.2.2: Use the BufferedReader object to read one line at a time\n\t\t\tString line = null;\n\t\t\twhile ( ( line = br.readLine() ) != null) {\n\t\t\t\t//Split the line into words, ignoring the case of the letters\n\t\t\t\tString[] tokens = line.toLowerCase().split(\" \");\n\t\t\t\t//Add each word in the line to the list\n\t\t\t\tfor (String token : tokens) {\n\t\t\t\t\twords.add(token);\n\t\t\t\t}\n\t\t\t}\n\t\t\t//Step 2.2.3: Close the BufferedReader object attached to the file\n\t\t\tbr.close();\n\t\t//Step 2.3: Handle all possible exceptions that may be thrown in the try block \n\t\t} catch (FileNotFoundException ex) {\n\t\t\tSystem.out.println(\"File not found\");\n\t\t} catch (IOException ex ) {\n\t\t\tSystem.out.println(\"Problem with the file!\");\n\t\t}\n\t\t//Step 2.4: return the list\n\t\treturn words;\n\t}\n}",
+  "lines": {
+    "1": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "2": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "3": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "4": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "5": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia crea un objeto JVocabulary2 usando la palabra reservada new y parentesis vacios. La variable v2 contiene una referencia a un objeto JVocabulary2.",
+          "untr_content": "This statement creates a JVocabulary2 object using the new keyword and empty parentheses. The variable v2 holds a reference to a JVocabulary2 object."
+        }
+      ]
+    },
+    "6": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos leer el archivo y crear una lista de palabras que el archivo contiene. Esta sentencia invoca el metodo getWords de v2 y le pasa el nombre del archivo \"archivo1.txt\" como su argumento. Este metodo retorna una referencia a la lista de palabras. Asignamos esta referencia a la variable lst1.",
+          "untr_content": "We need to read the file and create a list of words that the file contains. This statement invokes the method getWords of the v2 and passes the file name \"test1.txt\" as its argument. This method returns a reference to the list of words. We assign this reference to variable lst1. "
+        }
+      ]
+    },
+    "7": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia imprime la primera lista mostrando el contenido de la lista entre corchetes, con los valores separados por comas.",
+          "untr_content": "This statement prints the first list by showing the contents of the list inside square brackets, with the values separated by commas."
+        },
+        {
+          "content": "Nótese que podemos imprimir el contenido de un ArrayList porque la clase ArrayList sobreescribe el metodo toString de Java. El metodo toString es invocado cuando imprimimos un ArrayList o concatenamos un ArrayList a un String.",
+          "untr_content": "Note that we can print the content of an ArrayList because the ArrayList class overrides Java’s toString method. The toString method is called when we print an ArrayList or concatenate an ArrayList to a String."
+        }
+      ]
+    },
+    "8": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos leer el archivo y crear una lista de palabras que el archivo contiene. Esta sentencia invoca el metodo getWords de v2 y le pasa el nombre del archivo \"archivo2.txt\" como su argumento. Este metodo retorna una referencia a la lista de palabras. Asignamos esta referencia a la variable lst2.",
+          "untr_content": "We need to read the file and create a list of words that the file contains. This statement invokes the method getWords of the v2 and passes the file name \"test2.txt\" as its argument. This method returns a reference to the list of words. We assign this reference to variable lst2. "
+        }
+      ]
+    },
+    "9": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia imprime la segunda lista mostrando el contenido de la lista entre corchetes, con los valores separados por comas.",
+          "untr_content": "This statement prints the second list by showing the contents of the list inside square brackets, with the values separated by commas."
+        },
+        {
+          "content": "Nótese que podemos imprimir el contenido de un ArrayList porque la clase ArrayList sobreescribe el metodo toString de Java. El metodo toString es invocado cuando imprimimos un ArrayList o concatenamos un ArrayList a un String.",
+          "untr_content": "Note that we can print the content of an ArrayList because the ArrayList class overrides Java’s toString method. The toString method is called when we print an ArrayList or concatenate an ArrayList to a String."
+        }
+      ]
+    },
+    "10": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos averiguar cual lista es mayor en tamaño. Hacemos esto invocando el metodo compareLists de v2 y pasandole la lista de palabras del primer archivo y la lista de palabras del segundo archivo como sus argumentos.",
+          "untr_content": "We need to find out which list is larger in size. We do this by invoking the method compareLists of the v2 and passing the list of words in the first file, and the list of words in the second file as its argument."
+        }
+      ]
+    },
+    "11": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "12": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "13": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos declarar el metodo que compara dos listas para encontrar la que es mayor en tamaño. El primer parametro es la referencia a la primera lista, y el segundo parametro es la referencia a la segunda lista. Ambos parametros tienen el tipo ArrayList de String porque ambas listas almacenan valores String. Definimos este metodo como public para proveer acceso a este metodo desde fuera de la clase. Tambien definimos su tipo de retorno como void, ya que no retorna ningun valor.",
+          "untr_content": "We need to declare the method that compares two lists to find the one that is larger in size. The first parameter is the reference to the first list, and the second parameter is the reference to the second list. Both parameters have the type ArrayList of String because both lists store String values. We define this method as public to provide access to this method from outside of the class. Also, we define its return type as void, as it does not return any values."
+        }
+      ]
+    },
+    "14": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Para determinar la lista que es mayor en tamaño, necesitamos realizar dos pruebas: una para determinar si la primera lista tiene mas elementos que la segunda lista, y otra para determinar si la segunda lista tiene mas elementos que la primera lista. Si ninguna de las listas tiene mas elementos que la otra, entonces podemos concluir que ambas listas tienen el mismo tamano. Podemos determinar el numero de elementos de un ArrayList llamando al metodo size().",
+          "untr_content": "To determine the list that is larger in size, we need to perform two tests: one for determining whether the first list has more elements that the second list, and one for determining whether the second list has more elements that the first list. If the none of the lists has more elements than the other, then we could conclude that both lists have the same size.<br>We can determine the number of elements of an ArrayList by calling the size() method."
+        },
+        {
+          "content": "Las condiciones que prueban cual lista tiene mas elementos son mutuamente excluyentes (es decir, una y solo una de las condiciones puede ser verdadera); por lo tanto, su orden no importa. Ademas, es mejor usar declaraciones if-else if en lugar de if secuenciales porque solo una prueba puede ser verdadera y una vez que encontramos cual lista es mayor, no necesitamos realizar mas pruebas.",
+          "untr_content": "The conditions that test which list has more elements are mutually exclusive (i.e., one and only one of the conditions can be true); therefore, their order does not matter. Also, it is better to use if-else if statements instead of sequential if statements because only one test could be true and once we find which list is larger than the other, we don't need to perform more tests."
+        },
+        {
+          "content": "Si la primera lista tiene mas elementos que la segunda lista, entonces se ejecuta el bloque de esta sentencia if. De lo contrario, el bloque de esta sentencia if es omitido.",
+          "untr_content": "If the first list has more elements than the second list, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        }
+      ]
+    },
+    "15": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia imprime que la primera lista tiene mas palabras. El texto impreso es seguido por el caracter de fin de linea al final.",
+          "untr_content": "This statement prints that the first list has more words. The printed text is followed by the end-of-line character at the end."
+        }
+      ]
+    },
+    "16": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Si la primera prueba falla (es decir, cuando la primera lista no es mayor que la segunda lista), necesitamos comprobar si la segunda lista tiene mas elementos que la primera lista.",
+          "untr_content": "If the first test fails (i.e., when the first list is not larger than the second list), we need to test if the second list has more elements than the first list."
+        },
+        {
+          "content": "Si la primera prueba falla (es decir, cuando la primera lista no es mayor que la segunda lista), el cuerpo de la sentencia if anterior no se ejecutara; en su lugar el programa salta a esta sentencia else if donde comprobamos si la segunda lista tiene mas elementos que la primera lista. Si la segunda lista tiene mas elementos que la primera lista, entonces se ejecuta el bloque de esta sentencia else if. De lo contrario, el bloque de esta sentencia else if es omitido.",
+          "untr_content": "If the first test fails (i.e., when the first list is not larger than the second list), the body of the previous if statement will not be executed, instead the program jumps to this else if statement where we test whether the second list has more elements than the first list.<br><br>If the second list has more elements than the first list, then the body of this else if statement gets executed. Otherwise, the body of this else if statement is skipped."
+        }
+      ]
+    },
+    "17": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia imprime que la segunda lista tiene mas palabras. El texto impreso es seguido por el caracter de fin de linea al final.",
+          "untr_content": "This statement prints that the second list has more words. The printed text is followed by the end-of-line character at the end."
+        }
+      ]
+    },
+    "18": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos terminar las sentencias if-else if anteriores con una sentencia else cuyo bloque se ejecuta cuando ninguna de las pruebas anteriores es verdadera, es decir, cuando ambas listas tienen el mismo tamano.",
+          "untr_content": "We need to end the above if-else if statements with an else statement that its body is executed when none of the above tests are true, that is when both of the lists have the same size."
+        },
+        {
+          "content": "Nótese que cuando finalizamos una serie de if-else if con una sentencia else, nos aseguramos de ejecutar el bloque de exactamente una de esas sentencias.",
+          "untr_content": "Note than when we end series of if-else if statements with an else statement, we make sure to execute the body of exactly one of those statements."
+        }
+      ]
+    },
+    "19": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia imprime que ambas listas tienen el mismo numero de palabras. El texto impreso es seguido por el caracter de fin de linea al final.",
+          "untr_content": "This statement prints that both lists have the same number of words. The printed text is followed by the end-of-line character at the end."
+        }
+      ]
+    },
+    "20": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "21": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "22": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "23": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos declarar el metodo que crea un ArrayList de palabras que contiene el archivo dado. Definimos este metodo como public para proveer acceso a este metodo desde fuera de la clase. Tambien definimos su tipo de retorno como ArrayList de String, ya que retorna un ArrayList que contiene valores String.",
+          "untr_content": "We need to declare the method that creates an ArrayList of words that the given file contains. We define this method as public to provide access to this method from outside of the class. Also, we define its return type as ArrayList of String, as it returns an ArrayList that holds String values."
+        }
+      ]
+    },
+    "24": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "25": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos tener una lista que pueda almacenar valores String porque cada palabra es un String. La siguiente sentencia crea un ArrayList vacio para almacenar Strings y asigna su referencia a la variable words. Usamos ArrayList en lugar de un arreglo porque los arreglos tienen longitud fija mientras que ArrayList es dinamico en tamano. En situaciones como esta donde no conocemos el numero maximo de elementos que tenemos que procesar, necesitamos usar ArrayList. A medida que se agregan elementos a un ArrayList su capacidad crece automaticamente.",
+          "untr_content": "We need to have a list that could store String values because each word is a String. The following statement creates an empty ArrayList for storing Strings and assigns its reference to variable words. We use ArrayList instead of an array because arrays have fixed length while ArrayList is dynamic in size. In situations like this that we don't know the maximum number of elements that we have to process, we need to use ArrayList. As elements are added to an ArrayList its capacity grows automatically."
+        }
+      ]
+    },
+    "26": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "27": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "El bloque try intenta ejecutar el codigo dentro de el. Las sentencias en el bloque try pueden lanzar varios tipos de excepcion.",
+          "untr_content": "The try blocks tries to execute the code within it. The statements in the try block may throw several types of exception."
+        },
+        {
+          "content": "Si se encuentra un error, la ejecucion del bloque try se detiene y se transfiere hacia abajo a los bloques catch.",
+          "untr_content": "If an error is encountered, the try block code execution is stopped and transferred down to the catch block(s)."
+        }
+      ]
+    },
+    "28": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "29": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Queremos leer un archivo de texto; por lo tanto, necesitamos usar un FileReader y envolverlo en un BufferedReader. Esta sentencia crea un objeto FileReader usando la palabra new. La variable fr contiene una referencia a un objeto FileReader.",
+          "untr_content": "We want to read a text file; therefore, we need to use a FileReader and wrap it in a BufferedReader. This statement create a FileReader object using the new keyword and empty parentheses. The variable fr holds a reference to a FileReader object."
+        }
+      ]
+    },
+    "30": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Envolvemos un BufferedReader alrededor del FileReader porque BufferedReader almacena en buffer la entrada para hacer el proceso de lectura mucho mas rapido. La variable br contiene una referencia a un objeto BufferedReader.",
+          "untr_content": "We wrap a BufferedReader around the FileReader because the BufferedReader buffers the input to make the reading process much faster. The variable br holds a reference to a BufferedReader object."
+        }
+      ]
+    },
+    "31": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "32": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Definimos una variable de tipo String para contener el contenido de cada linea que el BufferedReader lee del archivo. La inicializamos en null.",
+          "untr_content": "We define a string variable to hold the content of each line that the BufferedReader object reads from the file. We set it to null."
+        }
+      ]
+    },
+    "33": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos leer las lineas mientras no hayamos alcanzado el final del archivo. Por lo tanto, necesitamos usar una estructura de bucle. Dado que no sabemos de antemano cuantas veces se repetira el bucle, necesitamos usar un while. La condicion en el while prueba si el cuerpo del bucle debe repetirse, asi que debe probar si la linea leida no es null.",
+          "untr_content": "We need to read the lines as long as we have not reached the end of the file. Therefore, we need to use a loop structure. Since we don't know ahead of time how many times the loop will be repeated, we need to use a while loop. The condition in the while loop tests whether the body of the loop should be repeated, so it should test whether the line that is read is not null."
+        },
+        {
+          "content": "Podemos leer una linea invocando el metodo readLine del objeto BufferedReader. Aqui comparamos el resultado de llamar a readLine con null. Asignamos el resultado de llamar a readLine a la variable line porque necesitamos procesarla en el cuerpo del while.",
+          "untr_content": "We could read a line by invoking the readLine method of the BufferedReader object. Here, we compare the result of calling the readLine method to null. We assign the result of calling the readLine method to variable line because we need to process it in the body of the while loop."
+        },
+        {
+          "content": "El cuerpo del while se repite mientras la linea leida no sea null. El bucle termina cuando la condicion del bucle evalua a false, es decir, cuando la linea leida es null.",
+          "untr_content": "The body of the while loop is repeated as long as the line that is read is not null. The loop terminates when the loop condition evaluates to false, that is when the line that is read is null."
+        }
+      ]
+    },
+    "34": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "35": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos dividir la linea en palabras y almacenar las palabras en un arreglo. No nos importa la capitalizacion, asi que convertimos la linea a minusculas antes de dividirla en palabras.",
+          "untr_content": "We need to split the line into words and store the words in an array. We don’t care about capitalization, so we convert the line to lowecase before splitting it into words."
+        },
+        {
+          "content": "Convertimos los caracteres del String a minusculas llamando al metodo toLowerCase en ese String. Usamos el metodo split() con \" \" como argumento porque queremos que split separe las cadenas usando un solo caracter de espacio.",
+          "untr_content": "We convert the string characters into lowercase by calling the method toLowerCase on that string. We use split() method with \" \" as its argument because we want the split method to separate strings using a single space character."
+        }
+      ]
+    },
+    "36": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "37": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Usamos un bucle for para iterar sobre las palabras y agregar cada palabra al ArrayList. Podemos hacer esto usando la sentencia for-each que visita cada palabra en el arreglo de tokens de la linea. Este for asigna el nombre token a cada uno de los valores en el arreglo por turnos, de izquierda a derecha, y luego la sentencia en el cuerpo del bucle se ejecuta para cada valor.",
+          "untr_content": "We use a for loop to iterate over the words and add each word to the ArrayList. We can do this by using for–each statement that visits each word in the array of line tokens. This for loop assigns the name token to each of the values in the array in turn, from left to right, and then the statement in the loop body will be executed for each value."
+        }
+      ]
+    },
+    "38": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Este metodo agrega la palabra visitada al final de la lista.",
+          "untr_content": "This method adds the word that we visited to the end of the list."
+        },
+        {
+          "content": "Podemos agregar un elemento al ArrayList llamando al metodo add().",
+          "untr_content": "We can add an element to the ArrayList by calling the add() method."
+        }
+      ]
+    },
+    "39": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "40": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "41": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "42": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Hemos terminado de leer el archivo; por lo tanto, necesitamos cerrar el objeto BufferedReader. Cerrar un BufferedReader tambien cerrara el Reader desde el cual el BufferedReader esta leyendo. Por lo tanto, no necesitamos cerrar el objeto FileReader (es decir, el objeto referido por la variable fr) cuando se cierra el BufferedReader.",
+          "untr_content": "We're done reading the file; so, we need to close the BufferedReader object. Closing a BufferedReader object will also close the Reader object from which the BufferedReader is reading. Therefore, we don't need to close the FileReader object (i.e., object referred by variable fr) when the BufferedReader object is closed ."
+        }
+      ]
+    },
+    "43": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "44": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "45": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia imprime en la salida estandar por defecto el error que causo el FileNotFoundException. El texto impreso es seguido por el caracter de fin de linea al final.",
+          "untr_content": "This statement prints to the default standard output stream the error that caused the FileNotFoundException. The printed text is followed by the end-of-line character at the end."
+        }
+      ]
+    },
+    "46": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos manejar la IOException. Este error ocurre cuando hay un problema al intentar leer o cerrar el archivo.",
+          "untr_content": "We need to handle the IOException. This error occurs when an error occurs when trying to read/close the file."
+        },
+        {
+          "content": "El cuerpo de este bloque catch se ejecuta solo si ocurre un error al intentar leer o cerrar el archivo. De lo contrario, el cuerpo de este catch es omitido.",
+          "untr_content": "The body of this catch block gets executed only if an error occurs when trying to read/close the file. Otherwise, the body of this catch statement is skipped."
+        }
+      ]
+    },
+    "47": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia imprime en la salida estandar por defecto el error que causo la IOException. El texto impreso es seguido por el caracter de fin de linea al final.",
+          "untr_content": "This statement prints to the default standard output stream the error that caused the IOException. The printed text is followed by the end-of-line character at the end."
+        }
+      ]
+    },
+    "48": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "49": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "50": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Ahora que procesamos el archivo, necesitamos retornar la lista de palabras que contiene el archivo. La sentencia return, cuando se alcanza, termina la llamada al metodo y envia el resultado de vuelta al invocador.",
+          "untr_content": "Now that we processed the file, we need to return the list of words that the file contains. The return statement, when reached, ends the method call and sends the result back to the caller."
+        }
+      ]
+    },
+    "51": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "52": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    }
+  },
+  "distractors": [
+    {
+      "code": "if ( list1 > list2 ) {",
+      "description": "",
+      "untr_code": "if ( list1 > list2 ) {",
+      "untr_description": ""
+    },
+    {
+      "code": "} else if ( list2 > list1 ) {",
+      "description": "",
+      "untr_code": "} else if ( list2 > list1 ) {",
+      "untr_description": ""
+    },
+    {
+      "code": "if ( list1.size() == list2.size() ) {",
+      "description": "",
+      "untr_code": "if ( list1.size() == list2.size() ) {",
+      "untr_description": ""
+    },
+    {
+      "code": "public void compareLists(ArrayList<Char> list1, ArrayList<Char> list2 ) {",
+      "description": "",
+      "untr_code": "public void compareLists(ArrayList<Char> list1, ArrayList<Char> list2 ) {",
+      "untr_description": ""
+    },
+    {
+      "code": "public void compareLists() {",
+      "description": "",
+      "untr_code": "public void compareLists() {",
+      "untr_description": ""
+    }
+  ],
+  "tags": [
+    "spanish-latam;color=yellow",
+    "human-english;color=blue",
+    "human-explanation;color=green",
+    "validation-pending;color=orange"
+  ],
+  "translations": {
+    "en": "0ccfc11b45d5e7b28dabc398"
+  },
+  "collaborator_emails": [
+    "moh70@pitt.edu"
+  ],
+  "programInput": ""
+}

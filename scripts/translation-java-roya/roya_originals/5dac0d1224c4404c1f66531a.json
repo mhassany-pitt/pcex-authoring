@@ -1,0 +1,306 @@
+{
+  "_id": "5dac0d1224c4404c1f66531a",
+  "id": "5dac0d1224c4404c1f66531a",
+  "name": "Determining the Average Ratings of each Respondent and Average Ratings Given to Each Soda in the Survey",
+  "description": "Suppose a soda manufacturer held a taste test for four new flavors to determine if people liked them. The manufacturer got 10 people to try each new flavor and give it a score from 1 to 5, where 1 equals poor and 5 equals excellent. The results of that survey is stored in a matrix. Each row of the matrix holds the responses that all testers gave for one particular soda flavor, and each column holds the responses of one person for all sodas.\\nConstruct a program that determines the average ratings that respondents provided to four new flavors of soda as well as the average ratings of each respondent.",
+  "language": "JAVA",
+  "iso_language_code": "en",
+  "user": "rah225@pitt.edu",
+  "collaborator_emails": [
+    "moh70@pitt.edu"
+  ],
+  "filename": "JSodaSurverySodaRespondentAvg.java",
+  "code": "public class JSodaSurverySodaRespondentAvg {\n\tpublic static void main(String[] args) {\n\t\t//Step 1: Define a 4x10 two-dimensional array\n\t\tint[][] ratingsData = {{ 3, 4, 5, 2, 1, 4, 3, 2, 4, 4 }, \n\t\t\t\t{ 2, 4, 3, 4, 3, 3, 2, 1, 2, 2 },\n\t\t\t\t{ 3, 5, 4, 5, 5, 3, 2, 5, 5, 5 },\n\t\t\t\t{ 1, 1, 1, 3, 1, 2, 1, 3, 2, 4 }};\n\t\t//Step 2: Get the dimensions of the array that stores the ratings data\n\t\tint numSodas = ratingsData.length;\n\t\tint numRespondents = ratingsData[0].length;\n\t\t//Step 3: Create an array to store the sum of rating of each soda flavor\n\t\tint[] sodaSum = new int[numSodas];\n\t\t//Step 4: Create an array to store the sum of rating of each respondent\n\t\tint[] respondentSum = new int[numRespondents];\n\t\t//Step 5: Iterate through the sodas \n\t\tfor (int i = 0; i < numSodas; i++) {\n\t\t\t//Step 5.1: Iterate through the respondents\n\t\t\tfor (int j = 0; j < numRespondents; j++) {\n\t\t\t\t//Step 5.1.1: Update sum of ratings given to soda i+1\n\t\t\t\tsodaSum[i] += ratingsData[i][j];\n\t\t\t\t//Step 5.1.2: Update sum of ratings from respondent j+1\n\t\t\t\trespondentSum[j] += ratingsData[i][j];\n\t\t\t}\n\t\t}\n\t\t//Step 6: Calculate and print the average rating for each soda\n\t\tSystem.out.println (\"Averages:\");\n\t\tfor (int i = 0; i < numSodas; i++) {\n\t\t\tSystem.out.printf(\"Soda # %d : %.2f\\n\", (i+1), (double) sodaSum[i]/numRespondents);\n\t\t}\n\t\t//Step 7: Calculate and print the average rating for each respondent    \n\t\tfor (int j = 0; j < numRespondents; j++) {\n\t\t\tSystem.out.printf(\"Respondent # %d : %.2f\\n\", (j+1), (double) respondentSum[j]/numSodas);\n\t\t}\n\t}\n}",
+  "lines": {
+    "1": {
+      "comments": [],
+      "blank": false
+    },
+    "2": {
+      "comments": [],
+      "blank": false
+    },
+    "3": {
+      "comments": [],
+      "blank": false
+    },
+    "4": {
+      "comments": [
+        {
+          "content": "We need to use two-dimensional array (an array of arrays) to create a matrix of the ratings. This statement creates a 4x10 two-dimensional array of ratings given to 4 new flavors of soda by 10 respondents."
+        },
+        {
+          "content": "Note that each matrix row corresponds to a subarray in the two-dimensional array. Also, note that arrays can naturally span multiple lines if we want them to because they are contained by a pair of braces."
+        }
+      ],
+      "blank": false
+    },
+    "5": {
+      "comments": [],
+      "blank": false
+    },
+    "6": {
+      "comments": [],
+      "blank": false
+    },
+    "7": {
+      "comments": [],
+      "blank": false
+    },
+    "8": {
+      "comments": [],
+      "blank": false
+    },
+    "9": {
+      "comments": [
+        {
+          "content": "We store the number of rows in the ratingsData in variable numSodas because we'll use it in different steps of the program. Note that the expression ratingsData.length returns the number of rows in the ratingsData."
+        }
+      ],
+      "blank": false
+    },
+    "10": {
+      "comments": [
+        {
+          "content": "We store the number of columns in the ratingsData in variable numRespondents because we'll use it in different steps of the program. Note that the expression rantingsData[0].length returns the number of columns in the ratingsData."
+        }
+      ],
+      "blank": false
+    },
+    "11": {
+      "comments": [],
+      "blank": false
+    },
+    "12": {
+      "comments": [
+        {
+          "content": "To compute the average ratings for sodas, we need to first compute the sum of the ratings for the four new flavors of sodas and then divide the sum of the ratings given to each soda by the total number of respondents. We need four variables to compute the sum of the ratings, which means that an array is a great way to store this data. In general, whenever we find ourselves thinking that we need n of some kind of data, we should think about using an array of length n. Here, we need four variables for storing the sum of the ratings for the sodas; so, we create an array of length 4."
+        },
+        {
+          "content": "The first, second, third, and fourth element in the array will be used for storing the sum of the ratings for the first, second, third, and fourth soda. This statement declares an array variable, sodaSum, creates an array of size numSodas, and assigns its reference to sodaSum. By default, each number in the array is 0."
+        }
+      ],
+      "blank": false
+    },
+    "13": {
+      "comments": [],
+      "blank": false
+    },
+    "14": {
+      "comments": [
+        {
+          "content": "To compute the average ratings of a respondent, we need to first compute the sum of the ratings of the respondent and then divide the sum by the number of the ratings that the respondent provided. We need ten variables to compute the sum of the ratings, which means that an array is a great way to store this data. In general, whenever we find ourselves thinking that we need n of some kind of data, we should think about using an array of length n. Here, we need ten variables for storing the sum of the ratings of respondents; so, we create an array of length 10."
+        },
+        {
+          "content": "The first, second, ..., and tenth element in the array will be used for storing the sum of the ratings of the first, second, ..., and tenth respondent. This statement declares an array variable, respondentSum, creates an array of size numRespondents, and assigns its reference to respondentSum. By default, each number in the array is 0."
+        }
+      ],
+      "blank": true
+    },
+    "15": {
+      "comments": [],
+      "blank": false
+    },
+    "16": {
+      "comments": [
+        {
+          "content": "We need to process the rating data and compute the sum of the ratings for each soda (row totals) and the sum of the ratings of each respondent (column totals). Our data, that is stored in ratingsData, is a two-dimensional array; therefore, we need to use nested for loops to process all of its elements. This statement is the outer for loop in the nested loop and it processes the data stored in ratingsData row by row. To iterate over the rows in the ratingsData, we need the indexes to start at 0 with every integer number up to but not including the number of rows."
+        },
+        {
+          "content": "In the first part of the loop header, we define a control variable i and initialize it to 0. In the second part of the loop header, we test whether the control variable has reached the termination threshold. The loop is repeated if the control variable is less than the number of sodas and terminates when the control variable reaches the number of sodas. In the third part of the loop header, we increment the control variable by 1 after each iteration of the loop."
+        },
+        {
+          "content": "Note that the first part is executed once before the loop starts, the second part is executed before each iteration, and the third part is executed after each iteration of the loop.<br><br>Also note that the increment operator (++) adds 1 to the value of variable i and the result is stored back into the variable i. Therefore, it is functionally equivalent to the statement i = i + 1."
+        }
+      ],
+      "blank": false
+    },
+    "17": {
+      "comments": [],
+      "blank": false
+    },
+    "18": {
+      "comments": [
+        {
+          "content": "This statement is the inner loop of the nested loop. It processes the elements within the row i where i is the row index in the ratingsData that changes after each iteration of the outer loop. To iterate over the individual elements in each row (i.e., iterating over the columns within a row) in the ratingsData, we need the indexes to start at 0 with every integer number up to but not including the number of columns."
+        },
+        {
+          "content": "In the first part of the loop header, we define a control variable j and initialize it to 0. In the second part of the loop header, we test whether the control variable has reached the termination threshold. The loop is repeated if the control variable is less than the number of respondents and terminates when the control variable reaches the number of respondent. In the third part of the loop header, we increment the control variable by 1 after each iteration of the loop."
+        },
+        {
+          "content": "Note that the first part is executed once before the loop starts, the second part is executed before each iteration, and the third part is executed after each iteration of the loop."
+        },
+        {
+          "content": "Also note that the increment operator (++) adds 1 to the value of variable j and the result is stored back into the variable j. Therefore, it is functionally equivalent to the statement j = j + 1. Finally, note that the name that we choose for the index in the inner loop should be different from the index name in the outer for loop. Here, we choose i for the soda index and j for the respondent index."
+        }
+      ],
+      "blank": false
+    },
+    "19": {
+      "comments": [],
+      "blank": false
+    },
+    "20": {
+      "comments": [
+        {
+          "content": "This statement adds the value of the current element in row i and column j to the element in the array sodaSum that stores the sum of the ratings for the soda i+1 in the ratingsData."
+        },
+        {
+          "content": "If i is 0, it adds the current element to the sodaSum[0] that stores the sum of the ratings for the Soda #1; if i is 1, it adds the current element to the sodaSum[1] that stores the sum of the ratings for the Soda #2; and so on."
+        },
+        {
+          "content": "Note that the += operator adds the value of the element in row i and column j of the ratingsData (i.e., element ratingsData[i][j]) to the value of the array element sodaSum[i] and the result is stored in the array element sodaSum[i]. Thus, this statement is equivalent to the statement sodaSum[i] = sodaSum[i] + ratingsData[i][j]."
+        }
+      ],
+      "blank": false
+    },
+    "21": {
+      "comments": [],
+      "blank": false
+    },
+    "22": {
+      "comments": [
+        {
+          "content": "This statement adds the value of the current element in row i and column j to the element in the array respondentSum that stores the sum of the ratings of the respondent j+1 in the ratingsData."
+        },
+        {
+          "content": "If j is 0, it adds the current element to the respondentSum[0] that stores the sum of the ratings of the Respondent #1; if j is 1, it adds the current element to the respondentSum[1] that stores the sum of the ratings of the Respondent #2; and so on."
+        },
+        {
+          "content": "Note that the += operator adds the value of the element in row i and column j of the ratingsData (i.e., element ratingsData[i][j]) to the value of the array element respondentSum[j] and the result is stored in the array element respondentSum[j]. Thus, this statement is equivalent to the statement respondentSum[j] = respondentSum[j] + ratingsData[i][j]."
+        }
+      ],
+      "blank": true
+    },
+    "23": {
+      "comments": [],
+      "blank": false
+    },
+    "24": {
+      "comments": [],
+      "blank": false
+    },
+    "25": {
+      "comments": [],
+      "blank": false
+    },
+    "26": {
+      "comments": [
+        {
+          "content": "This statement prints to the default standard output stream the text \"Averages:\" followed by the end-of-line character at the end."
+        }
+      ],
+      "blank": false
+    },
+    "27": {
+      "comments": [
+        {
+          "content": "We want to compute and print the average of ratings given to the sodas. To do this, we need to iterate over the sum of the ratings for the sodas stored the array sodaSum, we need the indexes to start at 0 with every integer number up to but not including the number of sodas."
+        },
+        {
+          "content": "In the first part of the loop header, we define a control variable i and initialize it to 0. In the second part of the loop header, we test whether the control variable has reached the termination threshold. The loop is repeated if the control variable is less than the number of sodas  and terminates when the control variable reaches the number of sodas. In the third part of the loop header, we increment the control variable by 1 after each iteration of the loop."
+        },
+        {
+          "content": "Note that the first part is executed once before the loop starts, the second part is executed before each iteration, and the third part is executed after each iteration of the loop.<br><br>Also note that the increment operator (++) adds 1 to the value of variable i and the result is stored back into the variable i. Therefore, it is functionally equivalent to the statement i = i + 1."
+        }
+      ],
+      "blank": false
+    },
+    "28": {
+      "comments": [
+        {
+          "content": "We get the average rating for a soda by dividing the sum of the ratings given to that soda by the number of respondents stored in variable numRespondents. Notice that both variables in the division are int and dividing an int by an int results in an int. Since we want to keep the fractional part, we need to cast one of the operands to a floating-point data type like double. To format how this floating-point number should be printed we use the printf method.<br><br>Here, we use %d to print the first decimal argument following the format string in the format method (i.e., the soda number which we get by calling i+1). We use %.2f to print the floating-point number returned from the division with two digits after the decimal point."
+        },
+        {
+          "content": "When floating-point value sodaSum[i] is divided by an integer value numRespondents, the value of numRespondents is promoted to a floating-point value automatically, before the division takes place, producing a floating-point result."
+        },
+        {
+          "content": "The printf method returns the result of replacing each format specifier in the format string with its corresponding argument passed to the printf method. Anything else, which is not a format specifier will be literally printed, i.e. without any changes."
+        },
+        {
+          "content": "Notice that the format specifier begins with a % sign and ends with a letter specifying the kind of value (d for decimals, f for floating-point numbers). An error will occur if the argument is not the expected data type. Also note that the new line character at the end of the format string will add an end-of-line character at the end of the formatted text. This is what we need because we want to print average rating for sodas in separate lines."
+        }
+      ],
+      "blank": false
+    },
+    "29": {
+      "comments": [],
+      "blank": false
+    },
+    "30": {
+      "comments": [],
+      "blank": false
+    },
+    "31": {
+      "comments": [
+        {
+          "content": "We want to compute and print the average of ratings of each respondent. To do this, we need to iterate over the sum of the ratings of respondents stored the array respondentSum, we need the indexes to start at 0 with every integer number up to but not including the number of respondents."
+        },
+        {
+          "content": "In the first part of the loop header, we define a control variable j and initialize it to 0. In the second part of the loop header, we test whether the control variable has reached the termination threshold. The loop is repeated if the control variable is less than the number of respondents and terminates when the control variable reaches the number of respondents. In the third part of the loop header, we increment the control variable by 1 after each iteration of the loop."
+        },
+        {
+          "content": "Note that the first part is executed once before the loop starts, the second part is executed before each iteration, and the third part is executed after each iteration of the loop.<br><br>Also note that the increment operator (++) adds 1 to the value of variable j and the result is stored back into the variable j. Therefore, it is functionally equivalent to the statement j = j + 1."
+        }
+      ],
+      "blank": false
+    },
+    "32": {
+      "comments": [
+        {
+          "content": "We get the average rating of a respondent by dividing the sum of the ratings of the respondent by the number of the ratings that the respondent provided. Notice that both variables in the division are int and dividing an int by an int results in an int. Since we want to keep the fractional part, we need to cast one of the operands to a floating-point data type like double. To format how this floating-point number should be printed we use the printf method.<br><br>Here, we use %d to print the first decimal argument following the format string in the format method (i.e., the respondent number which we get by calling j+1). We use %.2f to print the floating-point number returned from the division with two digits after the decimal point."
+        },
+        {
+          "content": "When floating-point value respondentSum[j] is divided by an integer value numSodas, the value of numSodas is promoted to a floating-point value automatically, before the division takes place, producing a floating-point result."
+        },
+        {
+          "content": "The printf method returns the result of replacing each format specifier in the format string with its corresponding argument passed to the printf method. Anything else, which is not a format specifier will be literally printed, i.e. without any changes."
+        },
+        {
+          "content": "Notice that the format specifier begins with a % sign and ends with a letter specifying the kind of value (d for decimals, f for floating-point numbers). An error will occur if the argument is not the expected data type. Also note that the new line character at the end of the format string will add an end-of-line character at the end of the formatted text. This is what we need because we want to print average rating for respondents in separate lines."
+        }
+      ],
+      "blank": false
+    },
+    "33": {
+      "comments": [],
+      "blank": false
+    },
+    "34": {
+      "comments": [],
+      "blank": false
+    },
+    "35": {
+      "comments": [],
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "code": "int[] respondentSum = new int[numSodas];",
+      "description": ""
+    },
+    {
+      "code": "int[] respondentSum = new int[numRespondents-1];",
+      "description": ""
+    },
+    {
+      "code": "respondentSum[j] = ratingsData[i][j];",
+      "description": ""
+    },
+    {
+      "code": "respondentSum[i] += ratingsData[i][j];",
+      "description": ""
+    },
+    {
+      "code": "respondentSum[j] += ratingsData[j][i];",
+      "description": ""
+    }
+  ],
+  "programInput": "",
+  "tags": [
+    "human-explanation;color=green",
+    "human-distractor;color=teal",
+    "human-english;color=blue"
+  ]
+}

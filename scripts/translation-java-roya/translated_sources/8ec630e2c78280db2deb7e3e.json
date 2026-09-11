@@ -1,0 +1,443 @@
+{
+  "id": "8ec630e2c78280db2deb7e3e",
+  "user": "rah225@pitt.edu",
+  "name": "Imprimir Tabla de Conteos de Medallas con Totales por Fila y Columna",
+  "untr_name": "Printing Table of Medal Winner Counts with Row and Column Totals",
+  "description": "Asuma que tenemos un arreglo de paises que almacena los nombres de los siete paises que participaron en las competencias de Patinaje en las Olimpiadas de Invierno. Tambien tenemos una matriz 7x3 que almacena el numero de medallas que estos siete paises ganaron. Esta matriz se ve como sigue:\\n{ {1, 0, 1 },\\n { 1, 1, 0 },\\n ...}\\nEl primer, segundo y tercer numero dentro de una fila i representan el numero de medallas de Oro, Plata y Bronce ganadas por el pais que esta en el indice i del arreglo de paises.\\nConstruya un programa que tome esta matriz y el arreglo de paises, e imprima una tabla de conteos de medallas con totales por fila y columna. Los totales de columna son la suma de las medallas de oro, plata y bronce ganadas en la competencia. La tabla de salida deberia verse como sigue:\\n      Country    Gold  Silver  Bronze   Total\\n         Canada        1       0       1          2\\n            China        1       1       0          2\\n           ...\\nColumn Total      4       4       4",
+  "untr_description": "Assume that we have an array of countries that stores the names of the seven countries that participated in the Skating competitions at the Winter Olympic. We also have a 7x3 matrix that stores the number of medals that these seven countries won. This matrix looks like as follows:\\n{ {1, 0, 1 },\\n { 1, 1, 0 },\\n ...}\\nThe first, second, and third numbers within a row i represent the number of Gold, Silver, and Bronze medals won by the country that is at the index i of the array of countries.\\nConstruct a program that takes this matrix and the array of countries, and prints a table of medal counts with row and column totals. The column totals are the sum of the gold, silver, and bronze medals won in the competition. The output table should look like as follows:\\n      Country    Gold  Silver  Bronze   Total\\n         Canada        1       0       1          2\\n            China        1       1       0          2\\n           ...\\nColumn Total      4       4       4",
+  "language": "JAVA",
+  "iso_language_code": "es",
+  "filename": "JPrintMedalsRowColumnTotal.java",
+  "code": "public class JPrintMedalsRowColumnTotal {\n\tpublic static void main(String[] args) {\n\t\t//Paso 1: Definir un arreglo de paises\n\t\tString[] countries = {\"CAN\", \"CHN\", \"GER\", \"KOR\", \"JPN\", \"RUS\", \"USA\" };\n\t\t//Paso 2: Definir una matriz 7x3 que almacena el numero de medallas que ganaron los paises\n\t\tint[][] medalCounts = { { 1, 0, 1 }, { 1, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, \n\t\t\t                    { 0, 1, 1 }, { 0, 1, 1 }, { 1, 1, 0 } };\n\t\t//Paso 3: Crear un arreglo para almacenar los totales de columna\n\t\tint[] columnTotals = new int[medalCounts[0].length];\n\t\t//Paso 4: Imprimir el encabezado de la tabla de salida\n\t\tSystem.out.printf(\"%4s%3s%3s%3s%4s\\n\",\"Nombre\", \"O\", \"P\", \"B\", \"Total\");\n\t\t//Paso 5: Iterar por las filas en la matriz de conteo de medallas\n\t\tfor (int i = 0; i < countries.length; i++) {\n\t\t\t//Paso 5.1: Imprimir el nombre del pais en la fila i\n\t\t\tSystem.out.printf(\"%4s\", countries[i]);\n\t\t\t//Paso 5.2: Inicializar la variable que necesitamos para almacenar el total de la fila i\n\t\t\tint rowTotal = 0;\n\t\t\t//Paso 5.3: Iterar por las columnas de la matriz de conteo de medallas\n\t\t\tfor (int j = 0; j < medalCounts[0].length; j++) {\n\t\t\t\t//Paso 5.3.1: Imprimir el numero de medallas en la fila i y columna j de la matriz\n\t\t\t\tSystem.out.printf(\"%3d\", medalCounts[i][j]);\n\t\t\t\t//Paso 5.3.2: Actualizar el total de la fila i \n\t\t\t\trowTotal = rowTotal + medalCounts[i][j];\n\t\t        //Paso 5.3.3: Actualizar el total de la columna j \n\t\t\t\tcolumnTotals[j] += medalCounts[i][j];\n\t\t\t}\n\t\t\t//Paso 5.4: Imprimir el total de la fila i de la tabla de salida\n\t\t\tSystem.out.printf(\"%3d\\n\", rowTotal);        \n\t\t}\n\t\t//Paso 6: Imprimir los totales de las columnas\n\t\tSystem.out.printf(\"%4s\", \"Total\");\n\t\tfor (int x : columnTotals) {\n\t\t\tSystem.out.printf(\"%3d\", x);\n\t\t}\n\t}\n}",
+  "untr_code": "public class JPrintMedalsRowColumnTotal {\n\tpublic static void main(String[] args) {\n\t\t//Step 1: Define an array of countries\n\t\tString[] countries = {\"CAN\", \"CHN\", \"GER\", \"KOR\", \"JPN\", \"RUS\", \"USA\" };\n\t\t//Step 2: Define a 7x3 matrix that stores the number of medals the countries won\n\t\tint[][] medalCounts = { { 1, 0, 1 }, { 1, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, \n\t\t\t                    { 0, 1, 1 }, { 0, 1, 1 }, { 1, 1, 0 } };\n\t\t//Step 3: Create an array to store column totals\n\t\tint[] columnTotals = new int[medalCounts[0].length];\n\t\t//Step 4: Print the header of the output table\n\t\tSystem.out.printf(\"%4s%3s%3s%3s%4s\\n\",\"Name\", \"G\", \"S\", \"B\", \"All\");\n\t\t//Step 5: Iterate through the rows in the medal counts matrix\n\t\tfor (int i = 0; i < countries.length; i++) {\n\t\t\t//Step 5.1: Print the name of the country at row i\n\t\t\tSystem.out.printf(\"%4s\", countries[i]);\n\t\t\t//Step 5.2: Initialize the variable that we need to store the row total for row i\n\t\t\tint rowTotal = 0;\n\t\t\t//Step 5.3: Iterate through the columns of the medals counts matrix\n\t\t\tfor (int j = 0; j < medalCounts[0].length; j++) {\n\t\t\t\t//Step 5.3.1: Print the the number of medals at row i and column j of the matrix\n\t\t\t\tSystem.out.printf(\"%3d\", medalCounts[i][j]);\n\t\t\t\t//Step 5.3.2: Update the row total for row i \n\t\t\t\trowTotal = rowTotal + medalCounts[i][j];\n\t\t        //Step 5.3.3: Update the column total for column j \n\t\t\t\tcolumnTotals[j] += medalCounts[i][j];\n\t\t\t}\n\t\t\t//Step 5.4: Print the row total for row i of the output table\n\t\t\tSystem.out.printf(\"%3d\\n\", rowTotal);        \n\t\t}\n\t\t//Step 6: Print the column totals\n\t\tSystem.out.printf(\"%4s\", \"All\");\n\t\tfor (int x : columnTotals) {\n\t\t\tSystem.out.printf(\"%3d\", x);\n\t\t}\n\t}\n}",
+  "lines": {
+    "1": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "2": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "3": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "4": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Definimos el arreglo countries de tipo String para contener los nombres de siete paises. Inicializamos el arreglo separando los elementos con comas y encerrando la coleccion entre llaves { }.",
+          "untr_content": "We define array countries of type string to hold the names of seven countries. We initialize the array by separating elements with a comma and enclosing the collection in braces { }."
+        }
+      ]
+    },
+    "5": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "6": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos crear la matriz de conteos de medallas. Para esto, usamos un arreglo bidimensional (un arreglo de arreglos) donde cada fila corresponde a las medallas de oro, plata y bronce ganadas por un pais. Esta instruccion crea un arreglo bidimensional 7x3 llamado medalCounts. Cada fila de la matriz corresponde a los conteos de medallas para el pais correspondiente en el arreglo countries. El primer, segundo y tercer numero dentro de una fila representan el numero de medallas de Oro, Plata y Bronce ganadas por el pais correspondiente en esa fila.",
+          "untr_content": "We need to create the matrix of medal counts. To do this, we use a two-dimensional array (an array of arrays) where each row corresponds to the gold, silver, and bronze medals won by one country. This statement creates a 7x3 two-dimensional array called medalCounts. Each row of the matrix corresponds to the medal counts for the corresponding country in the array of countries. The first, second, and third numbers within a row represent the number of Gold, Silver, and Bronze medals won by the corresponding country in that row."
+        },
+        {
+          "content": "Note que los arreglos pueden extenderse naturalmente en varias lineas si lo deseamos porque estan contenidos por llaves.",
+          "untr_content": "Note that arrays can naturally span multiple lines if we want them to because they are contained by braces."
+        }
+      ]
+    },
+    "7": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "8": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "9": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Queremos calcular el total de columna que es la suma del total de medallas de oro, plata y bronce ganadas en la competencia. Necesitamos tres variables para esto, lo que significa que un arreglo es una excelente forma de almacenar estos datos. En general, cada vez que nos encontramos pensando que necesitamos n de algun tipo de dato, deberiamos pensar en usar un arreglo de longitud n. Aqui, necesitamos 3 variables para almacenar los totales de columna; asi que, creamos un arreglo de longitud 3.",
+          "untr_content": "We want to compute the column total that is the sum of the total gold, silver, and bronze medals won in the competition. We need three variables to do this, which means that an array is a great way to store this data. In general, whenever we find ourselves thinking that we need n of some kind of data, we should think about using an array of length n. Here, we need 3 variables for storing the column totals; so, we create an array of length 3."
+        },
+        {
+          "content": "El primer, segundo y tercer elemento en el arreglo se usaran para almacenar los totales de columna para medallas de oro, plata y bronce ganadas en la competencia. Esta instruccion declara una variable arreglo, columnTotals, crea un arreglo de tamano medalCounts[0].length (la expresion medalCounts[0].length devuelve el numero de columnas en medalCounts), y asigna su referencia a columnTotals. Por defecto, cada numero en el arreglo es 0.",
+          "untr_content": "The first, second, and third element in the array will be used for storing the column totals for gold medals, silver medals, and bronze medals won in the competition. This statement declares an array variable, columnTotals, creates an array of size medalCounts[0].length (medalCounts[0].length expression returns the number of columns in the medalCounts), and assigns its reference to columnTotals. By default, each number in the array is 0."
+        }
+      ]
+    },
+    "10": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "11": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Queremos imprimir un encabezado para la tabla de conteos de medallas. Las columnas de la tabla de izquierda a derecha representan el pais, el numero de medallas de oro, plata y bronce que el pais gano, y finalmente, el total por fila que es el total de medallas que el pais gano. Queremos formatear la tabla para que todos los valores esten alineados a la derecha con espacio suficiente entre columnas. Para este proposito, llamamos al metodo printf.<br>Aqui, usamos %4s para justificar a la derecha el primer argumento string de la cadena de formato en un campo de 4 caracteres de ancho, y %3s/%4s para justificar a la derecha cada argumento string restante en un campo de 3/4 caracteres de ancho.",
+          "untr_content": "We want to print a header for the table of medal winner counts. The columns of the table from left to right represent the country, the number of gold, silver, and bronze medals the country won, and finally, the row total that is the total medals the country won. We want to format the table so that all values are right-aligned with sufficient spacing between columns. For this purpose, we call printf method.<br>Here, we use %4s to right-justify the first string argument of the format string in a field that is 4-characters wide, and %3s/%4s to right-justify each remaining string arguments in a field that is 3-characters/4-characters wide ."
+        },
+        {
+          "content": "Este metodo devuelve el resultado de reemplazar cada especificador de formato en la cadena de formato con su argumento correspondiente pasado al metodo printf. El caracter de nueva linea al final de la cadena de formato anadira un caracter de fin de linea al final del texto formateado. Esto es lo que necesitamos porque terminamos de imprimir los datos del encabezado de la tabla y queremos comenzar una nueva linea.",
+          "untr_content": "This method returns the result of replacing each format specifier in the format string with its corresponding argument passed to the printf method. The new line character at the end of the format string will add an end-of-line character at the end of the formatted text. This is what we need because we finished printing data of the table header and we want to start a new line."
+        },
+        {
+          "content": "Note que el especificador de formato comienza con un signo %, es seguido por la longitud del campo, y termina con una letra que especifica el tipo de valor (s para strings).",
+          "untr_content": "Notice that the format specifier begins with a % sign, is followed by the field length, and ends with a letter specifying the kind of value (s for strings)."
+        }
+      ]
+    },
+    "12": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "13": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos procesar los datos de conteo de medallas e imprimir los conteos de medallas y el numero total de medallas ganadas por cada pais (totales por fila). Estos datos, que estan almacenados en medalCounts, son un arreglo bidimensional; por lo tanto, necesitamos usar bucles for anidados para procesar todos sus elementos e imprimir la tabla. Esta instruccion es el bucle for externo en el bucle anidado y procesa los datos almacenados en medalCounts fila por fila.",
+          "untr_content": "We need to process the medal counts data and print medal counts and the total number of medals won for each country (row totals). This data, that is stored in medalCounts, is a two-dimensional array; therefore, we need to use nested for loops to process all of its elements and print the table. This statement is the outer for loop in the nested loop and it processes the data stored in medalCounts row by row."
+        },
+        {
+          "content": "Para iterar sobre las filas en medalCounts, necesitamos que los indices comiencen en 0 con cada numero entero hasta pero sin incluir el numero de filas.",
+          "untr_content": "To iterate over the rows in the medalCounts, we need the indexes to start at 0 with every integer number up to but not including the number of rows."
+        },
+        {
+          "content": "En la primera parte del encabezado del bucle, definimos una variable de control i e inicializamos en 0. En la segunda parte del encabezado del bucle, probamos si la variable de control ha alcanzado el umbral de terminacion. El bucle se repite si la variable de control es menor que el numero de elementos en el arreglo countries y termina cuando la variable de control alcanza el numero de elementos en el arreglo countries. En la tercera parte del encabezado del bucle, incrementamos la variable de control en 1 despues de cada iteracion del bucle.",
+          "untr_content": "In the first part of the loop header, we define a control variable i and initialize it to 0. In the second part of the loop header, we test whether the control variable has reached the termination threshold. The loop is repeated if the control variable is less than the number of elements in the array countries and terminates when the control variable reaches the number of elements in the array countries. In the third part of the loop header, we increment the control variable by 1 after each iteration of the loop."
+        },
+        {
+          "content": "Note que la primera parte se ejecuta una vez antes de que el bucle comience, la segunda parte se ejecuta antes de cada iteracion, y la tercera parte se ejecuta despues de cada iteracion del bucle.<br><br/>Tambien, note que el operador de incremento (++) anade 1 al valor de la variable i y el resultado se almacena de nuevo en la variable i. Por lo tanto, es funcionalmente equivalente a la instruccion i = i + 1.",
+          "untr_content": "Note that the first part is executed once before the loop starts, the second part is executed before each iteration, and the third part is executed after each iteration of the loop.<br><br>Also, note that the increment operator (++) adds 1 to the value of variable i and the result is stored back into the variable i. Therefore, it is functionally equivalent to the statement i = i + 1."
+        }
+      ]
+    },
+    "14": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "15": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Queremos imprimir el nombre del pais en la fila i. Tambien queremos formatear la fila de la tabla usando el mismo formato que aplicamos al encabezado de la tabla. Asi que, similar a imprimir el encabezado, llamamos al metodo printf.<br>Usamos %4s para justificar a la derecha el nombre del pais en la fila i (que esta almacenado en countries[i]) en un campo de 4 caracteres de ancho.",
+          "untr_content": "We want to print the name of the country at row i. We also want to format the table row using the same format that we applied to the table header. So, similar to printing the table header, we call printf method.<br>We use %4s to right-justify the name of the country at row i (which is stored at countries[i]) in a field that is 4-characters wide."
+        },
+        {
+          "content": "Este metodo devuelve el resultado de reemplazar cada especificador de formato en la cadena de formato con su argumento correspondiente pasado al metodo printf.",
+          "untr_content": "This method returns the result of replacing each format specifier in the format string with its corresponding argument passed to the printf method."
+        },
+        {
+          "content": "Note que el especificador de formato comienza con un signo %, es seguido por la longitud del campo, y termina con una letra que especifica el tipo de valor (s para strings).",
+          "untr_content": "Notice that the format specifier begins with a % sign, is followed by the field length, and ends with a letter specifying the kind of value (s for strings)."
+        }
+      ]
+    },
+    "16": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "17": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos la variable rowTotal para calcular el numero total de medallas ganadas por el pais en la fila i de la matriz. Necesitamos establecerla en 0 cada vez que queremos procesar una fila y calcular el total de la fila.",
+          "untr_content": "We need variable rowTotal to compute the total number of medals won by the country at row i of the matrix. We need to set it to 0 every time that we want to process a row and compute the row total."
+        },
+        {
+          "content": "Note que esta instruccion no puede colocarse dentro del bucle interno porque en ese caso en cada iteracion del bucle interno la variable rowTotal se estableceria a 0 y eso significaria que el total de la fila siempre seria igual al numero de medallas de bronce sin importar los demas conteos. Tampoco podemos colocar esta instruccion fuera del bucle externo porque en ese caso total mostraria la suma de los totales de fila en cada fila y todas sus filas precedentes. Por lo tanto, el unico lugar donde podemos colocar esta instruccion es en el cuerpo del bucle externo antes de llegar al bucle interno.",
+          "untr_content": "Note that this statement cannot be placed inside the inner loop because in that case in every iteration of the inner loop variable rowTotal would be set to 0 and that means that row total would always be equal to the number of bronze medals no matter what the remaining medal counts are. We cannot place this statement outside the outer loop either because in that case total would show the sum of the row totals in each row and all its preceding rows. Therefore, the only place that we could place this statement is in the outer loop body before reaching to the inner loop."
+        }
+      ]
+    },
+    "18": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "19": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta instruccion es el bucle interno del bucle anidado. Procesa los elementos dentro de la fila i donde i es el indice de fila en medalCounts que cambia despues de cada iteracion del bucle externo. Para iterar sobre los elementos individuales en cada fila (es decir, iterar por las columnas dentro de una fila) en medalCounts, necesitamos que los indices comiencen en 0 con cada numero entero hasta pero sin incluir el numero de columnas.",
+          "untr_content": "This statement is the inner loop of the nested loop. It processes the elements within the row i where i is the row index in the medalCounts that changes after each iteration of the outer loop. To iterate over the individual elements in each row (i.e., iterating over the columns within a row) in the medalCounts, we need the indexes to start at 0 with every integer number up to but not including the number of columns."
+        },
+        {
+          "content": "En la primera parte del encabezado del bucle, definimos una variable de control j e inicializamos en 0. En la segunda parte del encabezado del bucle, probamos si la variable de control ha alcanzado el umbral de terminacion. El bucle se repite si la variable de control es menor que el numero de columnas en medalCounts y termina cuando la variable de control alcanza el numero de columnas en el arreglo medalCounts. Obtenemos el numero de columnas en medalCounts llamando a medalCounts[0].length. En la tercera parte del encabezado del bucle, incrementamos la variable de control en 1 despues de cada iteracion del bucle.",
+          "untr_content": "In the first part of the loop header, we define a control variable j and initialize it to 0. In the second part of the loop header, we test whether the control variable has reached the termination threshold. The loop is repeated if the control variable is less than the number of columns in the medalCounts and terminates when the control variable reaches the number of columns in the array medalCounts. We get the number of columns in the medalCounts by calling medalCounts[0].length. In the third part of the loop header, we increment the control variable by 1 after each iteration of the loop."
+        },
+        {
+          "content": "Note que la primera parte se ejecuta una vez antes de que el bucle comience, la segunda parte se ejecuta antes de cada iteracion, y la tercera parte se ejecuta despues de cada iteracion del bucle.<br><br/>Tambien, note que el operador de incremento (++) anade 1 al valor de la variable j y el resultado se almacena de nuevo en la variable j. Por lo tanto, es funcionalmente equivalente a la instruccion j = j + 1.",
+          "untr_content": "Note that the first part is executed once before the loop starts, the second part is executed before each iteration, and the third part is executed after each iteration of the loop.<br><br>Also, note that the increment operator (++) adds 1 to the value of variable j and the result is stored back into the variable j. Therefore, it is functionally equivalent to the statement j = j + 1."
+        },
+        {
+          "content": "Finalmente, note que el nombre que escogemos para el indice en el bucle interno deberia ser diferente del nombre del indice en el bucle for externo. Aqui, escogemos i para el indice de fila y j para el indice de columna.",
+          "untr_content": "Finally, note that the name that we choose for the index in the inner loop should be different from the index name in the outer for loop. Here, we choose i for the row index and j for the column index."
+        }
+      ]
+    },
+    "20": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "21": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Queremos imprimir el numero de medallas en la fila i y columna j de la matriz. Tambien queremos formatear la fila de la tabla usando el mismo formato que aplicamos al encabezado de la tabla. Asi que, similar a imprimir el encabezado, llamamos al metodo printf.<br>Usamos %3d para justificar a la derecha el numero de medallas en un campo de 3 caracteres de ancho.",
+          "untr_content": "We want to print the number of the medals at row i and column j of the the matrix. We also want to format the table row using the same format that we applied to the table header. So, similar to printing the table header, we call printf method.<br>We use %3d to right-justify the number of medals in a field that is 3-characters wide"
+        },
+        {
+          "content": "Este metodo devuelve el resultado de reemplazar cada especificador de formato en la cadena de formato con su argumento correspondiente pasado al metodo printf. Note que el especificador de formato comienza con un signo %, es seguido por la longitud del campo, y termina con una letra que especifica el tipo de valor (d para decimales).",
+          "untr_content": "This method returns the result of replacing each format specifier in the format string with its corresponding argument passed to the printf method. Notice that the format specifier begins with a % sign, is followed by the field length, and ends with a letter specifying the kind of value (d for decimals)."
+        }
+      ]
+    },
+    "22": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "23": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Necesitamos acumular el numero de diferentes medallas (oro, plata, bronce) ganadas por el pais en la fila i. Asi que, en cada iteracion del bucle interno, el elemento especificado en la fila i y columna j de medalCounts se anade y se almacena de nuevo en la variable rowTotal.",
+          "untr_content": "We need to accumulate the number of different medals (gold, silver, bronze) won by the country at row i. So, in each iteration of the inner loop, the specified element in row i and column j of the medalCounts is added to and stored back into the variable rowTotal."
+        },
+        {
+          "content": "El operador += anade el valor del elemento en la fila i y columna j de medalCounts al valor de la variable rowTotal y el resultado se almacena en rowTotal. Asi, esta instruccion es equivalente a rowTotal = rowTotal + medalCounts[i][j].",
+          "untr_content": "The += operator adds the value of the element in row i and column j of the medalCounts to the value of the variable rowTotal and the result is stored in the variable rowTotal. Thus, this statement is equivalent to the statement rowTotal = rowTotal + medalCounts[i][j]."
+        }
+      ]
+    },
+    "24": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "25": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta instruccion anade el valor del elemento actual en la fila i y columna j al elemento en el arreglo columnTotals que almacena el total de la columna j en medalCounts.",
+          "untr_content": "This statement adds the value of the current element in row i and column j to the element in the array columnTotals that stores the column total for the column j in the medalCounts."
+        },
+        {
+          "content": "Si j es 0, anade el elemento actual a columnTotals[0] que almacena el total de medallas de oro ganadas en la competencia; si j es 1, anade el elemento actual a columnTotals[1] que almacena el total de medallas de plata ganadas en la competencia; y si j es 2, anade el elemento actual a columnTotals[2] que almacena el total de medallas de bronce ganadas en la competencia.",
+          "untr_content": "If j is 0, it adds the current element to the columnTotals[0] that stores total gold medals won in the competition; if j is 1, it adds the current element to the columnTotals[1] that stores total silver medals won in the competition; and if j is 2, it adds the current element to the columnTotals[2] that stores total bronze medals won in the competition."
+        },
+        {
+          "content": "Note que el operador += anade el valor del elemento en la fila i y columna j de medalCounts (i.e., elemento medalCounts[i][j]) al valor del elemento del arreglo columnTotals[j] y el resultado se almacena en columnTotals[j]. Asi, esta instruccion es equivalente a columnTotals[j] = columnTotals[j] + medalCounts[i][j].",
+          "untr_content": "Note that the += operator adds the value of the element in row i and column j of the medalCounts (i.e., element medalCounts[i][j]) to the value of the array element columnTotals[j] and the result is stored in the array element columnTotals[j]. Thus, this statement is equivalent to the statement columnTotals[j] = columnTotals[j] + medalCounts[i][j]."
+        }
+      ]
+    },
+    "26": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "27": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "28": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Queremos imprimir el total de la fila que es el numero total de medallas ganadas por el pais en la fila i. Tambien queremos formatear la fila usando el mismo formato que aplicamos al encabezado de la tabla. Asi que, similar a imprimir el encabezado, llamamos al metodo printf.<br>Usamos %3d para justificar a la derecha el total de la fila en un campo de 3 caracteres de ancho.",
+          "untr_content": "We want to print the row total that is the total number of the medals won by the country at row i. We also want to format the table row using the same format that we applied to the table header. So, similar to printing the table header, we call printf method.<br>We use %3d to right-justify the row total in a field that is 3-characters wide."
+        },
+        {
+          "content": "Este metodo devuelve el resultado de reemplazar cada especificador de formato en la cadena de formato con su argumento correspondiente pasado al metodo printf. El caracter de nueva linea al final de la cadena de formato anadira un caracter de fin de linea al final del texto formateado. Esto es lo que necesitamos porque terminamos de imprimir los datos de la fila i de la matriz y queremos comenzar una nueva linea.",
+          "untr_content": "This method returns the result of replacing each format specifier in the format string with its corresponding argument passed to the printf method.  The new line character at the end of the format string will add an end-of-line character at the end of the formatted text. This is what we need because we finished printing data of the row i of the matrix and we want to start a new line."
+        },
+        {
+          "content": "Note que el especificador de formato comienza con un signo %, es seguido por la longitud del campo, y termina con una letra que especifica el tipo de valor (d para decimales). Ocurrira un error si el argumento no es un numero decimal, por ejemplo, si el argumento es un string.",
+          "untr_content": "Notice that the format specifier begins with a % sign, is followed by the field length, and ends with a letter specifying the kind of value (d for decimals). An error will occur if the argument is not a decimal number, for instance, if the argument is a string."
+        }
+      ]
+    },
+    "29": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "30": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "31": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Queremos imprimir los totales de columna y formatear esta ultima fila de la tabla usando el mismo formato que aplicamos al encabezado de la tabla. Asi que, similar a imprimir el encabezado, llamamos al metodo printf.<br>Usamos %4s para justificar a la derecha el argumento string que sigue a la cadena de formato en un campo de 4 caracteres de ancho.",
+          "untr_content": "We want to print the column totals and format this last row of the table using the same format that we applied to the table header. So, similar to printing the table header, we call printf method.<br>We use %4s to right-justify the string argument following the format string in a field that is 4-characters wide."
+        },
+        {
+          "content": "Este metodo devuelve el resultado de reemplazar cada especificador de formato en la cadena de formato con su argumento correspondiente pasado al metodo printf.",
+          "untr_content": "This method returns the result of replacing each format specifier in the format string with its corresponding argument passed to the printf method. "
+        },
+        {
+          "content": "Note que el especificador de formato comienza con un signo %, es seguido por la longitud del campo, y termina con una letra que especifica el tipo de valor (s para strings).",
+          "untr_content": "Notice that the format specifier begins with a % sign, is followed by the field length, and ends with a letter specifying the kind of value (s for strings)."
+        }
+      ]
+    },
+    "32": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Queremos imprimir los totales de columna almacenados en el arreglo columnTotals. Recorremos los elementos del arreglo usando la sentencia for-each. Este for asigna el nombre x a cada uno de los elementos en el arreglo por turno, de izquierda a derecha, y la instruccion de impresion se ejecutara para cada uno.",
+          "untr_content": "We want to print the column totals stored in the array columnTotals. We traverse the array elements using for–each statement. This for loop assigns the name x to each of the elements in the array in turn, from left to right, and the print statement will be executed for each."
+        }
+      ]
+    },
+    "33": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Queremos imprimir el total de columna para cada columna en medalCounts. Tambien queremos formatear esta ultima fila de la tabla usando el mismo formato que aplicamos al encabezado de la tabla. Asi que, similar a imprimir el encabezado, llamamos al metodo printf.<br>Usamos %3d para justificar a la derecha el argumento decimal del metodo de formato (i.e., el valor de la variable x) en un campo de 3 caracteres de ancho.",
+          "untr_content": "We want to print the column total for each column in the medalCounts. We also want to format this last row of the table using the same format that we applied to the table header. So, similar to printing the table header, we call printf method.<br>We use %3d to right-justify the decimal argument of the format method (i.e., value of variable x) in a field that is 3-characters wide."
+        },
+        {
+          "content": "Este metodo devuelve el resultado de reemplazar cada especificador de formato en la cadena de formato con su argumento correspondiente pasado al metodo printf.",
+          "untr_content": "This method returns the result of replacing each format specifier in the format string with its corresponding argument passed to the printf method."
+        },
+        {
+          "content": "Note que el especificador de formato comienza con un signo %, es seguido por la longitud del campo, y termina con una letra que especifica el tipo de valor (d para decimales). Ocurrira un error si el argumento no es un numero decimal, por ejemplo, si el argumento es un string.",
+          "untr_content": "Notice that the format specifier begins with a % sign, is followed by the field length, and ends with a letter specifying the kind of value (d for decimals). An error will occur if the argument is not a decimal number, for instance, if the argument is a string."
+        }
+      ]
+    },
+    "34": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "35": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "36": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    }
+  },
+  "distractors": [
+    {
+      "code": "int[] columnTotals = new int[countries.length];",
+      "description": "",
+      "untr_code": "int[] columnTotals = new int[countries.length];",
+      "untr_description": ""
+    },
+    {
+      "code": "int[] columnTotals = new int[medalCounts.length];",
+      "description": "",
+      "untr_code": "int[] columnTotals = new int[medalCounts.length];",
+      "untr_description": ""
+    },
+    {
+      "code": "columnTotals[i] += medalCounts[i][j];",
+      "description": "",
+      "untr_code": "columnTotals[i] += medalCounts[i][j];",
+      "untr_description": ""
+    },
+    {
+      "code": "columnTotals[i] = medalCounts[i][j];",
+      "description": "",
+      "untr_code": "columnTotals[i] = medalCounts[i][j];",
+      "untr_description": ""
+    },
+    {
+      "code": "columnTotals[j] += medalCounts[j][i];",
+      "description": "",
+      "untr_code": "columnTotals[j] += medalCounts[j][i];",
+      "untr_description": ""
+    }
+  ],
+  "tags": [
+    "spanish-latam;color=yellow",
+    "human-english;color=blue",
+    "human-explanation;color=green",
+    "validation-pending;color=orange"
+  ],
+  "translations": {
+    "en": "5367ec7e243b69d1dffc4ffd"
+  },
+  "collaborator_emails": [
+    "moh70@pitt.edu"
+  ],
+  "programInput": ""
+}
