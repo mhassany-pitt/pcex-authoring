@@ -1,0 +1,164 @@
+{
+  "id": "ee5da9f6ea351d914a6c6389",
+  "user": "moh70@pitt.edu",
+  "name": "Reporte de las horas totales trabajadas por cada empleado (Caso 2)",
+  "untr_name": "Reporting the Total Hours Each Employee Worked (Case 2)",
+  "description": "Supongamos que tenemos un archivo de entrada que contiene informacion sobre cuantas horas ha trabajado cada empleado de una empresa. El archivo se ve de la siguiente manera (Numero de identificacion del empleado, nombre del empleado, Horas):\n101 Erica 7.5 8.5 10.25 8 8.5\n783 Erin 10.5 11.5 12 11 10.75\n114 Simone 8 8 8\n...\nConstruya un programa que lea este archivo y calcule el numero total de horas trabajadas por cada individuo. Asegurese de que el programa maneje cada excepcion especifica que pueda ocurrir.",
+  "untr_description": "Suppose we have an input file that contains information about how many hours each employee of a company has worked. The file looks like the following (Employee's identification number, Employee's name, Hours):\n101 Erica 7.5 8.5 10.25 8 8.5\n783 Erin 10.5 11.5 12 11 10.75\n114 Simone 8 8 8\n...\nConstruct a program that reads this file and calculates the total number of hours worked by each individual. Make sure that the program handles each specific exception that could occur.",
+  "language": "JAVA",
+  "iso_language_code": "es",
+  "filename": "JWorkHours2.java",
+  "code": "import java.io.*;\nimport java.util.Scanner;\npublic class JWorkHours2 {\n    public static void main(String[] args) {\n        Scanner scan = new Scanner(System.in);\n        System.out.println(\"Ingrese el nombre del archivo:\");\n        String name = scan.next();\n        JWorkHours2 jwh = new JWorkHours2();\n        jwh.reportWorkHours(name);\n    }\n    //Paso 1: Definir el metodo que procesa el archivo de empleados\n    public void reportWorkHours(String fileName) {\n        //Paso 1.1: Encerrar el codigo que puede lanzar una excepcion dentro del bloque try\n        try {\n            //Paso 1.1.1: Envolver un BufferedReader alrededor de un FileReader\n            FileReader fr = new FileReader(fileName); \n            BufferedReader br = new BufferedReader(fr); \n            //Paso 1.1.2: Usar el objeto BufferedReader para leer una linea a la vez\n            String line = null;\n            while ( ( line = br.readLine() ) != null) {\n                String[] tokens = line.split(\" \");\n                //Intentar obtener la id del empleado como un numero\n                try {\n                    int eid =  Integer.parseInt(tokens[0]);\n                } catch ( NumberFormatException ex) {\n                    System.out.println(\"Error en la identificacion del empleado.\");\n                }\n                String name = tokens[1];\n                double total = 0.0;\n                for (int i = 2; i < tokens.length; i++ ) {\n                    try {\n                        total += Double.parseDouble(tokens[i]);\n                    } catch (  NumberFormatException ex ) {\n                        System.out.println(\"Error en la hora.\");\n                    }\n                }\n                System.out.println(\"Total de horas trabajadas por \" + name + \" = \" + total);\n            }     \n            //Paso 1.1.3: Cerrar el objeto BufferedReader adjunto al archivo\n            br.close();\n        }\n        //Paso 1.2: Manejar todas las excepciones posibles que pueden ser lanzadas en el bloque try\n        catch (FileNotFoundException ex) {\n            System.out.println(\"Archivo no encontrado\");\n        }  catch (IOException ex ) {\n            System.out.println(\"Problema con el archivo!\");\n        }\n    }\n}",
+  "untr_code": "import java.io.*;\nimport java.util.Scanner;\npublic class JWorkHours2 {\n    public static void main(String[] args) {\n        Scanner scan = new Scanner(System.in);\n        System.out.println(\"Enter the name of the file:\");\n        String name = scan.next();\n        JWorkHours2 jwh = new JWorkHours2();\n        jwh.reportWorkHours(name);\n    }\n    //Step 1: Define the method that processes the employees file\n    public void reportWorkHours(String fileName) {\n        //Step 1.1: Enclose the code that might throw an exception within the try block\n        try {\n            //Step 1.1.1: Wrap a BufferedReader around a FileReader\n            FileReader fr = new FileReader(fileName); \n            BufferedReader br = new BufferedReader(fr); \n            //Step 1.1.2: Use the BufferedReader object to read one line at a time\n            String line = null;\n            while ( ( line = br.readLine() ) != null) {\n                String[] tokens = line.split(\" \");\n                //Try to get the id of the employee as a number\n                try {\n                    int eid =  Integer.parseInt(tokens[0]);\n                } catch ( NumberFormatException ex) {\n                    System.out.println(\"Error in the employee's id.\");\n                }\n                String name = tokens[1];\n                double total = 0.0;\n                for (int i = 2; i < tokens.length; i++ ) {\n                    try {\n                        total += Double.parseDouble(tokens[i]);\n                    } catch (  NumberFormatException ex ) {\n                        System.out.println(\"Error in the hour.\");\n                    }\n                }\n                System.out.println(\"Total hours worked by \" + name + \" = \" + total);\n            }     \n            //Step 1.1.3: Close the BufferedReader object attached to the file\n            br.close();\n        }\n        //Step 1.2: Handle all possible exceptions that may be thrown in the try block \n        catch (FileNotFoundException ex) {\n            System.out.println(\"File not found\");\n        }  catch (IOException ex ) {\n            System.out.println(\"Problem with the file!\");\n        }\n    }\n}\n",
+  "lines": {
+    "23": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicia un bloque try para manejar excepciones potenciales al parsear el ID del empleado desde el archivo de entrada.",
+          "untr_content": "This line begins a try block to handle potential exceptions when parsing the employee's ID from the input file."
+        },
+        {
+          "content": "El proposito de esta linea es asegurar que si el ID del empleado, que se espera sea un numero, no puede convertirse de String a entero, el programa pueda manejar este error de forma elegante.",
+          "untr_content": "The purpose of this line is to ensure that if the employee ID, which is expected to be a number, cannot be converted from a string to an integer, the program can handle this error gracefully."
+        },
+        {
+          "content": "La sintaxis `try {` indica el inicio de un bloque de codigo que sera monitoreado por excepciones. Si ocurre una excepcion dentro de este bloque, el control se transfiere al bloque catch correspondiente.",
+          "untr_content": "The syntax `try {` indicates the start of a block of code that will be monitored for exceptions. If an exception occurs within this block, control is transferred to the corresponding catch block."
+        },
+        {
+          "content": "Una idea equivocada comun puede ser que el bloque try en si realiza la conversion, pero solo establece un contexto para manejar excepciones que ocurran dentro de su alcance.",
+          "untr_content": "A common misconception might be that the try block itself performs the conversion, but it only sets up a context for handling exceptions that occur within its scope."
+        },
+        {
+          "content": "Como buena practica se sugiere usar bloques try-catch para gestionar excepciones que se pueden anticipar, como errores de formato al parsear Strings a numeros, para evitar que el programa termine inesperadamente.",
+          "untr_content": "Best practice suggests using try-catch blocks to manage exceptions that can be anticipated, such as format errors when parsing strings to numbers, to prevent the program from crashing unexpectedly."
+        }
+      ]
+    },
+    "24": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea intenta convertir el primer token de la linea actual, que se espera sea el numero de identificacion del empleado, de un String a un entero.",
+          "untr_content": "This line attempts to convert the first token of the current line, which is expected to be the employee's identification number, from a String to an integer."
+        },
+        {
+          "content": "Se utiliza el metodo Integer.parseInt(), que toma un String como argumento y devuelve su representacion entera si el String es un entero valido.",
+          "untr_content": "The method Integer.parseInt() is used here, which takes a String as an argument and returns its integer representation if the String is a valid integer."
+        },
+        {
+          "content": "Esta conversion es crucial porque el ID del empleado se espera que sea un numero, y usarlo como entero permite realizar operaciones numericas o comparaciones mas adelante en el programa.",
+          "untr_content": "This conversion is crucial because the employee ID is expected to be a number, and using it as an integer allows for potential numerical operations or comparisons later in the program."
+        },
+        {
+          "content": "Una idea equivocada comun es que cualquier String puede convertirse a un entero, pero si el String no representa un entero valido, se lanzara una NumberFormatException.",
+          "untr_content": "A common misconception might be that any String can be converted to an integer, but if the String does not represent a valid integer, a NumberFormatException will be thrown."
+        },
+        {
+          "content": "Es una buena practica manejar esta conversion dentro de un bloque try-catch, como se hace aqui, para gestionar de forma elegante cualquier NumberFormatException que pueda ocurrir si la entrada no es un entero valido.",
+          "untr_content": "It's a best practice to handle this conversion within a try-catch block, as done here, to gracefully manage any potential NumberFormatException that could occur if the input is not a valid integer."
+        }
+      ]
+    },
+    "25": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea es parte de un bloque try-catch que maneja posibles excepciones al parsear el ID del empleado desde el archivo de entrada.",
+          "untr_content": "This line is part of a try-catch block that handles potential exceptions when parsing the employee's ID from the input file."
+        },
+        {
+          "content": "El bloque catch captura especificamente una NumberFormatException, que ocurre si el primer token en la linea (esperado ser un ID de empleado) no puede convertirse a entero.",
+          "untr_content": "The catch block specifically catches a NumberFormatException, which occurs if the first token in the line (expected to be an employee ID) cannot be converted to an integer."
+        },
+        {
+          "content": "Al capturar esta excepcion, se asegura que el programa no termine si el ID no es un entero valido, y en su lugar imprime un mensaje de error para informar del problema.",
+          "untr_content": "By catching this exception, you ensure that the program does not crash if the ID is not a valid integer, and instead, it prints an error message to inform you of the issue."
+        },
+        {
+          "content": "Una idea equivocada comun puede ser que todos los tokens en el archivo estan correctamente formateados, pero esta linea anticipa y maneja casos donde no es asi.",
+          "untr_content": "A common misconception might be that all tokens in the file are correctly formatted, but this line anticipates and handles cases where they are not."
+        },
+        {
+          "content": "Como buena practica, siempre valide y maneje posibles excepciones cuando se trata de entrada de usuario o datos de archivo para hacer su programa mas robusto y amigable.",
+          "untr_content": "As a best practice, always validate and handle potential exceptions when dealing with user input or file data to make your program more robust and user-friendly."
+        }
+      ]
+    },
+    "26": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea muestra un mensaje de error en la consola si el ID del empleado no puede parsearse como entero.",
+          "untr_content": "This line outputs an error message to the console if the employee's ID cannot be parsed as an integer."
+        },
+        {
+          "content": "El proposito de esta linea es informar que hubo un problema con el formato del ID del empleado en el archivo de entrada, el cual se espera que sea un numero.",
+          "untr_content": "The purpose of this line is to inform you that there was an issue with the format of the employee's ID in the input file, which is expected to be a number."
+        },
+        {
+          "content": "La sintaxis `System.out.println()` se utiliza para imprimir mensajes en la consola. Aqui se usa para brindar retroalimentacion acerca del error especifico encontrado.",
+          "untr_content": "The syntax `System.out.println()` is used to print messages to the console. Here, it is used to provide feedback about the specific error encountered."
+        },
+        {
+          "content": "Una idea equivocada comun puede ser que esta linea maneja el error, pero en realidad solo informa del error. El manejo real lo realiza el bloque `catch`, que evita que el programa falle.",
+          "untr_content": "A common misconception might be that this line handles the error, but it only informs you of the error. The actual handling is done by the `catch` block, which prevents the program from crashing."
+        },
+        {
+          "content": "Como buena practica, proveer mensajes de error claros e informativos ayuda en la depuracion y en entender que salio mal, especialmente cuando se trabaja con entrada de usuario o datos de archivo.",
+          "untr_content": "As a best practice, providing clear and informative error messages helps in debugging and understanding what went wrong, especially when dealing with user input or file data."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "int eid = Integer.parseInt(tokens[1]);",
+      "untr_code": "int eid = Integer.parseInt(tokens[1]);",
+      "description": "Podria pensar equivocadamente que el ID del empleado se almacena en la segunda posicion del arreglo, llevandole a usar tokens[1]. Esta idea equivocada podria surgir de una mala comprension de como se indexan los arreglos en Java, donde el indice comienza en 0. Usar este distractor resultaria en intentar parsear el nombre del empleado como un entero, lo que lanzaria una NumberFormatException. Este error evitara que el programa identifique correctamente al empleado y calcule sus horas. El distractor falla en acceder correctamente al ID del empleado, que es crucial para la logica del programa.",
+      "untr_description": "You might mistakenly think that the employee ID is stored in the second position of the array, leading you to use tokens[1]. This misconception could arise from a misunderstanding of how arrays are indexed in Java, where indexing starts at 0. Using this distractor would result in trying to parse the employee's name as an integer, which would throw a NumberFormatException. This error would prevent the program from correctly identifying the employee and calculating their hours. The distractor fails to correctly access the employee ID, which is crucial for the program's logic.",
+      "line_number": 24
+    },
+    {
+      "code": "int eid = Integer.parseInt(tokens[2]);",
+      "untr_code": "int eid = Integer.parseInt(tokens[2]);",
+      "description": "Podria asumir que el ID del empleado se encuentra en tokens[2], posiblemente por una interpretacion erronea del formato de entrada. Este distractor le llevaria a intentar parsear una de las horas trabajadas como un entero, lo cual no solo es incorrecto sino que tambien causaria una NumberFormatException. Este error interrumpiria el flujo del programa, ya que no identificaria correctamente al empleado. El distractor desplaza incorrectamente el ID del empleado, que es esencial para procesar los datos con precision.",
+      "untr_description": "You might assume that the employee ID is located at tokens[2], possibly due to a misinterpretation of the input format. This distractor would lead you to attempt parsing one of the hours worked as an integer, which would not only be incorrect but also cause a NumberFormatException. This error would disrupt the program's flow, as it would not correctly identify the employee. The distractor misplaces the employee ID, which is essential for processing the data accurately.",
+      "line_number": 24
+    },
+    {
+      "code": "if (tokens[0] != null) {",
+      "untr_code": "if (tokens[0] != null) {",
+      "description": "Podria pensar que comprobar si tokens[0] no es null es suficiente para garantizar que el ID del empleado puede parsearse sin problemas. Sin embargo, esta linea solo verifica valores nulos y no maneja casos donde tokens[0] es una cadena no numerica, lo que provocaria una NumberFormatException. Usar este distractor resultaria en que el programa no capture ni maneje errores de parseo, llevando a posibles fallos o salidas incorrectas al encontrarse con datos invalidos. A diferencia del manejo de excepciones, una comprobacion de null no aborda el problema central de parsear cadenas no numericas.",
+      "untr_description": "You might think that checking if tokens[0] is not null is enough to ensure that the employee ID can be safely parsed. However, this line only checks for null values and does not handle cases where tokens[0] is a non-numeric string, which would cause a NumberFormatException. Using this distractor would result in the program failing to catch and handle parsing errors, leading to potential crashes or incorrect outputs when encountering invalid data. Unlike exception handling, a null check does not address the core issue of parsing non-numeric strings.",
+      "line_number": 23
+    },
+    {
+      "code": "} catch (IOException ex) {",
+      "untr_code": "} catch (IOException ex) {",
+      "description": "Podria creer equivocadamente que cualquier error relacionado con la lectura del archivo, incluidos errores de parseo, deberia capturarse como una IOException. Sin embargo, una NumberFormatException se lanza especificamente cuando una cadena no puede convertirse a numero, lo cual no esta relacionado con operaciones de E/S. Usar este distractor resultaria en que el programa no capture el error especifico de formato numerico invalido, llevando a excepciones no manejadas y potencialmente a que el programa falle al encontrarse con un ID de empleado mal formado.",
+      "untr_description": "You might mistakenly believe that any error related to file reading, including parsing errors, should be caught as an IOException. However, a NumberFormatException is specifically thrown when a string cannot be converted to a number, which is unrelated to IO operations. Using this distractor would result in the program not catching the specific error of an invalid number format, leading to unhandled exceptions and potentially crashing the program when encountering a malformed employee ID.",
+      "line_number": 25
+    }
+  ],
+  "tags": [
+    "spanish-latam;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "translations": {
+    "en": "68bdb309f6cc3d7a9cc09869"
+  },
+  "collaborator_emails": [],
+  "programInput": "hours2.txt"
+}

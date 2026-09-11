@@ -1,0 +1,445 @@
+{
+  "id": "f5793d6042ea21c8116a36f9",
+  "user": "moh70@pitt.edu",
+  "name": "Imprimir tabla de conteo de medallas con totales por fila y columna",
+  "untr_name": "Printing Table of Medal Winner Counts with Row and Column Totals",
+  "description": "Suponga que tenemos un arreglo de paises que almacena los nombres de los siete paises que participaron en las competiciones de patinaje en los Juegos Olimpicos de Invierno. Tambien tenemos una matriz 7x3 que almacena el numero de medallas que estos siete paises ganaron. Esta matriz se ve de la siguiente manera:\\n{ {1, 0, 1 },\\n { 1, 1, 0 },\\n ...}\\nEl primer, segundo y tercer numero dentro de una fila i representan la cantidad de medallas de Oro, Plata y Bronce ganadas por el pais que esta en el indice i del arreglo de paises.\\nConstruya un programa que tome esta matriz y el arreglo de paises, y que imprima una tabla de conteo de medallas con totales por fila y columna. Los totales de columna son la suma de las medallas de oro, plata y bronce ganadas en la competencia. La tabla de salida deberia verse como sigue:\\n      Pais    Oro  Plata  Bronce   Total\\n         Canada        1       0       1          2\\n            China        1       1       0          2\\n           ...\\nTotal de columna      4       4       4",
+  "untr_description": "Assume that we have an array of countries that stores the names of the seven countries that participated in the Skating competitions at the Winter Olympic. We also have a 7x3 matrix that stores the number of medals that these seven countries won. This matrix looks like as follows:\\n{ {1, 0, 1 },\\n { 1, 1, 0 },\\n ...}\\nThe first, second, and third numbers within a row i represent the number of Gold, Silver, and Bronze medals won by the country that is at the index i of the array of countries.\\nConstruct a program that takes this matrix and the array of countries, and prints a table of medal counts with row and column totals. The column totals are the sum of the gold, silver, and bronze medals won in the competition. The output table should look like as follows:\\n      Country    Gold  Silver  Bronze   Total\\n         Canada        1       0       1          2\\n            China        1       1       0          2\\n           ...\\nColumn Total      4       4       4",
+  "language": "JAVA",
+  "iso_language_code": "es",
+  "filename": "JPrintMedalsRowColumnTotal.java",
+  "code": "public class JPrintMedalsRowColumnTotal {\n\tpublic static void main(String[] args) {\n\t\t//Paso 1: Definir un arreglo de paises\n\t\tString[] countries = {\"CAN\", \"CHN\", \"GER\", \"KOR\", \"JPN\", \"RUS\", \"USA\" };\n\t\t//Paso 2: Definir una matriz 7x3 que almacena el numero de medallas que ganaron los paises\n\t\tint[][] medalCounts = { { 1, 0, 1 }, { 1, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, \n\t\t\t                    { 0, 1, 1 }, { 0, 1, 1 }, { 1, 1, 0 } };\n\t\t//Paso 3: Crear un arreglo para almacenar los totales de columnas\n\t\tint[] columnTotals = new int[medalCounts[0].length];\n\t\t//Paso 4: Imprimir la cabecera de la tabla de salida\n\t\tSystem.out.printf(\"%4s%3s%3s%3s%4s\\n\",\"Nombre\", \"O\", \"P\", \"B\", \"Total\");\n\t\t//Paso 5: Iterar a traves de las filas en la matriz de conteo de medallas\n\t\tfor (int i = 0; i < countries.length; i++) {\n\t\t\t//Paso 5.1: Imprimir el nombre del pais en la fila i\n\t\t\tSystem.out.printf(\"%4s\", countries[i]);\n\t\t\t//Paso 5.2: Inicializar la variable que necesitamos para almacenar el total de la fila i\n\t\t\tint rowTotal = 0;\n\t\t\t//Paso 5.3: Iterar a traves de las columnas de la matriz de conteo de medallas\n\t\t\tfor (int j = 0; j < medalCounts[0].length; j++) {\n\t\t\t\t//Paso 5.3.1: Imprimir el numero de medallas en la fila i y columna j de la matriz\n\t\t\t\tSystem.out.printf(\"%3d\", medalCounts[i][j]);\n\t\t\t\t//Paso 5.3.2: Actualizar el total de la fila i\n\t\t\t\trowTotal = rowTotal + medalCounts[i][j];\n\t\t        //Paso 5.3.3: Actualizar el total de la columna j\n\t\t\t\tcolumnTotals[j] += medalCounts[i][j];\n\t\t\t}\n\t\t\t//Paso 5.4: Imprimir el total de la fila i en la tabla de salida\n\t\t\tSystem.out.printf(\"%3d\\n\", rowTotal);        \n\t\t}\n\t\t//Paso 6: Imprimir los totales de columnas\n\t\tSystem.out.printf(\"%4s\", \"Total\");\n\t\tfor (int x : columnTotals) {\n\t\t\tSystem.out.printf(\"%3d\", x);\n\t\t}\n\t}\n}",
+  "untr_code": "public class JPrintMedalsRowColumnTotal {\n\tpublic static void main(String[] args) {\n\t\t//Step 1: Define an array of countries\n\t\tString[] countries = {\"CAN\", \"CHN\", \"GER\", \"KOR\", \"JPN\", \"RUS\", \"USA\" };\n\t\t//Step 2: Define a 7x3 matrix that stores the number of medals the countries won\n\t\tint[][] medalCounts = { { 1, 0, 1 }, { 1, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, \n\t\t\t                    { 0, 1, 1 }, { 0, 1, 1 }, { 1, 1, 0 } };\n\t\t//Step 3: Create an array to store column totals\n\t\tint[] columnTotals = new int[medalCounts[0].length];\n\t\t//Step 4: Print the header of the output table\n\t\tSystem.out.printf(\"%4s%3s%3s%3s%4s\\n\",\"Name\", \"G\", \"S\", \"B\", \"All\");\n\t\t//Step 5: Iterate through the rows in the medal counts matrix\n\t\tfor (int i = 0; i < countries.length; i++) {\n\t\t\t//Step 5.1: Print the name of the country at row i\n\t\t\tSystem.out.printf(\"%4s\", countries[i]);\n\t\t\t//Step 5.2: Initialize the variable that we need to store the row total for row i\n\t\t\tint rowTotal = 0;\n\t\t\t//Step 5.3: Iterate through the columns of the medals counts matrix\n\t\t\tfor (int j = 0; j < medalCounts[0].length; j++) {\n\t\t\t\t//Step 5.3.1: Print the the number of medals at row i and column j of the matrix\n\t\t\t\tSystem.out.printf(\"%3d\", medalCounts[i][j]);\n\t\t\t\t//Step 5.3.2: Update the row total for row i \n\t\t\t\trowTotal = rowTotal + medalCounts[i][j];\n\t\t        //Step 5.3.3: Update the column total for column j \n\t\t\t\tcolumnTotals[j] += medalCounts[i][j];\n\t\t\t}\n\t\t\t//Step 5.4: Print the row total for row i of the output table\n\t\t\tSystem.out.printf(\"%3d\\n\", rowTotal);        \n\t\t}\n\t\t//Step 6: Print the column totals\n\t\tSystem.out.printf(\"%4s\", \"All\");\n\t\tfor (int x : columnTotals) {\n\t\t\tSystem.out.printf(\"%3d\", x);\n\t\t}\n\t}\n}",
+  "lines": {
+    "4": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define e inicializa un arreglo llamado 'countries' con los nombres de los siete paises que participan en las competiciones de patinaje. Cada elemento en el arreglo es una cadena que representa la abreviatura de un pais.",
+          "untr_content": "This line defines and initializes an array named 'countries' with the names of the seven countries participating in the skating competitions. Each element in the array is a string representing a country's abbreviation."
+        },
+        {
+          "content": "El proposito de esta linea es almacenar los nombres de los paises en un orden especifico, que corresponde a las filas en la matriz 'medalCounts'. Esto te permite acceder e imprimir facilmente el nombre del pais junto con sus conteos de medallas.",
+          "untr_content": "The purpose of this line is to store the country names in a specific order, which corresponds to the rows in the medalCounts matrix. This allows you to easily access and print the country name alongside its medal counts."
+        },
+        {
+          "content": "La sintaxis 'String[] countries = {...};' declara un arreglo de cadenas y lo inicializa con los valores especificados. Las llaves '{...}' se usan para listar los elementos del arreglo.",
+          "untr_content": "The syntax 'String[] countries = {...};' declares an array of strings and initializes it with the specified values. The curly braces '{...}' are used to list the elements of the array."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir el indice del arreglo con la posicion real del pais en una lista. Recuerda que los indices de arreglos comienzan en 0, asi que 'CAN' esta en el indice 0, 'CHN' en el indice 1, y asi sucesivamente.",
+          "untr_content": "A common misconception might be confusing the array index with the actual position of the country in a list. Remember that array indices start at 0, so 'CAN' is at index 0, 'CHN' at index 1, and so on."
+        },
+        {
+          "content": "Como buena practica, asegurate de que el numero de elementos en el arreglo 'countries' coincida con el numero de filas en la matriz 'medalCounts' para evitar errores de indice fuera de rango al acceder a los elementos.",
+          "untr_content": "As a best practice, ensure that the number of elements in the 'countries' array matches the number of rows in the 'medalCounts' matrix to avoid index out-of-bounds errors when accessing elements."
+        }
+      ]
+    },
+    "6": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicializa una matriz 2D llamada `medalCounts` con valores predeterminados que representan la cantidad de medallas ganadas por cada pais.",
+          "untr_content": "This line initializes a 2D array named `medalCounts` with predefined values representing the number of medals won by each country."
+        },
+        {
+          "content": "La matriz esta estructurada como una matriz 7x3, donde cada fila corresponde a un pais y cada columna representa un tipo de medalla: Oro, Plata y Bronce.",
+          "untr_content": "The array is structured as a 7x3 matrix, where each row corresponds to a country and each column represents a type of medal: Gold, Silver, and Bronze."
+        },
+        {
+          "content": "La sintaxis `int[][]` declara un arreglo bidimensional de enteros, que es adecuado para almacenar datos tabulares como esta matriz.",
+          "untr_content": "The syntax `int[][]` declares a two-dimensional array of integers, which is suitable for storing tabular data like this matrix."
+        },
+        {
+          "content": "Cada arreglo interno, como `{ 1, 0, 1 }`, representa los conteos de medallas para un pais especifico, con el primer elemento siendo Oro, el segundo Plata y el tercero Bronce.",
+          "untr_content": "Each inner array, such as `{ 1, 0, 1 }`, represents the medal counts for a specific country, with the first element being Gold, the second Silver, and the third Bronze."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que los numeros son totales acumulados, pero en realidad son conteos individuales para cada tipo de medalla por pais.",
+          "untr_content": "A common misconception might be thinking that the numbers are cumulative totals, but they are actually individual counts for each medal type per country."
+        },
+        {
+          "content": "Asegurate de que el numero de filas en `medalCounts` coincida con el numero de paises en el arreglo `countries` para evitar errores de indice fuera de rango al iterar sobre ellos.",
+          "untr_content": "Ensure that the number of rows in `medalCounts` matches the number of countries in the `countries` array to avoid index out-of-bounds errors when iterating through them."
+        },
+        {
+          "content": "Usar un arreglo 2D es una buena practica aqui ya que te permite acceder y manipular facilmente los datos en un formato estructurado, lo cual es esencial para generar la tabla de salida.",
+          "untr_content": "Using a 2D array is a best practice here as it allows you to easily access and manipulate the data in a structured format, which is essential for generating the output table."
+        }
+      ]
+    },
+    "9": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicializa un arreglo llamado `columnTotals` con un tamano igual al numero de columnas en la matriz `medalCounts`. Este arreglo almacenara el numero total de medallas para cada tipo (Oro, Plata, Bronce) a traves de todos los paises.",
+          "untr_content": "This line initializes an array named `columnTotals` with a size equal to the number of columns in the `medalCounts` matrix. This array will store the total number of medals for each type (Gold, Silver, Bronze) across all countries."
+        },
+        {
+          "content": "La expresion `medalCounts[0].length` se usa para determinar el numero de columnas en la matriz `medalCounts`. Esto asegura que el arreglo `columnTotals` tenga el tamano correcto para almacenar los totales de cada tipo de medalla.",
+          "untr_content": "The expression `medalCounts[0].length` is used to determine the number of columns in the `medalCounts` matrix. This ensures that the `columnTotals` array has the correct size to store totals for each medal type."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser fijar de forma rigida el tamano del arreglo `columnTotals` a 3, asumiendo que siempre habran tres tipos de medallas. Sin embargo, usar `medalCounts[0].length` hace el codigo mas flexible y adaptable a cambios en la estructura de la matriz.",
+          "untr_content": "A common misconception might be to hardcode the size of the `columnTotals` array to 3, assuming there are always three types of medals. However, using `medalCounts[0].length` makes the code more flexible and adaptable to changes in the matrix structure."
+        },
+        {
+          "content": "Es una buena practica usar dimensionamiento dinamico como `medalCounts[0].length` en lugar de valores codificados, ya que hace tu codigo mas mantenible y menos propenso a errores si la estructura de los datos cambia.",
+          "untr_content": "It's a best practice to use dynamic sizing like `medalCounts[0].length` instead of hardcoding values, as it makes your code more maintainable and less prone to errors if the structure of the data changes."
+        }
+      ]
+    },
+    "11": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime la cabecera de la tabla de salida, que incluye los nombres de las columnas: 'Nombre', 'O', 'P', 'B' y 'Total'.",
+          "untr_content": "This line prints the header of the output table, which includes the column names: 'Name', 'G', 'S', 'B', and 'All'."
+        },
+        {
+          "content": "El metodo `System.out.printf` se usa para salida formateada, permitiendote especificar el ancho y la alineacion de cada columna.",
+          "untr_content": "The `System.out.printf` method is used for formatted output, allowing you to specify the width and alignment of each column."
+        },
+        {
+          "content": "El especificador de formato `%4s` se usa para 'Nombre', que asigna 4 espacios para la cadena, asegurando la alineacion. De manera similar, `%3s` se usa para 'O', 'P' y 'B', asignando 3 espacios cada uno, y `%4s` para 'Total', asignando 4 espacios.",
+          "untr_content": "The format specifier `%4s` is used for 'Name', which allocates 4 spaces for the string, ensuring alignment. Similarly, `%3s` is used for 'G', 'S', and 'B', allocating 3 spaces each, and `%4s` for 'All', allocating 4 spaces."
+        },
+        {
+          "content": "El `\\n` al final de la cadena de formato es un caracter de nueva linea, que mueve el cursor a la siguiente linea despues de imprimir la cabecera, preparando las filas de datos subsiguientes.",
+          "untr_content": "The `\\n` at the end of the format string is a newline character, which moves the cursor to the next line after printing the header, preparing for the subsequent rows of data."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar igualar el numero de especificadores de formato con el numero de argumentos proporcionados, lo que resultaria en un error en tiempo de ejecucion.",
+          "untr_content": "A common misconception might be forgetting to match the number of format specifiers with the number of arguments provided, which would result in a runtime error."
+        },
+        {
+          "content": "Usar `printf` para cabeceras de tablas es una buena practica cuando necesitas asegurar que la salida este alineada ordenadamente, especialmente cuando se trata de datos tabulares.",
+          "untr_content": "Using `printf` for table headers is a best practice when you need to ensure that the output is neatly aligned, especially when dealing with tabular data."
+        }
+      ]
+    },
+    "13": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicia un bucle for que itera sobre cada pais en el arreglo countries.",
+          "untr_content": "This line begins a for loop that iterates over each country in the countries array."
+        },
+        {
+          "content": "El bucle usa una variable indice 'i' que comienza en 0 y se incrementa en 1 hasta que alcanza la longitud del arreglo countries, asegurando que cada pais sea procesado.",
+          "untr_content": "The loop uses an index variable 'i' which starts at 0 and increments by 1 until it reaches the length of the countries array, ensuring that each country is processed."
+        },
+        {
+          "content": "El proposito de este bucle es procesar cada fila de la matriz `medalCounts`, que corresponde a un pais especifico, y imprimir los conteos de medallas para ese pais.",
+          "untr_content": "The purpose of this loop is to process each row of the medalCounts matrix, which corresponds to a specific country, and to print the medal counts for that country."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir la variable de bucle 'i' con las columnas de la matriz, pero aqui 'i' se usa para iterar sobre filas, no columnas.",
+          "untr_content": "A common misconception might be confusing the loop variable 'i' with the columns of the matrix, but here 'i' is used to iterate over rows, not columns."
+        },
+        {
+          "content": "Es una buena practica usar nombres de variables descriptivos, pero en este contexto, 'i' es una eleccion convencional para indices de bucle, especialmente cuando el bucle es simple y el contexto es claro.",
+          "untr_content": "It's a best practice to use descriptive variable names, but in this context, 'i' is a conventional choice for loop indices, especially when the loop is simple and the context is clear."
+        }
+      ]
+    },
+    "15": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime el nombre del pais correspondiente al indice de fila actual 'i' en el bucle.",
+          "untr_content": "This line prints the name of the country corresponding to the current row index 'i' in the loop."
+        },
+        {
+          "content": "El especificador de formato '%4s' en el metodo printf se usa para imprimir una cadena con un ancho minimo de 4 caracteres, asegurando que los nombres de los paises esten alineados en la tabla de salida.",
+          "untr_content": "The '%4s' format specifier in the printf method is used to print a string with a minimum width of 4 characters, ensuring that the country names are aligned in the output table."
+        },
+        {
+          "content": "Te puedes preguntar porque se usa '%4s' en lugar de simplemente '%s'. El especificador de ancho ayuda a mantener una alineacion de columna ordenada, lo cual es crucial para la legibilidad en datos tabulares.",
+          "untr_content": "You might wonder why '%4s' is used instead of just '%s'. The width specifier helps maintain a neat column alignment, which is crucial for readability in tabular data."
+        },
+        {
+          "content": "Un error comun podria ser olvidar usar el especificador de formato correcto, lo que llevaria a una salida desalineada. Siempre asegura que el especificador de formato coincida con el tipo de dato que estas imprimiendo.",
+          "untr_content": "A common mistake could be forgetting to use the correct format specifier, which would lead to misaligned output. Always ensure the format specifier matches the data type you are printing."
+        },
+        {
+          "content": "Usar printf para salida formateada es una buena practica cuando necesitas alinear datos en un formato estructurado, ya que proporciona mas control sobre la aparencia de la salida comparado con usar metodos simples print o println.",
+          "untr_content": "Using printf for formatted output is a best practice when you need to align data in a structured format, as it provides more control over the appearance of the output compared to using simple print or println methods."
+        }
+      ]
+    },
+    "17": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicializa una variable llamada `rowTotal` a 0. Esta variable se usa para llevar el conteo total de medallas ganadas por un pais especifico, que corresponde a una fila en la matriz `medalCounts`.",
+          "untr_content": "This line initializes a variable named `rowTotal` to 0. This variable is used to keep track of the total number of medals won by a specific country, which corresponds to a row in the `medalCounts` matrix."
+        },
+        {
+          "content": "Al establecer `rowTotal` en 0 al inicio de cada iteracion del bucle externo (que itera sobre los paises), aseguras que el conteo de medallas para cada pais comience desde cero antes de sumar las medallas de cada columna.",
+          "untr_content": "By setting `rowTotal` to 0 at the start of each iteration of the outer loop (which iterates over countries), you ensure that the medal count for each country starts from zero before adding the medals from each column."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar reiniciar `rowTotal` a 0 para cada nuevo pais, lo que resultaria en totales incorrectos ya que los valores se acumularian entre diferentes paises.",
+          "untr_content": "A common misconception might be to forget to reset `rowTotal` to 0 for each new country, which would result in incorrect totals as the values would accumulate across different countries."
+        },
+        {
+          "content": "Es una buena practica inicializar variables como `rowTotal` al comienzo de su ambito para evitar arrastrar valores de iteraciones previas, lo que podria provocar errores logicos en tu programa.",
+          "untr_content": "It's a best practice to initialize variables like `rowTotal` at the beginning of their scope to avoid carrying over values from previous iterations, which could lead to logical errors in your program."
+        }
+      ]
+    },
+    "19": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicia un bucle anidado que itera sobre cada columna de la fila actual en la matriz `medalCounts`. El bucle externo (iniciado en la linea 13) itera sobre cada pais, y este bucle interno itera sobre cada tipo de medalla (Oro, Plata, Bronce) para ese pais.",
+          "untr_content": "This line begins a nested loop that iterates over each column of the current row in the `medalCounts` matrix. The outer loop (starting at line 13) iterates over each country, and this inner loop iterates over each type of medal (Gold, Silver, Bronze) for that country."
+        },
+        {
+          "content": "El bucle usa la variable `j` como indice para acceder a cada columna en la fila actual `i`. La condicion `j < medalCounts[0].length` asegura que el bucle itere sobre todas las columnas en la matriz, que corresponden a los tres tipos de medallas.",
+          "untr_content": "The loop uses the variable `j` as the index to access each column in the current row `i`. The condition `j < medalCounts[0].length` ensures that the loop iterates over all columns in the matrix, which corresponds to the three types of medals."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir los roles de `i` y `j`. Aqui, `i` se usa para filas (paises), y `j` se usa para columnas (tipos de medalla). Mezclar estos puede llevar a acceder datos incorrectos.",
+          "untr_content": "A common misconception might be confusing the roles of `i` and `j`. Here, `i` is used for rows (countries), and `j` is used for columns (medal types). Mixing these up could lead to incorrect data being accessed."
+        },
+        {
+          "content": "Usar `medalCounts[0].length` para determinar el numero de columnas es una buena practica porque se adapta dinamicamente al numero real de columnas en la matriz, haciendo el codigo mas robusto a cambios en el tamano de la matriz.",
+          "untr_content": "Using `medalCounts[0].length` to determine the number of columns is a best practice because it dynamically adapts to the actual number of columns in the matrix, making the code more robust to changes in the matrix size."
+        }
+      ]
+    },
+    "21": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime la cantidad de medallas para un pais y tipo de medalla especificos, que se encuentra en la fila `i` y columna `j` de la matriz `medalCounts`.",
+          "untr_content": "This line prints the number of medals for a specific country and medal type, which is located at row `i` and column `j` of the `medalCounts` matrix."
+        },
+        {
+          "content": "El metodo `System.out.printf` se usa aqui para formatear la salida. El especificador `%3d` asegura que el valor entero se imprima con un ancho de 3 caracteres, lo que ayuda a alinear los numeros en columnas para una mejor legibilidad.",
+          "untr_content": "The `System.out.printf` method is used here to format the output. The `%3d` format specifier ensures that the integer value is printed with a width of 3 characters, which helps align the numbers in columns for better readability."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser malinterpretar el especificador `%3d`. Este no cambia el valor sino que solo afecta como se muestra, asegurando un ancho consistente de columna.",
+          "untr_content": "A common misconception might be misunderstanding the `%3d` format specifier. It doesn't change the value but only affects how it is displayed, ensuring consistent column width."
+        },
+        {
+          "content": "Es una buena practica usar salida formateada como `printf` para tablas, ya que hace la salida mas legible y profesional, especialmente cuando se trata de datos numericos.",
+          "untr_content": "It's a good practice to use formatted output like `printf` for tables, as it makes the output more readable and professional-looking, especially when dealing with numerical data."
+        }
+      ]
+    },
+    "23": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea actualiza la variable `rowTotal` sumando la cantidad de medallas de la columna actual `j` de la fila actual `i` en la matriz `medalCounts`.",
+          "untr_content": "This line updates the `rowTotal` variable by adding the number of medals from the current column `j` of the current row `i` in the `medalCounts` matrix."
+        },
+        {
+          "content": "El proposito de esta linea es calcular el numero total de medallas ganadas por el pais en el indice `i` del arreglo `countries`. Este total se usa mas adelante para mostrar el total de medallas por pais.",
+          "untr_content": "The purpose of this line is to calculate the total number of medals won by the country at index `i` in the `countries` array. This total is used later to display the total medals for each country."
+        },
+        {
+          "content": "La sintaxis `rowTotal = rowTotal + medalCounts[i][j];` puede simplificarse usando el atajo `rowTotal += medalCounts[i][j];`, lo cual es una practica comun en Java para hacer el codigo mas conciso.",
+          "untr_content": "The syntax `rowTotal = rowTotal + medalCounts[i][j];` can be simplified using the shorthand `rowTotal += medalCounts[i][j];`, which is a common practice in Java to make the code more concise."
+        },
+        {
+          "content": "Un posible error a vigilar es olvidar inicializar `rowTotal` a 0 antes de esta linea, lo que resultaria en totales incorrectos. Esto se maneja correctamente en la linea 17.",
+          "untr_content": "A potential error to watch out for is forgetting to initialize `rowTotal` to 0 before this line, which would result in incorrect totals. This is correctly handled in line 17."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que esta linea actualiza el total para todos los paises, pero en realidad solo actualiza el total para el pais actual que se esta procesando en el bucle.",
+          "untr_content": "A common misconception might be thinking that this line updates the total for all countries, but it only updates the total for the current country being processed in the loop."
+        }
+      ]
+    },
+    "25": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea actualiza el total de columna para el tipo de medalla actual (Oro, Plata o Bronce) sumando la cantidad de medallas ganadas por el pais actual (en el indice i) para ese tipo de medalla (en el indice j).",
+          "untr_content": "This line updates the column total for the current medal type (Gold, Silver, or Bronze) by adding the number of medals won by the current country (at index i) for that medal type (at index j)."
+        },
+        {
+          "content": "La sintaxis `columnTotals[j] += medalCounts[i][j];` es un atajo para `columnTotals[j] = columnTotals[j] + medalCounts[i][j];`. Agrega el valor en `medalCounts[i][j]` al valor actual de `columnTotals[j]`.",
+          "untr_content": "The syntax `columnTotals[j] += medalCounts[i][j];` is a shorthand for `columnTotals[j] = columnTotals[j] + medalCounts[i][j];`. It adds the value at `medalCounts[i][j]` to the current value of `columnTotals[j]`."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar inicializar el arreglo `columnTotals` a cero, lo que podria llevar a totales incorrectos si el arreglo contuviera valores basura. Sin embargo, en Java, los arreglos de enteros se inicializan automaticamente a cero, asi que esto no es un problema aqui.",
+          "untr_content": "A common misconception might be forgetting to initialize the `columnTotals` array to zero, which could lead to incorrect totals if the array contains garbage values. However, in Java, arrays of integers are automatically initialized to zero, so this is not an issue here."
+        },
+        {
+          "content": "Es una buena practica usar el operador `+=` por claridad y concision cuando necesitas incrementar una variable por cierto valor, ya que hace el codigo mas facil de leer y entender.",
+          "untr_content": "It's a best practice to use the `+=` operator for clarity and conciseness when you need to increment a variable by a certain value, as it makes the code easier to read and understand."
+        }
+      ]
+    },
+    "28": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime el numero total de medallas ganadas por un pais especifico, que esta almacenado en la variable `rowTotal`.",
+          "untr_content": "This line prints the total number of medals won by a specific country, which is stored in the variable `rowTotal`."
+        },
+        {
+          "content": "El metodo `System.out.printf` se usa para formatear la salida, asegurando que el total este alineado correctamente en la tabla con un ancho de 3 caracteres, seguido por un caracter de nueva linea `\\n` para pasar a la siguiente linea.",
+          "untr_content": "The `System.out.printf` method is used to format the output, ensuring that the total is aligned properly in the table with a width of 3 characters, followed by a newline character `\\n` to move to the next line."
+        },
+        {
+          "content": "Puedes malinterpretar el especificador de formato `%3d\\n`. `%3d` asegura que el entero este alineado a la derecha dentro de un ancho de 3 caracteres, y `\\n` mueve el cursor a la siguiente linea, lo cual es crucial para mantener la estructura de la tabla.",
+          "untr_content": "You might misunderstand the `%3d\\n` format specifier. `%3d` ensures the integer is right-aligned within a 3-character width, and `\\n` moves the cursor to the next line, which is crucial for maintaining the table's structure."
+        },
+        {
+          "content": "Un error comun podria ser olvidar el caracter de nueva linea, lo que resultaria en que todos los totales se impriman en la misma linea, interrumpiendo el formato de la tabla.",
+          "untr_content": "A common mistake could be forgetting the newline character, which would result in all totals being printed on the same line, disrupting the table format."
+        },
+        {
+          "content": "Como buena practica, siempre asegura que tu salida formateada coincida con la estructura de la tabla planeada para legibilidad y claridad.",
+          "untr_content": "As a best practice, always ensure your formatted output aligns with the intended table structure for readability and clarity."
+        }
+      ]
+    },
+    "31": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime la etiqueta 'Total' al inicio de la fila que muestra los totales de columna. Se alinea con la cabecera 'Total' en la tabla, que representa el numero total de medallas para cada tipo (Oro, Plata, Bronce) a traves de todos los paises.",
+          "untr_content": "This line prints the label 'All' at the beginning of the row that displays the column totals. It aligns with the header 'All' in the table, which represents the total number of medals for each type (Gold, Silver, Bronze) across all countries."
+        },
+        {
+          "content": "La sintaxis `System.out.printf(\"%4s\", \"Total\");` usa el metodo `printf` para formatear la salida. `%4s` es un especificador de formato donde `%s` se usa para cadenas, y `4` especifica un ancho minimo de 4 caracteres para la salida. Esto asegura que la etiqueta 'Total' este alineada correctamente con las otras columnas en la tabla.",
+          "untr_content": "The syntax `System.out.printf(\"%4s\", \"All\");` uses the `printf` method to format the output. `%4s` is a format specifier where `%s` is used for strings, and `4` specifies a minimum width of 4 characters for the output. This ensures that the label 'All' is aligned properly with the other columns in the table."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el numero '4' en `%4s` esta relacionado con el numero de columnas o el numero de paises, pero en realidad se refiere al ancho de la cadena impresa. Esto asegura una alineacion consistente en la tabla.",
+          "untr_content": "A common misconception might be that the number '4' in `%4s` is related to the number of columns or the number of countries, but it actually refers to the width of the printed string. This ensures consistent alignment in the table."
+        },
+        {
+          "content": "Como buena practica, usar `printf` para salida formateada ayuda a mantener una estructura de tabla limpia y legible, especialmente cuando se trata de datos tabulares. Es importante asegurar que los especificadores de formato coincidan con el tipo de datos que se imprimen para evitar errores en tiempo de ejecucion.",
+          "untr_content": "As a best practice, using `printf` for formatted output helps maintain a clean and readable table structure, especially when dealing with tabular data. It is important to ensure that the format specifiers match the type of data being printed to avoid runtime errors."
+        }
+      ]
+    },
+    "32": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicia un bucle for mejorado, tambien conocido como bucle 'for-each', que itera sobre cada elemento en el arreglo `columnTotals`.",
+          "untr_content": "This line begins an enhanced for loop, also known as a 'for-each' loop, which iterates over each element in the `columnTotals` array."
+        },
+        {
+          "content": "El proposito de este bucle es acceder a cada numero total de medallas para las columnas de oro, plata y bronce, que han sido acumuladas en el arreglo `columnTotals`.",
+          "untr_content": "The purpose of this loop is to access each total number of medals for the gold, silver, and bronze columns, which have been accumulated in the `columnTotals` array."
+        },
+        {
+          "content": "La sintaxis `for (int x : columnTotals)` significa que en cada iteracion, el elemento actual de `columnTotals` se asigna a la variable `x`. Esto te permite procesar cada elemento del arreglo sin necesitar usar una variable indice.",
+          "untr_content": "The syntax `for (int x : columnTotals)` means that for each iteration, the current element of `columnTotals` is assigned to the variable `x`. This allows you to process each element of the array without needing to use an index variable."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir este bucle con un bucle for tradicional que usa un indice. Aqui, no necesitas gestionar una variable indice, lo que simplifica el codigo y reduce la posibilidad de errores por desbordamiento de indice.",
+          "untr_content": "A common misconception might be confusing this loop with a traditional for loop that uses an index. Here, you don't need to manage an index variable, which simplifies the code and reduces the chance of off-by-one errors."
+        },
+        {
+          "content": "Usar un bucle for-each es una buena practica cuando necesitas iterar sobre todos los elementos de un arreglo o coleccion sin modificar el arreglo en si, ya que hace el codigo mas legible y menos propenso a errores.",
+          "untr_content": "Using a for-each loop is a best practice when you need to iterate over all elements of an array or collection without modifying the array itself, as it makes the code more readable and less error-prone."
+        }
+      ]
+    },
+    "33": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime cada elemento del arreglo `columnTotals`, que representa el numero total de cada tipo de medalla (Oro, Plata, Bronce) ganadas a traves de todos los paises.",
+          "untr_content": "This line prints each element of the `columnTotals` array, which represents the total number of each type of medal (Gold, Silver, Bronze) won across all countries."
+        },
+        {
+          "content": "El metodo `System.out.printf` se usa para formatear la salida, asegurando que cada numero se imprima con un ancho de 3 caracteres, alineando los numeros ordenadamente en columnas.",
+          "untr_content": "The `System.out.printf` method is used to format the output, ensuring that each number is printed with a width of 3 characters, aligning the numbers neatly in columns."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar usar el especificador de formato correcto `%3d`, que asegura que los numeros esten alineados a la derecha y ocupen 3 espacios, manteniendo la alineacion de la tabla.",
+          "untr_content": "A common misconception might be forgetting to use the correct format specifier `%3d`, which ensures that the numbers are right-aligned and take up 3 spaces, maintaining the table's alignment."
+        },
+        {
+          "content": "Es una buena practica usar salida formateada como `printf` para tablas, ya que ayuda a mantener una estructura limpia y legible, especialmente cuando se trata de datos numericos.",
+          "untr_content": "It's a best practice to use formatted output like `printf` for tables, as it helps maintain a clean and readable structure, especially when dealing with numerical data."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "int[] columnTotals = new int[countries.length];",
+      "untr_code": "int[] columnTotals = new int[countries.length];",
+      "description": "Puedes pensar que el tamano del arreglo columnTotals deberia coincidir con el numero de paises porque cada pais tiene una fila en la matriz. Sin embargo, esto es incorrecto porque columnTotals esta destinado a almacenar los totales para cada tipo de medalla, no para cada pais. Usar este distractor llevaria a un arreglo demasiado grande, causando errores logicos al intentar sumar las medallas por tipo. El programa no calcularia correctamente los totales de columna, ya que intentaria acceder a indices que no corresponden a tipos de medalla, potencialmente llevando a una salida incorrecta o errores en tiempo de ejecucion.",
+      "untr_description": "You might think that the size of the columnTotals array should match the number of countries because each country has a row in the matrix. However, this is incorrect because columnTotals is meant to store the totals for each type of medal, not for each country. Using this distractor would lead to an array that is too large, causing logical errors when you try to sum the medals by type. The program would not correctly calculate the column totals, as it would attempt to access indices that do not correspond to medal types, potentially leading to incorrect output or runtime errors.",
+      "line_number": 9
+    },
+    {
+      "code": "int[] columnTotals = new int[7];",
+      "untr_code": "int[] columnTotals = new int[7];",
+      "description": "Podrias equivocadamente creer que el arreglo columnTotals deberia tener un tamano de 7, coincidiendo con el numero de paises. Esta confusion surge de mezclar los roles de filas y columnas en la matriz. El arreglo columnTotals esta pensado para almacenar totales por tipo de medalla, no por pais. Usar este distractor resultaria en un arreglo demasiado grande, llevando a errores logicos al calcular totales, ya que los indices extra no corresponderian a ningun tipo de medalla, lo que podria causar calculos incorrectos o errores en tiempo de ejecucion.",
+      "untr_description": "You might mistakenly believe that the columnTotals array should have a size of 7, matching the number of countries. This confusion arises from mixing up the roles of rows and columns in the matrix. The columnTotals array is supposed to store totals for each medal type, not for each country. Using this distractor would result in an array that is too large, leading to logical errors when calculating totals, as the extra indices would not correspond to any medal type, potentially causing incorrect calculations or runtime errors.",
+      "line_number": 9
+    },
+    {
+      "code": "columnTotals[i] += medalCounts[i][j];",
+      "untr_code": "columnTotals[i] += medalCounts[i][j];",
+      "description": "Podrias pensar erroneamente que deberias usar el mismo indice para la fila y la columna al actualizar los totales, especialmente si no tienes claro como funcionan las matrices. Esta linea usa incorrectamente 'i' para ambos indices, lo que te llevaria a acumular valores incorrectos en 'columnTotals'. En lugar de sumar las medallas por columna a traves de todos los paises, esta linea intentaria sumar las medallas para cada pais a traves de todas las columnas, que no es la operacion deseada. Esto resultaria en totales de columna incorrectos, ya que cada entrada en 'columnTotals' reflejaria solo las medallas de un solo pais en lugar del total para cada tipo de medalla.",
+      "untr_description": "You might mistakenly think that you should use the same index for both the row and column when updating totals, especially if you're not clear on how matrices work. This line incorrectly uses 'i' for both the row and column index, which would lead you to accumulate the wrong values into 'columnTotals'. Instead of summing up the medals for each column across all countries, this line would attempt to sum the medals for each country across all columns, which is not the intended operation. This would result in incorrect column totals, as each entry in 'columnTotals' would only reflect the medals of a single country rather than the total for each medal type.",
+      "line_number": 25
+    },
+    {
+      "code": "columnTotals[i] += medalCounts[j][i];",
+      "untr_code": "columnTotals[i] += medalCounts[j][i];",
+      "description": "Podrias usar las variables de bucle equivocadas si no tienes claros sus roles en bucles anidados. Esta linea usa incorrectamente 'i' para el indice de columna y 'j' para el indice de fila, lo que llevaria a acumular valores de forma incorrecta. En lugar de sumar las medallas por columna, esta linea intentaria sumar las medallas por fila, lo que no es la operacion deseada. Esto resultaria en totales incorrectos, ya que cada entrada en 'columnTotals' reflejaria una mezcla de diferentes tipos de medalla en lugar de un tipo especifico a traves de todos los paises.",
+      "untr_description": "You might use the wrong loop variables if you're not clear on their roles in nested loops. This line incorrectly uses 'i' for the column index and 'j' for the row index, which would lead to accumulating values incorrectly. Instead of summing the medals for each column, this line would attempt to sum the medals for each row, which is not the intended operation. This would result in incorrect totals, as each entry in 'columnTotals' would reflect a mix of different medal types rather than a specific type across all countries.",
+      "line_number": 25
+    }
+  ],
+  "tags": [
+    "spanish-latam;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "translations": {
+    "en": "68bdb308f6cc3d7a9cc09744"
+  },
+  "collaborator_emails": [],
+  "programInput": ""
+}

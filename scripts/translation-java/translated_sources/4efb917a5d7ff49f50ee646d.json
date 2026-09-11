@@ -1,0 +1,683 @@
+{
+  "id": "4efb917a5d7ff49f50ee646d",
+  "user": "moh70@pitt.edu",
+  "name": "Contar el numero de codigos de producto validos y prohibidos (Caso 2)",
+  "untr_name": "Counting the Number of Valid and Banned Product Codes (Case 2) ",
+  "description": "Supongamos que una compañia hipotetica usa codigos para representar sus distintos productos. Un codigo de producto incluye, entre otra informacion, un caracter en la decima posicion que representa la zona de donde se fabrico ese producto, y un entero de cuatro digitos que representa el distrito en el que se vendera. Este entero de cuatro digitos comienza en el caracter 4 y se extiende hasta el caracter 7 del codigo de entrada (inclusive). Debido a una reorganizacion, los productos de la zona R estan prohibidos de venderse en distritos con designacion 2000 o superior.\nConstruya un programa que lea codigos de producto desde el usuario y cuente el numero de codigos validos y prohibidos ingresados. Asegurese de que el programa maneje todas las excepciones posibles.\nEl programa debe pedir al usuario una entrada hasta que el usuario escriba STOP.",
+  "untr_description": "Suppose a hypothetical company uses codes to represent its various products. A product code includes, among other information, a character in the tenth position that represents the zone from which that product was made, and a four-digit integer representing the district in which it will be sold. This four-digit integer begins at the 4th character and extends to the 7th character in the input code (inclusive). Due to some reorganization, products from zone R are banned from being sold in districts with a designation of 2000 or higher.\\nConstruct a program that reads product codes from the user and counts the number of valid and banned codes entered. Make sure that the program handles all possible exceptions.\\nThe program must ask the user for an input until the user enters STOP.",
+  "language": "JAVA",
+  "iso_language_code": "es",
+  "filename": "JCheckProductCode2.java",
+  "code": "import java.util.Scanner;\npublic class JCheckProductCode2 {\n\tpublic static void main(String[] args) {\n\t\tJCheckProductCode2 p2 = new JCheckProductCode2();\n\t\tp2.checkProductCode();\n\t}\n\t//Paso 1: Definir el metodo\n\tpublic void checkProductCode() {\n\t\t//Paso 1.1: Definir las variables que necesitamos para los contadores\n\t    int valid = 0;\n\t    int banned = 0;\n\t    //Paso 1.2: Solicitar una entrada valida mientras el usuario no escriba STOP; de lo contrario, terminar\n\t\tScanner scan = new Scanner(System.in);\n\t\tSystem.out.println(\"Ingrese codigo de producto:\");\n\t\tString code = scan.next();\t    \n\t    while ( ! code.equals(\"STOP\") ) {\n\t    \t //Paso 1.2.1: Encerrar el codigo que podria lanzar una excepcion dentro del bloque try\n\t        try {\n\t            char zone = code.charAt(9);\n\t            int district = Integer.parseInt(code.substring(3, 7));\n\t            valid += 1;\n\t            if (zone == 'R' && district >= 2000) {\n\t                banned += 1;\n\t            }\n\t        }\n\t        //Paso 1.2.2: Manejar todas las excepciones posibles que puedan ser lanzadas en el bloque try\n\t       catch (IndexOutOfBoundsException ex ) {                    \n\t            System.out.println(\"Longitud de codigo incorrecta.\");\n\t       } \n\t\tcatch (NumberFormatException ex ) {                   \n\t\t\tSystem.out.println(\"Error! Distrito no es numerico.\");\n\t\t}\n\t\t\tSystem.out.println(\"Ingrese codigo de producto:\");\n\t\t\tcode = scan.next();\n\t    }\n\t    //Paso 1.3: Imprimir el resultado    \n\t    System.out.println(\"# de codigos validos ingresados: \" + valid);\n\t    System.out.println(\"# de codigos prohibidos ingresados: \"+ banned);\n\t}\n}",
+  "untr_code": "import java.util.Scanner;\npublic class JCheckProductCode2 {\n\tpublic static void main(String[] args) {\n\t\tJCheckProductCode2 p2 = new JCheckProductCode2();\n\t\tp2.checkProductCode();\n\t}\n\t//Step 1: Define the method\n\tpublic void checkProductCode() {\n\t\t//Step 1.1: Define the variables that we need for counts\n\t    int valid = 0;\n\t    int banned = 0;\n\t    //Step 1.2: Ask for a valid input as long as the user does'nt enter STOP; otherwise stop\n\t\tScanner scan = new Scanner(System.in);\n\t\tSystem.out.println(\"Enter product code:\");\n\t\tString code = scan.next();\t    \n\t    while ( ! code.equals(\"STOP\") ) {\n\t    \t //Step 1.2.1: Enclose the code that might throw an exception within the try block\n\t        try {\n\t            char zone = code.charAt(9);\n\t            int district = Integer.parseInt(code.substring(3, 7));\n\t            valid += 1;\n\t            if (zone == 'R' && district >= 2000) {\n\t                banned += 1;\n\t            }\n\t        }\n\t        //Step 1.2.2: Handle all possible exceptions that may be thrown in the try block \n\t       catch (IndexOutOfBoundsException ex ) {                    \n\t            System.out.println(\"Improper code length.\");\n\t       } \n\t\tcatch (NumberFormatException ex ) {                   \n\t\t\tSystem.out.println(\"Error! District is not numeric.\");\n\t\t}\n\t\t\tSystem.out.println(\"Enter product code:\");\n\t\t\tcode = scan.next();\n\t    }\n\t    //Step 1.3: Print the result    \n\t    System.out.println(\"# of valid codes entered: \" + valid);\n\t    System.out.println(\"# of banned codes entered: \"+ banned);\n\t}\n}",
+  "lines": {
+    "4": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea una instancia de la clase JCheckProductCode2, llamada p2. Esta instancia es necesaria para llamar al metodo no estatico checkProductCode() posteriormente en el programa.",
+          "untr_content": "This line creates an instance of the JCheckProductCode2 class, named p2. This instance is necessary to call the non-static method checkProductCode() later in the program."
+        },
+        {
+          "content": "En Java, los metodos no estaticos no pueden llamarse directamente desde un contexto estatico como el metodo main. Al crear una instancia de la clase, puede acceder a sus metodos no estaticos.",
+          "untr_content": "In Java, non-static methods cannot be called directly from a static context like the main method. By creating an instance of the class, you can access its non-static methods."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser intentar llamar a checkProductCode() directamente desde el metodo main sin crear una instancia, lo que resultaria en un error de compilacion.",
+          "untr_content": "A common misconception might be to try calling checkProductCode() directly from the main method without creating an instance, which would result in a compilation error."
+        },
+        {
+          "content": "Como buena practica, asegurese de entender la diferencia entre contextos static y no static en Java. Use instancias de clases para acceder a metodos no estaticos cuando sea necesario.",
+          "untr_content": "As a best practice, ensure that you understand the difference between static and non-static contexts in Java. Use instances of classes to access non-static methods when needed."
+        }
+      ]
+    },
+    "5": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea llama al metodo `checkProductCode()` en la instancia `p2` de la clase `JCheckProductCode2`. Aquí es donde se implementa la logica central del programa.",
+          "untr_content": "This line calls the method `checkProductCode()` on the instance `p2` of the class `JCheckProductCode2`. This is where the core logic of the program is implemented."
+        },
+        {
+          "content": "Al llamar `p2.checkProductCode()`, esta ejecutando el metodo que maneja la entrada de codigos de producto, los procesa y cuenta los codigos validos y prohibidos.",
+          "untr_content": "By calling `p2.checkProductCode()`, you are executing the method that handles the input of product codes, processes them, and counts the valid and banned codes."
+        },
+        {
+          "content": "La sintaxis `p2.checkProductCode()` implica usar el operador punto para llamar a un metodo en un objeto. Aqui, `p2` es una instancia de la clase, y `checkProductCode()` es un metodo definido dentro de esa clase.",
+          "untr_content": "The syntax `p2.checkProductCode()` involves using the dot operator to call a method on an object. Here, `p2` is an instance of the class, and `checkProductCode()` is a method defined within that class."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que `checkProductCode()` puede llamarse sin crear una instancia de la clase. Sin embargo, dado que `checkProductCode()` no es un metodo estatico, debe llamarse sobre una instancia de la clase.",
+          "untr_content": "A common misconception might be thinking that `checkProductCode()` can be called without creating an instance of the class. However, since `checkProductCode()` is not a static method, it must be called on an instance of the class."
+        },
+        {
+          "content": "Como buena practica, asegurese de que el metodo que esta llamando sea accesible y este correctamente definido dentro de la clase. En este caso, `checkProductCode()` es un metodo publico, por lo que puede ser accedido desde el metodo main.",
+          "untr_content": "As a best practice, ensure that the method you are calling is accessible and correctly defined within the class. In this case, `checkProductCode()` is a public method, so it can be accessed from the main method."
+        }
+      ]
+    },
+    "8": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo llamado `checkProductCode` dentro de la clase `JCheckProductCode2`. Este metodo es responsable de implementar la logica central del programa, que involucra leer codigos de producto, verificar su validez y contar los codigos validos y prohibidos.",
+          "untr_content": "This line defines a method named `checkProductCode` within the `JCheckProductCode2` class. This method is responsible for implementing the core logic of the program, which involves reading product codes, checking their validity, and counting valid and banned codes."
+        },
+        {
+          "content": "El metodo esta declarado como `public`, lo que significa que puede ser accedido desde fuera de la clase, lo que es util si desea llamar a este metodo desde otras clases o instancias.",
+          "untr_content": "The method is declared as `public`, meaning it can be accessed from outside the class, which is useful if you want to call this method from other classes or instances."
+        },
+        {
+          "content": "El metodo es `void`, indicando que no devuelve ningun valor. En su lugar, realiza acciones como leer entradas e imprimir resultados.",
+          "untr_content": "The method is `void`, indicating that it does not return any value. Instead, it performs actions such as reading input and printing results."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que un metodo siempre debe devolver un valor, pero en Java, los metodos pueden ser void si su proposito es realizar acciones sin devolver datos.",
+          "untr_content": "A common misconception might be thinking that a method must always return a value, but in Java, methods can be void if they are intended to perform actions without returning data."
+        },
+        {
+          "content": "Es buena practica dar nombres descriptivos a los metodos como `checkProductCode` para transmitir claramente su proposito, haciendo el codigo mas legible y mantenible.",
+          "untr_content": "It's a best practice to give methods descriptive names like `checkProductCode` to clearly convey their purpose, making the code more readable and maintainable."
+        }
+      ]
+    },
+    "10": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicializa una variable entera llamada 'valid' y establece su valor inicial en 0.",
+          "untr_content": "This line initializes an integer variable named 'valid' and sets its initial value to 0."
+        },
+        {
+          "content": "El proposito de esta variable es llevar la cuenta del numero de codigos de producto validos ingresados por el usuario.",
+          "untr_content": "The purpose of this variable is to keep track of the number of valid product codes entered by the user."
+        },
+        {
+          "content": "En Java, declarar una variable con 'int' especifica que almacenara valores enteros. El operador de asignacion '=' se usa para establecer el valor inicial.",
+          "untr_content": "In Java, declaring a variable with 'int' specifies that it will store integer values. The assignment operator '=' is used to set the initial value."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser asumir que la variable contara automaticamente los codigos validos sin incrementarla explicitamente. Sin embargo, debe incrementar este contador dentro de la logica del programa.",
+          "untr_content": "A common misconception might be to assume that the variable will automatically count valid codes without explicitly incrementing it. However, you must manually increase this count within the program logic."
+        },
+        {
+          "content": "Es buena practica inicializar las variables cuando las declara, especialmente si se usan para contar, para evitar errores por variables sin inicializar.",
+          "untr_content": "It's a best practice to initialize variables when you declare them, especially if they are used for counting, to avoid potential errors from using uninitialized variables."
+        }
+      ]
+    },
+    "11": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicializa una variable entera llamada 'banned' en 0, que se usara para contar el numero de codigos de producto que se consideran prohibidos segun los criterios del problema.",
+          "untr_content": "This line initializes an integer variable named 'banned' to 0, which will be used to count the number of product codes that are considered banned according to the problem's criteria."
+        },
+        {
+          "content": "El proposito de esta linea es configurar un contador que se incrementara cada vez que un codigo de producto sea identificado como prohibido, especificamente cuando la zona sea 'R' y el distrito sea 2000 o mayor.",
+          "untr_content": "The purpose of this line is to set up a counter that will increment each time a product code is identified as banned, specifically when the zone is 'R' and the district is 2000 or higher."
+        },
+        {
+          "content": "La sintaxis 'int banned = 0;' declara una variable de tipo entero y le asigna un valor inicial de 0. Esto es una practica comun para asegurar que la variable comience a contar desde cero.",
+          "untr_content": "The syntax 'int banned = 0;' declares a variable of type integer and assigns it an initial value of 0. This is a common practice to ensure that the variable starts counting from zero."
+        },
+        {
+          "content": "Un posible error podria ocurrir si olvida inicializar la variable, lo que causaria un error de compilacion ya que Java requiere que las variables se inicialicen antes de usarse.",
+          "untr_content": "A potential error could occur if you forget to initialize the variable, which would lead to a compilation error since Java requires variables to be initialized before use."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que la variable 'banned' se actualiza automaticamente. Recuerde, debe incrementarla explicitamente dentro de la logica que verifica las condiciones de prohibicion.",
+          "untr_content": "A common misconception might be thinking that the variable 'banned' automatically updates itself. Remember, you need to explicitly increment it within the logic that checks for banned conditions."
+        },
+        {
+          "content": "Como buena practica, inicializar contadores al inicio de su metodo o bucle asegura que estan listos para usarse y ayuda a evitar errores logicos relacionados con variables no inicializadas.",
+          "untr_content": "As a best practice, initializing counters at the start of your method or loop ensures that they are ready to be used and helps avoid logic errors related to uninitialized variables."
+        }
+      ]
+    },
+    "13": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea un nuevo objeto Scanner llamado 'scan' que se usa para leer la entrada del flujo de entrada estandar (System.in), que tipicamente es el teclado.",
+          "untr_content": "This line creates a new Scanner object named 'scan' that is used to read input from the standard input stream (System.in), which is typically the keyboard."
+        },
+        {
+          "content": "La clase Scanner es parte del paquete java.util, y proporciona metodos convenientes para leer y parsear varios tipos de entrada, como cadenas y numeros.",
+          "untr_content": "The Scanner class is part of the java.util package, and it provides convenient methods to read and parse various types of input, such as strings and numbers."
+        },
+        {
+          "content": "Al usar 'new Scanner(System.in)', esta inicializando el Scanner para leer desde la consola, permitiendo que el programa capture la entrada del usuario.",
+          "untr_content": "By using 'new Scanner(System.in)', you are initializing the Scanner to read from the console, allowing the program to capture user input."
+        },
+        {
+          "content": "Una idea equivocada comun es olvidar cerrar el objeto Scanner, lo que puede provocar fugas de recursos. Sin embargo, en este contexto, dado que el programa se ejecuta hasta que se ingresa 'STOP', cerrar el Scanner no es necesario hasta que el programa termine.",
+          "untr_content": "A common misconception is forgetting to close the Scanner object, which can lead to resource leaks. However, in this context, since the program runs until 'STOP' is entered, closing the Scanner is not necessary until the program ends."
+        },
+        {
+          "content": "La buena practica sugiere que deberia cerrar el objeto Scanner cuando ya no se necesita, tipicamente al final del programa, para liberar recursos del sistema.",
+          "untr_content": "Best practice suggests that you should close the Scanner object when it is no longer needed, typically at the end of the program, to free up system resources."
+        }
+      ]
+    },
+    "14": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime un aviso en la consola pidiendo al usuario que ingrese un codigo de producto. Es esencial para guiar al usuario a proporcionar la entrada necesaria para que el programa la procese.",
+          "untr_content": "This line prints a prompt to the console asking the user to enter a product code. It is essential for guiding the user to provide the necessary input for the program to process."
+        },
+        {
+          "content": "El metodo `System.out.println` se usa aqui para mostrar el mensaje. `System.out` es un flujo de salida estandar en Java, y `println` es un metodo que imprime el mensaje especificado seguido de un salto de linea.",
+          "untr_content": "The `System.out.println` method is used here to display the message. `System.out` is a standard output stream in Java, and `println` is a method that prints the specified message followed by a newline."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir `println` con `print`. Mientras que `println` agrega un salto de linea despues del mensaje, `print` no lo hace, lo que podria afectar como aparece el aviso para el usuario.",
+          "untr_content": "A common misconception might be confusing `println` with `print`. While `println` adds a newline after the message, `print` does not, which could affect how the input prompt appears to the user."
+        },
+        {
+          "content": "Como buena practica, siempre asegurese de que los avisos al usuario sean claros e informativos, para que los usuarios sepan exactamente que entrada se espera. Esto ayuda a reducir errores de entrada y mejorar la experiencia del usuario.",
+          "untr_content": "As a best practice, always ensure that user prompts are clear and informative, so users know exactly what input is expected. This helps in reducing input errors and improving user experience."
+        }
+      ]
+    },
+    "15": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea lee la siguiente entrada del usuario y la asigna a la variable 'code'.",
+          "untr_content": "This line reads the next input from the user and assigns it to the variable 'code'."
+        },
+        {
+          "content": "El metodo 'scan.next()' se usa para capturar el siguiente token de entrada del usuario, que se espera sea un codigo de producto.",
+          "untr_content": "The 'scan.next()' method is used to capture the next token of input from the user, which is expected to be a product code."
+        },
+        {
+          "content": "Debe asegurarse de que la entrada tenga un formato de codigo de producto valido, ya que el programa asume que la entrada sera una cadena de longitud y estructura suficientes.",
+          "untr_content": "You should ensure that the input is a valid product code format, as the program assumes the input will be a string of sufficient length and structure."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que 'scan.next()' lee una linea entera, pero solo lee hasta el siguiente espacio en blanco. Si la entrada incluye espacios, solo se capturara la primera palabra.",
+          "untr_content": "A common misconception might be thinking 'scan.next()' reads an entire line, but it only reads up to the next whitespace. If the input includes spaces, only the first word will be captured."
+        },
+        {
+          "content": "Es buena practica validar la entrada inmediatamente despues de leerla para asegurar que cumpla el formato esperado antes de procesarla mas.",
+          "untr_content": "It's a good practice to validate the input immediately after reading it to ensure it meets the expected format before processing further."
+        }
+      ]
+    },
+    "16": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicia un bucle while que continua ejecutandose mientras la entrada del usuario no sea 'STOP'.",
+          "untr_content": "This line begins a while loop that continues to execute as long as the user input is not 'STOP'."
+        },
+        {
+          "content": "La condicion `! code.equals(\"STOP\")` verifica si la entrada actual almacenada en la variable `code` no es igual a la cadena 'STOP'. El operador `!` niega el resultado de `code.equals(\"STOP\")`, por lo que el bucle continua si la entrada es cualquier cosa distinta de 'STOP'.",
+          "untr_content": "The condition `! code.equals(\"STOP\")` checks if the current input stored in the variable `code` is not equal to the string 'STOP'. The `!` operator negates the result of `code.equals(\"STOP\")`, so the loop continues if the input is anything other than 'STOP'."
+        },
+        {
+          "content": "Usar `code.equals(\"STOP\")` es una buena practica para comparacion de cadenas en Java, ya que verifica de forma segura la igualdad entre cadenas, a diferencia de `==` que verifica igualdad de referencia.",
+          "untr_content": "Using `code.equals(\"STOP\")` is a best practice for string comparison in Java, as it safely checks for equality between strings, unlike `==` which checks for reference equality."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser usar `==` para comparar cadenas, lo que llevaria a un comportamiento incorrecto ya que `==` verifica si ambas referencias apuntan al mismo objeto, no si las cadenas tienen el mismo contenido.",
+          "untr_content": "A common misconception might be to use `==` for string comparison, which would lead to incorrect behavior since `==` checks if both references point to the same object, not if the strings have the same content."
+        },
+        {
+          "content": "Este bucle es esencial para solicitar repetidamente la entrada del usuario hasta que decida detenerse ingresando 'STOP'. Asegura que el programa pueda procesar multiples codigos en una sola ejecucion.",
+          "untr_content": "This loop is essential for repeatedly prompting the user for input until they decide to stop by entering 'STOP'. It ensures that the program can process multiple product codes in a single run."
+        }
+      ]
+    },
+    "18": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicia un bloque try, que se usa para manejar excepciones que puedan ocurrir durante la ejecucion del codigo dentro del mismo.",
+          "untr_content": "This line begins a try block, which is used to handle exceptions that might occur during the execution of the code within it."
+        },
+        {
+          "content": "El proposito del bloque try es intentar ejecutar codigo que potencialmente puede lanzar excepciones, como acceder a un caracter en un indice especifico o parsear una subcadena a entero.",
+          "untr_content": "The purpose of the try block is to attempt to execute code that may potentially throw exceptions, such as accessing a character at a specific index or parsing a substring to an integer."
+        },
+        {
+          "content": "En este contexto, el bloque try es esencial porque permite al programa intentar procesar el codigo de producto mientras proporciona un mecanismo para capturar y manejar errores de forma elegante, asegurando que el programa no se bloquee.",
+          "untr_content": "In this context, the try block is essential because it allows the program to attempt to process the product code while providing a mechanism to catch and handle errors gracefully, ensuring the program doesn't crash."
+        },
+        {
+          "content": "Una idea equivocada comun es que los bloques try son necesarios solo para operaciones complejas, pero incluso operaciones simples como acceder a un indice de una cadena pueden lanzar excepciones si no se manejan correctamente.",
+          "untr_content": "A common misconception is that try blocks are only necessary for complex operations, but even simple operations like accessing a string index can throw exceptions if not handled properly."
+        },
+        {
+          "content": "Es buena practica usar bloques try para encapsular codigo que interactua con la entrada del usuario o fuentes de datos externas, ya que estos son puntos comunes de fallo.",
+          "untr_content": "Best practice suggests using try blocks to encapsulate code that interacts with user input or external data sources, as these are common points of failure."
+        }
+      ]
+    },
+    "19": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea extrae el caracter en la decima posicion de la cadena del codigo de producto, que se usa para determinar la zona de donde se fabrico el producto.",
+          "untr_content": "This line extracts the character at the tenth position of the product code string, which is used to determine the zone from which the product was made."
+        },
+        {
+          "content": "El metodo `charAt(9)` se usa aqui porque Java utiliza indice basado en cero, por lo que el decimo caracter esta en el indice 9.",
+          "untr_content": "The method `charAt(9)` is used here because Java uses zero-based indexing, so the tenth character is at index 9."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser usar `charAt(10)`, lo que intentaria acceder al onceavo caracter y resultaria en una `IndexOutOfBoundsException` si la cadena no es lo suficientemente larga.",
+          "untr_content": "A common misconception might be to use `charAt(10)`, which would actually attempt to access the eleventh character and result in an `IndexOutOfBoundsException` if the string is not long enough."
+        },
+        {
+          "content": "Es importante asegurarse de que la cadena de entrada tenga al menos 10 caracteres antes de llamar a `charAt(9)`, por eso esta linea esta dentro de un bloque try para capturar posibles excepciones.",
+          "untr_content": "It's important to ensure that the input string is at least 10 characters long before calling `charAt(9)`, which is why this line is inside a try block to catch potential exceptions."
+        },
+        {
+          "content": "Como buena practica, valide la longitud de la cadena antes de intentar acceder a indices especificos, pero en este caso se usa manejo de excepciones para gestionar entradas de longitud incorrecta.",
+          "untr_content": "Best practice is to validate the length of the string before attempting to access specific indices, but in this case, exception handling is used to manage improper input lengths."
+        }
+      ]
+    },
+    "20": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea extrae una subcadena del codigo de producto, comenzando en el indice 3 y terminando en el indice 6 (inclusive), y la convierte en un entero. Este entero representa el codigo de distrito.",
+          "untr_content": "This line extracts a substring from the product code, starting at index 3 and ending at index 6 (inclusive), and converts it into an integer. This integer represents the district code."
+        },
+        {
+          "content": "El metodo `code.substring(3, 7)` se usa para extraer caracteres desde el indice 3 hasta el 6. Recuerde que el segundo parametro de substring es exclusivo, por lo que se detiene antes del indice 7.",
+          "untr_content": "The method `code.substring(3, 7)` is used to extract characters from index 3 to 6. Remember that substring's second parameter is exclusive, so it stops before index 7."
+        },
+        {
+          "content": "El metodo `Integer.parseInt()` se usa para convertir la subcadena extraida en un entero. Esto es necesario porque el codigo de distrito esta representado como un numero, y necesitamos realizar comparaciones numericas despues.",
+          "untr_content": "The `Integer.parseInt()` method is used to convert the extracted substring into an integer. This is necessary because the district code is represented as a number, and we need to perform numerical comparisons later."
+        },
+        {
+          "content": "Un error potencial aqui es una `NumberFormatException`, que ocurre si la subcadena no representa un entero valido. Esto podria pasar si el codigo de entrada esta mal formado o si la parte del distrito contiene caracteres no numericos.",
+          "untr_content": "A potential error here is a `NumberFormatException`, which occurs if the substring does not represent a valid integer. This could happen if the input code is malformed or if the district part contains non-numeric characters."
+        },
+        {
+          "content": "Asegurese de que el codigo de entrada tenga al menos 7 caracteres para evitar una `IndexOutOfBoundsException` al llamar a `substring(3, 7)`. Esto se maneja en el bloque catch.",
+          "untr_content": "Ensure that the input code is at least 7 characters long to avoid an `IndexOutOfBoundsException` when calling `substring(3, 7)`. This is handled in the catch block."
+        },
+        {
+          "content": "Usar `Integer.parseInt()` es una buena practica para convertir cadenas a enteros, pero siempre asegure que la cadena sea una representacion valida de un entero para evitar excepciones.",
+          "untr_content": "Using `Integer.parseInt()` is a best practice for converting strings to integers, but always ensure that the string is a valid representation of an integer to avoid exceptions."
+        }
+      ]
+    },
+    "21": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea incrementa el contador 'valid' en 1 cada vez que se procesa un codigo de producto, indicando que el codigo se ha parseado exitosamente sin excepciones.",
+          "untr_content": "This line increments the 'valid' counter by 1 each time a product code is processed, indicating that the code has been successfully parsed without exceptions."
+        },
+        {
+          "content": "La sintaxis 'valid += 1;' es una forma abreviada de 'valid = valid + 1;'. Aumenta el valor de la variable 'valid' en una unidad.",
+          "untr_content": "The syntax 'valid += 1;' is a shorthand for 'valid = valid + 1;'. It increases the value of the 'valid' variable by one."
+        },
+        {
+          "content": "Podria confundirse y pensar que esta linea verifica si el codigo es valido, pero en realidad solo cuenta cada codigo procesado, asumiendo que no lanzo una excepcion.",
+          "untr_content": "You might mistakenly think this line checks if the code is valid, but it actually just counts every code processed, assuming it hasn't thrown an exception."
+        },
+        {
+          "content": "Es buena practica separar la logica de conteo de la logica de validacion, asegurando que la estructura del programa se mantenga clara y facil de mantener.",
+          "untr_content": "It's a good practice to separate counting logic from validation logic, ensuring that the program structure remains clear and maintainable."
+        }
+      ]
+    },
+    "22": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea verifica si el codigo de producto esta prohibido evaluando dos condiciones: si el caracter de zona es 'R' y si el numero de distrito es 2000 o mayor.",
+          "untr_content": "This line checks if the product code is banned by evaluating two conditions: whether the zone character is 'R' and if the district number is 2000 or higher."
+        },
+        {
+          "content": "La condicion `zone == 'R'` verifica si el producto es de la zona restringida 'R'. Esto es crucial porque los productos de esta zona estan sujetos a restricciones adicionales.",
+          "untr_content": "The condition `zone == 'R'` checks if the product is from the restricted zone 'R'. This is crucial because products from this zone are subject to additional restrictions."
+        },
+        {
+          "content": "La condicion `district >= 2000` verifica si el numero de distrito es 2000 o mayor, que es el umbral para prohibir productos de la zona 'R'.",
+          "untr_content": "The condition `district >= 2000` checks if the district number is 2000 or higher, which is the threshold for banning products from zone 'R'."
+        },
+        {
+          "content": "Ambas condiciones se combinan usando el operador logico AND `&&`, lo que significa que ambas deben ser verdaderas para que el codigo se considere prohibido.",
+          "untr_content": "Both conditions are combined using the logical AND operator `&&`, meaning both must be true for the code to be considered banned."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser malinterpretar el uso de `&&` como que requiere que ambas condiciones sean verdaderas simultaneamente, lo cual es correcto en este contexto.",
+          "untr_content": "A common misconception might be misunderstanding the use of `&&` as requiring both conditions to be true simultaneously, which is correct in this context."
+        },
+        {
+          "content": "Asegurese de que el caracter en la decima posicion y la subcadena para el distrito se hayan extraido correctamente para evitar errores logicos en esta condicion.",
+          "untr_content": "Ensure that the character at the 10th position and the substring for the district are correctly extracted to avoid logical errors in this condition."
+        },
+        {
+          "content": "Usar nombres de variables claros y descriptivos como `zone` y `district` ayuda a que la logica de esta condicion sea mas entendible y mantenible.",
+          "untr_content": "Using clear and descriptive variable names like `zone` and `district` helps make the logic of this condition more understandable and maintainable."
+        }
+      ]
+    },
+    "23": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea incrementa el contador 'banned' en 1 si el codigo de producto actual se determina como prohibido.",
+          "untr_content": "This line increments the 'banned' counter by 1 if the current product code is determined to be banned."
+        },
+        {
+          "content": "La condicion para que un codigo de producto sea prohibido es que el caracter 'zone' sea 'R' y el entero 'district' sea 2000 o mayor, como se verifica en la instruccion if de la linea 22.",
+          "untr_content": "The condition for a product code to be banned is that the 'zone' character is 'R' and the 'district' integer is 2000 or higher, as checked in the if statement on line 22."
+        },
+        {
+          "content": "Al usar 'banned += 1;', esta efectivamente contando cuantos codigos de producto cumplen el criterio para ser prohibidos. Esto es una forma abreviada de 'banned = banned + 1;', que es una forma comun de incrementar un contador en programacion.",
+          "untr_content": "By using 'banned += 1;', you are effectively counting how many product codes meet the criteria for being banned. This is a shorthand for 'banned = banned + 1;', which is a common way to increment a counter in programming."
+        },
+        {
+          "content": "Un posible error podria ocurrir si la variable 'banned' no esta correctamente inicializada antes de esta linea, pero dado que se inicializa en 0 en la linea 11, esto no es un problema aqui.",
+          "untr_content": "A potential error could occur if the 'banned' variable is not properly initialized before this line, but since it is initialized to 0 on line 11, this is not an issue here."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que esta linea por si sola determina si un codigo es prohibido, pero en realidad solo actualiza el conteo basado en la condicion verificada en la linea anterior.",
+          "untr_content": "A common misconception might be thinking that this line alone determines if a code is banned, but it actually just updates the count based on the condition checked in the previous line."
+        },
+        {
+          "content": "Como buena practica, asegurese de que la logica que determina cuando incrementar contadores sea clara y que los contadores esten inicializados antes de usarlos para evitar comportamientos inesperados.",
+          "untr_content": "As a best practice, ensure that the logic determining when to increment counters is clear and that counters are initialized before use to avoid unexpected behavior."
+        }
+      ]
+    },
+    "27": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicia un bloque catch que maneja la IndexOutOfBoundsException, que se lanza cuando intenta acceder a un indice que esta fuera de los limites de una cadena.",
+          "untr_content": "This line begins a catch block that handles the IndexOutOfBoundsException, which is thrown when you try to access an index that is out of the bounds of a string."
+        },
+        {
+          "content": "El proposito de esta linea es asegurar que si el codigo de producto ingresado por el usuario es demasiado corto y no tiene suficientes caracteres para acceder a la decima posicion (o cualquier otra posicion requerida), el programa no se bloquee. En su lugar, maneja el error de forma elegante.",
+          "untr_content": "The purpose of this line is to ensure that if the product code entered by the user is too short and does not have enough characters to access the tenth position (or any other required position), the program does not crash. Instead, it gracefully handles the error."
+        },
+        {
+          "content": "La sintaxis 'catch (IndexOutOfBoundsException ex)' se usa para capturar excepciones de tipo IndexOutOfBoundsException. 'ex' es una variable que contiene el objeto excepcion, que puede usarse para obtener mas informacion sobre el error si se necesita.",
+          "untr_content": "The syntax 'catch (IndexOutOfBoundsException ex)' is used to catch exceptions of type IndexOutOfBoundsException. The 'ex' is a variable that holds the exception object, which can be used to get more information about the error if needed."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el programa manejara automaticamente todos los errores, pero sin este bloque catch, una IndexOutOfBoundsException haria que el programa termine inesperadamente.",
+          "untr_content": "A common misconception might be that the program will automatically handle all errors, but without this catch block, an IndexOutOfBoundsException would cause the program to terminate unexpectedly."
+        },
+        {
+          "content": "Como buena practica, siempre debe anticipar posibles errores al acceder a elementos de una cadena o arreglo y manejarlos apropiadamente para que su programa sea robusto y amigable para el usuario.",
+          "untr_content": "As a best practice, you should always anticipate potential errors when accessing elements of a string or array and handle them appropriately to make your program robust and user-friendly."
+        }
+      ]
+    },
+    "28": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime un mensaje en la consola indicando que el codigo de producto ingresado por el usuario no tiene la longitud correcta.",
+          "untr_content": "This line prints a message to the console indicating that the product code entered by the user does not have the correct length."
+        },
+        {
+          "content": "Use esta linea para informar al usuario que el codigo que ingreso es muy corto o demasiado largo, lo que les ayuda a entender por que su entrada no fue procesada.",
+          "untr_content": "You use this line to inform the user that the code they entered is too short or too long, which helps them understand why their input was not processed."
+        },
+        {
+          "content": "El mensaje 'Longitud de codigo incorrecta.' se muestra cuando se captura una IndexOutOfBoundsException, que ocurre si el codigo no tiene al menos 10 caracteres.",
+          "untr_content": "The message 'Improper code length.' is displayed when an IndexOutOfBoundsException is caught, which occurs if the code does not have at least 10 characters."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que cualquier excepcion activara este mensaje, pero en especifico aborda problemas con la longitud de la cadena de entrada.",
+          "untr_content": "A common misconception might be that any exception will trigger this message, but it specifically addresses issues with the length of the input string."
+        },
+        {
+          "content": "Como buena practica, proporcionar mensajes de error claros y especificos como este ayuda a los usuarios a corregir su entrada y mejora la experiencia general del usuario.",
+          "untr_content": "As a best practice, providing clear and specific error messages like this one helps users correct their input and improves the overall user experience."
+        }
+      ]
+    },
+    "30": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea forma parte del mecanismo de manejo de excepciones en el programa, especificamente diseñada para capturar una NumberFormatException.",
+          "untr_content": "This line is part of the exception handling mechanism in the program, specifically designed to catch a NumberFormatException."
+        },
+        {
+          "content": "Use este bloque catch para manejar situaciones donde la subcadena extraida del codigo de producto, que se pretendia representar el distrito, no puede convertirse en un entero.",
+          "untr_content": "You use this catch block to handle situations where the substring extracted from the product code, intended to represent the district, cannot be converted into an integer."
+        },
+        {
+          "content": "La NumberFormatException es lanzada por el metodo Integer.parseInt() si la subcadena no contiene un entero parseable, lo que podria suceder si la entrada esta mal formada o contiene caracteres no numericos.",
+          "untr_content": "The NumberFormatException is thrown by the Integer.parseInt() method if the substring does not contain a parsable integer, which could happen if the input is malformed or contains non-numeric characters."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser asumir que cualquier subcadena puede convertirse a entero sin error. Esta linea asegura que su programa pueda manejar dichos errores de forma elegante sin bloquearse.",
+          "untr_content": "A common misconception might be assuming that any substring can be converted to an integer without error. This line ensures that your program can gracefully handle such errors without crashing."
+        },
+        {
+          "content": "Como buena practica, siempre anticipe y maneje posibles excepciones al parsear entrada del usuario, especialmente al convertir cadenas a numeros, para mantener aplicaciones robustas y amigables.",
+          "untr_content": "As a best practice, always anticipate and handle potential exceptions when parsing user input, especially when converting strings to numbers, to maintain robust and user-friendly applications."
+        }
+      ]
+    },
+    "31": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime un mensaje de error en la consola cuando se captura una NumberFormatException.",
+          "untr_content": "This line prints an error message to the console when a NumberFormatException is caught."
+        },
+        {
+          "content": "El proposito de esta linea es informar al usuario que la parte de distrito del codigo de producto no es un valor numerico valido, lo cual es necesario para que el programa funcione correctamente.",
+          "untr_content": "The purpose of this line is to inform the user that the district part of the product code is not a valid numeric value, which is necessary for the program to function correctly."
+        },
+        {
+          "content": "La sintaxis System.out.println() se usa para enviar texto a la consola. La cadena dentro de los parentesis es el mensaje que se mostrara.",
+          "untr_content": "The syntax System.out.println() is used to output text to the console. The string inside the parentheses is the message that will be displayed."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que cualquier entrada no numerica activara esta excepcion, pero en especifico maneja casos donde la subcadena destinada a ser parseada como entero no puede convertirse debido a caracteres no numericos.",
+          "untr_content": "A common misconception might be that any non-numeric input will be caught by this exception, but it specifically handles cases where the substring intended to be parsed as an integer cannot be converted due to non-numeric characters."
+        },
+        {
+          "content": "Como buena practica, proporcionar mensajes de error claros y especificos ayuda a los usuarios a entender que salio mal y como pueden corregir su entrada.",
+          "untr_content": "As a best practice, providing clear and specific error messages helps users understand what went wrong and how they might correct their input."
+        }
+      ]
+    },
+    "33": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea pide al usuario que ingrese un nuevo codigo de producto despues de procesar el anterior. Asegura que el programa continue pidiendo entradas hasta que el usuario decida detenerse ingresando 'STOP'.",
+          "untr_content": "This line prompts the user to enter a new product code after processing the previous one. It ensures that the program continues to ask for input until the user decides to stop by entering 'STOP'."
+        },
+        {
+          "content": "La sintaxis `System.out.println(\"Enter product code:\");` usa el metodo `System.out.println` para imprimir un mensaje en la consola. Este metodo es parte de la clase `System` en Java, que proporciona acceso a los flujos de entrada, salida y error estandar del sistema.",
+          "untr_content": "The syntax `System.out.println(\"Enter product code:\");` uses the `System.out.println` method to print a message to the console. This method is part of the `System` class in Java, which provides access to the system's standard input, output, and error streams."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que esta linea es innecesaria porque ya se proporciono el aviso antes del bucle. Sin embargo, es crucial repetir el aviso dentro del bucle para guiar al usuario a traves de multiples entradas.",
+          "untr_content": "A common misconception might be that this line is unnecessary because the prompt is already given before the loop. However, it is crucial to repeat the prompt inside the loop to guide the user through multiple entries."
+        },
+        {
+          "content": "Como buena practica, siempre proporcione avisos claros y consistentes al usuario para mejorar la experiencia y reducir errores de entrada.",
+          "untr_content": "As a best practice, always provide clear and consistent prompts to the user to improve the user experience and reduce input errors."
+        }
+      ]
+    },
+    "34": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea actualiza la variable 'code' con la siguiente entrada del usuario. Asegura que el bucle continue procesando nuevos codigos de producto hasta que el usuario ingrese 'STOP'.",
+          "untr_content": "This line updates the 'code' variable with the next input from the user. It ensures that the loop continues to process new product codes until the user enters 'STOP'."
+        },
+        {
+          "content": "El metodo 'scan.next()' lee el siguiente token de la entrada, que se espera sea un codigo de producto o la palabra 'STOP'.",
+          "untr_content": "The 'scan.next()' method reads the next token from the input, which is expected to be a product code or the word 'STOP'."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que 'scan.next()' lee una linea entera, pero en realidad solo lee hasta el siguiente espacio en blanco. Asegurese de que los usuarios ingresen codigos sin espacios.",
+          "untr_content": "A common misconception might be that 'scan.next()' reads an entire line, but it actually reads only up to the next whitespace. Ensure that users enter codes without spaces."
+        },
+        {
+          "content": "Es buena practica solicitar la entrada al usuario antes de llamar a 'scan.next()' para evitar confusiones sobre lo que el programa espera en ese punto.",
+          "untr_content": "It's a best practice to prompt the user for input before calling 'scan.next()' to avoid confusion about what the program is expecting at this point."
+        }
+      ]
+    },
+    "37": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime el numero total de codigos de producto validos ingresados por el usuario. Proporciona retroalimentacion al usuario sobre cuantos codigos fueron procesados exitosamente.",
+          "untr_content": "This line prints the total number of valid product codes entered by the user. It provides feedback to the user about how many codes were processed successfully."
+        },
+        {
+          "content": "La sintaxis `System.out.println()` se usa para enviar texto a la consola. El operador `+` se usa para concatenar la cadena `\"# of valid codes entered: \"` con la variable entera `valid`, que contiene la cuenta de codigos validos.",
+          "untr_content": "The syntax `System.out.println()` is used to output text to the console. The `+` operator is used to concatenate the string `\"# of valid codes entered: \"` with the integer variable `valid`, which holds the count of valid codes."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar actualizar correctamente el contador `valid` dentro del bucle, lo que conduciria a una salida incorrecta. Asegurese de que `valid` se incremente solo cuando un codigo se procesa exitosamente.",
+          "untr_content": "A common misconception might be forgetting to update the `valid` counter correctly within the loop, which would lead to incorrect output. Ensure that `valid` is incremented only when a code is successfully processed."
+        },
+        {
+          "content": "Como buena practica, asegurese de que el mensaje impreso sea claro e informativo, ayudando a los usuarios a entender el resultado de su entrada. Mensajes consistentes y significativos mejoran la experiencia del usuario.",
+          "untr_content": "As a best practice, ensure that the message printed is clear and informative, helping users understand the result of their input. Consistent and meaningful output messages improve user experience."
+        }
+      ]
+    },
+    "38": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea muestra el numero total de codigos prohibidos ingresados por el usuario. Proporciona retroalimentacion al usuario sobre cuantos de los codigos ingresados fueron identificados como prohibidos segun los criterios especificados en el enunciado.",
+          "untr_content": "This line outputs the total number of banned product codes entered by the user. It provides feedback to the user about how many of the entered codes were identified as banned based on the criteria specified in the problem statement."
+        },
+        {
+          "content": "La sintaxis `System.out.println()` se usa para imprimir un mensaje en la consola. El operador `+` se usa para concatenar la cadena `\"# of banned codes entered: \"` con el valor de la variable `banned`, que contiene la cuenta de codigos prohibidos.",
+          "untr_content": "The syntax `System.out.println()` is used to print a message to the console. The `+` operator is used to concatenate the string `\"# of banned codes entered: \"` with the value of the `banned` variable, which holds the count of banned codes."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir el operador `+` con una suma en lugar de concatenacion de cadenas en este contexto. Asegurese de entender que cuando se usa con cadenas, `+` las concatena.",
+          "untr_content": "A common misconception might be confusing the `+` operator for addition rather than string concatenation in this context. Ensure you understand that when used with strings, `+` concatenates them."
+        },
+        {
+          "content": "Como buena practica, asegurese de que el mensaje comunique claramente el resultado al usuario. En este caso, el mensaje es directo e informa al usuario el numero de codigos prohibidos.",
+          "untr_content": "As a best practice, ensure that the message clearly communicates the result to the user. In this case, the message is straightforward and directly informs the user of the number of banned codes."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "int district = Integer.parseInt(code.substring(4, 8));",
+      "untr_code": "int district = Integer.parseInt(code.substring(4, 8));",
+      "description": "Podria elegir este distractor si por error cree que el metodo substring incluye tanto el indice de inicio como el de fin. En Java, el metodo substring incluye el indice de inicio pero excluye el indice final. Al usar los indices 4 y 8, en realidad esta extrayendo caracteres desde la posicion 5 hasta la 8, lo cual es incorrecto para este problema. Esto resultaria en que se parsee un numero de distrito incorrecto, posiblemente provocando validaciones incorrectas de los codigos de producto. Este distractor resalta la importancia de entender como funcionan los indices en substring en Java.",
+      "untr_description": "You might choose this distractor if you mistakenly believe that the substring method includes both the start and end indices. In Java, the substring method includes the start index but excludes the end index. By using indices 4 and 8, you are actually extracting characters from the 5th to the 8th position, which is incorrect for this problem. This would result in an incorrect district number being parsed, potentially leading to incorrect validation of product codes. This distractor highlights the importance of understanding how substring indices work in Java.",
+      "line_number": 20
+    },
+    {
+      "code": "int district = Integer.parseInt(code.substring(2, 6));",
+      "untr_code": "int district = Integer.parseInt(code.substring(2, 6));",
+      "description": "Este distractor podria parecer correcto si esta confundido acerca del indice basado en cero y piensa que el distrito comienza en el tercer caracter en lugar del cuarto. Al usar los indices 2 y 6, esta extrayendo caracteres desde la posicion 3 hasta la 6, lo cual es incorrecto. Esto llevaria a parsear la parte equivocada del codigo de producto como el numero de distrito, causando errores logicos en el programa. Esta opcion enfatiza la necesidad de considerar cuidadosamente el indice inicial al usar substring en Java.",
+      "untr_description": "This distractor might seem correct if you are confused about zero-based indexing and think that the district starts at the 3rd character instead of the 4th. By using indices 2 and 6, you are extracting characters from the 3rd to the 6th position, which is incorrect. This would lead to parsing the wrong part of the product code as the district number, causing logical errors in the program. This choice emphasizes the need to carefully consider the starting index when using substring in Java.",
+      "line_number": 20
+    },
+    {
+      "code": "int district = Integer.parseInt(code.substring(3, 8));",
+      "untr_code": "int district = Integer.parseInt(code.substring(3, 8));",
+      "description": "Este distractor podria ser elegido si sobreestima la longitud del codigo de distrito, pensando que incluye cinco caracteres. Al usar los indices 3 y 8, esta extrayendo cinco caracteres, lo cual es incorrecto. Esto resultaria en una NumberFormatException si la subcadena extraida no es un entero valido, o llevaria a logica incorrecta si es un numero valido pero equivocado. Esta opcion subraya la importancia de interpretar exactamente el enunciado y entender la longitud correcta de la subcadena necesaria.",
+      "untr_description": "This distractor might be chosen if you overestimate the length of the district code, thinking it includes five characters. By using indices 3 and 8, you are extracting five characters, which is incorrect. This would result in a NumberFormatException if the extracted substring is not a valid integer, or it would lead to incorrect logic if it is a valid but incorrect number. This choice underscores the importance of accurately interpreting the problem statement and understanding the correct length of the substring needed.",
+      "line_number": 20
+    },
+    {
+      "code": "banned += 1;",
+      "untr_code": "banned += 1;",
+      "description": "Podria elegir esta linea si por error cree que cada codigo debe contarse como prohibido por defecto. Este distractor confunde la logica de contar codigos validos con la de codigos prohibidos. Si usa esta linea, el programa incrementara incorrectamente el conteo de prohibidos para cada codigo, sin importar si cumple o no el criterio de prohibicion. Esto resultaria en un conteo inexacto de codigos prohibidos y potencialmente cero codigos validos, ya que el contador de valid no se incrementa. Lo que falta en este distractor es la condicion correcta para determinar cuando un codigo debe considerarse valido, que no es abordada aqui.",
+      "untr_description": "You might choose this line if you mistakenly believe that every code should be counted as banned by default. This distractor confuses the logic of counting valid codes with banned codes. If you use this line, the program will incorrectly increment the banned count for every code, regardless of whether it meets the criteria for being banned. This would lead to an inaccurate count of banned codes and potentially zero valid codes, as the valid count is never incremented. The key aspect missing here is the correct condition to determine when a code should be considered valid, which is not addressed by this distractor.",
+      "line_number": 21
+    },
+    {
+      "code": "valid = 1;",
+      "untr_code": "valid = 1;",
+      "description": "Podria seleccionar esta linea si confunde asignacion con incremento. Este distractor establece el contador valid en 1 cada vez que se procesa un codigo, en lugar de incrementarlo. Esto resultaria en que el conteo de valid refleje solo si el ultimo codigo fue valido. Este enfoque no acumula el total de codigos validos, que es crucial para el proposito del programa. El aspecto clave que falta aqui es el uso de incremente para mantener un total acumulado de codigos validos.",
+      "untr_description": "You might select this line if you confuse assignment with incrementation. This distractor sets the valid count to 1 every time a code is processed, rather than incrementing it. This would result in the valid count being reset with each iteration, ultimately only reflecting whether the last code was valid. This approach fails to accumulate the total number of valid codes, which is crucial for the program's purpose. The key aspect missing here is the use of incrementation to maintain a running total of valid codes.",
+      "line_number": 21
+    },
+    {
+      "code": "catch (InputMismatchException ex ) {",
+      "untr_code": "catch (InputMismatchException ex ) {",
+      "description": "Podria asumir que InputMismatchException es apropiada para manejar cualquier error relacionado con la entrada, pero esta excepcion tipicamente es lanzada por un Scanner cuando la entrada no coincide con el tipo esperado, como al leer desde la consola. En este contexto, el error surge al parsear una cadena a entero, que no es lo mismo que una discrepancia de tipo esperada por Scanner. Usar este distractor haria que el programa no capture la NumberFormatException, llevando a que falle si se ingresa una parte de distrito no numerica. Este distractor aplica incorrectamente el tipo de excepcion, sin abordar el error de parseo especifico.",
+      "untr_description": "You might assume that InputMismatchException is appropriate for handling any input-related errors, but this exception is typically thrown by a Scanner when the input does not match the expected type, such as when reading from the console. In this context, the error arises from parsing a string to an integer, which is not the same as a mismatch in expected input type. Using this distractor would result in the program not catching the NumberFormatException, leading to a crash if a non-numeric district code is entered. This distractor misapplies the exception type, failing to address the specific parsing error.",
+      "line_number": 30
+    }
+  ],
+  "tags": [
+    "spanish-latam;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "translations": {
+    "en": "68bdb309f6cc3d7a9cc0978a"
+  },
+  "collaborator_emails": [],
+  "programInput": "TRV2475A5Z-14 TRV275A5Z-14 TRD1704A7R-12 TRQ2778A7R-19 TRV2105A2 STOP"
+}

@@ -1,0 +1,786 @@
+{
+  "id": "bc18d7025c7945aa5b8345c1",
+  "user": "moh70@pitt.edu",
+  "name": "Comparar la lista de palabras de dos archivos",
+  "untr_name": "Comparing the List of Words from Two Files",
+  "description": "Construya un programa que lea dos archivos de texto y cree una lista de las palabras que contiene cada uno de estos archivos, ignorando el caso de las letras. El programa debe determinar cual lista es mayor en tamaño, es decir, cual lista tiene mas palabras.\\nAsuma que todas las palabras en estos archivos de texto estan separadas por un unico caracter de espacio.",
+  "untr_description": "Construct a program that reads two text files and creates a list of the words that each of these files contains, ignoring the case of the letters. The program should determine which list is larger in size, i.e., which list has more words.\\nAssume that all of the words in these text files are separated by a single space characters.",
+  "language": "JAVA",
+  "iso_language_code": "es",
+  "filename": "JVocabulary2.java",
+  "code": "import java.util.*;\nimport java.io.*;\npublic class JVocabulary2 {\n\tpublic static void main(String[] args) throws FileNotFoundException {\n\t\tJVocabulary2 v2 = new JVocabulary2();\n\t\tArrayList<String> lst1 = v2.getWords(\"test1.txt\");\n\t\tSystem.out.println(\"palabras lista1 = \" + lst1);\n\t\tArrayList<String> lst2 = v2.getWords(\"test2.txt\");\n\t\tSystem.out.println(\"palabras lista2 = \" + lst2);\n\t\tv2.compareLists(lst1, lst2);\n\t}\n\t//Paso 1: Definir el metodo que compara dos listas para encontrar la mas grande\n\tpublic void compareLists(ArrayList<String> list1, ArrayList<String> list2 ) {\n\t\tif ( list1.size() > list2.size() ) {\n\t\t\tSystem.out.println(\"lista1 tiene mas palabras.\");\n\t\t} else if ( list2.size() > list1.size() ) {\n\t\t\tSystem.out.println(\"lista2 tiene mas palabras\");\n\t\t} else {\n\t\t\tSystem.out.println(\"lista1 y lista2 tienen la misma cantidad de palabras.\");\n\t\t}\n\t}\n\t//Paso 2: Definir el metodo que crea una lista de palabras a partir de un archivo\n\tpublic ArrayList<String> getWords(String fileName) {\n\t\t//Paso 2.1: Crear una lista vacia para almacenar las palabras\n\t\tArrayList<String> words = new ArrayList<String>();\n\t\t//Paso 2.2: Encerrar el codigo que podria lanzar una excepcion dentro del bloque try\n\t\ttry {\n\t\t\t//Paso 2.2.1: Envolver un BufferedReader alrededor de un FileReader\n\t\t\tFileReader fr = new FileReader(fileName); \n\t\t\tBufferedReader br = new BufferedReader(fr); \n\t\t\t//Paso 2.2.2: Usar el objeto BufferedReader para leer una linea a la vez\n\t\t\tString line = null;\n\t\t\twhile ( ( line = br.readLine() ) != null) {\n\t\t\t\t//Dividir la linea en palabras, ignorando el caso de las letras\n\t\t\t\tString[] tokens = line.toLowerCase().split(\" \");\n\t\t\t\t//Agregar cada palabra de la linea a la lista\n\t\t\t\tfor (String token : tokens) {\n\t\t\t\t\twords.add(token);\n\t\t\t\t}\n\t\t\t}\n\t\t\t//Paso 2.2.3: Cerrar el objeto BufferedReader asociado al archivo\n\t\t\tbr.close();\n\t\t//Paso 2.3: Manejar todas las posibles excepciones que puedan ser lanzadas en el bloque try \n\t\t} catch (FileNotFoundException ex) {\n\t\t\tSystem.out.println(\"Archivo no encontrado\");\n\t\t} catch (IOException ex ) {\n\t\t\tSystem.out.println(\"Problema con el archivo!\");\n\t\t}\n\t\t//Paso 2.4: retornar la lista\n\t\treturn words;\n\t}\n}",
+  "untr_code": "import java.util.*;\nimport java.io.*;\npublic class JVocabulary2 {\n\tpublic static void main(String[] args) throws FileNotFoundException {\n\t\tJVocabulary2 v2 = new JVocabulary2();\n\t\tArrayList<String> lst1 = v2.getWords(\"test1.txt\");\n\t\tSystem.out.println(\"list1 words = \" + lst1);\n\t\tArrayList<String> lst2 = v2.getWords(\"test2.txt\");\n\t\tSystem.out.println(\"list2 words = \" + lst2);\n\t\tv2.compareLists(lst1, lst2);\n\t}\n\t//Step 1: Define the method that compares two lists to find the largest one\n\tpublic void compareLists(ArrayList<String> list1, ArrayList<String> list2 ) {\n\t\tif ( list1.size() > list2.size() ) {\n\t\t\tSystem.out.println(\"list1 has more words.\");\n\t\t} else if ( list2.size() > list1.size() ) {\n\t\t\tSystem.out.println(\"list2 has more words\");\n\t\t} else {\n\t\t\tSystem.out.println(\"list1 and list2 have the same number of words.\");\n\t\t}\n\t}\n\t//Step 2: Define the method that creates a list of words from a file\n\tpublic ArrayList<String> getWords(String fileName) {\n\t\t//Step 2.1: Create an empty list to store the words\n\t\tArrayList<String> words = new ArrayList<String>();\n\t\t//Step 2.2: Enclose the code that might throw an exception within the try block\n\t\ttry {\n\t\t\t//Step 2.2.1: Wrap a BufferedReader around a FileReader\n\t\t\tFileReader fr = new FileReader(fileName); \n\t\t\tBufferedReader br = new BufferedReader(fr); \n\t\t\t//Step 2.2.2: Use the BufferedReader object to read one line at a time\n\t\t\tString line = null;\n\t\t\twhile ( ( line = br.readLine() ) != null) {\n\t\t\t\t//Split the line into words, ignoring the case of the letters\n\t\t\t\tString[] tokens = line.toLowerCase().split(\" \");\n\t\t\t\t//Add each word in the line to the list\n\t\t\t\tfor (String token : tokens) {\n\t\t\t\t\twords.add(token);\n\t\t\t\t}\n\t\t\t}\n\t\t\t//Step 2.2.3: Close the BufferedReader object attached to the file\n\t\t\tbr.close();\n\t\t//Step 2.3: Handle all possible exceptions that may be thrown in the try block \n\t\t} catch (FileNotFoundException ex) {\n\t\t\tSystem.out.println(\"File not found\");\n\t\t} catch (IOException ex ) {\n\t\t\tSystem.out.println(\"Problem with the file!\");\n\t\t}\n\t\t//Step 2.4: return the list\n\t\treturn words;\n\t}\n}",
+  "lines": {
+    "5": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea una instancia de la clase JVocabulary2, lo cual es necesario para llamar los metodos no estaticos getWords y compareLists.",
+          "untr_content": "This line creates an instance of the JVocabulary2 class, which is necessary to call the non-static methods getWords and compareLists."
+        },
+        {
+          "content": "En Java, los metodos no estaticos requieren una instancia de la clase para ser invocados. Al crear un objeto v2 de JVocabulary2, puede acceder a estos metodos.",
+          "untr_content": "In Java, non-static methods require an instance of the class to be invoked. By creating an object v2 of JVocabulary2, you can access these methods."
+        },
+        {
+          "content": "Una idea equivocada comun es que se pueden llamar metodos no estaticos directamente desde el metodo main sin una instancia. Recuerde, los metodos no estaticos pertenecen a la instancia, no a la clase.",
+          "untr_content": "A common misconception is that you can call non-static methods directly from the main method without an instance. Remember, non-static methods belong to the instance, not the class itself."
+        },
+        {
+          "content": "Usar nombres de variables descriptivos como v2 puede ayudarle a usted y a otros a entender el proposito del objeto, que en este caso es manejar operaciones relacionadas con vocabulario.",
+          "untr_content": "Using descriptive variable names like v2 can help you and others understand the purpose of the object, which in this case is to handle vocabulary-related operations."
+        }
+      ]
+    },
+    "6": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea un ArrayList llamado 'lst1' que almacenara las palabras del archivo 'test1.txt'.",
+          "untr_content": "This line creates an ArrayList named 'lst1' that will store the words from the file 'test1.txt'."
+        },
+        {
+          "content": "El metodo 'getWords' se llama sobre el objeto 'v2', que es una instancia de la clase 'JVocabulary2'. Este metodo lee el archivo especificado y devuelve una lista de palabras.",
+          "untr_content": "The method 'getWords' is called on the 'v2' object, which is an instance of the 'JVocabulary2' class. This method reads the specified file and returns a list of words."
+        },
+        {
+          "content": "El metodo 'getWords' toma un solo argumento, el nombre del archivo ('test1.txt'), y lo procesa para extraer palabras, convirtiendolas a minusculas y separandolas por espacios.",
+          "untr_content": "The 'getWords' method takes a single argument, the name of the file ('test1.txt'), and processes it to extract words, converting them to lowercase and splitting them by spaces."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que 'getWords' lee todo el archivo de una vez, pero en realidad lo lee linea por linea, lo cual es mas eficiente en memoria.",
+          "untr_content": "A common misconception might be that 'getWords' reads the entire file at once, but it actually reads it line by line, which is more memory efficient."
+        },
+        {
+          "content": "Usar un ArrayList es una buena practica aqui porque permite redimensionamiento dinamico, lo cual es util cuando no se conoce la cantidad de palabras de antemano.",
+          "untr_content": "Using an ArrayList is a best practice here because it allows dynamic resizing, which is useful when you don't know the number of words in advance."
+        }
+      ]
+    },
+    "7": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime la lista de palabras obtenida del primer archivo de texto, 'test1.txt', en la consola. Le ayuda a verificar que las palabras se han leido y almacenado correctamente en la lista.",
+          "untr_content": "This line prints the list of words obtained from the first text file, 'test1.txt', to the console. It helps you verify that the words have been correctly read and stored in the list."
+        },
+        {
+          "content": "La sintaxis 'System.out.println()' se usa para mostrar texto en la consola. Aqui concatena la cadena 'palabras lista1 = ' con la representacion en cadena de 'lst1', que es la lista de palabras.",
+          "untr_content": "The syntax 'System.out.println()' is used to output text to the console. Here, it concatenates the string 'list1 words = ' with the string representation of 'lst1', which is the list of words."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser esperar que la lista se imprima en un formato diferente. Recuerde que 'ArrayList' usa su metodo 'toString()' para convertir la lista a cadena, lo que incluye corchetes y comas.",
+          "untr_content": "A common misconception might be expecting the list to be printed in a different format. Remember that 'ArrayList' uses its 'toString()' method to convert the list to a string, which includes square brackets and commas."
+        },
+        {
+          "content": "Como buena practica, imprimir resultados intermedios como este puede ser util para depurar y asegurar que su programa esta procesando los datos como se espera.",
+          "untr_content": "As a best practice, printing intermediate results like this can be useful for debugging and ensuring that your program is processing data as expected."
+        }
+      ]
+    },
+    "8": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea un ArrayList llamado 'lst2' que almacenara las palabras del archivo 'test2.txt'.",
+          "untr_content": "This line creates an ArrayList named 'lst2' that will store the words from the file 'test2.txt'."
+        },
+        {
+          "content": "Llama al metodo 'getWords' en el objeto 'v2', pasando 'test2.txt' como argumento. Este metodo lee el archivo, convierte todas las palabras a minusculas y las separa en palabras individuales, que luego se agregan a la lista 'lst2'.",
+          "untr_content": "You call the 'getWords' method on the 'v2' object, passing 'test2.txt' as an argument. This method reads the file, converts all words to lowercase, and splits them into individual words, which are then added to the 'lst2' list."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que 'getWords' modifica el archivo o que lee el archivo multiples veces. En realidad, lo lee una vez y procesa las palabras en una lista.",
+          "untr_content": "A common misconception might be thinking that 'getWords' modifies the file or that it reads the file multiple times. In reality, it reads the file once and processes the words into a list."
+        },
+        {
+          "content": "Es buena practica usar nombres de variables descriptivos como 'lst2' para indicar que esta lista corresponde al segundo archivo, haciendo el codigo mas legible y mantenible.",
+          "untr_content": "It's a good practice to use descriptive variable names like 'lst2' to indicate that this list corresponds to the second file, making your code more readable and maintainable."
+        }
+      ]
+    },
+    "9": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime la lista de palabras extraidas del segundo archivo de texto, 'test2.txt', en la consola. Le ayuda a verificar que las palabras se han leido y almacenado correctamente en la lista.",
+          "untr_content": "This line prints the list of words extracted from the second text file, 'test2.txt', to the console. It helps you verify that the words have been correctly read and stored in the list."
+        },
+        {
+          "content": "La sintaxis `System.out.println(\"list2 words = \" + lst2);` usa el metodo `System.out.println` para mostrar texto en la consola. El operador `+` se usa para concatenar la cadena \"list2 words = \" con la representacion en cadena del ArrayList `lst2`.",
+          "untr_content": "The syntax `System.out.println(\"list2 words = \" + lst2);` uses the `System.out.println` method to output text to the console. The `+` operator is used to concatenate the string \"list2 words = \" with the string representation of the `lst2` ArrayList."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que `lst2` imprime directamente las palabras en un formato especial. Sin embargo, imprime la representacion `toString()` de la lista, que incluye corchetes y comas.",
+          "untr_content": "A common misconception might be thinking that `lst2` directly prints the words in a formatted way. However, it prints the list's `toString()` representation, which includes square brackets and commas."
+        },
+        {
+          "content": "Como buena practica, asegurese de imprimir resultados intermedios como este durante el desarrollo para confirmar que sus datos se estan procesando correctamente. Esto le puede ayudar a detectar errores temprano en el proceso.",
+          "untr_content": "As a best practice, ensure that you print intermediate results like this during development to confirm that your data is being processed correctly. This can help you catch errors early in the process."
+        }
+      ]
+    },
+    "10": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea llama al metodo `compareLists`, pasando `lst1` y `lst2` como argumentos. Este metodo es responsable de determinar cual de las dos listas tiene mas palabras.",
+          "untr_content": "This line calls the `compareLists` method, passing `lst1` and `lst2` as arguments. This method is responsible for determining which of the two lists has more words."
+        },
+        {
+          "content": "El proposito de esta linea es ejecutar la logica central de comparar los tamanos de las dos listas de palabras obtenidas de los archivos de texto. Contribuye al resultado esperado al proporcionar el resultado de la comparacion, que luego se imprime en la consola.",
+          "untr_content": "The purpose of this line is to execute the core logic of comparing the sizes of the two lists of words obtained from the text files. It contributes to the intended outcome by providing the comparison result, which is then printed to the console."
+        },
+        {
+          "content": "La sintaxis aqui implica llamar un metodo en una instancia de la clase (`v2.compareLists(lst1, lst2);`). Asegurese de que el metodo `compareLists` este definido en la clase y que acepte dos parametros `ArrayList<String>`.",
+          "untr_content": "The syntax here involves calling a method on an instance of the class (`v2.compareLists(lst1, lst2);`). Ensure that the method `compareLists` is defined in the class and that it accepts two `ArrayList<String>` parameters."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar instanciar la clase antes de llamar a sus metodos no estaticos, lo que causaria un error de compilacion. Asegurese de que `v2` este correctamente instanciado como se muestra en la linea 5.",
+          "untr_content": "A common misconception might be forgetting to instantiate the class before calling its non-static methods, which would lead to a compilation error. Ensure that `v2` is properly instantiated as shown in line 5."
+        },
+        {
+          "content": "Como buena practica, asegurese de que el metodo `compareLists` este bien documentado y que su proposito sea claro. Esto ayuda a mantener la legibilidad y comprension del codigo.",
+          "untr_content": "As a best practice, ensure that the method `compareLists` is well-documented and that its purpose is clear. This helps maintain readability and understandability of the code."
+        }
+      ]
+    },
+    "13": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo llamado `compareLists` que toma dos parametros: `list1` y `list2`, ambos de tipo `ArrayList<String>`.",
+          "untr_content": "This line defines a method named `compareLists` that takes two parameters: `list1` and `list2`, both of which are `ArrayList<String>` types."
+        },
+        {
+          "content": "El proposito de este metodo es comparar los tamanos de las dos listas para determinar cual contiene mas palabras.",
+          "untr_content": "The purpose of this method is to compare the sizes of the two lists to determine which one contains more words."
+        },
+        {
+          "content": "El metodo se declara como `public`, lo que significa que puede ser accedido desde fuera de la clase, lo cual es util si desea llamar a este metodo desde otras clases.",
+          "untr_content": "The method is declared as `public`, meaning it can be accessed from outside the class, which is useful if you want to call this method from other classes."
+        },
+        {
+          "content": "El metodo no devuelve ningun valor, como lo indica el tipo de retorno `void`. En su lugar, realiza una accion, que es imprimir cual lista es mas grande o si tienen el mismo tamano.",
+          "untr_content": "The method does not return any value, as indicated by the `void` return type. Instead, it performs an action, which is printing out which list is larger or if they are the same size."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que el metodo modifica las listas, pero solo lee sus tamanos e imprime un mensaje basado en la comparacion.",
+          "untr_content": "A common misconception might be thinking that the method modifies the lists, but it only reads their sizes and prints a message based on the comparison."
+        },
+        {
+          "content": "Como buena practica, asegurese de que los parametros del metodo esten claramente nombrados para reflejar su proposito, lo cual se hace bien aqui con `list1` y `list2`.",
+          "untr_content": "As a best practice, ensure that the method parameters are clearly named to reflect their purpose, which is well done here with `list1` and `list2`."
+        }
+      ]
+    },
+    "14": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea verifica si el tamano de list1 es mayor que el tamano de list2. Es la primera condicion en una serie de comprobaciones para determinar cual lista tiene mas palabras.",
+          "untr_content": "This line checks if the size of list1 is greater than the size of list2. It is the first condition in a series of checks to determine which list has more words."
+        },
+        {
+          "content": "El metodo `size()` se llama sobre `list1` y `list2` para obtener el numero de elementos (palabras) en cada lista. Esta es una forma comun de determinar la longitud de una lista en Java.",
+          "untr_content": "The method `size()` is called on `list1` and `list2` to get the number of elements (words) in each list. This is a common way to determine the length of a list in Java."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que `size()` es una propiedad en lugar de un metodo. Recuerde usar parentesis `()` al llamar metodos en Java.",
+          "untr_content": "A common misconception might be thinking that `size()` is a property rather than a method. Remember to use parentheses `()` when calling methods in Java."
+        },
+        {
+          "content": "Usar una sentencia `if` aqui es una buena practica para tomar decisiones basadas en condiciones. Permite al programa ejecutar distintos bloques de codigo segun el resultado de la comparacion.",
+          "untr_content": "Using an `if` statement here is a best practice for making decisions based on conditions. It allows the program to execute different code blocks based on the comparison result."
+        }
+      ]
+    },
+    "15": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea muestra un mensaje en la consola indicando que la primera lista, `list1`, contiene mas palabras que la segunda lista, `list2`.",
+          "untr_content": "This line outputs a message to the console indicating that the first list, `list1`, contains more words than the second list, `list2`."
+        },
+        {
+          "content": "El metodo `System.out.println` se usa aqui para imprimir la cadena \"lista1 tiene mas palabras.\" en la salida estandar, que normalmente es la consola.",
+          "untr_content": "The `System.out.println` method is used here to print the string \"list1 has more words.\" to the standard output, which is typically the console."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que esta linea realiza la comparacion, pero solo se ejecuta si la condicion en la linea 14 es verdadera, lo que significa que la comparacion ya se ha hecho.",
+          "untr_content": "A common misconception might be that this line compares the lists, but it only executes if the condition on line 14 is true, meaning the comparison has already been made."
+        },
+        {
+          "content": "Es buena practica proporcionar mensajes claros e informativos al usuario, como se hace aqui, para que la salida del programa sea comprensible.",
+          "untr_content": "It's a good practice to provide clear and informative messages to the user, as done here, to make the program's output understandable."
+        }
+      ]
+    },
+    "16": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea verifica si el tamano de list2 es mayor que el tamano de list1. Es parte de la logica condicional para determinar cual lista tiene mas palabras.",
+          "untr_content": "This line checks if the size of list2 is greater than the size of list1. It is part of the conditional logic to determine which list has more words."
+        },
+        {
+          "content": "La sintaxis `else if` se usa para proveer una condicion alternativa a la sentencia `if` inicial en la linea 14. Si la primera condicion es falsa, se evalua esta condicion.",
+          "untr_content": "The syntax `else if` is used to provide an alternative condition to the initial `if` statement on line 14. If the first condition is false, this condition is evaluated."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que `else if` es obligatorio despues de un `if`, pero es opcional y solo se usa cuando tiene multiples condiciones que comprobar.",
+          "untr_content": "A common misconception might be thinking that `else if` is mandatory after an `if` statement, but it is optional and only used when you have multiple conditions to check."
+        },
+        {
+          "content": "Usar `list2.size() > list1.size()` asegura que esta comparando el numero de elementos en cada lista, lo cual es crucial para determinar cual lista es mayor.",
+          "untr_content": "Using `list2.size() > list1.size()` ensures that you are comparing the number of elements in each list, which is crucial for determining which list is larger."
+        },
+        {
+          "content": "Es buena practica usar `else if` cuando tiene multiples condiciones mutuamente exclusivas, ya que hace el codigo mas legible y eficiente al prevenir comprobaciones innecesarias.",
+          "untr_content": "It's a good practice to use `else if` when you have multiple mutually exclusive conditions, as it makes the code more readable and efficient by preventing unnecessary checks."
+        }
+      ]
+    },
+    "17": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime un mensaje en la consola indicando que la segunda lista, `list2`, contiene mas palabras que la primera lista, `list1`.",
+          "untr_content": "This line prints a message to the console indicating that the second list, `list2`, contains more words than the first list, `list1`."
+        },
+        {
+          "content": "El metodo `System.out.println` se usa para mostrar texto en la consola. Aqui, imprime la cadena \"lista2 tiene mas palabras\".",
+          "untr_content": "The `System.out.println` method is used to output text to the console. Here, it outputs the string \"list2 has more words\"."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser asumir que esta linea compara las listas, pero solo se ejecuta si la condicion en el `else if` de la linea 16 es verdadera, lo que significa que la comparacion ya se realizo.",
+          "untr_content": "A common misconception might be assuming that this line compares the lists, but it only executes if the condition in the `else if` statement on line 16 is true, meaning the comparison has already been made."
+        },
+        {
+          "content": "Es buena practica proporcionar mensajes claros e informativos al usuario, como se hace aqui, para asegurar que la salida del programa sea comprensible.",
+          "untr_content": "It's a good practice to provide clear and informative messages to the user, as done here, to ensure the program's output is understandable."
+        }
+      ]
+    },
+    "18": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea maneja el escenario donde ambas listas tienen el mismo numero de palabras.",
+          "untr_content": "This line handles the scenario where both lists have the same number of words."
+        },
+        {
+          "content": "El bloque `else` se ejecuta solo si ninguna de las condiciones previas (list1 siendo mayor o list2 siendo mayor) son verdaderas, lo que significa que los tamanos de las dos listas son iguales.",
+          "untr_content": "The `else` block is executed only if neither of the previous conditions (list1 being larger or list2 being larger) are true, meaning the sizes of the two lists are equal."
+        },
+        {
+          "content": "Usar `else` aqui es una buena practica porque define claramente las condiciones mutuamente exclusivas, asegurando que todas las posibles salidas esten cubiertas.",
+          "untr_content": "Using `else` here is a best practice because it clearly defines the mutually exclusive conditions, ensuring that all possible outcomes are covered."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser asumir que un bloque `else` es innecesario si las condiciones previas parecen exhaustivas, pero en este caso asegura que el programa proporcione retroalimentacion cuando hay igualdad.",
+          "untr_content": "A common misconception might be to assume that an `else` block is unnecessary if the previous conditions seem exhaustive, but in this case, it ensures that the program provides feedback for all possible comparisons."
+        },
+        {
+          "content": "Esta linea contribuye al resultado esperado del programa al proveer una comparacion completa de las dos listas, asegurando que el usuario este informado sobre la igualdad de los tamanos de las listas.",
+          "untr_content": "This line contributes to the program's intended outcome by providing a complete comparison of the two lists, ensuring that the user is informed about the equality of the list sizes."
+        }
+      ]
+    },
+    "19": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime un mensaje en la consola indicando que ambas listas, list1 y list2, tienen el mismo numero de palabras.",
+          "untr_content": "This line prints a message to the console indicating that both lists, list1 and list2, have the same number of words."
+        },
+        {
+          "content": "El proposito de esta linea es manejar el caso donde los tamanos de las dos listas son iguales, que es la condicion final en la estructura if-else.",
+          "untr_content": "The purpose of this line is to handle the case where the sizes of the two lists are equal, which is the final condition in the if-else structure."
+        },
+        {
+          "content": "La sintaxis `System.out.println()` se usa para mostrar texto en la consola. La cadena dentro de los parentesis es el mensaje que se mostrara.",
+          "untr_content": "The syntax `System.out.println()` is used to output text to the console. The string inside the parentheses is the message that will be displayed."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser asumir que el programa siempre encontrara una lista mas grande que la otra, pero esta linea asegura que el programa maneje correctamente el escenario donde ambas listas tienen el mismo tamano.",
+          "untr_content": "A common misconception might be assuming that the program will always find one list larger than the other, but this line ensures that the program correctly handles the scenario where both lists are of equal size."
+        },
+        {
+          "content": "Es buena practica cubrir todas las posibles condiciones en una comparacion, incluida la igualdad, para asegurar que el programa se comporte como se espera en todos los escenarios.",
+          "untr_content": "It's a good practice to cover all possible conditions in a comparison, including equality, to ensure the program behaves as expected in all scenarios."
+        }
+      ]
+    },
+    "23": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo llamado `getWords` que toma un solo parametro, `fileName`, que es un `String` que representa el nombre del archivo a leer.",
+          "untr_content": "This line defines a method named `getWords` that takes a single parameter, `fileName`, which is a `String` representing the name of the file to be read."
+        },
+        {
+          "content": "El metodo esta declarado para devolver un `ArrayList<String>`, que contendra todas las palabras extraidas del archivo especificado.",
+          "untr_content": "The method is declared to return an `ArrayList<String>`, which will contain all the words extracted from the specified file."
+        },
+        {
+          "content": "El metodo es publico, lo que significa que puede ser accedido desde fuera de la clase, permitiendo que otras partes del programa lo usen para leer palabras de archivos.",
+          "untr_content": "The method is public, meaning it can be accessed from outside the class, allowing other parts of the program to use it to read words from files."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el metodo lee el archivo directamente en esta linea, pero solo establece la firma del metodo. La lectura real del archivo ocurre dentro del cuerpo del metodo.",
+          "untr_content": "A common misconception might be that the method reads the file directly in this line, but it only sets up the method signature. The actual file reading happens within the method body."
+        },
+        {
+          "content": "Es buena practica definir claramente el proposito y el tipo de retorno de un metodo en su firma, ya que ayuda a entender lo que el metodo debe hacer y que tipo de datos devolvera.",
+          "untr_content": "It's a best practice to clearly define the purpose and return type of a method in its signature, as it helps in understanding what the method is supposed to do and what kind of data it will return."
+        }
+      ]
+    },
+    "25": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicializa un ArrayList vacio llamado 'words' que almacenara las palabras extraidas del archivo.",
+          "untr_content": "This line initializes an empty ArrayList named 'words' that will store the words extracted from the file."
+        },
+        {
+          "content": "El ArrayList es parte del Java Collections Framework, que provee una implementacion de arreglo redimensionable. Esto es util porque el numero de palabras en el archivo no se conoce de antemano.",
+          "untr_content": "The ArrayList is a part of the Java Collections Framework, which provides a resizable array implementation. This is useful because the number of words in the file is not known beforehand."
+        },
+        {
+          "content": "La sintaxis 'new ArrayList<String>()' crea una nueva instancia de un ArrayList que esta diseñado especificamente para contener objetos String. La parte '<String>' es un parametro generico que asegura seguridad de tipo, lo que significa que solo objetos String pueden ser agregados a esta lista.",
+          "untr_content": "The syntax 'new ArrayList<String>()' creates a new instance of an ArrayList that is specifically designed to hold String objects. The '<String>' part is a generic type parameter that ensures type safety, meaning only String objects can be added to this list."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que el ArrayList tiene un tamano fijo, pero puede crecer dinamicamente a medida que se agregan mas palabras.",
+          "untr_content": "A common misconception might be thinking that the ArrayList has a fixed size, but it can dynamically grow as more words are added."
+        },
+        {
+          "content": "Es buena practica usar genericos (como <String>) con colecciones para evitar errores en tiempo de ejecucion y hacer el codigo mas legible y mantenible.",
+          "untr_content": "It's a best practice to use generics (like <String>) with collections to avoid runtime errors and to make the code more readable and maintainable."
+        }
+      ]
+    },
+    "27": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicia un bloque try, que se usa para manejar excepciones que puedan ocurrir durante la ejecucion del codigo dentro de el.",
+          "untr_content": "This line begins a try block, which is used to handle exceptions that might occur during the execution of the code within it."
+        },
+        {
+          "content": "El proposito del bloque try es intentar ejecutar codigo que puede lanzar excepciones, como operaciones con archivos, y proporcionar un mecanismo para capturar y manejar esas excepciones de forma elegante.",
+          "untr_content": "The purpose of the try block is to attempt to execute code that may throw exceptions, such as file operations, and to provide a mechanism to catch and handle these exceptions gracefully."
+        },
+        {
+          "content": "En este contexto, el bloque try es esencial porque las operaciones con archivos, como abrir y leer un archivo, pueden fallar por varias razones (por ejemplo, el archivo puede no existir).",
+          "untr_content": "In this context, the try block is essential because file operations, like opening and reading from a file, can fail for various reasons (e.g., the file might not exist)."
+        },
+        {
+          "content": "Una idea equivocada comun es que las operaciones con archivos siempre tienen exito, pero en realidad son propensas a errores, por lo que usar una estructura try-catch es una buena practica.",
+          "untr_content": "A common misconception is that file operations are always successful, but in reality, they are prone to errors, which is why using a try-catch structure is a best practice."
+        },
+        {
+          "content": "Al usar un bloque try, se asegura que su programa pueda manejar errores sin colapsar, lo cual es un aspecto crucial de escribir aplicaciones robustas y amigables para el usuario.",
+          "untr_content": "By using a try block, you ensure that your program can handle errors without crashing, which is a crucial aspect of writing robust and user-friendly applications."
+        }
+      ]
+    },
+    "29": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea un objeto FileReader, que se usa para leer el contenido del archivo especificado por el parametro fileName.",
+          "untr_content": "This line creates a FileReader object, which is used to read the contents of the file specified by the fileName parameter."
+        },
+        {
+          "content": "FileReader es parte del paquete java.io y esta diseñado para leer archivos de caracteres. Es un puente desde flujos de bytes a flujos de caracteres.",
+          "untr_content": "The FileReader is a part of the java.io package and is designed to read character files. It is a bridge from byte streams to character streams."
+        },
+        {
+          "content": "Debe pasar el nombre del archivo como una cadena al constructor de FileReader. Si el archivo no existe, se lanzara una FileNotFoundException.",
+          "untr_content": "You need to pass the name of the file as a string to the FileReader constructor. If the file does not exist, a FileNotFoundException will be thrown."
+        },
+        {
+          "content": "Una idea equivocada comun es que FileReader puede manejar todo tipo de archivos, pero es especificamente para leer archivos de texto. Para archivos binarios, se usaria una clase diferente.",
+          "untr_content": "A common misconception is that FileReader can handle all types of files, but it is specifically for reading text files. For binary files, you would use a different class."
+        },
+        {
+          "content": "Es buena practica envolver el FileReader en un BufferedReader (como se hace en la siguiente linea) para mejorar la eficiencia reduciendo el numero de operaciones de E/S.",
+          "untr_content": "It's a best practice to wrap the FileReader in a BufferedReader (as done in the next line) to improve efficiency by reducing the number of I/O operations."
+        }
+      ]
+    },
+    "30": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea un objeto BufferedReader llamado 'br' envolviendolo alrededor del objeto FileReader 'fr'.",
+          "untr_content": "This line creates a BufferedReader object named 'br' by wrapping it around the FileReader object 'fr'."
+        },
+        {
+          "content": "El proposito de usar BufferedReader es leer texto del archivo de forma eficiente, ya que hace buffering de la entrada para proporcionar una lectura eficiente de caracteres, arreglos y lineas.",
+          "untr_content": "The purpose of using BufferedReader is to efficiently read text from the file, as it buffers the input to provide efficient reading of characters, arrays, and lines."
+        },
+        {
+          "content": "La sintaxis 'new BufferedReader(fr)' construye un nuevo objeto BufferedReader, donde 'fr' es la instancia de FileReader que lee el archivo especificado por 'fileName'.",
+          "untr_content": "The syntax 'new BufferedReader(fr)' constructs a new BufferedReader object, where 'fr' is the FileReader instance that reads the file specified by 'fileName'."
+        },
+        {
+          "content": "Una idea equivocada comun es que FileReader por si solo es suficiente para leer lineas de texto, pero BufferedReader es preferido por su eficiencia y por su capacidad de leer lineas directamente.",
+          "untr_content": "A common misconception is that FileReader alone is sufficient for reading lines of text, but BufferedReader is preferred for its efficiency and ability to read lines directly."
+        },
+        {
+          "content": "Es buena practica cerrar el BufferedReader despues de usarlo para liberar recursos del sistema, lo cual se hace mas adelante en el codigo.",
+          "untr_content": "Best practice suggests closing the BufferedReader after use to free system resources, which is done later in the code."
+        }
+      ]
+    },
+    "32": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicializa una variable String llamada 'line' a null. Esta variable se usara para almacenar cada linea de texto leida del archivo.",
+          "untr_content": "This line initializes a String variable named 'line' to null. This variable will be used to store each line of text read from the file."
+        },
+        {
+          "content": "Al inicializar 'line' a null, se asegura que la variable tenga un valor definido antes de ser usada en el bucle while en la siguiente linea.",
+          "untr_content": "By initializing 'line' to null, you ensure that the variable has a defined value before it is used in the while loop on the next line."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser suponer que 'line' se establecerá automaticamente en la primera linea del archivo, pero debe leerse explicitamente desde el archivo usando 'br.readLine()' en el bucle.",
+          "untr_content": "A common misconception might be to assume that 'line' will automatically be set to the first line of the file, but you must explicitly read from the file using 'br.readLine()' in the loop."
+        },
+        {
+          "content": "Es buena practica inicializar variables antes de usarlas, especialmente cuando seran usadas en la condicion de un bucle, para evitar posibles NullPointerException o errores logicos.",
+          "untr_content": "It's a best practice to initialize variables before use, especially when they will be used in a loop condition, to avoid potential null pointer exceptions or logic errors."
+        }
+      ]
+    },
+    "33": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea es crucial ya que implementa un bucle que lee cada linea del archivo hasta que no queden mas lineas por leer. Usa un bucle `while` para ejecutar repetidamente el bloque de codigo mientras la condicion `(line = br.readLine()) != null` sea verdadera.",
+          "untr_content": "This line is crucial as it implements a loop that reads each line from the file until there are no more lines to read. It uses a `while` loop to repeatedly execute the block of code as long as the condition `(line = br.readLine()) != null` is true."
+        },
+        {
+          "content": "La expresion `(line = br.readLine())` es una operacion de asignacion que lee la siguiente linea del archivo y la asigna a la variable `line`. El metodo `readLine()` devuelve `null` cuando se alcanza el final del archivo, lo que hace que el bucle termine.",
+          "untr_content": "The expression `(line = br.readLine())` is an assignment operation that reads the next line from the file and assigns it to the variable `line`. The `readLine()` method returns `null` when the end of the file is reached, which causes the loop to terminate."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir el operador de asignacion `=` con el operador de igualdad `==`. Aqui, `=` se usa para asignar el resultado de `br.readLine()` a `line`, no para comparar valores.",
+          "untr_content": "A common misconception might be confusing the assignment operator `=` with the equality operator `==`. Here, `=` is used to assign the result of `br.readLine()` to `line`, not to compare values."
+        },
+        {
+          "content": "Es buena practica comprobar `null` para evitar `NullPointerException` al trabajar con lectura de archivos. Esto asegura que el bucle solo procese lineas validas de texto.",
+          "untr_content": "It's a best practice to check for `null` to avoid `NullPointerException` when working with file reading operations. This ensures that the loop only processes valid lines of text."
+        }
+      ]
+    },
+    "35": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea es crucial porque procesa cada linea de texto del archivo al convertirla a minusculas y dividirla en palabras individuales.",
+          "untr_content": "This line is crucial because it processes each line of text from the file by converting it to lowercase and splitting it into individual words."
+        },
+        {
+          "content": "La llamada al metodo `line.toLowerCase()` asegura que todas las palabras se traten de forma uniforme, independientemente de su caso original, lo cual es importante para comparaciones insensibles a mayusculas.",
+          "untr_content": "The `line.toLowerCase()` method call ensures that all words are treated uniformly, regardless of their original case, which is important for case-insensitive comparison."
+        },
+        {
+          "content": "El metodo `split(\" \")` rompe la linea en un arreglo de palabras usando un espacio simple como delimitador, como se especifica en el enunciado del problema.",
+          "untr_content": "The `split(\" \")` method breaks the line into an array of words using a single space as the delimiter, as specified in the problem statement."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que `split(\" \")` maneja multiples espacios u otros delimitadores, pero solo divide en espacios simples. Si el texto contiene multiples espacios entre palabras, esto podria producir cadenas vacias en el arreglo.",
+          "untr_content": "A common misconception might be that `split(\" \")` handles multiple spaces or other delimiters, but it only splits on single spaces. If the text contains multiple spaces between words, this could lead to empty strings in the array."
+        },
+        {
+          "content": "Es buena practica manejar el procesamiento de texto de forma que tenga en cuenta variaciones posibles en la entrada, como recortar espacios o manejar multiples espacios, para hacer el programa mas robusto.",
+          "untr_content": "It's a best practice to handle text processing in a way that accounts for potential variations in input, such as trimming whitespace or handling multiple spaces, to make the program more robust."
+        }
+      ]
+    },
+    "37": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea usa un bucle for-each para iterar sobre cada elemento en el arreglo 'tokens', que contiene las palabras de una sola linea del archivo.",
+          "untr_content": "This line uses a for-each loop to iterate over each element in the 'tokens' array, which contains the words from a single line of the file."
+        },
+        {
+          "content": "El proposito de esta linea es procesar cada palabra (o token) obtenida al dividir la linea en palabras individuales, permitiendo agregarlas a la lista 'words'.",
+          "untr_content": "The purpose of this line is to process each word (or token) obtained from splitting the line into individual words, allowing you to add them to the 'words' list."
+        },
+        {
+          "content": "La sintaxis 'for (String token : tokens)' es un bucle for-each en Java, que es una forma simplificada de iterar sobre arreglos o colecciones. Aqui, 'String token' declara una variable 'token' de tipo String que contendra cada elemento del arreglo 'tokens' durante cada iteracion.",
+          "untr_content": "The syntax 'for (String token : tokens)' is a for-each loop in Java, which is a simplified way to iterate over arrays or collections. Here, 'String token' declares a variable 'token' of type String that will hold each element of the 'tokens' array during each iteration."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir el bucle for-each con un bucle for tradicional. Recuerde que el bucle for-each esta disenado para iterar sobre colecciones y arreglos, y no usa una variable de indice.",
+          "untr_content": "A common misconception might be confusing the for-each loop with a traditional for loop. Remember, the for-each loop is specifically designed for iterating over collections and arrays, and it does not use an index variable."
+        },
+        {
+          "content": "Como buena practica, se sugiere usar un bucle for-each cuando necesita acceder a cada elemento de una coleccion o arreglo sin modificar la coleccion en si, ya que hace el codigo mas legible y menos propenso a errores.",
+          "untr_content": "Best practice suggests using a for-each loop when you need to access each element of a collection or array without modifying the collection itself, as it makes the code more readable and less error-prone."
+        }
+      ]
+    },
+    "38": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea agrega cada palabra, representada por la variable 'token', al ArrayList 'words'.",
+          "untr_content": "This line adds each word, represented by the variable 'token', to the 'words' ArrayList."
+        },
+        {
+          "content": "El metodo 'add' se usa para anexar elementos a un ArrayList, que se redimensiona dinamicamente a medida que se agregan nuevos elementos.",
+          "untr_content": "The 'add' method is used to append elements to an ArrayList, which dynamically resizes as new elements are added."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que 'add' reemplaza elementos, pero en realidad los anade al final de la lista.",
+          "untr_content": "A common misconception might be that 'add' replaces elements, but it actually appends them to the end of the list."
+        },
+        {
+          "content": "Asegurese de que 'token' no sea null o vacio antes de agregarlo para evitar entradas innecesarias en la lista, aunque en este contexto, el metodo split deberia manejar eso sin producir tokens nulos.",
+          "untr_content": "Ensure that 'token' is not null or empty before adding it to avoid unnecessary entries in the list, although in this context, the split method should handle that by not producing null tokens."
+        },
+        {
+          "content": "Usar un ArrayList es una buena practica aqui porque provee redimensionamiento dinamico y facil acceso a elementos, lo cual es adecuado para manejar un numero desconocido de palabras desde un archivo.",
+          "untr_content": "Using an ArrayList is a best practice here because it provides dynamic resizing and easy access to elements, which is suitable for handling an unknown number of words from a file."
+        }
+      ]
+    },
+    "42": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Cerrar el BufferedReader es crucial para liberar recursos del sistema que fueron asignados para leer el archivo. Esta es una buena practica para prevenir fugas de recursos, las cuales pueden ocurrir si el archivo permanece abierto.",
+          "untr_content": "Closing the BufferedReader is crucial to free up system resources that were allocated for reading the file. This is a good practice to prevent resource leaks, which can occur if the file remains open."
+        },
+        {
+          "content": "La sintaxis `br.close();` llama al metodo `close` sobre el objeto BufferedReader `br`. Este metodo es parte de la interfaz `Closeable`, que BufferedReader implementa, asegurando que el flujo se cierre correctamente.",
+          "untr_content": "The syntax `br.close();` calls the `close` method on the BufferedReader object `br`. This method is part of the `Closeable` interface, which BufferedReader implements, ensuring that the stream is properly closed."
+        },
+        {
+          "content": "Una idea equivocada comun es que Java cierra automaticamente los archivos cuando el programa termina. Sin embargo, siempre debe cerrar archivos explicitamente para asegurar que los recursos se liberen tan pronto como ya no se necesiten.",
+          "untr_content": "A common misconception is that Java automatically closes files when the program ends. However, you should always explicitly close files to ensure that resources are released as soon as they are no longer needed."
+        },
+        {
+          "content": "Es mejor practica cerrar el BufferedReader en un bloque `finally` o usar una sentencia try-with-resources para asegurar que se cierre incluso si ocurre una excepcion. En este codigo, el metodo `close` se llama antes de los bloques catch, lo que significa que no se ejecutara si se lanza una excepcion antes de alcanzar esta linea.",
+          "untr_content": "It's best practice to close the BufferedReader in a `finally` block or use a try-with-resources statement to ensure it closes even if an exception occurs. In this code, the `close` method is called before the catch blocks, which means it won't execute if an exception is thrown before reaching this line."
+        }
+      ]
+    },
+    "45": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime un mensaje en la consola indicando que el archivo especificado no pudo ser encontrado.",
+          "untr_content": "This line prints a message to the console indicating that the specified file could not be found."
+        },
+        {
+          "content": "El proposito de esta linea es informar que el programa intento abrir un archivo que no existe o no es accesible en la ruta especificada.",
+          "untr_content": "The purpose of this line is to inform you that the program attempted to open a file that does not exist or is not accessible at the specified path."
+        },
+        {
+          "content": "La sintaxis `System.out.println(\"Archivo no encontrado\")` usa el metodo `System.out.println` para mostrar una cadena en la consola. Esta es una forma comun de dar retroalimentacion al usuario sobre la ejecucion del programa.",
+          "untr_content": "The syntax `System.out.println(\"File not found\")` uses the `System.out.println` method to output a string to the console. This is a common way to provide feedback to the user about the program's execution."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que este mensaje aparecera para cualquier error relacionado con archivos, pero aborda especificamente la `FileNotFoundException`, que ocurre cuando la ruta del archivo es incorrecta o el archivo falta.",
+          "untr_content": "A common misconception might be that this message will appear for any file-related error, but it specifically addresses the `FileNotFoundException`, which occurs when the file path is incorrect or the file is missing."
+        },
+        {
+          "content": "Como buena practica, deberia proveer mensajes de error claros y especificos para ayudar a los usuarios a entender que salio mal y como pueden arreglarlo. Este mensaje podria mejorarse incluyendo el nombre del archivo en la salida.",
+          "untr_content": "As a best practice, you should provide clear and specific error messages to help users understand what went wrong and how they might fix it. This message could be improved by including the file name in the output."
+        }
+      ]
+    },
+    "46": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea forma parte del manejo de excepciones en el metodo getWords, especificamente capturando IOExceptions.",
+          "untr_content": "This line is part of the exception handling mechanism in the getWords method, specifically catching IOExceptions."
+        },
+        {
+          "content": "El proposito de esta linea es manejar cualquier error de entrada/salida que pueda ocurrir mientras se lee el archivo, como problemas al leer el contenido del archivo.",
+          "untr_content": "The purpose of this line is to handle any input/output errors that might occur while reading the file, such as issues with reading the file's content."
+        },
+        {
+          "content": "La sintaxis 'catch (IOException ex)' se usa para definir un bloque de codigo que se ejecutara si se lanza una IOException en el bloque try. 'ex' es una variable que contiene el objeto de la excepcion, que puede usarse para obtener mas informacion sobre el error.",
+          "untr_content": "The syntax 'catch (IOException ex)' is used to define a block of code that will execute if an IOException is thrown in the try block. The 'ex' is a variable that holds the exception object, which can be used to get more information about the error."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que IOException solo ocurre cuando un archivo no se encuentra, pero en realidad abarca una gama mas amplia de errores de entrada/salida, como problemas al leer o escribir datos.",
+          "untr_content": "A common misconception might be that IOException only occurs when a file is not found, but it actually covers a broader range of input/output errors, such as issues with reading or writing data."
+        },
+        {
+          "content": "Es buena practica manejar excepciones como IOException para asegurar que su programa pueda manejar errores inesperados de forma elegante y proporcionar retroalimentacion informativa al usuario.",
+          "untr_content": "It's a best practice to handle exceptions like IOException to ensure your program can gracefully handle unexpected errors and provide informative feedback to the user."
+        }
+      ]
+    },
+    "47": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea forma parte del manejo de excepciones en el metodo getWords, especificamente informando sobre IOExceptions.",
+          "untr_content": "This line is part of the exception handling mechanism in the getWords method, specifically handling IOExceptions."
+        },
+        {
+          "content": "Se usa esta linea para informar al usuario que hubo un problema al leer el archivo, lo cual podria deberse a varias razones como corrupcion del archivo o permisos de lectura insuficientes.",
+          "untr_content": "You use this line to inform the user that there was a problem with reading the file, which could be due to various reasons such as file corruption or read permission issues."
+        },
+        {
+          "content": "La sintaxis `System.out.println(\"Problema con el archivo!\");` usa el metodo System.out.println para imprimir un mensaje en la consola. Esta es una manera simple de dar retroalimentacion al usuario.",
+          "untr_content": "The syntax `System.out.println(\"Problem with the file!\");` uses the System.out.println method to print a message to the console. This is a simple way to provide feedback to the user."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que esta linea maneja todas las excepciones, pero maneja especificamente IOExceptions, las cuales son diferentes de FileNotFoundExceptions manejadas en el bloque catch previo.",
+          "untr_content": "A common misconception might be that this line handles all exceptions, but it specifically handles IOExceptions, which are different from FileNotFoundExceptions handled in the previous catch block."
+        },
+        {
+          "content": "Como buena practica, deberia proporcionar mensajes de error significativos para ayudar a los usuarios a entender que salio mal. En un programa mas avanzado, tambien podria registrar los detalles de la excepcion para propósitos de depuracion.",
+          "untr_content": "As a best practice, you should provide meaningful error messages to help users understand what went wrong. In a more advanced program, you might also log the exception details for debugging purposes."
+        }
+      ]
+    },
+    "50": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea devuelve la lista de palabras que se han leido del archivo y almacenado en el ArrayList 'words'.",
+          "untr_content": "This line returns the list of words that have been read from the file and stored in the ArrayList 'words'."
+        },
+        {
+          "content": "La palabra clave 'return' se usa para salir del metodo y proporcionar al codigo que lo llamo el resultado, que en este caso es la lista de palabras.",
+          "untr_content": "The 'return' keyword is used to exit the method and provide the calling code with the result, which in this case is the list of words."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar devolver la lista, lo que resultaria en que el metodo llamador reciba un valor null o cause un error de compilacion.",
+          "untr_content": "A common misconception might be forgetting to return the list, which would result in the calling method receiving a null value or causing a compilation error."
+        },
+        {
+          "content": "Como buena practica, asegurese de que el tipo de retorno del metodo coincida con el tipo del valor que se devuelve. Aqui, el metodo esta declarado para devolver un ArrayList<String>, que coincide con el tipo de 'words'.",
+          "untr_content": "As a best practice, ensure that the method's return type matches the type of the value being returned. Here, the method is declared to return an ArrayList<String>, which matches the type of 'words'."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "if ( list1.size() < list2.size() ) {",
+      "untr_code": "if ( list1.size() < list2.size() ) {",
+      "description": "Podria elegir este distractor si confunde el operador 'mayor que' con el operador 'menor que'. Esta linea verifica incorrectamente si la primera lista es mas pequena que la segunda lista, lo cual es lo opuesto de lo que necesita para determinar cual lista es mayor. Usar este distractor haria que el programa identifique incorrectamente la lista mas pequena como la mas grande, llevando a una salida incorrecta. Es crucial entender la diferencia entre estos operadores para asegurar que la logica de sus comparaciones sea correcta.",
+      "untr_description": "You might choose this distractor if you confuse the 'greater than' operator with the 'less than' operator. This line incorrectly checks if the first list is smaller than the second list, which is the opposite of what you need to determine which list is larger. Using this distractor would result in the program incorrectly identifying the smaller list as the larger one, leading to incorrect output. It's crucial to understand the difference between these operators to ensure the logic of your comparisons is correct.",
+      "line_number": 14
+    },
+    {
+      "code": "if ( list1.size() >= list2.size() ) {",
+      "untr_code": "if ( list1.size() >= list2.size() ) {",
+      "description": "Podria seleccionar este distractor si piensa que comprobar 'mayor o igual' es suficiente. Sin embargo, esta linea trataria incorrectamente listas de tamano igual como si la primera lista fuera mayor, lo que podria llevar a una salida equivocada. Este malentendido puede causar errores logicos al determinar cual lista tiene verdaderamente mas palabras. Es esencial usar la comparacion correcta para reflejar con precision los requisitos del problema.",
+      "untr_description": "You might select this distractor if you think that checking for 'greater than or equal to' is sufficient. However, this line would incorrectly treat lists of equal size as if the first list is larger, which could lead to incorrect output. This misunderstanding can cause logical errors in determining which list truly has more words. It's essential to use the correct comparison to accurately reflect the problem's requirements.",
+      "line_number": 14
+    },
+    {
+      "code": "if ( list1.size() != list2.size() ) {",
+      "untr_code": "if ( list1.size() != list2.size() ) {",
+      "description": "Este distractor podria ser elegido si cree equivocadamente que simplemente comprobar desigualdad es suficiente para determinar cual lista es mayor. Sin embargo, esta linea solo verifica si los tamanos son diferentes, sin especificar cual es mayor. Esto conduciria a un flujo logico incorrecto y potencialmente a una salida incorrecta. Entender la necesidad de una comparacion especifica para determinar la lista mayor es crucial para resolver el problema correctamente.",
+      "untr_description": "This distractor might be chosen if you mistakenly believe that simply checking for inequality is enough to determine which list is larger. However, this line only checks if the sizes are different, without specifying which is larger. This would lead to incorrect logic flow and potentially incorrect output. Understanding the need for a specific comparison to determine the larger list is crucial for solving the problem correctly.",
+      "line_number": 14
+    },
+    {
+      "code": "} else if ( list1.size() == list2.size() ) {",
+      "untr_code": "} else if ( list1.size() == list2.size() ) {",
+      "description": "Este distractor podria parecer correcto si no comprende bien el flujo de las sentencias condicionales. Al comprobar la igualdad aqui, interrumpe la secuencia logica prevista, que deberia primero determinar si una lista es mayor que la otra. Usar esta linea haria que el programa omita la comparacion correcta, llevando a resultados incorrectos. El distractor no implementa la comprobacion de desigualdad necesaria, que es crucial para determinar cual lista es mayor.",
+      "untr_description": "This distractor might seem correct if you misunderstand how conditional statements flow. By checking for equality here, you disrupt the intended logic sequence, which should first determine if one list is larger than the other. Using this line would cause the program to skip the correct comparison, leading to incorrect results. The distractor fails to implement the necessary inequality check, which is crucial for determining which list is larger.",
+      "line_number": 16
+    },
+    {
+      "code": "} else if ( list1.size() >= list2.size() ) {",
+      "untr_code": "} else if ( list1.size() >= list2.size() ) {",
+      "description": "Podria seleccionar este distractor si cree equivocadamente que 'mayor o igual' es apropiado aqui. Esta linea permite incorrectamente la posibilidad de que list1 sea igual o mayor que list2, lo cual no es la logica pretendida. Usar esta linea resultaria en una salida incorrecta cuando las listas tengan el mismo tamano, ya que no manejaria correctamente el caso de igualdad. El distractor aplica mal el operador, llevando a errores logicos en la determinacion de la lista mayor.",
+      "untr_description": "You might select this distractor if you mistakenly believe that 'greater than or equal to' is appropriate here. This line incorrectly allows for the possibility that list1 is equal to or larger than list2, which is not the intended logic. Using this line would result in incorrect output when the lists are of equal size, as it would not properly handle the equality case. The distractor misapplies the operator, leading to logical errors in determining the larger list.",
+      "line_number": 16
+    },
+    {
+      "code": "} else if ( list2.size() <= list1.size() ) {",
+      "untr_code": "} else if ( list2.size() <= list1.size() ) {",
+      "description": "Este distractor podria parecer plausible si confunde 'menor o igual' con 'mayor que'. Esta linea verifica incorrectamente si list2 es menor o igual que list1, lo cual no es la logica deseada. Si usa esta linea, el programa no identificara correctamente cuando list2 es mayor, llevando a una salida incorrecta. El distractor aplica mal la logica de comparacion, fallando en determinar con precision cual lista tiene mas palabras.",
+      "untr_description": "This distractor might seem plausible if you confuse 'less than or equal to' with 'greater than'. This line incorrectly checks if list2 is less than or equal to list1, which is not the intended logic. If you use this line, the program will not correctly identify when list2 is larger, leading to incorrect output. The distractor misapplies the comparison logic, failing to accurately determine which list has more words.",
+      "line_number": 16
+    }
+  ],
+  "tags": [
+    "spanish-latam;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "translations": {
+    "en": "68bdb308f6cc3d7a9cc096c5"
+  },
+  "collaborator_emails": [],
+  "programInput": ""
+}

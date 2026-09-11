@@ -1,0 +1,1182 @@
+{
+  "id": "c4d1d9b4ac67d33f02c03ffd",
+  "user": "moh70@pitt.edu",
+  "name": "La clase para representar una cuenta bancaria (Caso 2)",
+  "untr_name": "The Class for Representing a Bank Account (Case 2)",
+  "description": "Construir una clase que represente una cuenta bancaria basica. Esta clase debe contener datos que representen el nombre del propietario de la cuenta, el numero de cuenta y el saldo actual de la cuenta. La tasa de interes para la cuenta se almacena como una constante. La clase debe tener constructores que permitan abrir una cuenta cuando:\\n - se especifican el nombre de la cuenta, el numero de cuenta y el saldo inicial\\n - solo se especifican el nombre de la cuenta y el numero de cuenta. En este caso, el saldo inicial se asume como cero.\\nLos otros metodos de esta clase deben realizar varios servicios sobre la cuenta (hacer depositos, retiros, agregar interes a la cuenta). Estos metodos deben examinar los datos que se les pasan para asegurarse de que la transaccion solicitada es valida.\\n\\nLa clase Transactions2 crea algunas cuentas bancarias y solicita varios servicios.",
+  "untr_description": "Construct a class that represents a basic bank account. This class should contain data representing the name of the account’s owner, the account number, and the account’s current balance. The interest rate for the account is stored as a constant. The class should have constructors that permits an account to be opened when:\\n - the account name, account number, and initial balance are specified\\n - only the account name and the account number are specified. In this case, initial balance is assumed to be zero.\\nThe other methods of this class should perform various services on the account (making deposits, withdrawals, adding interest to the account). These methods should examine the data passed into them to make sure the requested transaction is valid.\\n\\nThe Transactions2 class creates some bank accounts and requests various services.",
+  "language": "JAVA",
+  "iso_language_code": "es",
+  "filename": "Transactions2.java",
+  "code": "import java.text.NumberFormat;\npublic class Transactions2 {\n\tpublic static void main (String[] args) {\n\t\tAccount2 acct1 = new Account2(\"Tina Murphy\", 72354, 25.59);\n\t\tAccount2 acct2 = new Account2(\"Angelica Adams\", 69713, 500.00);\n\t\tAccount2 acct3 = new Account2(\"Edward Demsey\", 93757, 769.32);\n\t\tAccount2 acct4 = new Account2(\"Samuel Williams\", 300301);\n\t\tacct1.deposit (44.10);  \n\t\tacct4.deposit (5.00);  \n\t\tdouble adamsBalance = acct2.deposit (75.25);\n\t\tSystem.out.println (acct2.getName() + \" - saldo despues del deposito: \" + adamsBalance);\n\t\tSystem.out.println (acct2.getName() + \" - saldo despues del retiro: \" + acct2.withdraw (480, 1.50));\n\t\tacct3.withdraw (-100.00, 1.50);  \n\t\tacct1.addInterest();\n\t\tacct2.addInterest();\n\t\tacct3.addInterest();\n\t\tSystem.out.println (acct1);\n\t\tSystem.out.println (acct2);\n\t\tSystem.out.println (acct3);\n\t\tSystem.out.println (acct4);\n\t}\n}\nclass Account2 {\n\t//Paso 1: Declarar las variables de instancia \n\tprivate final double RATE = 0.035;  \n\tprivate String acctName;\n\tprivate long acctNumber;\n\tprivate double balance;\n\t//Paso 2: Definir el constructor para configurar una cuenta con el nombre de cuenta especificado, numero de cuenta y saldo inicial\n\tpublic Account2 (String owner, long account, double initial) {\n\t\tacctName = owner;\n\t\tacctNumber = account;\n\t\tbalance = initial;\n\t}\n\t//Paso 3: Definir el constructor para configurar una cuenta con el nombre de cuenta y el numero de cuenta especificados\n\tpublic Account2 (String owner, long account) {\n\t\tthis(owner, account, 0);\n\t}\n\t//Paso 4: Definir los metodos para realizar varios servicios en la cuenta\n\tpublic double deposit (double amount) {\n\t\tif (amount > 0) {\n\t\t\tbalance = balance + amount;\n\t\t}\n\t\treturn balance;\n\t}\n\tpublic double withdraw (double amount, double fee) {\n\t\tif (amount > 0 && fee >= 0 && amount+fee < balance) {\n\t\t\tbalance = balance - amount - fee;\n\t\t}\n\t\treturn balance;\n\t}\n\tpublic double addInterest () {\n\t\tbalance += (balance * RATE);\n\t\treturn balance;\n\t}\n\t//Paso 5: Definir los metodos para obtener el estado actual de la cuenta \n\tpublic String getName() {\n\t\treturn acctName;\n\t}\n\tpublic double getBalance() {\n\t\treturn balance;\n\t}\n\tpublic long getAcctNumber() {\n\t\treturn acctNumber;\n\t}\n\tpublic String toString () {\n\t\tNumberFormat fmt = NumberFormat.getCurrencyInstance();\n\t\treturn (acctNumber + \"\\t\" + acctName + \"\\t\" + fmt.format(balance));\n\t}\n}",
+  "untr_code": "import java.text.NumberFormat;\npublic class Transactions2 {\n\tpublic static void main (String[] args) {\n\t\tAccount2 acct1 = new Account2(\"Tina Murphy\", 72354, 25.59);\n\t\tAccount2 acct2 = new Account2(\"Angelica Adams\", 69713, 500.00);\n\t\tAccount2 acct3 = new Account2(\"Edward Demsey\", 93757, 769.32);\n\t\tAccount2 acct4 = new Account2(\"Samuel Williams\", 300301);\n\t\tacct1.deposit (44.10);  \n\t\tacct4.deposit (5.00);  \n\t\tdouble adamsBalance = acct2.deposit (75.25);\n\t\tSystem.out.println (acct2.getName() + \"'s balance after deposit: \" + adamsBalance);\n\t\tSystem.out.println (acct2.getName() + \"'s balance after withdrawal: \" + acct2.withdraw (480, 1.50));\n\t\tacct3.withdraw (-100.00, 1.50);  \n\t\tacct1.addInterest();\n\t\tacct2.addInterest();\n\t\tacct3.addInterest();\n\t\tSystem.out.println (acct1);\n\t\tSystem.out.println (acct2);\n\t\tSystem.out.println (acct3);\n\t\tSystem.out.println (acct4);\n\t}\n}\nclass Account2 {\n\t//Step 1: Declare the instance variables \n\tprivate final double RATE = 0.035;  \n\tprivate String acctName;\n\tprivate long acctNumber;\n\tprivate double balance;\n\t//Step 2: Define the constructor to set up an account with the specified account name, account number, and initial balance\n\tpublic Account2 (String owner, long account, double initial) {\n\t\tacctName = owner;\n\t\tacctNumber = account;\n\t\tbalance = initial;\n\t}\n\t//Step 3: Define the constructor to set up an account with the specified account name and account number\n\tpublic Account2 (String owner, long account) {\n\t\tthis(owner, account, 0);\n\t}\n\t//Step 4: Define the methods to perform various services on the account\n\tpublic double deposit (double amount) {\n\t\tif (amount > 0) {\n\t\t\tbalance = balance + amount;\n\t\t}\n\t\treturn balance;\n\t}\n\tpublic double withdraw (double amount, double fee) {\n\t\tif (amount > 0 && fee >= 0 && amount+fee < balance) {\n\t\t\tbalance = balance - amount - fee;\n\t\t}\n\t\treturn balance;\n\t}\n\tpublic double addInterest () {\n\t\tbalance += (balance * RATE);\n\t\treturn balance;\n\t}\n\t//Step 5: Define the methods to get the current state of the account \n\tpublic String getName() {\n\t\treturn acctName;\n\t}\n\tpublic double getBalance() {\n\t\treturn balance;\n\t}\n\tpublic long getAcctNumber() {\n\t\treturn acctNumber;\n\t}\n\tpublic String toString () {\n\t\tNumberFormat fmt = NumberFormat.getCurrencyInstance();\n\t\treturn (acctNumber + \"\\t\" + acctName + \"\\t\" + fmt.format(balance));\n\t}\n}",
+  "lines": {
+    "2": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea declara la clase Transactions2, que es la clase principal del programa donde comienza la ejecucion.",
+          "untr_content": "This line declares the Transactions2 class, which is the main class of the program where the execution begins."
+        },
+        {
+          "content": "La palabra clave 'public' es un modificador de acceso que hace que la clase sea accesible desde otras clases, lo cual es necesario para que el metodo main sea ejecutado por el tiempo de ejecucion de Java.",
+          "untr_content": "The keyword 'public' is an access modifier that makes the class accessible from other classes, which is necessary for the main method to be executed by the Java runtime."
+        },
+        {
+          "content": "La palabra clave 'class' se usa para definir una nueva clase en Java, que es una plantilla para crear objetos.",
+          "untr_content": "The keyword 'class' is used to define a new class in Java, which is a blueprint for creating objects."
+        },
+        {
+          "content": "El nombre 'Transactions2' sigue las convenciones de nomenclatura de Java para clases, que tipicamente usan PascalCase.",
+          "untr_content": "The name 'Transactions2' follows Java naming conventions for classes, which typically use PascalCase."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir el nombre de la clase con el de un metodo o variable. Recuerda, los nombres de clases deben comenzar con una letra mayuscula y ser descriptivos de su proposito.",
+          "untr_content": "A common misconception might be confusing the class name with a method or variable name. Remember, class names should start with an uppercase letter and be descriptive of their purpose."
+        },
+        {
+          "content": "Es una buena practica asegurarse de que los nombres de las clases sean significativos y reflejen la funcionalidad o proposito de la clase, que en este caso es manejar transacciones para cuentas bancarias.",
+          "untr_content": "It's a best practice to ensure that class names are meaningful and reflect the functionality or purpose of the class, which in this case is to handle transactions for bank accounts."
+        }
+      ]
+    },
+    "4": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea una nueva instancia de la clase Account2, que representa una cuenta bancaria para 'Tina Murphy' con un numero de cuenta de 72354 y un saldo inicial de 25.59.",
+          "untr_content": "This line creates a new instance of the Account2 class, representing a bank account for 'Tina Murphy' with an account number of 72354 and an initial balance of 25.59."
+        },
+        {
+          "content": "El constructor usado aqui es el que toma tres parametros: el nombre del propietario de la cuenta, el numero de cuenta y el saldo inicial. Esto coincide con el constructor definido en la Linea 30 de la clase Account2.",
+          "untr_content": "The constructor used here is the one that takes three parameters: the account owner's name, the account number, and the initial balance. This matches the constructor defined on Line 30 of the Account2 class."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar hacer coincidir los parametros del constructor con los definidos en la clase. Asegurate de que los tipos de datos y el orden de los parametros sean correctos.",
+          "untr_content": "A common misconception might be forgetting to match the constructor parameters with the ones defined in the class. Ensure that the data types and order of parameters are correct."
+        },
+        {
+          "content": "Usar nombres de variables descriptivos como 'acct1' ayuda a entender el proposito de la variable, lo cual es una buena practica para mantener el codigo legible y mantenible.",
+          "untr_content": "Using descriptive variable names like 'acct1' helps in understanding the purpose of the variable, which is a best practice for maintaining readable and maintainable code."
+        }
+      ]
+    },
+    "5": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea una nueva instancia de la clase Account2, que representa una cuenta bancaria para 'Angelica Adams' con un numero de cuenta de 69713 y un saldo inicial de 500.00.",
+          "untr_content": "This line creates a new instance of the Account2 class, representing a bank account for 'Angelica Adams' with an account number of 69713 and an initial balance of 500.00."
+        },
+        {
+          "content": "El constructor usado aqui es el que toma tres parametros: el nombre del propietario de la cuenta, el numero de cuenta y el saldo inicial. Esto coincide con el constructor definido en las lineas 30-34 en la clase Account2.",
+          "untr_content": "The constructor used here is the one that takes three parameters: the account owner's name, the account number, and the initial balance. This matches the constructor defined on lines 30-34 in the Account2 class."
+        },
+        {
+          "content": "La sintaxis 'new Account2(...)' se usa para instanciar un nuevo objeto de la clase Account2. Los parametros proporcionados en los parentesis se pasan al constructor para inicializar el estado del objeto.",
+          "untr_content": "The syntax 'new Account2(...)' is used to instantiate a new object of the Account2 class. The parameters provided in the parentheses are passed to the constructor to initialize the object's state."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el saldo se establece automaticamente en cero si no se especifica, pero en este caso, el constructor lo establece explicitamente en 500.00 como se proveyó.",
+          "untr_content": "A common misconception might be that the balance is automatically set to zero if not specified, but in this case, the constructor explicitly sets it to 500.00 as provided."
+        },
+        {
+          "content": "Es una buena practica asegurarse de que el saldo inicial sea un numero valido y no negativo, aunque esto no se verifica explicitamente en el constructor. Esto podria ser un area potencial de mejora en el diseno de la clase.",
+          "untr_content": "It's a good practice to ensure that the initial balance is a valid number and not negative, although this is not explicitly checked in the constructor. This could be a potential area for improvement in the class design."
+        }
+      ]
+    },
+    "6": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea una nueva instancia de la clase Account2 llamada acct3, que representa una cuenta bancaria para 'Edward Demsey' con un numero de cuenta de 93757 y un saldo inicial de 769.32.",
+          "untr_content": "This line creates a new instance of the Account2 class named acct3, representing a bank account for 'Edward Demsey' with an account number of 93757 and an initial balance of 769.32."
+        },
+        {
+          "content": "El constructor usado aqui es el que toma tres parametros: el nombre del propietario de la cuenta, el numero de cuenta y el saldo inicial. Este constructor inicializa la cuenta con los valores proporcionados.",
+          "untr_content": "The constructor used here is the one that takes three parameters: the account owner's name, the account number, and the initial balance. This constructor initializes the account with the provided values."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que el numero de cuenta es un entero, pero en realidad es de tipo long para acomodar numeros mas grandes.",
+          "untr_content": "A common misconception might be that the account number is an integer, but it is actually a long data type to accommodate larger numbers."
+        },
+        {
+          "content": "Es una buena practica asegurarse de que el saldo inicial sea un numero positivo, ya que saldos negativos podrían no ser validos en escenarios del mundo real a menos que la logica del negocio lo permita explicitamente.",
+          "untr_content": "It's a good practice to ensure that the initial balance is a positive number, as negative balances might not be valid in real-world scenarios unless explicitly allowed by the business logic."
+        }
+      ]
+    },
+    "7": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea una nueva instancia de la clase Account2 llamada acct4, que representa una cuenta bancaria para 'Samuel Williams' con el numero de cuenta 300301.",
+          "untr_content": "This line creates a new instance of the Account2 class named acct4, representing a bank account for 'Samuel Williams' with the account number 300301."
+        },
+        {
+          "content": "El constructor usado aqui solo toma dos parametros: el nombre del propietario de la cuenta y el numero de cuenta. Esto es porque no se especifica el saldo inicial, por lo que el constructor por defecto establece el saldo en cero.",
+          "untr_content": "The constructor used here only takes two parameters: the account owner's name and the account number. This is because the initial balance is not specified, so the constructor defaults the balance to zero."
+        },
+        {
+          "content": "La sintaxis `new Account2(\"Samuel Williams\", 300301)` llama al constructor definido en la Linea 36, que a su vez llama al constructor en la Linea 30 con un saldo inicial por defecto de cero.",
+          "untr_content": "The syntax `new Account2(\"Samuel Williams\", 300301)` calls the constructor defined on Line 36, which in turn calls the constructor on Line 30 with a default initial balance of zero."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el saldo queda indefinido o es null cuando no se especifica, pero el constructor se asegura de que se establezca en cero.",
+          "untr_content": "A common misconception might be that the balance is undefined or null when not specified, but the constructor ensures it is set to zero."
+        },
+        {
+          "content": "Usar constructores con diferentes listas de parametros (sobrecarga) es una buena practica que proporciona flexibilidad en la creacion de objetos, permitiendo inicializar objetos con distintos niveles de detalle.",
+          "untr_content": "Using constructors with different parameter lists (overloading) is a best practice that provides flexibility in object creation, allowing you to initialize objects with varying levels of detail."
+        }
+      ]
+    },
+    "8": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea llama al metodo `deposit` en el objeto `acct1`, que es una instancia de la clase `Account2`. Al metodo se le pasa el valor `44.10`, que representa la cantidad a depositar en la cuenta.",
+          "untr_content": "This line calls the `deposit` method on the `acct1` object, which is an instance of the `Account2` class. The method is passed the value `44.10`, representing the amount to be deposited into the account."
+        },
+        {
+          "content": "El proposito de esta linea es aumentar el saldo de `acct1` por la cantidad especificada de deposito, siempre que la cantidad sea mayor que cero. Esto simula una transaccion de deposito en una cuenta bancaria.",
+          "untr_content": "The purpose of this line is to increase the balance of `acct1` by the specified deposit amount, provided the amount is greater than zero. This simulates a deposit transaction in a bank account."
+        },
+        {
+          "content": "La sintaxis `acct1.deposit(44.10)` implica llamar a un metodo en un objeto. El metodo `deposit` esta definido en la clase `Account2` y toma un solo parametro, `amount`, que es un `double`.",
+          "untr_content": "The syntax `acct1.deposit(44.10)` involves calling a method on an object. The `deposit` method is defined in the `Account2` class and takes a single parameter, `amount`, which is a `double`."
+        },
+        {
+          "content": "Un error potencial a vigilar es pasar un numero negativo al metodo `deposit`, lo que no aumentaria el saldo ya que el metodo verifica si la cantidad es mayor que cero antes de proceder.",
+          "untr_content": "A potential error to watch out for is passing a negative number to the `deposit` method, which would not increase the balance as the method checks if the amount is greater than zero before proceeding."
+        },
+        {
+          "content": "Como buena practica, asegura validar la cantidad de deposito antes de llamar al metodo para evitar llamadas innecesarias con datos invalidos. Esto ayuda a mantener la integridad del saldo de la cuenta.",
+          "untr_content": "As a best practice, ensure that the deposit amount is validated before calling the method to avoid unnecessary method calls with invalid data. This can help maintain the integrity of the account balance."
+        }
+      ]
+    },
+    "9": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea llama al metodo `deposit` en el objeto `acct4`, que es una instancia de la clase `Account2`, para agregar 5.00 a su saldo.",
+          "untr_content": "This line calls the `deposit` method on the `acct4` object, which is an instance of the `Account2` class, to add $5.00 to its balance."
+        },
+        {
+          "content": "El metodo `deposit` verifica si la cantidad es mayor que 0 antes de agregarla al saldo actual, asegurando que solo se procesen cantidades de deposito validas.",
+          "untr_content": "The `deposit` method checks if the amount is greater than 0 before adding it to the current balance, ensuring that only valid deposit amounts are processed."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el metodo de deposito siempre cambiara el saldo, pero solo lo hace si la cantidad es positiva.",
+          "untr_content": "A common misconception might be that the deposit method will always change the balance, but it only does so if the amount is positive."
+        },
+        {
+          "content": "Es una buena practica asegurar que metodos como `deposit` manejen entradas invalidas de forma elegante, como se ve aqui con la comprobacion de una cantidad positiva.",
+          "untr_content": "It's a good practice to ensure that methods like `deposit` handle invalid inputs gracefully, as seen here with the check for a positive amount."
+        }
+      ]
+    },
+    "10": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea realiza una operacion de deposito en el objeto de cuenta `acct2` llamando a su metodo `deposit` con un argumento de `75.25`. El resultado de esta operacion, que es el saldo actualizado de la cuenta, se almacena en la variable `adamsBalance`.",
+          "untr_content": "This line performs a deposit operation on the account object `acct2` by calling its `deposit` method with an argument of `75.25`. The result of this operation, which is the updated balance of the account, is stored in the variable `adamsBalance`."
+        },
+        {
+          "content": "El proposito de esta linea es actualizar el saldo de `acct2` sumando la cantidad de deposito especificada y capturar el nuevo saldo para su uso posterior, como mostrarlo luego.",
+          "untr_content": "The purpose of this line is to update the balance of `acct2` by adding the specified deposit amount and to capture the new balance for further use, such as displaying it later."
+        },
+        {
+          "content": "La sintaxis `acct2.deposit(75.25)` llama al metodo `deposit` de la clase `Account2`, pasando `75.25` como el parametro `amount`. El metodo verifica si la cantidad es positiva y, si es asi, la agrega al saldo actual, devolviendo el saldo actualizado.",
+          "untr_content": "The syntax `acct2.deposit(75.25)` calls the `deposit` method of the `Account2` class, passing `75.25` as the parameter `amount`. The method checks if the amount is positive and, if so, adds it to the current balance, returning the updated balance."
+        },
+        {
+          "content": "Un error potencial podria ocurrir si el metodo `deposit` no esta correctamente implementado para manejar cantidades negativas, pero esto esta protegido por la condicion `if (amount > 0)` dentro del metodo.",
+          "untr_content": "A potential error could occur if the `deposit` method is not correctly implemented to handle negative amounts, but this is safeguarded by the condition `if (amount > 0)` within the method."
+        },
+        {
+          "content": "Es buena practica almacenar el resultado de la operacion de deposito en una variable como `adamsBalance` si planeas usar el saldo actualizado inmediatamente despues de la operacion, ya que evita llamadas multiple al metodo y mantiene el codigo limpio y eficiente.",
+          "untr_content": "It is a good practice to store the result of the deposit operation in a variable like `adamsBalance` if you plan to use the updated balance immediately after the operation, as it avoids multiple method calls and keeps the code clean and efficient."
+        }
+      ]
+    },
+    "11": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime un mensaje en la consola que incluye el nombre del titular de la cuenta y su saldo despues de realizar un deposito.",
+          "untr_content": "This line prints out a message to the console that includes the name of the account holder and their balance after a deposit has been made."
+        },
+        {
+          "content": "El metodo `System.out.println` se usa para mostrar texto en la consola. Concatena el nombre del titular, un mensaje y el saldo despues del deposito.",
+          "untr_content": "The `System.out.println` method is used to output text to the console. It concatenates the account holder's name, a string message, and the balance after the deposit."
+        },
+        {
+          "content": "La llamada `acct2.getName()` recupera el nombre del titular de la cuenta para `acct2`, que luego se concatena con el resto de la cadena.",
+          "untr_content": "The `acct2.getName()` method call retrieves the name of the account holder for `acct2`, which is then concatenated with the rest of the string."
+        },
+        {
+          "content": "La variable `adamsBalance` contiene el resultado de la llamada al metodo `deposit` de la Linea 10, que es el nuevo saldo despues del deposito. Este valor se incluye en el mensaje impreso.",
+          "untr_content": "The variable `adamsBalance` holds the result of the `deposit` method call from Line 10, which is the new balance after the deposit. This value is included in the printed message."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser asumir que `adamsBalance` es un valor independiente del saldo de la cuenta, pero en realidad refleja el saldo actualizado de `acct2` despues del deposito.",
+          "untr_content": "A common misconception might be assuming that `adamsBalance` is a separate value from the account's balance, but it actually reflects the updated balance of `acct2` after the deposit."
+        },
+        {
+          "content": "Es una buena practica usar nombres de variables descriptivos como `adamsBalance` para que el codigo sea mas legible y para indicar claramente lo que representa la variable.",
+          "untr_content": "It's a good practice to use descriptive variable names like `adamsBalance` to make the code more readable and to clearly indicate what the variable represents."
+        }
+      ]
+    },
+    "12": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime el saldo de acct2 despues de una operacion de retiro, incluyendo una tarifa.",
+          "untr_content": "This line prints out the balance of acct2 after a withdrawal operation, including a fee."
+        },
+        {
+          "content": "Se llama al metodo `acct2.withdraw(480, 1.50)` para intentar retirar $480 con una tarifa de $1.50 del saldo de acct2.",
+          "untr_content": "The method `acct2.withdraw(480, 1.50)` is called to attempt to withdraw $480 with a $1.50 fee from acct2's balance."
+        },
+        {
+          "content": "El metodo `withdraw` verifica si la cantidad y la tarifa son validas y si el monto total de retiro (cantidad + tarifa) es menor que el saldo actual antes de proceder.",
+          "untr_content": "The `withdraw` method checks if the amount and fee are valid and if the total withdrawal amount (amount + fee) is less than the current balance before proceeding."
+        },
+        {
+          "content": "Si el retiro tiene exito, el saldo se actualiza y se devuelve; de lo contrario, el saldo permanece sin cambios.",
+          "untr_content": "If the withdrawal is successful, the balance is updated and returned; otherwise, the balance remains unchanged."
+        },
+        {
+          "content": "El metodo `getName()` se usa para recuperar el nombre del titular de la cuenta, asegurando que la salida sea personalizada.",
+          "untr_content": "The `getName()` method is used to retrieve the account holder's name, ensuring the output is personalized."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser asumir que el retiro siempre tendra exito; sin embargo, solo procedera si se cumplen las condiciones en el metodo `withdraw`.",
+          "untr_content": "A common misconception might be assuming the withdrawal will always succeed; however, it will only proceed if the conditions in the `withdraw` method are met."
+        },
+        {
+          "content": "Usar `System.out.println` para mostrar el resultado inmediatamente ayuda en la depuracion y a verificar que la transaccion se proceso correctamente.",
+          "untr_content": "Using `System.out.println` to display the result immediately helps in debugging and verifying that the transaction was processed correctly."
+        }
+      ]
+    },
+    "13": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea intenta retirar una cantidad negativa de acct3, que es una instancia de la clase Account2.",
+          "untr_content": "This line attempts to withdraw a negative amount from acct3, which is an instance of the Account2 class."
+        },
+        {
+          "content": "El proposito de esta linea es probablemente probar la capacidad del metodo withdraw para manejar entradas invalidas, especificamente una cantidad de retiro negativa.",
+          "untr_content": "The purpose of this line is likely to test the withdraw method's ability to handle invalid input, specifically a negative withdrawal amount."
+        },
+        {
+          "content": "En el metodo withdraw, la condicion `amount > 0` asegura que solo se puedan retirar cantidades positivas. Como -100.00 no es mayor que 0, el retiro no se procesara y el saldo permanecera sin cambios.",
+          "untr_content": "In the withdraw method, the condition `amount > 0` ensures that only positive amounts can be withdrawn. Since -100.00 is not greater than 0, the withdrawal will not be processed, and the balance will remain unchanged."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que un retiro negativo disminuiria el saldo, pero el metodo esta diseñado para prevenir esto comprobando la validez de la cantidad.",
+          "untr_content": "A common misconception might be that a negative withdrawal would decrease the balance, but the method is designed to prevent this by checking the amount's validity."
+        },
+        {
+          "content": "La mejor practica sugiere validar la entrada antes de llamar a los metodos para evitar llamadas innecesarias y manejar errores de forma elegante, posiblemente informando al usuario sobre la entrada invalida.",
+          "untr_content": "Best practice suggests validating input before calling methods to avoid unnecessary method calls and to handle errors gracefully, possibly by informing the user of invalid input."
+        }
+      ]
+    },
+    "14": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea llama al metodo `addInterest` en el objeto `acct1`, que representa una cuenta bancaria.",
+          "untr_content": "This line calls the `addInterest` method on the `acct1` object, which represents a bank account."
+        },
+        {
+          "content": "El proposito de esta linea es aplicar interes al saldo de `acct1`. Esto simula el escenario del mundo real donde una cuenta bancaria gana interes con el tiempo.",
+          "untr_content": "The purpose of this line is to apply interest to the balance of `acct1`. This simulates the real-world scenario where a bank account earns interest over time."
+        },
+        {
+          "content": "El metodo `addInterest`, definido en la clase `Account2`, calcula el interes multiplicando el saldo actual por una tasa de interes constante (`RATE`) y agrega esta cantidad al saldo.",
+          "untr_content": "The `addInterest` method, defined in the `Account2` class, calculates interest by multiplying the current balance by a constant interest rate (`RATE`) and adds this amount to the balance."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que llamar a `addInterest` mostrara inmediatamente el saldo actualizado, pero necesitas recuperar el saldo explicitamente usando un metodo como `getBalance` o imprimir el objeto de la cuenta para ver el cambio.",
+          "untr_content": "A common misconception might be that calling `addInterest` will immediately show the updated balance, but you need to explicitly retrieve the balance using a method like `getBalance` or print the account object to see the change."
+        },
+        {
+          "content": "Como buena practica, asegura que el metodo `addInterest` se llame periodicamente o en momentos apropiados en tu aplicacion para reflejar la acumulacion realista de interes.",
+          "untr_content": "As a best practice, ensure that the `addInterest` method is called periodically or at appropriate times in your application to reflect realistic interest accrual."
+        }
+      ]
+    },
+    "15": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea llama al metodo `addInterest` en el objeto `acct2`, que representa la cuenta bancaria de Angelica Adams.",
+          "untr_content": "This line calls the `addInterest` method on the `acct2` object, which represents Angelica Adams' bank account."
+        },
+        {
+          "content": "El proposito de esta linea es aplicar la tasa de interes al saldo actual de `acct2`, aumentando el saldo en un porcentaje definido por la constante `RATE` en la clase `Account2`.",
+          "untr_content": "The purpose of this line is to apply the interest rate to the current balance of `acct2`, increasing the balance by a percentage defined by the constant `RATE` in the `Account2` class."
+        },
+        {
+          "content": "El metodo `addInterest` calcula el interes multiplicando el saldo actual por `RATE` y suma este valor al saldo, efectivamente capitalizando el interes.",
+          "untr_content": "The `addInterest` method calculates the interest by multiplying the current balance by the `RATE` and adds this value to the balance, effectively compounding the interest."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el interes se agrega automaticamente o continuamente, pero en este programa debes llamar explicitamente a `addInterest` para aplicarlo.",
+          "untr_content": "A common misconception might be that interest is added automatically or continuously, but in this program, you must explicitly call `addInterest` to apply it."
+        },
+        {
+          "content": "La mejor practica sugiere asegurarse de que el metodo `addInterest` se llame en momentos apropiados, como al final de un periodo financiero, para reflejar saldos de cuenta precisos.",
+          "untr_content": "Best practice suggests ensuring that the `addInterest` method is called at appropriate times, such as at the end of a financial period, to reflect accurate account balances."
+        }
+      ]
+    },
+    "16": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea llama al metodo `addInterest` en el objeto `acct3`, que es una instancia de la clase `Account2`.",
+          "untr_content": "This line calls the `addInterest` method on the `acct3` object, which is an instance of the `Account2` class."
+        },
+        {
+          "content": "El proposito de esta linea es aplicar la tasa de interes al saldo actual de `acct3`, aumentando su saldo en un porcentaje definido por la constante `RATE`.",
+          "untr_content": "The purpose of this line is to apply the interest rate to the current balance of `acct3`, thereby increasing its balance by a percentage defined by the constant `RATE`."
+        },
+        {
+          "content": "El metodo `addInterest` calcula el interes multiplicando el saldo actual por `RATE` y luego añade este interes al saldo.",
+          "untr_content": "The `addInterest` method calculates the interest by multiplying the current balance by the `RATE` and then adds this interest to the balance."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el interes se agrega automaticamente con el tiempo, pero en este programa debes llamar explicitamente a `addInterest` para actualizar el saldo.",
+          "untr_content": "A common misconception might be that interest is added automatically over time, but in this program, you must explicitly call `addInterest` to update the balance."
+        },
+        {
+          "content": "La mejor practica sugiere asegurarse de que el metodo `addInterest` se llame en momentos apropiados, como al final de un periodo financiero, para reflejar saldos de cuenta precisos.",
+          "untr_content": "Best practice suggests ensuring that the `addInterest` method is called at appropriate times, such as at the end of a financial period, to reflect accurate account balances."
+        }
+      ]
+    },
+    "17": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime la representacion en forma de cadena del objeto acct1 en la consola.",
+          "untr_content": "This line prints the string representation of the acct1 object to the console."
+        },
+        {
+          "content": "El metodo System.out.println se usa para mostrar texto en la consola. Aqui, se usa para desplegar los detalles del objeto acct1.",
+          "untr_content": "The System.out.println method is used to output text to the console. Here, it is used to display the details of the acct1 object."
+        },
+        {
+          "content": "El objeto acct1 es una instancia de la clase Account2. Cuando pasas un objeto a System.out.println, Java llama automaticamente al metodo toString del objeto para obtener una representacion en cadena del mismo.",
+          "untr_content": "The acct1 object is an instance of the Account2 class. When you pass an object to System.out.println, Java automatically calls the object's toString method to get a string representation of the object."
+        },
+        {
+          "content": "En la clase Account2, el metodo toString esta sobrescrito para devolver una cadena formateada que contiene el numero de cuenta, el nombre de la cuenta y el saldo. Por eso se ven estos detalles impresos para acct1.",
+          "untr_content": "In the Account2 class, the toString method is overridden to return a formatted string containing the account number, account name, and balance. This is why you see these details printed for acct1."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el metodo toString no es necesario, pero sin el, la implementacion por defecto no proporcionaria informacion significativa sobre la cuenta.",
+          "untr_content": "A common misconception might be that the toString method is not necessary, but without it, the default implementation would not provide meaningful information about the account."
+        },
+        {
+          "content": "Es buena practica siempre sobrescribir el metodo toString en tus clases para proporcionar una representacion en cadena clara y util de tus objetos, lo cual es especialmente util para depuracion y registro.",
+          "untr_content": "Best practice is to always override the toString method in your classes to provide a clear and useful string representation of your objects, which is especially helpful for debugging and logging."
+        }
+      ]
+    },
+    "18": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime la representacion en forma de cadena del objeto `acct2` en la consola. El metodo `System.out.println` se usa para mostrar el resultado de `acct2.toString()`.",
+          "untr_content": "This line prints the string representation of the `acct2` object to the console. The `System.out.println` method is used to output the result of `acct2.toString()`."
+        },
+        {
+          "content": "El metodo `toString()` en la clase `Account2` esta sobrescrito para proporcionar un formato de cadena personalizado para los detalles de la cuenta, incluyendo el numero de cuenta, el nombre de la cuenta y el saldo formateado.",
+          "untr_content": "The `toString()` method in the `Account2` class is overridden to provide a custom string format for the account details, including the account number, account name, and formatted balance."
+        },
+        {
+          "content": "Podrias suponer que `System.out.println(acct2)` imprimira la direccion de memoria del objeto, pero debido a que `toString()` esta sobrescrito, imprime los detalles formateados de la cuenta en su lugar.",
+          "untr_content": "You might assume that `System.out.println(acct2)` would print the memory address of the object, but because `toString()` is overridden, it prints the formatted account details instead."
+        },
+        {
+          "content": "Es una buena practica sobrescribir el metodo `toString()` en tus clases para proporcionar una salida significativa cuando se imprimen objetos, lo que mejora la legibilidad y la depuracion.",
+          "untr_content": "It's a best practice to override the `toString()` method in your classes to provide meaningful output when objects are printed, which enhances readability and debugging."
+        }
+      ]
+    },
+    "19": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime los detalles del objeto de cuenta `acct3` en la consola.",
+          "untr_content": "This line prints the details of the account object `acct3` to the console."
+        },
+        {
+          "content": "El metodo `System.out.println` se usa para mostrar texto en la consola, y llama automaticamente al metodo `toString` del objeto `acct3`.",
+          "untr_content": "The `System.out.println` method is used to output text to the console, and it automatically calls the `toString` method of the `acct3` object."
+        },
+        {
+          "content": "El metodo `toString` en la clase `Account2` formatea el numero de cuenta, el nombre de la cuenta y el saldo en una cadena legible, usando un caracter de tabulacion (`\\t`) para separar los campos.",
+          "untr_content": "The `toString` method in the `Account2` class formats the account number, account name, and balance into a readable string, using a tab character (`\\t`) to separate the fields."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que `System.out.println(acct3)` imprime directamente el objeto, pero en realidad depende del metodo `toString` para convertir el objeto a una representacion en cadena.",
+          "untr_content": "A common misconception might be that `System.out.println(acct3)` directly prints the object, but it actually relies on the `toString` method to convert the object to a string representation."
+        },
+        {
+          "content": "Es buena practica sobrescribir el metodo `toString` en tus clases para proporcionar representaciones en cadena significativas de tus objetos, lo cual es especialmente util para depuracion y registro.",
+          "untr_content": "It's a best practice to override the `toString` method in your classes to provide meaningful string representations of your objects, which is especially useful for debugging and logging."
+        }
+      ]
+    },
+    "20": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea imprime los detalles del objeto de cuenta `acct4` en la consola.",
+          "untr_content": "This line prints the details of the account object `acct4` to the console."
+        },
+        {
+          "content": "El metodo `System.out.println` se usa para mostrar texto en la consola, y llama automaticamente al metodo `toString` del objeto `acct4`.",
+          "untr_content": "The `System.out.println` method is used to output text to the console, and it automatically calls the `toString` method of the `acct4` object."
+        },
+        {
+          "content": "El metodo `toString` en la clase `Account2` formatea el numero de cuenta, el nombre de la cuenta y el saldo en una cadena legible, que luego se imprime.",
+          "untr_content": "The `toString` method in the `Account2` class formats the account number, account name, and balance into a readable string, which is then printed."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que `System.out.println(acct4)` imprime directamente el objeto, pero en realidad depende del metodo `toString` para convertir el objeto a una representacion en cadena.",
+          "untr_content": "A common misconception might be that `System.out.println(acct4)` directly prints the object, but it actually relies on the `toString` method to convert the object to a string representation."
+        },
+        {
+          "content": "Es buena practica sobrescribir el metodo `toString` en tus clases para proporcionar representaciones en cadena significativas de tus objetos, lo cual se hace aqui en la clase `Account2`.",
+          "untr_content": "Best practice is to override the `toString` method in your classes to provide meaningful string representations of your objects, which is done here in the `Account2` class."
+        }
+      ]
+    },
+    "23": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea inicia la definicion de la clase Account2, que encapsula los datos y comportamientos asociados con una cuenta bancaria.",
+          "untr_content": "This line begins the definition of the Account2 class, which encapsulates the data and behaviors associated with a bank account."
+        },
+        {
+          "content": "La palabra clave 'class' se utiliza para declarar una nueva clase en Java, y 'Account2' es el nombre de la clase.",
+          "untr_content": "The keyword 'class' is used to declare a new class in Java, and 'Account2' is the name of the class."
+        },
+        {
+          "content": "Al definir esta clase, estas creando una plantilla para objetos de cuenta bancaria, que tendran propiedades como nombre de cuenta, numero y saldo, y metodos para manipular estas propiedades.",
+          "untr_content": "By defining this class, you are creating a blueprint for bank account objects, which will have properties like account name, number, and balance, and methods to manipulate these properties."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que la clase en si contiene datos; en cambio, define la estructura y el comportamiento para los objetos que se instancien a partir de ella.",
+          "untr_content": "A common misconception might be thinking that the class itself holds data; instead, it defines the structure and behavior for objects that will be instantiated from it."
+        },
+        {
+          "content": "Es buena practica comenzar los nombres de las clases con una letra mayuscula en Java, siguiendo la convension CamelCase, lo cual se respeta aqui con 'Account2'.",
+          "untr_content": "It's a best practice to start class names with an uppercase letter in Java, following the CamelCase convention, which is adhered to here with 'Account2'."
+        }
+      ]
+    },
+    "25": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea declara una constante llamada RATE, que representa la tasa de interes para la cuenta bancaria.",
+          "untr_content": "This line declares a constant named RATE, which represents the interest rate for the bank account."
+        },
+        {
+          "content": "La palabra clave 'private' restringe el acceso a esta constante, asegurando que solo pueda ser accedida dentro de la clase Account2.",
+          "untr_content": "The keyword 'private' restricts access to this constant, ensuring it can only be accessed within the Account2 class."
+        },
+        {
+          "content": "La palabra clave 'final' indica que el valor de RATE no puede cambiar una vez que se inicializa, lo cual es una practica comun para las constantes.",
+          "untr_content": "The keyword 'final' indicates that the value of RATE cannot be changed once it is initialized, which is a common practice for constants."
+        },
+        {
+          "content": "El valor 0.035 se asigna a RATE, representando una tasa de 3.5%. Este valor se usa en el metodo addInterest para calcular el interes.",
+          "untr_content": "The value 0.035 is assigned to RATE, representing a 3.5% interest rate. This value is used in the addInterest method to calculate interest."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que RATE puede modificarse mas tarde en el programa, pero la palabra 'final' lo impide.",
+          "untr_content": "A common misconception might be thinking that RATE can be modified later in the program, but the 'final' keyword prevents this."
+        },
+        {
+          "content": "Es buena practica usar letras mayusculas para los nombres de constantes para distinguirlas de las variables, lo cual se cumple aqui.",
+          "untr_content": "It's a best practice to use uppercase letters for constant names to distinguish them from variables, which is followed here."
+        }
+      ]
+    },
+    "26": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea declara una variable de instancia privada llamada `acctName` de tipo `String`. Esta variable se usa para almacenar el nombre del propietario de la cuenta.",
+          "untr_content": "This line declares a private instance variable named `acctName` of type `String`. This variable is used to store the name of the account owner."
+        },
+        {
+          "content": "Al declarar `acctName` como private, aseguras que solo pueda ser accedida y modificada a traves de metodos dentro de la clase `Account2`, promoviendo la encapsulacion.",
+          "untr_content": "By declaring `acctName` as private, you ensure that it can only be accessed and modified through methods within the `Account2` class, promoting encapsulation."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que `acctName` puede ser accedida directamente desde fuera de la clase. Sin embargo, debido a su modificador de acceso private, debes usar un metodo publico como `getName()` para acceder a su valor.",
+          "untr_content": "A common misconception might be thinking that `acctName` can be accessed directly from outside the class. However, due to its private access modifier, you must use a public method like `getName()` to access its value."
+        },
+        {
+          "content": "Es buena practica usar nombres de variables descriptivos como `acctName` para hacer tu codigo mas legible y mantenible, indicando claramente el proposito de la variable.",
+          "untr_content": "It's a best practice to use descriptive variable names like `acctName` to make your code more readable and maintainable, clearly indicating the purpose of the variable."
+        }
+      ]
+    },
+    "27": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea declara una variable de instancia privada llamada `acctNumber` de tipo `long`. Esta variable se usa para almacenar el numero de cuenta para cada instancia de la clase `Account2`.",
+          "untr_content": "This line declares a private instance variable named `acctNumber` of type `long`. This variable is used to store the account number for each instance of the `Account2` class."
+        },
+        {
+          "content": "El modificador `private` asegura que `acctNumber` solo pueda ser accedido y modificado por metodos dentro de la clase `Account2`, promoviendo la encapsulacion y ocultacion de datos.",
+          "untr_content": "The `private` access modifier ensures that the `acctNumber` can only be accessed and modified by methods within the `Account2` class, promoting encapsulation and data hiding."
+        },
+        {
+          "content": "Usar un tipo `long` permite que el numero de cuenta sea un entero grande, lo cual es util para acomodar una amplia gama de numeros de cuenta sin llegar a problemas de desbordamiento.",
+          "untr_content": "Using a `long` data type allows the account number to be a large integer, which is useful for accommodating a wide range of account numbers without running into overflow issues."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser usar un `int` para numeros de cuenta, pero `long` es mas apropiado para valores mas grandes, reduciendo el riesgo de exceder el valor maximo que un `int` puede contener.",
+          "untr_content": "A common misconception might be to use an `int` for account numbers, but `long` is more appropriate for larger values, reducing the risk of exceeding the maximum value an `int` can hold."
+        },
+        {
+          "content": "La mejor practica sugiere usar nombres de variables descriptivos como `acctNumber` para indicar claramente el proposito de la variable, haciendo el codigo mas legible y mantenible.",
+          "untr_content": "Best practice suggests using descriptive variable names like `acctNumber` to clearly indicate the purpose of the variable, making the code more readable and maintainable."
+        }
+      ]
+    },
+    "28": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea declara una variable de instancia privada llamada 'balance' de tipo double. Se usa para almacenar el saldo actual de la cuenta bancaria.",
+          "untr_content": "This line declares a private instance variable named 'balance' of type double. It is used to store the current balance of the bank account."
+        },
+        {
+          "content": "El modificador 'private' asegura que la variable 'balance' solo pueda ser accedida y modificada por metodos dentro de la clase 'Account2', promoviendo la encapsulacion.",
+          "untr_content": "The 'private' access modifier ensures that the 'balance' variable can only be accessed and modified by methods within the 'Account2' class, promoting encapsulation."
+        },
+        {
+          "content": "Usar un tipo 'double' permite que el saldo incluya valores decimales, lo cual es esencial para representar moneda con precision.",
+          "untr_content": "Using a 'double' type allows the balance to include decimal values, which is essential for representing currency accurately."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser usar un tipo 'int' para el saldo, lo que no permitira centavos en valores monetarios y resultaria en calculos financieros inexactos.",
+          "untr_content": "A common misconception might be to use an 'int' type for balance, which would not allow for cents in currency values, leading to inaccurate financial calculations."
+        },
+        {
+          "content": "Es buena practica mantener las variables de instancia privadas y proporcionar metodos publicos para acceder y modificarlas, asegurando control sobre como se manipulan los datos.",
+          "untr_content": "It's a best practice to keep instance variables private and provide public methods to access and modify them, ensuring control over how the data is manipulated."
+        }
+      ]
+    },
+    "30": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un constructor para la clase Account2 que toma tres parametros: un String para el nombre del propietario, un long para el numero de cuenta y un double para el saldo inicial.",
+          "untr_content": "This line defines a constructor for the Account2 class that takes three parameters: a String for the owner's name, a long for the account number, and a double for the initial balance."
+        },
+        {
+          "content": "El proposito de este constructor es inicializar un nuevo objeto Account2 con el propietario especificado, el numero de cuenta y el saldo inicial, permitiendo crear una cuenta completamente especificada al instanciar.",
+          "untr_content": "The purpose of this constructor is to initialize a new Account2 object with the specified owner, account number, and initial balance, allowing you to create a fully specified account upon instantiation."
+        },
+        {
+          "content": "La sintaxis usada aqui utiliza el metodo constructor, que es un metodo especial en Java que tiene el mismo nombre que la clase y no tiene tipo de retorno. Asi es como se configuran los valores iniciales de los atributos de un objeto cuando se crea.",
+          "untr_content": "The syntax here uses the constructor method, which is a special method in Java that has the same name as the class and no return type. This is how you set up initial values for an object's attributes when it is created."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir el constructor con un metodo normal debido a la ausencia de tipo de retorno. Recuerda, los constructores son unicos en este sentido y se usan solo para inicializar nuevos objetos.",
+          "untr_content": "A common misconception might be confusing the constructor with a regular method due to its lack of a return type. Remember, constructors are unique in this way and are used solely for initializing new objects."
+        },
+        {
+          "content": "La mejor practica sugiere usar constructores para asegurar que los objetos siempre se creen en un estado valido, con todos los campos necesarios inicializados. Este constructor asegura que no se pueda crear una cuenta sin especificar estos detalles esenciales.",
+          "untr_content": "Best practice suggests using constructors to ensure that objects are always created in a valid state, with all necessary fields initialized. This constructor ensures that an account cannot be created without specifying these essential details."
+        }
+      ]
+    },
+    "31": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea asigna el valor del parametro 'owner' a la variable de instancia 'acctName'.",
+          "untr_content": "This line assigns the value of the parameter 'owner' to the instance variable 'acctName'."
+        },
+        {
+          "content": "El proposito de esta linea es inicializar el nombre del titular de la cuenta cuando se crea un nuevo objeto Account2.",
+          "untr_content": "The purpose of this line is to initialize the account holder's name when a new Account2 object is created."
+        },
+        {
+          "content": "La sintaxis 'acctName = owner;' es directa: 'acctName' es la variable de instancia y 'owner' es el parametro pasado al constructor.",
+          "untr_content": "The syntax 'acctName = owner;' is straightforward, where 'acctName' is the instance variable and 'owner' is the parameter passed to the constructor."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir el parametro 'owner' con la variable de instancia 'acctName'. Recuerda, 'owner' es una variable local dentro del constructor, mientras que 'acctName' es una variable a nivel de clase.",
+          "untr_content": "A common misconception might be confusing the parameter 'owner' with the instance variable 'acctName'. Remember, 'owner' is a local variable within the constructor, while 'acctName' is a class-level variable."
+        },
+        {
+          "content": "Es buena practica usar nombres significativos para parametros y variables de instancia para evitar confusiones y mejorar la legibilidad del codigo.",
+          "untr_content": "It's a best practice to use meaningful names for parameters and instance variables to avoid confusion and enhance code readability."
+        }
+      ]
+    },
+    "32": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea asigna el valor del parametro 'account' a la variable de instancia 'acctNumber'.",
+          "untr_content": "This line assigns the value of the 'account' parameter to the instance variable 'acctNumber'."
+        },
+        {
+          "content": "El proposito de esta linea es almacenar el numero de cuenta proporcionado durante la creacion de un objeto Account2, asegurando que cada cuenta tenga un identificador unico.",
+          "untr_content": "The purpose of this line is to store the account number provided during the creation of an Account2 object, ensuring that each account has a unique identifier."
+        },
+        {
+          "content": "La sintaxis aqui implica una simple operacion de asignacion, donde el valor a la derecha (el parametro 'account') se asigna a la variable a la izquierda ('acctNumber').",
+          "untr_content": "The syntax here involves a simple assignment operation, where the value on the right (the parameter 'account') is assigned to the variable on the left ('acctNumber')."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir el parametro 'account' con la variable de instancia 'acctNumber'. Recuerda, 'account' es una variable local especifica del constructor, mientras que 'acctNumber' es una variable de instancia que persiste con el objeto.",
+          "untr_content": "A common misconception might be confusing the parameter 'account' with the instance variable 'acctNumber'. Remember, 'account' is a local variable specific to the constructor, while 'acctNumber' is an instance variable that persists with the object."
+        },
+        {
+          "content": "Es buena practica usar nombres significativos para parametros y variables de instancia para evitar confusiones y hacer el codigo mas legible.",
+          "untr_content": "It's a best practice to use meaningful names for parameters and instance variables to avoid confusion and to make the code more readable."
+        }
+      ]
+    },
+    "33": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea asigna el saldo inicial al campo balance de la cuenta cuando se crea la cuenta.",
+          "untr_content": "This line assigns the initial balance to the account's balance field when the account is created."
+        },
+        {
+          "content": "La sintaxis `balance = initial;` es directa: asigna el valor del parametro `initial` a la variable de instancia `balance`.",
+          "untr_content": "The syntax `balance = initial;` is straightforward: it assigns the value of the `initial` parameter to the `balance` instance variable."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que el saldo se establece automaticamente en cero si no se asigna explicitamente, pero esta linea asegura que el saldo se establece al valor inicial proporcionado.",
+          "untr_content": "A common misconception might be thinking that the balance is automatically set to zero if not explicitly assigned, but this line ensures the balance is set to the provided initial value."
+        },
+        {
+          "content": "Es buena practica inicializar todas las variables de instancia en el constructor para asegurar que el objeto este en un estado valido inmediatamente despues de la creacion.",
+          "untr_content": "It's a best practice to initialize all instance variables in the constructor to ensure the object is in a valid state immediately after creation."
+        }
+      ]
+    },
+    "34": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea marca el fin del constructor que inicializa una cuenta con un nombre de cuenta especificado, numero de cuenta y saldo inicial.",
+          "untr_content": "This line marks the end of the constructor that initializes an account with a specified account name, account number, and initial balance."
+        },
+        {
+          "content": "El constructor es un metodo especial en Java usado para crear e inicializar objetos. En este caso, configura el estado inicial de un objeto Account2 asignando valores a las variables de instancia `acctName`, `acctNumber` y `balance`.",
+          "untr_content": "The constructor is a special method in Java used to create and initialize objects. In this case, it sets up the initial state of an Account2 object by assigning values to the instance variables `acctName`, `acctNumber`, and `balance`."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que los constructores necesitan un tipo de retorno, pero en Java, los constructores no tienen tipo de retorno, ni siquiera void.",
+          "untr_content": "A common misconception might be that constructors need a return type, but in Java, constructors do not have a return type, not even void."
+        },
+        {
+          "content": "Es buena practica asegurarse de que todas las variables de instancia esten correctamente inicializadas en el constructor para evitar referencias nulas o variables sin inicializar mas adelante en el programa.",
+          "untr_content": "It's a best practice to ensure that all instance variables are properly initialized in the constructor to avoid null references or uninitialized variables later in the program."
+        }
+      ]
+    },
+    "36": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un constructor para la clase Account2 que toma dos parametros: un String 'owner' y un long 'account'. Este constructor se usa cuando solo se proporcionan el nombre de la cuenta y el numero de cuenta, y asume un saldo inicial de cero.",
+          "untr_content": "This line defines a constructor for the Account2 class that takes two parameters: a String 'owner' and a long 'account'. This constructor is used when only the account name and account number are provided, and it assumes an initial balance of zero."
+        },
+        {
+          "content": "El constructor llama a otro constructor dentro de la misma clase usando la palabra clave 'this', pasando 'owner', 'account' y '0' como argumentos. Esto se conoce como encadenamiento de constructores y ayuda a evitar la duplicacion de codigo al reutilizar la logica del constructor de tres parametros definido anteriormente.",
+          "untr_content": "The constructor calls another constructor within the same class using the 'this' keyword, passing 'owner', 'account', and '0' as arguments. This is known as constructor chaining and helps to avoid code duplication by reusing the logic of the three-parameter constructor defined earlier."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que la palabra 'this' solo se usa para variables de instancia, pero tambien se puede usar para llamar a otro constructor en la misma clase.",
+          "untr_content": "A common misconception might be that the 'this' keyword is only used for instance variables, but it can also be used to call another constructor in the same class."
+        },
+        {
+          "content": "Usar encadenamiento de constructores es una buena practica ya que mantiene tu codigo DRY (Don't Repeat Yourself) y facilita el mantenimiento y actualizacion.",
+          "untr_content": "Using constructor chaining is a best practice as it keeps your code DRY (Don't Repeat Yourself) and makes it easier to maintain and update."
+        }
+      ]
+    },
+    "37": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea llama a otro constructor dentro de la misma clase usando la palabra `this`, lo cual es una practica comun en Java para evitar la duplicacion de codigo.",
+          "untr_content": "This line calls another constructor within the same class using the `this` keyword, which is a common practice in Java to avoid code duplication."
+        },
+        {
+          "content": "El proposito de esta linea es inicializar un nuevo objeto `Account2` con un saldo inicial por defecto de 0 cuando solo se proporcionan el nombre y el numero de cuenta.",
+          "untr_content": "The purpose of this line is to initialize a new `Account2` object with a default initial balance of 0 when only the account name and account number are provided."
+        },
+        {
+          "content": "La sintaxis `this(owner, account, 0);` refiere al constructor `Account2(String owner, long account, double initial)` definido en la Linea 30, pasando `owner`, `account` y `0` como argumentos.",
+          "untr_content": "The syntax `this(owner, account, 0);` refers to the constructor `Account2(String owner, long account, double initial)` defined on Line 30, passing `owner`, `account`, and `0` as arguments."
+        },
+        {
+          "content": "Un error potencial aqui podria ser no entender el uso de `this` para llamar a otro constructor, lo cual solo esta permitido como la primera sentencia en un constructor.",
+          "untr_content": "A potential error here could be misunderstanding the use of `this` to call another constructor, which is only allowed as the first statement in a constructor."
+        },
+        {
+          "content": "Usar encadenamiento de constructores como este es una buena practica ya que reduce la redundancia y asegura una logica de inicializacion consistente entre diferentes constructores.",
+          "untr_content": "Using constructor chaining like this is a best practice as it reduces redundancy and ensures consistent initialization logic across different constructors."
+        }
+      ]
+    },
+    "38": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea es la llave de cierre para el constructor definido en la linea 36. Marca el fin del bloque del constructor que inicializa una cuenta con un nombre y numero especificados, estableciendo el saldo inicial en cero.",
+          "untr_content": "This line is the closing brace for the constructor defined on line 36. It marks the end of the constructor block that initializes an account with a specified name and account number, setting the initial balance to zero."
+        },
+        {
+          "content": "En Java, cada bloque de codigo, como un metodo o constructor, debe estar encerrado entre llaves. La llave de apertura esta en la linea 36, y esta llave de cierre en la linea 38 asegura que el constructor esta correctamente definido.",
+          "untr_content": "In Java, every block of code, such as a method or constructor, must be enclosed within curly braces. The opening brace is on line 36, and this closing brace on line 38 ensures that the constructor is properly defined."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar la llave de cierre, lo que resultaria en un error de compilacion. Siempre asegura que cada llave de apertura tenga su correspondiente llave de cierre.",
+          "untr_content": "A common misconception might be to forget the closing brace, which would result in a compilation error. Always ensure that every opening brace has a corresponding closing brace."
+        },
+        {
+          "content": "Es buena practica formatear consistentemente tu codigo con la indentacion y colocacion de llaves apropiadas para mejorar la legibilidad y mantenibilidad.",
+          "untr_content": "Best practice is to consistently format your code with proper indentation and brace placement to enhance readability and maintainability."
+        }
+      ]
+    },
+    "40": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo llamado `deposit` que toma un solo parametro, `amount`, de tipo `double`. El proposito de este metodo es agregar una cantidad especificada de dinero al saldo de la cuenta.",
+          "untr_content": "This line defines a method named `deposit` that takes a single parameter, `amount`, of type `double`. The purpose of this method is to add a specified amount of money to the account's balance."
+        },
+        {
+          "content": "El metodo devuelve un `double`, que es el saldo actualizado de la cuenta despues de la operacion de deposito.",
+          "untr_content": "The method returns a `double`, which is the updated balance of the account after the deposit operation."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el metodo de deposito siempre debe sumar la cantidad al saldo, pero en realidad verifica que la cantidad sea mayor que cero antes de hacerlo, como se ve en las lineas siguientes.",
+          "untr_content": "A common misconception might be that the deposit method should always add the amount to the balance, but it actually checks if the amount is greater than zero before doing so, as seen in the subsequent lines."
+        },
+        {
+          "content": "Es una buena practica validar la entrada, como asegurar que la cantidad de deposito sea positiva, para prevenir errores logicos y mantener la integridad de los datos.",
+          "untr_content": "It's a best practice to validate input, such as ensuring the deposit amount is positive, to prevent logical errors and maintain data integrity."
+        }
+      ]
+    },
+    "41": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea verifica si la cantidad a depositar es mayor que cero. Esto es crucial porque quieres asegurarte de que solo cantidades positivas se agreguen al saldo de la cuenta, evitando intentos accidentales o maliciosos de depositar una cantidad negativa, lo que efectivamente reduciria el saldo.",
+          "untr_content": "This line checks if the amount to be deposited is greater than zero. This is crucial because you want to ensure that only positive amounts are added to the account balance, preventing any accidental or malicious attempts to deposit a negative amount, which would effectively reduce the balance."
+        },
+        {
+          "content": "La sintaxis `if (amount > 0)` es una sentencia condicional en Java. Evalua la expresion `amount > 0`, que comprueba si la variable `amount` es mayor que cero. Si esta condicion es verdadera, el bloque de codigo dentro de las llaves `{}` en la siguiente linea se ejecutara.",
+          "untr_content": "The syntax `if (amount > 0)` is a conditional statement in Java. It evaluates the expression `amount > 0`, which checks if the variable `amount` is greater than zero. If this condition is true, the code block inside the curly braces `{}` on the next line will execute."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que cero es una cantidad valida para depositar. Sin embargo, depositar cero no cambia el saldo, por lo que tipicamente no se permite en operaciones bancarias.",
+          "untr_content": "A common misconception might be thinking that zero is a valid deposit amount. However, depositing zero does not change the balance, so it is typically not allowed in banking operations."
+        },
+        {
+          "content": "Como buena practica, siempre valida los datos de entrada antes de realizar operaciones sobre ellos. Esto ayuda a mantener la integridad de los datos y previene comportamientos inesperados en tu programa.",
+          "untr_content": "As a best practice, always validate input data before performing operations on it. This helps maintain data integrity and prevents unexpected behavior in your program."
+        }
+      ]
+    },
+    "46": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define la firma del metodo para `withdraw`, el cual es responsable de manejar transacciones de retiro de la cuenta bancaria.",
+          "untr_content": "This line defines the method signature for the `withdraw` method, which is responsible for handling withdrawal transactions from the bank account."
+        },
+        {
+          "content": "El metodo toma dos parametros: `amount` y `fee`, ambos de tipo `double`. `amount` representa el dinero a retirar, y `fee` representa cualquier tarifa de transaccion asociada con el retiro.",
+          "untr_content": "The method takes two parameters: `amount` and `fee`, both of which are of type `double`. The `amount` represents the money to be withdrawn, and `fee` represents any transaction fee associated with the withdrawal."
+        },
+        {
+          "content": "El metodo devuelve un `double`, que es el saldo actualizado de la cuenta despues de procesar el retiro y la tarifa.",
+          "untr_content": "The method returns a `double`, which is the updated balance of the account after the withdrawal and fee have been processed."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el metodo siempre retirara la cantidad y la tarifa, pero en realidad comprueba condiciones en la siguiente linea para asegurar que la transaccion sea valida antes de proceder.",
+          "untr_content": "A common misconception might be that the method will always withdraw the amount and fee, but it actually checks conditions in the next line to ensure the transaction is valid before proceeding."
+        },
+        {
+          "content": "La mejor practica aqui es asegurar que la firma del metodo indique claramente el proposito y los parametros del metodo, lo que ayuda a comprender y mantener el codigo.",
+          "untr_content": "Best practice here is to ensure that the method signature clearly indicates the purpose and parameters of the method, which helps in understanding and maintaining the code."
+        }
+      ]
+    },
+    "47": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea verifica si la cantidad de retiro y la tarifa son validas antes de proceder con la transaccion.",
+          "untr_content": "This line checks if the withdrawal amount and fee are valid before proceeding with the transaction."
+        },
+        {
+          "content": "La condicion `amount > 0` asegura que la cantidad de retiro sea positiva, previniendo retiros negativos que podrian aumentar el saldo.",
+          "untr_content": "The condition `amount > 0` ensures that the withdrawal amount is positive, preventing negative withdrawals which could increase the balance."
+        },
+        {
+          "content": "La condicion `fee >= 0` asegura que la tarifa no sea negativa, lo que de otro modo aumentaria incorrectamente el saldo.",
+          "untr_content": "The condition `fee >= 0` ensures that the fee is not negative, which would otherwise incorrectly increase the balance."
+        },
+        {
+          "content": "La condicion `amount + fee < balance` asegura que la cuenta tenga fondos suficientes para cubrir tanto la cantidad de retiro como la tarifa, evitando sobregiros.",
+          "untr_content": "The condition `amount + fee < balance` ensures that the account has sufficient funds to cover both the withdrawal amount and the fee, preventing overdrafts."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que `amount + fee <= balance` deberia usarse, pero esto permitira que el saldo llegue a cero, lo cual podria no ser deseable dependiendo de la politica del banco.",
+          "untr_content": "A common misconception might be thinking that `amount + fee <= balance` should be used, but this would allow the balance to become zero, which might not be desirable depending on the bank's policy."
+        },
+        {
+          "content": "Usar una condicion compuesta con AND logico (`&&`) asegura que todas las condiciones deben ser verdaderas para que el retiro proceda, lo que es una buena practica para validar multiples criterios.",
+          "untr_content": "Using a compound condition with logical AND (`&&`) ensures that all conditions must be true for the withdrawal to proceed, which is a best practice for validating multiple criteria."
+        }
+      ]
+    },
+    "52": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "El metodo `addInterest` esta disenado para calcular y agregar interes al saldo actual de la cuenta.",
+          "untr_content": "The method `addInterest` is designed to calculate and add interest to the account's current balance."
+        },
+        {
+          "content": "El metodo devuelve el saldo actualizado despues de que se ha agregado el interes, lo que te permite ver inmediatamente el nuevo saldo si es necesario.",
+          "untr_content": "The method returns the updated balance after interest has been added, which allows you to immediately see the new balance if needed."
+        },
+        {
+          "content": "La sintaxis `public double addInterest()` indica que este metodo es accesible desde fuera de la clase (`public`), devuelve un valor de tipo `double` y no toma parametros.",
+          "untr_content": "The syntax `public double addInterest()` indicates that this method is accessible from outside the class (`public`), returns a `double` value, and takes no parameters."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el interes se agrega automaticamente; sin embargo, debes llamar explicitamente a este metodo para aplicarlo.",
+          "untr_content": "A common misconception might be that interest is added automatically; however, you must explicitly call this method to apply interest."
+        },
+        {
+          "content": "Es una buena practica asegurar que la tasa de interes (`RATE`) sea una constante, como lo es aqui, para prevenir cambios accidentales y mantener consistencia entre todas las cuentas.",
+          "untr_content": "It's a best practice to ensure that the interest rate (`RATE`) is a constant, as it is here, to prevent accidental changes and maintain consistency across all accounts."
+        }
+      ]
+    },
+    "57": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo publico llamado `getName` que devuelve el nombre del titular de la cuenta.",
+          "untr_content": "This line defines a public method named `getName` that returns the name of the account holder."
+        },
+        {
+          "content": "El metodo es un simple accesor (o getter) que proporciona acceso a la variable privada de instancia `acctName`.",
+          "untr_content": "The method is a simple accessor (or getter) that provides access to the private instance variable `acctName`."
+        },
+        {
+          "content": "Al usar un metodo getter, mantienes la encapsulacion, que es un principio clave en la programacion orientada a objetos. Esto te permite controlar como se accede y eventualmente se modifica el nombre de la cuenta.",
+          "untr_content": "By using a getter method, you maintain encapsulation, which is a key principle in object-oriented programming. This allows you to control how the account name is accessed and potentially modified in the future."
+        },
+        {
+          "content": "El metodo esta declarado con un tipo de retorno `String`, que coincide con el tipo de dato de `acctName`. Esto asegura que el metodo devuelva el tipo de dato correcto.",
+          "untr_content": "The method is declared with a return type of `String`, which matches the data type of `acctName`. This ensures that the method returns the correct type of data."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que el metodo modifica el nombre de la cuenta, pero solo recupera el valor actual.",
+          "untr_content": "A common misconception might be thinking that the method modifies the account name, but it only retrieves the current value."
+        },
+        {
+          "content": "La mejor practica sugiere usar metodos getter como este para acceder a campos privados, ya que proporciona una forma controlada de exponer datos de la clase.",
+          "untr_content": "Best practice suggests using getter methods like this to access private fields, as it provides a controlled way to expose class data."
+        }
+      ]
+    },
+    "60": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo llamado `getBalance` que devuelve el saldo actual de la cuenta.",
+          "untr_content": "This line defines a method named `getBalance` that returns the current balance of the account."
+        },
+        {
+          "content": "El metodo es publico, lo que significa que puede ser accedido desde fuera de la clase, permitiendo que otras clases recuperen el saldo de una cuenta.",
+          "untr_content": "The method is public, meaning it can be accessed from outside the class, allowing other classes to retrieve the balance of an account."
+        },
+        {
+          "content": "El tipo de retorno del metodo es `double`, que coincide con el tipo de dato de la variable `balance`, asegurando que el metodo devuelva el tipo correcto.",
+          "untr_content": "The return type of the method is `double`, which matches the data type of the `balance` variable, ensuring that the method returns the correct type of data."
+        },
+        {
+          "content": "El metodo no toma parametros, ya que simplemente devuelve el estado actual de la variable `balance`.",
+          "untr_content": "The method does not take any parameters, as it simply returns the current state of the `balance` variable."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que este metodo modifica el saldo, pero solo recupera el valor actual sin hacer cambios.",
+          "untr_content": "A common misconception might be thinking that this method modifies the balance, but it only retrieves the current value without making any changes."
+        },
+        {
+          "content": "Como buena practica, usar un metodo getter como este encapsula la variable `balance`, evitando acceso directo y posibles modificaciones no intencionadas desde fuera de la clase.",
+          "untr_content": "As a best practice, using a getter method like this encapsulates the `balance` variable, preventing direct access and potential unintended modifications from outside the class."
+        }
+      ]
+    },
+    "63": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo publico llamado `getAcctNumber` que devuelve el numero de cuenta de la cuenta bancaria.",
+          "untr_content": "This line defines a public method named `getAcctNumber` that returns the account number of the bank account."
+        },
+        {
+          "content": "El metodo se declara con el modificador de acceso `public`, lo que significa que puede ser accedido desde fuera de la clase, lo cual es esencial para recuperar el numero de cuenta desde otras clases o metodos.",
+          "untr_content": "The method is declared with the `public` access modifier, meaning it can be accessed from outside the class, which is essential for retrieving the account number from other classes or methods."
+        },
+        {
+          "content": "El tipo de retorno del metodo es `long`, que coincide con el tipo de dato de la variable de instancia `acctNumber`. Esto asegura que el metodo devuelva el tipo de dato correcto.",
+          "untr_content": "The return type of the method is `long`, which matches the data type of the `acctNumber` instance variable. This ensures that the method returns the correct type of data."
+        },
+        {
+          "content": "El metodo no toma parametros, ya que simplemente devuelve el valor de la variable de instancia `acctNumber`.",
+          "untr_content": "The method does not take any parameters, as it simply returns the value of the `acctNumber` instance variable."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que este metodo modifica el numero de cuenta, pero solo recupera y devuelve el valor actual.",
+          "untr_content": "A common misconception might be that this method modifies the account number, but it only retrieves and returns the current value."
+        },
+        {
+          "content": "La mejor practica sugiere usar metodos getter como este para acceder a variables de instancia privadas, manteniendo la encapsulacion y protegiendo la integridad de los datos.",
+          "untr_content": "Best practice suggests using getter methods like this to access private instance variables, maintaining encapsulation and protecting the integrity of the data."
+        }
+      ]
+    },
+    "66": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "El metodo `toString` esta sobrescrito para proporcionar una representacion en cadena del objeto Account2, lo cual es util para mostrar detalles de la cuenta en un formato legible.",
+          "untr_content": "The `toString` method is overridden to provide a string representation of the Account2 object, which is useful for displaying account details in a readable format."
+        },
+        {
+          "content": "En Java, el metodo `toString` es un metodo estandar que se puede sobrescribir para definir como un objeto debe representarse como una cadena. Por defecto, devuelve una cadena que incluye el nombre de la clase y el codigo hash, pero aqui se personaliza para mostrar detalles de la cuenta.",
+          "untr_content": "In Java, the `toString` method is a standard method that can be overridden to define how an object should be represented as a string. By default, it returns a string that includes the class name and hash code, but here it is customized to show account details."
+        },
+        {
+          "content": "Una idea equivocada comun es que el metodo `toString` se llama automaticamente solo cuando lo invocas explicitamente. Sin embargo, tambien se llama implicitamente cuando imprimes un objeto usando `System.out.println` o concatenas un objeto con una cadena.",
+          "untr_content": "A common misconception is that the `toString` method is automatically called only when you explicitly call it. However, it is also implicitly called when you print an object using `System.out.println` or concatenate an object with a string."
+        },
+        {
+          "content": "Es una buena practica sobrescribir el metodo `toString` en tus clases para proporcionar informacion significativa y legible sobre los objetos, lo que puede ser muy util para depuracion y registro.",
+          "untr_content": "It's a best practice to override the `toString` method in your classes to provide meaningful and human-readable information about the objects, which can be very helpful for debugging and logging."
+        }
+      ]
+    },
+    "67": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea un objeto `NumberFormat` llamado `fmt` usando el metodo `getCurrencyInstance()`.",
+          "untr_content": "This line creates a `NumberFormat` object named `fmt` using the `getCurrencyInstance()` method."
+        },
+        {
+          "content": "El proposito de esta linea es formatear el saldo de la cuenta como una cadena de moneda, lo cual es util para mostrar valores monetarios de forma amigable para el usuario.",
+          "untr_content": "The purpose of this line is to format the account balance as a currency string, which is useful for displaying monetary values in a user-friendly way."
+        },
+        {
+          "content": "La clase `NumberFormat` es parte del paquete `java.text`, que provee metodos para formatear y parsear numeros.",
+          "untr_content": "The `NumberFormat` class is part of the `java.text` package, which provides methods for formatting and parsing numbers."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que `getCurrencyInstance()` establece automaticamente el tipo de moneda, pero en realidad usa el formato de moneda del locale por defecto a menos que se especifique otro.",
+          "untr_content": "A common misconception might be that `getCurrencyInstance()` automatically sets the currency type, but it actually uses the default locale's currency format unless specified otherwise."
+        },
+        {
+          "content": "Es buena practica usar `NumberFormat` para moneda para asegurar que el saldo se muestre con simbolos de moneda y decimales apropiados, mejorando la legibilidad y profesionalismo de la salida.",
+          "untr_content": "It's a best practice to use `NumberFormat` for currency to ensure that the balance is displayed with appropriate currency symbols and decimal places, enhancing the readability and professionalism of the output."
+        }
+      ]
+    },
+    "68": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea construye y devuelve una cadena que representa el objeto de cuenta, la cual incluye el numero de cuenta, el nombre de la cuenta y el saldo formateado.",
+          "untr_content": "This line constructs and returns a string representation of the account object, which includes the account number, account name, and formatted balance."
+        },
+        {
+          "content": "El operador `+` se usa para concatenar el numero de cuenta, el nombre de la cuenta y el saldo formateado en una sola cadena. El caracter `\\t` es una tabulacion, lo que ayuda a alinear la salida cuando se imprime.",
+          "untr_content": "The `+` operator is used to concatenate the account number, account name, and formatted balance into a single string. The `\\t` character is a tab character, which helps in aligning the output when printed."
+        },
+        {
+          "content": "La parte `fmt.format(balance)` usa la instancia de `NumberFormat` para formatear el saldo como moneda, lo que hace la salida mas legible al incluir simbolos de moneda y decimales apropiados.",
+          "untr_content": "The `fmt.format(balance)` part uses the `NumberFormat` instance to format the balance as currency, which makes the output more readable by including currency symbols and appropriate decimal places."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el operador `+` solo se usa para suma numerica, pero en Java tambien se usa para la concatenacion de cadenas.",
+          "untr_content": "A common misconception might be that the `+` operator can only be used for numerical addition, but in Java, it is also used for string concatenation."
+        },
+        {
+          "content": "Es buena practica sobrescribir el metodo `toString` en las clases Java para proporcionar una representacion en cadena significativa del objeto, lo que es util para depuracion y registro.",
+          "untr_content": "It's a best practice to override the `toString` method in Java classes to provide a meaningful string representation of the object, which is useful for debugging and logging."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "public Account2 (String owner, double initial) {",
+      "untr_code": "public Account2 (String owner, double initial) {",
+      "description": "Podrias elegir este distractor si confundes los tipos de parametros necesarios para diferentes constructores. Esta linea usa incorrectamente un double para el saldo inicial en lugar de un long para el numero de cuenta. Este error puede provenir de no entender como funciona la sobrecarga de constructores, donde cada constructor debe tener una lista de parametros unica. Usar este distractor generaria un error de compilacion porque la firma del constructor no coincide con el caso de uso previsto de inicializar una cuenta con solo nombre y numero de cuenta. La linea correcta deberia enfocarse en inicializar la cuenta con los parametros correctos, asegurando que el numero de cuenta se establezca apropiadamente.",
+      "untr_description": "You might choose this distractor if you confuse the types of parameters needed for different constructors. This line incorrectly uses a double for the initial balance instead of a long for the account number. This mistake could stem from misunderstanding how constructor overloading works, where each constructor must have a unique parameter list. Using this distractor would lead to a compilation error because the constructor signature does not match the intended use case of initializing an account with a name and account number only. The correct line should focus on initializing the account with the correct parameters, ensuring the account number is properly set.",
+      "line_number": 36
+    },
+    {
+      "code": "public Account2 (String owner, long account, double balance) {",
+      "untr_code": "public Account2 (String owner, long account, double balance) {",
+      "description": "Este distractor podria parecer plausible si olvidas que el constructor deberia establecer un saldo por defecto de cero cuando solo se proporcionan el propietario y el numero de cuenta. Al incluir un parametro de saldo, estas sobreespecificando el constructor, lo que contradice el requisito de asumir un saldo cero cuando no se provee explicitamente. Esto podria causar confusiones sobre que constructor usar cuando solo hay dos parametros disponibles, provocando errores logicos en el programa. El enfoque correcto es asegurar que el constructor inicialice la cuenta con el saldo por defecto sin requerir un parametro adicional.",
+      "untr_description": "This distractor might seem plausible if you forget that the constructor is meant to set a default balance of zero when only the owner and account number are provided. By including a balance parameter, you are over-specifying the constructor, which contradicts the requirement to assume a zero balance when not explicitly provided. This would lead to confusion about which constructor to use when only two parameters are available, potentially causing logical errors in the program. The correct approach should ensure that the constructor initializes the account with the default balance without requiring an additional parameter.",
+      "line_number": 36
+    },
+    {
+      "code": "this(owner, account);",
+      "untr_code": "this(owner, account);",
+      "description": "Podrias pensar que omitir el tercer parametro automaticamente fijara el saldo inicial en cero, similar a como funcionan los valores por defecto en algunos lenguajes o contextos. Sin embargo, esta linea intenta llamar a un constructor que no existe, lo que lleva a un error de compilacion. La sobrecarga de constructores requiere que definas explicitamente cada constructor con los parametros exactos que piensas usar. Sin especificar el saldo inicial, el programa no sabra como inicializar el saldo de la cuenta, resultando en un error.",
+      "untr_description": "You might think that omitting the third parameter will automatically set the initial balance to zero, similar to how default values work in some languages or contexts. However, this line attempts to call a constructor that doesn't exist, leading to a compilation error. Constructor overloading requires you to explicitly define each constructor with the exact parameters you intend to use. Without specifying the initial balance, the program won't know how to initialize the account's balance, resulting in an error.",
+      "line_number": 37
+    },
+    {
+      "code": "super(owner, account, 0);",
+      "untr_code": "super(owner, account, 0);",
+      "description": "Podrias equivocarte pensando que 'super' se usa para llamar a otro constructor dentro de la misma clase, pero 'super' en realidad se usa para llamar al constructor de la superclase. Como no hay un constructor de superclase a llamar aqui, esta linea causaria un error de compilacion. Esta confusion puede surgir si no tienes claro la diferencia entre 'this' y 'super' en Java. Usar 'super' en este contexto es invalido porque no se refiere al constructor de la clase actual, que es lo que necesitas para inicializar la cuenta con un saldo cero.",
+      "untr_description": "You might mistakenly think that 'super' is used to call another constructor within the same class, but 'super' is actually used to call a constructor of the superclass. Since there is no superclass constructor to call here, this line would cause a compilation error. This misunderstanding can arise if you're not clear on the difference between 'this' and 'super' in Java. Using 'super' in this context is invalid because it doesn't refer to the current class's constructor, which is what you need to initialize the account with a zero balance.",
+      "line_number": 37
+    }
+  ],
+  "tags": [
+    "spanish-latam;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "translations": {
+    "en": "68bdb308f6cc3d7a9cc096ad"
+  },
+  "collaborator_emails": [],
+  "programInput": ""
+}

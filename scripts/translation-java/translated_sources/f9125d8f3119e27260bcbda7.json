@@ -1,0 +1,924 @@
+{
+  "id": "f9125d8f3119e27260bcbda7",
+  "user": "moh70@pitt.edu",
+  "name": "La clase para representar un préstamo (Caso 1)",
+  "untr_name": "The Class for Representing a Loan (Case 1)",
+  "description": "Construya una clase que represente un prestamo. Esta clase debe contener datos que representen la tasa de interes, el monto del prestamo y la duracion del periodo del prestamo (en anos). La clase debe tener constructores que permitan crear un prestamo cuando:\n - se especifican la tasa de interes anual, la duracion del periodo del prestamo y el monto del prestamo\\n - no se especifican las propiedades del prestamo. En este caso, creamos un prestamo con valores por defecto para las propiedades del prestamo (tasa de interes 3 %, periodo de prestamo de 1 ano, y monto del prestamo 1000).\nEl otro metodo de esta clase debe calcular el monto de los pagos mensuales del prestamo.\n\nLa clase LoanTester1 instancia un objeto de esta clase e invoca su metodo para determinar el monto de los pagos mensuales del prestamo.",
+  "untr_description": "Construct a class that represents a loan. This class should contain data representing the interest rate, loan amount, and the length of loan period (in years). The class should have constructors that permits a loan to be created when:\n - annual interest rate, length of loan period, and loan amount are specified\\n - none of the properties of the loan are specified. In this, we create a loan with default values for the loan properties (3 % interest rate, 1-year loan period, and 1000 loan amount).\nThe other method of the this class should calculate the amount of monthly payments on the loan.\n\nThe LoanTester1 class instantiates an object from this class and invokes its method to determine the amount of monthly payments on the loan.",
+  "language": "JAVA",
+  "iso_language_code": "es",
+  "filename": "LoanTester1.java",
+  "code": "import java.text.NumberFormat;\nimport java.util.Scanner;\npublic class LoanTester1 {\n\tpublic static void main(String[] args) {\n\t\tScanner input = new Scanner(System.in);\n\t\tSystem.out.println(\"Ingrese la tasa de interes anual: \");\n\t\tdouble annualInterestRate = input.nextDouble();\n\t\tSystem.out.println(\"Ingrese el numero de anos para el periodo del prestamo: \");\n\t\tint numberOfYears = input.nextInt();\n\t\tSystem.out.println(\"Ingrese el monto del prestamo: \");\n\t\tdouble loanAmount =  input.nextDouble();\n\t\tLoan1 loan = new Loan1(annualInterestRate, numberOfYears, loanAmount);\n\t\tNumberFormat fmt = NumberFormat.getCurrencyInstance();\n\t\tSystem.out.println(\"El pago mensual del prestamo es: \" + fmt.format(loan.getMonthlyPayment()));\n\t}\n}\nclass Loan1 {\n\t//Paso 1: Declarar las variables de instancia \n\tprivate double annualInterestRate;\n\tprivate int numberOfYears;\n\tprivate double loanAmount;\n\t//Paso 2: Definir el constructor para crear un prestamo con los valores especificados \n\tpublic Loan1(double annualInterestRate, int numberOfYears, double loanAmount) {\n\t\tthis.annualInterestRate = annualInterestRate;\n\t\tthis.numberOfYears = numberOfYears;\n\t\tthis.loanAmount = loanAmount;\n\t}\n\t//Paso 3: Definir el constructor para crear un prestamo sin especificar ningun valor \n\tpublic Loan1() {\n\t\tthis(0.03, 1, 1000);\n\t}\n\t//Paso 4: Definir el metodo que calcula el monto de los pagos mensuales del prestamo\n\tpublic double getMonthlyPayment() {\n\t\tdouble monthlyInterestRate = annualInterestRate / 12;\n\t\tdouble monthlyPayment = loanAmount * monthlyInterestRate / (1 -\n\t\t\t\t(1 / Math.pow(1 + monthlyInterestRate, numberOfYears * 12)));\n\t\treturn monthlyPayment;    \n\t}\n\t//Paso 5: Definir los metodos para obtener/establecer las propiedades del prestamo\n\tpublic double getAnnualInterestRate() {\n\t\treturn annualInterestRate;\n\t}\n\tpublic void setAnnualInterestRate(double annualInterestRate) {\n\t\tthis.annualInterestRate = annualInterestRate;\n\t}\n\tpublic int getNumberOfYears() {\n\t\treturn numberOfYears;\n\t}\n\tpublic void setNumberOfYears(int numberOfYears) {\n\t\tthis.numberOfYears = numberOfYears;\n\t}\n\tpublic double getLoanAmount() {\n\t\treturn loanAmount;\n\t}\n\tpublic void setLoanAmount(double loanAmount) {\n\t\tthis.loanAmount = loanAmount;\n\t}\n}",
+  "untr_code": "import java.text.NumberFormat;\nimport java.util.Scanner;\npublic class LoanTester1 {\n\tpublic static void main(String[] args) {\n\t\tScanner input = new Scanner(System.in);\n\t\tSystem.out.println(\"Enter the annual interest rate: \");\n\t\tdouble annualInterestRate = input.nextDouble();\n\t\tSystem.out.println(\"Enter the number of years for the loan period: \");\n\t\tint numberOfYears = input.nextInt();\n\t\tSystem.out.println(\"Enter the loan amount: \");\n\t\tdouble loanAmount =  input.nextDouble();\n\t\tLoan1 loan = new Loan1(annualInterestRate, numberOfYears, loanAmount);\n\t\tNumberFormat fmt = NumberFormat.getCurrencyInstance();\n\t\tSystem.out.println(\"The monthly paymenst for the loan is: \" + fmt.format(loan.getMonthlyPayment()));\n\t}\n}\nclass Loan1 {\n\t//Step 1: Declare the instance variables \n\tprivate double annualInterestRate;\n\tprivate int numberOfYears;\n\tprivate double loanAmount;\n\t//Step 2: Define the constructor to create a loan with the specified values \n\tpublic Loan1(double annualInterestRate, int numberOfYears, double loanAmount) {\n\t\tthis.annualInterestRate = annualInterestRate;\n\t\tthis.numberOfYears = numberOfYears;\n\t\tthis.loanAmount = loanAmount;\n\t}\n\t//Step 3: Define the constructor to create a loan without specifying any value \n\tpublic Loan1() {\n\t\tthis(0.03, 1, 1000);\n\t}\n\t//Step 4: Define the method that calculates the amount of monthly payments on the loan\n\tpublic double getMonthlyPayment() {\n\t\tdouble monthlyInterestRate = annualInterestRate / 12;\n\t\tdouble monthlyPayment = loanAmount * monthlyInterestRate / (1 -\n\t\t\t\t(1 / Math.pow(1 + monthlyInterestRate, numberOfYears * 12)));\n\t\treturn monthlyPayment;    \n\t}\n\t//Step 5: Define the methods to get/set the properties of the loan\n\tpublic double getAnnualInterestRate() {\n\t\treturn annualInterestRate;\n\t}\n\tpublic void setAnnualInterestRate(double annualInterestRate) {\n\t\tthis.annualInterestRate = annualInterestRate;\n\t}\n\tpublic int getNumberOfYears() {\n\t\treturn numberOfYears;\n\t}\n\tpublic void setNumberOfYears(int numberOfYears) {\n\t\tthis.numberOfYears = numberOfYears;\n\t}\n\tpublic double getLoanAmount() {\n\t\treturn loanAmount;\n\t}\n\tpublic void setLoanAmount(double loanAmount) {\n\t\tthis.loanAmount = loanAmount;\n\t}\n}",
+  "lines": {
+    "3": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea declara la clase LoanTester1, que es la clase principal responsable de probar la clase Loan1.",
+          "untr_content": "This line declares the LoanTester1 class, which is the main class responsible for testing the Loan1 class."
+        },
+        {
+          "content": "En Java, una clase se define usando las palabras clave 'public class' seguidas del nombre de la clase. Aqui, 'LoanTester1' es el nombre de la clase.",
+          "untr_content": "In Java, a class is defined using the 'public class' keywords followed by the class name. Here, 'LoanTester1' is the name of the class."
+        },
+        {
+          "content": "El modificador de acceso 'public' indica que esta clase es accesible desde otras clases, lo cual es necesario para que pueda ejecutarse como un programa independiente.",
+          "untr_content": "The 'public' access modifier indicates that this class is accessible from other classes, which is necessary for it to be executed as a standalone program."
+        },
+        {
+          "content": "Una idea equivocada comun es que el nombre de la clase puede ser arbitrario, pero debe coincidir con el nombre del archivo (LoanTester1.java) para que el programa compile y se ejecute correctamente.",
+          "untr_content": "A common misconception is that the class name can be arbitrary, but it must match the filename (LoanTester1.java) for the program to compile and run correctly."
+        },
+        {
+          "content": "Es una buena practica usar nombres de clase descriptivos que transmitan el proposito de la clase, como se ve aqui con 'LoanTester1', que sugiere que esta clase se usa para probar la clase Loan1.",
+          "untr_content": "It's a best practice to use descriptive class names that convey the purpose of the class, as seen here with 'LoanTester1', which suggests that this class is used for testing the Loan1 class."
+        }
+      ]
+    },
+    "5": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea un nuevo objeto Scanner llamado 'input' que lee desde el flujo de entrada estandar (System.in).",
+          "untr_content": "This line creates a new Scanner object named 'input' that reads from the standard input stream (System.in)."
+        },
+        {
+          "content": "La clase Scanner forma parte del paquete java.util, que se importa al inicio del programa. Se usa para capturar la entrada del usuario desde la consola.",
+          "untr_content": "The Scanner class is part of the java.util package, which is imported at the beginning of the program. It is used to capture user input from the console."
+        },
+        {
+          "content": "Al usar 'new Scanner(System.in)', estas inicializando el Scanner para leer la entrada desde el teclado, lo cual es esencial para programas interactivos que requieren entrada del usuario.",
+          "untr_content": "By using 'new Scanner(System.in)', you are initializing the Scanner to read input from the keyboard, which is essential for interactive programs that require user input."
+        },
+        {
+          "content": "Un error comun es olvidar cerrar el objeto Scanner despues de su uso, lo que puede causar fugas de recursos. Deberias cerrarlo usando 'input.close()' cuando ya no sea necesario, aunque no se muestra en este ejemplo.",
+          "untr_content": "A common mistake is forgetting to close the Scanner object after use, which can lead to resource leaks. You should close it using 'input.close()' when it's no longer needed, although it's not shown in this example."
+        },
+        {
+          "content": "Usar un Scanner es una buena practica para leer entrada en Java porque proporciona metodos para parsear tipos primitivos y cadenas usando expresiones regulares.",
+          "untr_content": "Using a Scanner is a best practice for reading input in Java because it provides methods to parse primitive types and strings using regular expressions."
+        }
+      ]
+    },
+    "6": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea solicita al usuario que ingrese la tasa de interes anual para el prestamo. Usa el metodo `System.out.println` para mostrar un mensaje en la consola.",
+          "untr_content": "This line prompts the user to enter the annual interest rate for the loan. It uses the `System.out.println` method to display a message on the console."
+        },
+        {
+          "content": "El proposito de esta linea es informar al usuario que el programa espera una entrada para la tasa de interes anual, que es un dato crucial para calcular el pago mensual del prestamo.",
+          "untr_content": "The purpose of this line is to inform the user that the program is expecting an input for the annual interest rate, which is a crucial piece of data needed to calculate the loan's monthly payment."
+        },
+        {
+          "content": "La sintaxis `System.out.println` es una forma estandar en Java de imprimir texto en la consola. El texto dentro de los parentesis y comillas es el mensaje que se mostrara.",
+          "untr_content": "The syntax `System.out.println` is a standard way in Java to print text to the console. The text within the parentheses and quotes is the message that will be displayed."
+        },
+        {
+          "content": "Una equivocacion comun es confundir `System.out.println` con `System.out.print`. La primera agrega un salto de linea despues del mensaje, mientras que la segunda no, lo que puede afectar como se muestran las entradas o salidas posteriores.",
+          "untr_content": "A common misconception might be confusing `System.out.println` with `System.out.print`. The former adds a newline after the message, while the latter does not, which can affect how subsequent inputs or outputs are displayed."
+        },
+        {
+          "content": "Como buena practica, asegura que el mensaje de solicitud sea claro y descriptivo para que los usuarios sepan exactamente que entrada se espera. Esto ayuda a prevenir errores y mejora la experiencia del usuario.",
+          "untr_content": "As a best practice, ensure that the prompt message is clear and descriptive so that users know exactly what input is expected. This helps prevent input errors and improves user experience."
+        }
+      ]
+    },
+    "7": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea lee un valor double desde la entrada del usuario, que representa la tasa de interes anual para el prestamo.",
+          "untr_content": "This line reads a double value from the user input, which represents the annual interest rate for the loan."
+        },
+        {
+          "content": "Se usa el metodo `nextDouble()` aqui, que forma parte de la clase `Scanner`. Lee el siguiente token de la entrada como un `double`. Asegurate de que la entrada sea un double valido para evitar `InputMismatchException`.",
+          "untr_content": "The method `nextDouble()` is used here, which is part of the `Scanner` class. It reads the next token of the input as a `double`. Ensure that the input is a valid double to avoid `InputMismatchException`."
+        },
+        {
+          "content": "La variable `annualInterestRate` se declara como `double` para acomodar valores decimales, que son comunes en las tasas de interes.",
+          "untr_content": "The variable `annualInterestRate` is declared as a `double` to accommodate decimal values, which are common in interest rates."
+        },
+        {
+          "content": "Un error comun es olvidar solicitar al usuario la entrada antes de llamar a `nextDouble()`, lo que puede llevar a confusion si el programa parece pausar inesperadamente.",
+          "untr_content": "A common mistake is to forget to prompt the user for input before calling `nextDouble()`, which can lead to confusion if the program seems to pause unexpectedly."
+        },
+        {
+          "content": "Es una buena practica validar la entrada del usuario para asegurar que este dentro de un rango razonable para tasas de interes, aunque esto no se implementa en esta linea.",
+          "untr_content": "It's a good practice to validate user input to ensure it falls within a reasonable range for interest rates, though this is not implemented in this line."
+        }
+      ]
+    },
+    "8": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea solicita al usuario que ingrese el numero de anos para el periodo del prestamo. Es esencial porque recoge uno de los datos clave necesarios para calcular el pago mensual del prestamo.",
+          "untr_content": "This line prompts the user to enter the number of years for the loan period. It is essential because it collects one of the key inputs needed to calculate the loan's monthly payment."
+        },
+        {
+          "content": "La sintaxis `System.out.println()` se usa para mostrar un mensaje en la consola. Este metodo forma parte de la clase `System`, que proporciona acceso al flujo de salida estandar del sistema.",
+          "untr_content": "The syntax `System.out.println()` is used to display a message to the console. This method is part of the `System` class, which provides access to the system's standard output stream."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que esta linea lee la entrada, pero solo muestra la instruccion. La lectura real de la entrada se realiza en la siguiente linea usando `input.nextInt()`.",
+          "untr_content": "A common misconception might be thinking that this line reads the input, but it only displays the prompt. The actual input is read in the next line using `input.nextInt()`."
+        },
+        {
+          "content": "Como buena practica, asegura que el mensaje de solicitud sea claro y conciso, para que el usuario sepa exactamente que informacion debe proporcionar.",
+          "untr_content": "As a best practice, ensure that the prompt message is clear and concise, so the user knows exactly what information to provide."
+        }
+      ]
+    },
+    "9": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea lee una entrada entera desde el usuario, que representa el numero de anos para el periodo del prestamo.",
+          "untr_content": "This line reads an integer input from the user, which represents the number of years for the loan period."
+        },
+        {
+          "content": "Se usa el metodo `input.nextInt()` para capturar la entrada del usuario como un entero. Esto es crucial porque el periodo del prestamo tipicamente se expresa en anos completos.",
+          "untr_content": "The `input.nextInt()` method is used to capture the user's input as an integer. This is crucial because the loan period is typically expressed in whole years."
+        },
+        {
+          "content": "Un error comun a tener en cuenta es ingresar un valor no entero, lo que provocaria que el programa lance una `InputMismatchException`. Asegurate de que el usuario ingrese un entero valido.",
+          "untr_content": "A common error to watch out for is entering a non-integer value, which would cause the program to throw an `InputMismatchException`. Ensure that the user inputs a valid integer."
+        },
+        {
+          "content": "Es una buena practica solicitar claramente al usuario antes de esta linea para asegurar que conozca que tipo de entrada se espera, como se hizo en la linea anterior con `System.out.println()`.",
+          "untr_content": "It's a good practice to prompt the user clearly before this line to ensure they know what type of input is expected, as done in the previous line with `System.out.println()`."
+        }
+      ]
+    },
+    "10": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea solicita al usuario que ingrese el monto del prestamo, que es un dato crucial necesario para calcular el pago mensual.",
+          "untr_content": "This line prompts the user to enter the loan amount, which is a crucial piece of data needed to calculate the monthly payment."
+        },
+        {
+          "content": "El metodo `System.out.println` se usa para mostrar un mensaje en la consola, pidiendo al usuario que ingrese el monto del prestamo. Esta es una forma estandar de interactuar con usuarios en una aplicacion de consola.",
+          "untr_content": "The `System.out.println` method is used to display a message to the console, asking the user to input the loan amount. This is a standard way to interact with users in a console application."
+        },
+        {
+          "content": "Un error comun aqui podria ser olvidar solicitar al usuario, lo que llevaria a confusion mientras el programa espera la entrada sin indicar que se espera.",
+          "untr_content": "A common mistake here might be forgetting to prompt the user, which would lead to confusion as the program waits for input without any indication of what is expected."
+        },
+        {
+          "content": "Es una buena practica comunicarse claramente con el usuario proporcionando instrucciones informativas, asegurando que sepan que entrada se requiere en cada paso.",
+          "untr_content": "It's a good practice to clearly communicate with the user by providing informative prompts, ensuring they know what input is required at each step."
+        }
+      ]
+    },
+    "11": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea lee un valor double desde la entrada del usuario, que representa el monto del prestamo.",
+          "untr_content": "This line reads a double value from the user input, which represents the loan amount."
+        },
+        {
+          "content": "Se usa el metodo `input.nextDouble()` para capturar la entrada del usuario como un double, asegurando que el monto del prestamo pueda incluir valores decimales.",
+          "untr_content": "The `input.nextDouble()` method is used to capture the user's input as a double, ensuring that the loan amount can include decimal values."
+        },
+        {
+          "content": "Un error comun aqui podria ser ingresar un valor no numerico, lo que causaria una `InputMismatchException`. Para prevenir esto, deberias asegurarte de que la entrada sea un numero valido.",
+          "untr_content": "A common error here could be entering a non-numeric value, which would cause an `InputMismatchException`. To prevent this, you should ensure that the input is a valid number."
+        },
+        {
+          "content": "Es una buena practica solicitar claramente al usuario antes de esta linea para asegurar que sepan que tipo de entrada se espera, como se hizo en la linea anterior con `System.out.println()`.",
+          "untr_content": "It's a good practice to prompt the user clearly before this line to ensure they know what type of input is expected, as done in the previous line with `System.out.println()`."
+        }
+      ]
+    },
+    "12": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea una nueva instancia de la clase Loan1 usando el constructor que toma tres parametros: annualInterestRate, numberOfYears, y loanAmount.",
+          "untr_content": "This line creates a new instance of the Loan1 class using the constructor that takes three parameters: annualInterestRate, numberOfYears, and loanAmount."
+        },
+        {
+          "content": "El proposito de esta linea es inicializar un objeto Loan1 con los valores especificos proporcionados por el usuario, que se almacenan en las variables annualInterestRate, numberOfYears y loanAmount.",
+          "untr_content": "The purpose of this line is to initialize a Loan1 object with the specific values provided by the user, which are stored in the variables annualInterestRate, numberOfYears, and loanAmount."
+        },
+        {
+          "content": "La sintaxis Loan1 loan = new Loan1(...) implica declarar una variable loan del tipo Loan1 y asignarle un nuevo objeto creado llamando al constructor Loan1(double, int, double).",
+          "untr_content": "The syntax Loan1 loan = new Loan1(...) involves declaring a variable loan of type Loan1 and assigning it a new object created by calling the constructor Loan1(double, int, double)."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que se usa el constructor Loan1() aqui, pero en realidad se invoca el constructor parametrizado Loan1(double, int, double).",
+          "untr_content": "A common misconception might be thinking that the constructor Loan1() is used here, but it is actually the parameterized constructor Loan1(double, int, double) that is invoked."
+        },
+        {
+          "content": "Como buena practica se sugiere validar los valores de entrada antes de crear el objeto Loan1 para prevenir configuraciones de prestamo invalidas.",
+          "untr_content": "Best practice suggests ensuring that the input values are validated before creating the Loan1 object to prevent invalid loan configurations."
+        }
+      ]
+    },
+    "13": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea crea una instancia de NumberFormat que esta especificamente configurada para formatear numeros como moneda.",
+          "untr_content": "This line creates a NumberFormat instance that is specifically configured to format numbers as currency."
+        },
+        {
+          "content": "El metodo getCurrencyInstance() es un metodo estatico de la clase NumberFormat, que devuelve un formato de moneda para la localidad por defecto actual.",
+          "untr_content": "The method getCurrencyInstance() is a static method of the NumberFormat class, which returns a currency format for the current default locale."
+        },
+        {
+          "content": "Usar NumberFormat para moneda asegura que los valores monetarios se muestren de una manera familiar para los usuarios, incluyendo el simbolo de moneda correcto y los decimales.",
+          "untr_content": "Using NumberFormat for currency ensures that the monetary values are displayed in a way that is familiar to users, including the correct currency symbol and decimal places."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que esta linea formatea el numero de inmediato, pero solo configura el formateador. Necesitaras usar este formateador mas tarde para formatear numeros específicos.",
+          "untr_content": "A common misconception might be that this line formats the number immediately, but it only sets up the formatter. You will need to use this formatter later to format specific numbers."
+        },
+        {
+          "content": "Es una buena practica usar NumberFormat para moneda para manejar la localizacion automaticamente, en lugar de anexar manualmente simbolos de moneda o formatear numeros.",
+          "untr_content": "It's a best practice to use NumberFormat for currency to handle localization automatically, rather than manually appending currency symbols or formatting numbers."
+        }
+      ]
+    },
+    "14": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea muestra el monto del pago mensual del prestamo en la consola, formateado como moneda.",
+          "untr_content": "This line outputs the monthly payment amount for the loan to the console, formatted as currency."
+        },
+        {
+          "content": "El metodo `System.out.println` se usa para imprimir texto en la consola. Aqui, combina una cadena con el resultado de `fmt.format(loan.getMonthlyPayment())`.",
+          "untr_content": "The `System.out.println` method is used to print text to the console. Here, it combines a string with the result of `fmt.format(loan.getMonthlyPayment())`."
+        },
+        {
+          "content": "El metodo `fmt.format` formatea el monto del pago mensual como moneda, lo que es mas amigable para el usuario y facil de leer.",
+          "untr_content": "The `fmt.format` method formats the monthly payment amount as currency, which is more user-friendly and easier to read."
+        },
+        {
+          "content": "La llamada al metodo `loan.getMonthlyPayment()` obtiene el pago mensual calculado del objeto `Loan1`.",
+          "untr_content": "The `loan.getMonthlyPayment()` method call retrieves the calculated monthly payment from the `Loan1` object."
+        },
+        {
+          "content": "Un error comun podria ser olvidar formatear la salida como moneda, lo que podria resultar en una salida menos legible.",
+          "untr_content": "A common mistake might be forgetting to format the output as currency, which could lead to less readable output."
+        },
+        {
+          "content": "Usar `NumberFormat.getCurrencyInstance()` es una buena practica para mostrar valores monetarios, ya que aplica automaticamente el simbolo de moneda y el formateo correcto.",
+          "untr_content": "Using `NumberFormat.getCurrencyInstance()` is a best practice for displaying monetary values, as it automatically applies the correct currency symbol and formatting."
+        }
+      ]
+    },
+    "17": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "La linea 17 comienza la definicion de la clase Loan1, que es crucial para encapsular las propiedades y comportamientos relacionados con un prestamo.",
+          "untr_content": "Line 17 begins the definition of the Loan1 class, which is crucial for encapsulating the properties and behaviors related to a loan."
+        },
+        {
+          "content": "La sintaxis 'class Loan1 {' declara una nueva clase llamada Loan1. En Java, las clases son planos para crear objetos, y esta linea establece la estructura para la clase Loan1.",
+          "untr_content": "The syntax 'class Loan1 {' declares a new class named Loan1. In Java, classes are blueprints for creating objects, and this line sets up the structure for the Loan1 class."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir el nombre de la clase con un metodo o variable. Recuerda que los nombres de clases normalmente comienzan con una letra mayuscula y van seguidos de una llave '{' para indicar el inicio del cuerpo de la clase.",
+          "untr_content": "A common misconception might be confusing the class name with a method or variable. Remember, class names typically start with an uppercase letter and are followed by a curly brace '{' to indicate the start of the class body."
+        },
+        {
+          "content": "Es una buena practica nombrar tus clases con nombres significativos que reflejen su proposito. Aqui, 'Loan1' es un nombre descriptivo que indica que esta clase maneja funcionalidad relacionada con prestamos.",
+          "untr_content": "It's a best practice to name your classes with meaningful names that reflect their purpose. Here, 'Loan1' is a descriptive name indicating that this class deals with loan-related functionality."
+        }
+      ]
+    },
+    "19": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea declara una variable de instancia privada llamada `annualInterestRate` de tipo `double`.",
+          "untr_content": "This line declares a private instance variable named `annualInterestRate` of type `double`."
+        },
+        {
+          "content": "El proposito de esta linea es almacenar la tasa de interes anual para el prestamo, que es un componente crucial para calcular el pago mensual.",
+          "untr_content": "The purpose of this line is to store the annual interest rate for the loan, which is a crucial component in calculating the monthly payment."
+        },
+        {
+          "content": "Al declararla como `private`, aseguras que esta variable solo pueda ser accedida y modificada a traves de metodos dentro de la clase `Loan1`, promoviendo la encapsulacion.",
+          "untr_content": "By declaring it as `private`, you ensure that this variable can only be accessed and modified through methods within the `Loan1` class, promoting encapsulation."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que las variables `private` pueden ser accedidas directamente desde fuera de la clase, pero no es asi. Necesitas usar metodos getter y setter para acceder.",
+          "untr_content": "A common misconception might be thinking that `private` variables can be accessed directly from outside the class, but they cannot. You need to use getter and setter methods for access."
+        },
+        {
+          "content": "Es una buena practica declarar las variables de instancia como `private` para proteger la integridad de los datos y controlar como se accede y modifica.",
+          "untr_content": "It's a best practice to declare instance variables as `private` to protect the integrity of the data and to control how it is accessed and modified."
+        }
+      ]
+    },
+    "20": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea declara una variable de instancia privada llamada `numberOfYears` de tipo `int` dentro de la clase `Loan1`.",
+          "untr_content": "This line declares a private instance variable named `numberOfYears` of type `int` within the `Loan1` class."
+        },
+        {
+          "content": "El proposito de esta linea es almacenar el numero de anos para el periodo del prestamo, que es un componente clave para calcular el pago mensual del prestamo.",
+          "untr_content": "The purpose of this line is to store the number of years for the loan period, which is a key component in calculating the loan's monthly payment."
+        },
+        {
+          "content": "Al declarar esta variable como privada, aseguras que solo pueda ser accedida y modificada a traves de los metodos de la clase, promoviendo la encapsulacion y protegiendo la integridad de los datos.",
+          "untr_content": "By declaring this variable as private, you ensure that it can only be accessed and modified through the class's methods, promoting encapsulation and protecting the integrity of the data."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser declarar esta variable como publica, lo que la expondria a modificaciones directas desde fuera de la clase, potencialmente llevando a calculos incorrectos o inconsistencia de datos.",
+          "untr_content": "A common misconception might be to declare this variable as public, which would expose it to direct modification from outside the class, potentially leading to incorrect calculations or data inconsistency."
+        },
+        {
+          "content": "Es buena practica usar nombres descriptivos para las variables como `numberOfYears` para transmitir claramente el proposito de la variable, haciendo el codigo mas legible y mantenible.",
+          "untr_content": "Best practice suggests using descriptive variable names like `numberOfYears` to clearly convey the purpose of the variable, making the code more readable and maintainable."
+        }
+      ]
+    },
+    "21": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea declara una variable de instancia privada llamada `loanAmount` de tipo `double` dentro de la clase `Loan1`.",
+          "untr_content": "This line declares a private instance variable named `loanAmount` of type `double` within the `Loan1` class."
+        },
+        {
+          "content": "El proposito de esta linea es almacenar el monto del prestamo, que es un componente clave para calcular el pago mensual.",
+          "untr_content": "The purpose of this line is to store the amount of the loan, which is a key component in calculating the monthly payment."
+        },
+        {
+          "content": "El modificador `private` asegura que `loanAmount` solo pueda ser accedido y modificado mediante metodos dentro de la clase `Loan1`, promoviendo la encapsulacion.",
+          "untr_content": "The `private` access modifier ensures that `loanAmount` can only be accessed and modified through methods within the `Loan1` class, promoting encapsulation."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que `loanAmount` se puede acceder directamente desde fuera de la clase, pero debido a su modificador `private`, debes usar metodos getter y setter.",
+          "untr_content": "A common misconception might be thinking that `loanAmount` can be accessed directly from outside the class, but due to its `private` modifier, you must use getter and setter methods."
+        },
+        {
+          "content": "Como buena practica, usar nombres de variables descriptivos como `loanAmount` ayuda a que tu codigo sea mas legible y mantenible.",
+          "untr_content": "As a best practice, using descriptive variable names like `loanAmount` helps make your code more readable and maintainable."
+        }
+      ]
+    },
+    "23": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un constructor para la clase Loan1 que toma tres parametros: annualInterestRate, numberOfYears y loanAmount.",
+          "untr_content": "This line defines a constructor for the Loan1 class that takes three parameters: annualInterestRate, numberOfYears, and loanAmount."
+        },
+        {
+          "content": "El proposito de este constructor es inicializar un objeto Loan1 con valores especificos para su tasa de interes, periodo del prestamo y monto, permitiendo crear un prestamo con parametros personalizados.",
+          "untr_content": "The purpose of this constructor is to initialize a Loan1 object with specific values for its interest rate, loan period, and amount, allowing you to create a loan with custom parameters."
+        },
+        {
+          "content": "La sintaxis 'public Loan1(double annualInterestRate, int numberOfYears, double loanAmount)' declara un metodo constructor publico llamado Loan1, que coincide con el nombre de la clase, indicando que es un constructor.",
+          "untr_content": "The syntax 'public Loan1(double annualInterestRate, int numberOfYears, double loanAmount)' declares a public constructor method named Loan1, which matches the class name, indicating it's a constructor."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser confundir el constructor con un metodo regular. Recuerda que los constructores no tienen un tipo de retorno, ni siquiera void, y comparten el nombre de la clase.",
+          "untr_content": "A common misconception might be confusing the constructor with a regular method. Remember, constructors do not have a return type, not even void, and they share the class name."
+        },
+        {
+          "content": "Es buena practica usar la palabra clave 'this' para diferenciar entre variables de instancia y parametros cuando tienen el mismo nombre, asegurando claridad y previniendo errores.",
+          "untr_content": "Best practice suggests using 'this' keyword to differentiate between instance variables and parameters when they have the same name, ensuring clarity and preventing errors."
+        }
+      ]
+    },
+    "24": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea asigna el valor del parametro 'annualInterestRate' a la variable de instancia 'annualInterestRate' de la clase Loan1.",
+          "untr_content": "This line assigns the value of the parameter 'annualInterestRate' to the instance variable 'annualInterestRate' of the Loan1 class."
+        },
+        {
+          "content": "La palabra clave 'this' se usa para diferenciar entre la variable de instancia y el parametro, que tienen el mismo nombre. Esta es una practica comun para evitar conflictos de nombres.",
+          "untr_content": "The 'this' keyword is used to differentiate between the instance variable and the parameter, which have the same name. This is a common practice to avoid naming conflicts."
+        },
+        {
+          "content": "Un error potencial aqui podria ser olvidar usar 'this', lo que resultaria en que el parametro no se asigne a la variable de instancia, llevando a un comportamiento incorrecto de la clase.",
+          "untr_content": "A potential error here could be forgetting to use 'this', which would result in the parameter not being assigned to the instance variable, leading to incorrect behavior of the class."
+        },
+        {
+          "content": "Usar 'this' es una buena practica cuando los nombres de tus parametros son iguales a los de tus variables de instancia, ya que hace tu codigo mas legible y menos propenso a errores.",
+          "untr_content": "Using 'this' is a best practice when your parameter names are the same as your instance variable names, as it makes your code more readable and less prone to errors."
+        }
+      ]
+    },
+    "25": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea asigna el valor del parametro 'numberOfYears' a la variable de instancia 'numberOfYears'.",
+          "untr_content": "This line assigns the value of the parameter 'numberOfYears' to the instance variable 'numberOfYears'."
+        },
+        {
+          "content": "La palabra clave 'this' se usa para diferenciar entre la variable de instancia y el parametro, que tienen el mismo nombre.",
+          "untr_content": "The 'this' keyword is used to differentiate between the instance variable and the parameter, which have the same name."
+        },
+        {
+          "content": "Al usar 'this.numberOfYears', aseguras que la variable de instancia se establezca correctamente con el valor pasado al constructor.",
+          "untr_content": "By using 'this.numberOfYears', you ensure that the instance variable is correctly set to the value passed to the constructor."
+        },
+        {
+          "content": "Una idea equivocada comun es olvidar la palabra 'this', lo que puede llevar a que el parametro no se asigne a la variable de instancia, resultando en un comportamiento incorrecto.",
+          "untr_content": "A common misconception is to forget the 'this' keyword, which can lead to the parameter not being assigned to the instance variable, resulting in incorrect behavior."
+        },
+        {
+          "content": "Es una buena practica usar nombres descriptivos para parametros y variables de instancia, pero cuando son iguales, usar 'this' es necesario para evitar confusiones.",
+          "untr_content": "It's a best practice to use descriptive names for parameters and instance variables, but when they are the same, using 'this' is necessary to avoid confusion."
+        }
+      ]
+    },
+    "26": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea asigna el valor del parametro 'loanAmount' a la variable de instancia 'loanAmount' de la clase Loan1.",
+          "untr_content": "This line assigns the value of the parameter 'loanAmount' to the instance variable 'loanAmount' of the Loan1 class."
+        },
+        {
+          "content": "La palabra clave 'this' se usa para diferenciar entre la variable de instancia y el parametro con el mismo nombre. Esto es crucial porque tanto el parametro como la variable de instancia se llaman 'loanAmount'.",
+          "untr_content": "The 'this' keyword is used to differentiate between the instance variable and the parameter with the same name. This is crucial because both the parameter and the instance variable are named 'loanAmount'."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que 'this.loanAmount' y 'loanAmount' se refieren a la misma variable. Sin embargo, 'this.loanAmount' se refiere a la variable de instancia, mientras que 'loanAmount' se refiere al parametro pasado al constructor.",
+          "untr_content": "A common misconception might be thinking that 'this.loanAmount' and 'loanAmount' refer to the same variable. However, 'this.loanAmount' refers to the instance variable, while 'loanAmount' refers to the parameter passed to the constructor."
+        },
+        {
+          "content": "Es una buena practica usar 'this' para evitar ambiguedades y asegurar que la variable correcta se este asignando, especialmente cuando los nombres de los parametros coinciden con los de las variables de instancia.",
+          "untr_content": "It's a best practice to use 'this' to avoid ambiguity and ensure that the correct variable is being assigned, especially when parameter names are the same as instance variable names."
+        }
+      ]
+    },
+    "29": {
+      "content": "",
+      "blank": true,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un constructor sin argumentos para la clase Loan1, lo que permite crear un objeto Loan1 con valores por defecto.",
+          "untr_content": "This line defines a no-argument constructor for the Loan1 class, which allows you to create a Loan1 object with default values."
+        },
+        {
+          "content": "El constructor usa la palabra clave 'this' para llamar a otro constructor dentro de la misma clase, especificamente al que toma tres parametros: annualInterestRate, numberOfYears y loanAmount.",
+          "untr_content": "The constructor uses the 'this' keyword to call another constructor within the same class, specifically the one that takes three parameters: annualInterestRate, numberOfYears, and loanAmount."
+        },
+        {
+          "content": "Al llamar 'this(0.03, 1, 1000);', estas estableciendo los valores por defecto para un prestamo: una tasa de interes de 3%, un periodo de prestamo de 1 ano, y un monto de prestamo de 1000.",
+          "untr_content": "By calling 'this(0.03, 1, 1000);', you are setting the default values for a loan to an interest rate of 3%, a loan period of 1 year, and a loan amount of 1000."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que 'this' se refiere al objeto actual, pero en este contexto, se usa para llamar a otro constructor.",
+          "untr_content": "A common misconception might be thinking that 'this' refers to the current object, but in this context, it is used to call another constructor."
+        },
+        {
+          "content": "Usar encadenamiento de constructores con 'this' es una buena practica para evitar duplicacion de codigo y asegurar que todos los constructores inicialicen el objeto de manera consistente.",
+          "untr_content": "Using constructor chaining with 'this' is a best practice to avoid code duplication and ensure that all constructors initialize the object in a consistent manner."
+        }
+      ]
+    },
+    "30": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea llama a otro constructor dentro de la misma clase usando la palabra clave `this`, lo que se conoce como encadenamiento de constructores.",
+          "untr_content": "This line calls another constructor within the same class using the `this` keyword, which is known as constructor chaining."
+        },
+        {
+          "content": "El proposito de esta linea es inicializar un objeto `Loan1` con valores por defecto: una tasa de interes de 3% (0.03), un periodo de prestamo de 1 ano, y un monto de prestamo de 1000.",
+          "untr_content": "The purpose of this line is to initialize a `Loan1` object with default values: an interest rate of 3% (0.03), a loan period of 1 year, and a loan amount of 1000."
+        },
+        {
+          "content": "Al usar `this(0.03, 1, 1000);`, aseguras que el constructor por defecto delegue la inicializacion al constructor parametrizado, promoviendo la reutilizacion de codigo y reduciendo la redundancia.",
+          "untr_content": "By using `this(0.03, 1, 1000);`, you ensure that the default constructor delegates the initialization to the parameterized constructor, promoting code reuse and reducing redundancy."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que `this` se refiere al objeto actual solo en metodos, pero tambien puede ser usado para llamar a otro constructor en la misma clase.",
+          "untr_content": "A common misconception might be thinking that `this` refers to the current object only in methods, but it can also be used to call another constructor in the same class."
+        },
+        {
+          "content": "Como buena practica se sugiere usar encadenamiento de constructores para mantener un unico punto de logica de inicializacion, lo que hace el codigo mas facil de mantener y menos propenso a errores.",
+          "untr_content": "Best practice suggests using constructor chaining to maintain a single point of initialization logic, which makes the code easier to maintain and less error-prone."
+        }
+      ]
+    },
+    "33": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo llamado `getMonthlyPayment` que calcula y retorna el monto del pago mensual para el prestamo.",
+          "untr_content": "This line defines a method named `getMonthlyPayment` that calculates and returns the monthly payment amount for the loan."
+        },
+        {
+          "content": "El metodo es publico, lo que significa que puede ser accedido desde fuera de la clase, permitiendo que otras clases lo usen para determinar el pago mensual.",
+          "untr_content": "The method is public, meaning it can be accessed from outside the class, allowing other classes to use it to determine the monthly payment."
+        },
+        {
+          "content": "El tipo de retorno del metodo es `double`, indicando que retornara un valor decimal, lo cual es apropiado para calculos monetarios.",
+          "untr_content": "The return type of the method is `double`, indicating that it will return a decimal value, which is appropriate for monetary calculations."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser que el metodo retorna directamente un valor sin realizar calculos, pero en realidad contiene logica para calcular el pago mensual con base en las propiedades del prestamo.",
+          "untr_content": "A common misconception might be that the method directly returns a value without performing any calculations, but it actually contains logic to compute the monthly payment based on the loan's properties."
+        },
+        {
+          "content": "Es una buena practica encapsular la logica de calculo dentro de un metodo como este, ya que mantiene el codigo organizado y facilita la reutilizacion del calculo en diferentes partes del programa.",
+          "untr_content": "It's a best practice to encapsulate the calculation logic within a method like this, as it keeps the code organized and makes it easy to reuse the calculation in different parts of the program."
+        }
+      ]
+    },
+    "34": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea calcula la tasa de interes mensual dividiendo la tasa de interes anual entre 12, ya que hay 12 meses en un ano.",
+          "untr_content": "This line calculates the monthly interest rate by dividing the annual interest rate by 12, as there are 12 months in a year."
+        },
+        {
+          "content": "El proposito de esta linea es convertir la tasa de interes anual en una tasa mensual, lo que es necesario para calcular el pago mensual.",
+          "untr_content": "The purpose of this line is to convert the annual interest rate into a monthly rate, which is necessary for calculating the monthly payment."
+        },
+        {
+          "content": "La sintaxis usa el operador de division '/' para realizar el calculo, y el resultado se almacena en la variable 'monthlyInterestRate'.",
+          "untr_content": "The syntax uses the division operator '/' to perform the calculation, and the result is stored in the variable 'monthlyInterestRate'."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar dividir por 12, lo que llevaria a calculos incorrectos del pago mensual.",
+          "untr_content": "A common misconception might be to forget dividing by 12, which would lead to incorrect monthly payment calculations."
+        },
+        {
+          "content": "Es una buena practica usar nombres de variables descriptivos como 'monthlyInterestRate' para hacer el codigo mas legible y mantenible.",
+          "untr_content": "It's a best practice to use descriptive variable names like 'monthlyInterestRate' to make the code more readable and maintainable."
+        }
+      ]
+    },
+    "35": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea calcula el pago mensual del prestamo usando la formula para el pago de una anualidad.",
+          "untr_content": "This line calculates the monthly payment for the loan using the formula for an annuity payment."
+        },
+        {
+          "content": "La formula usada aqui es una formula financiera estandar para calcular el pago mensual de un prestamo, que considera el monto del prestamo, la tasa de interes mensual y el numero total de pagos.",
+          "untr_content": "The formula used here is a standard financial formula to calculate the monthly payment on a loan, which considers the loan amount, monthly interest rate, and the total number of payments."
+        },
+        {
+          "content": "La expresion `loanAmount * monthlyInterestRate` calcula la parte de interes del pago mensual.",
+          "untr_content": "The expression `loanAmount * monthlyInterestRate` calculates the interest part of the monthly payment."
+        },
+        {
+          "content": "El denominador `(1 - (1 / Math.pow(1 + monthlyInterestRate, numberOfYears * 12)))` calcula el factor de descuento, que toma en cuenta el valor presente de pagos futuros.",
+          "untr_content": "The denominator `(1 - (1 / Math.pow(1 + monthlyInterestRate, numberOfYears * 12)))` calculates the discount factor, which accounts for the present value of future payments."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar dividir la tasa de interes anual entre 12 para obtener la tasa mensual, lo que resultaria en calculos incorrectos.",
+          "untr_content": "A common misconception might be to forget dividing the annual interest rate by 12 to get the monthly interest rate, which would lead to incorrect calculations."
+        },
+        {
+          "content": "Asegurate de usar `Math.pow` correctamente para elevar `(1 + monthlyInterestRate)` a la potencia `(numberOfYears * 12)`, que representa el numero total de pagos mensuales.",
+          "untr_content": "Ensure that you use `Math.pow` correctly to raise `(1 + monthlyInterestRate)` to the power of `(numberOfYears * 12)`, which represents the total number of monthly payments."
+        },
+        {
+          "content": "Es una buena practica descomponer calculos complejos en partes mas pequenas para mayor claridad, pero aqui se combina en una sola linea para concision.",
+          "untr_content": "It's a best practice to break down complex calculations into smaller parts for clarity, but here it's combined into one line for conciseness."
+        }
+      ]
+    },
+    "40": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo publico llamado `getAnnualInterestRate` que retorna un valor `double`.",
+          "untr_content": "This line defines a public method named `getAnnualInterestRate` that returns a `double` value."
+        },
+        {
+          "content": "El proposito de este metodo es proporcionar acceso a la variable de instancia privada `annualInterestRate` desde fuera de la clase `Loan1`.",
+          "untr_content": "The purpose of this method is to provide access to the private instance variable `annualInterestRate` from outside the `Loan1` class."
+        },
+        {
+          "content": "Al usar un metodo getter, cumples con el principio de encapsulacion, que es una buena practica en programacion orientada a objetos. Esto permite controlar como se accede y modifica `annualInterestRate`.",
+          "untr_content": "By using a getter method, you adhere to the principle of encapsulation, which is a best practice in object-oriented programming. This allows you to control how the `annualInterestRate` is accessed and modified."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que puedes acceder a variables privadas directamente desde fuera de la clase. Sin embargo, las variables privadas requieren metodos getter como este para ser accedidas externamente.",
+          "untr_content": "A common misconception might be thinking that you can access private variables directly from outside the class. However, private variables require getter methods like this one to be accessed externally."
+        },
+        {
+          "content": "El metodo no toma parametros y simplemente retorna el valor actual de `annualInterestRate`, asegurando que el estado interno de la clase pueda ser leido sin ser modificado.",
+          "untr_content": "The method does not take any parameters and simply returns the current value of `annualInterestRate`, ensuring that the class's internal state can be read without being modified."
+        }
+      ]
+    },
+    "43": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo setter llamado `setAnnualInterestRate` para la clase `Loan1`, que te permite actualizar la variable de instancia `annualInterestRate` despues de que un objeto `Loan1` ha sido creado.",
+          "untr_content": "This line defines a setter method named `setAnnualInterestRate` for the `Loan1` class, which allows you to update the `annualInterestRate` instance variable after a `Loan1` object has been created."
+        },
+        {
+          "content": "El metodo toma un parametro unico, `annualInterestRate`, que representa la nueva tasa de interes que quieres establecer para el prestamo. Este parametro es de tipo `double`, coincidiendo con el tipo de la variable de instancia que actualiza.",
+          "untr_content": "The method takes a single parameter, `annualInterestRate`, which represents the new interest rate you want to set for the loan. This parameter is of type `double`, matching the type of the instance variable it updates."
+        },
+        {
+          "content": "Dentro del metodo, la palabra `this` se usa para distinguir entre la variable de instancia `annualInterestRate` y el parametro del metodo con el mismo nombre. Esto es una practica comun en Java para evitar conflictos de nombres y asegurar que la variable de instancia se actualice correctamente.",
+          "untr_content": "Inside the method, the `this` keyword is used to distinguish between the instance variable `annualInterestRate` and the method parameter with the same name. This is a common practice in Java to avoid naming conflicts and ensure that the instance variable is correctly updated."
+        },
+        {
+          "content": "Un error potencial a tener en cuenta es establecer una tasa de interes invalida, como un valor negativo. Aunque este metodo no incluye validacion, deberias asegurarte de que los valores que le pasas sean sensatos y esten dentro de rangos esperados.",
+          "untr_content": "A potential error to watch out for is setting an invalid interest rate, such as a negative value. While this method does not include validation, you should ensure that the values passed to it are sensible and within expected ranges."
+        },
+        {
+          "content": "Como buena practica, considera agregar logica de validacion dentro de este metodo para verificar que la tasa de interes proporcionada sea positiva y este dentro de un rango razonable. Esto puede prevenir errores logicos en tu programa y asegurar la integridad de los datos.",
+          "untr_content": "As a best practice, consider adding validation logic within this method to check that the provided interest rate is positive and within a reasonable range. This can prevent logical errors in your program and ensure data integrity."
+        }
+      ]
+    },
+    "44": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea forma parte del metodo setter `setAnnualInterestRate` para la propiedad `annualInterestRate` de la clase `Loan1`.",
+          "untr_content": "This line is part of the setter method `setAnnualInterestRate` for the `annualInterestRate` property of the `Loan1` class."
+        },
+        {
+          "content": "a) El proposito de esta linea es actualizar la variable de instancia `annualInterestRate` con un nuevo valor proporcionado como argumento al metodo. Esto permite cambiar la tasa de interes de un objeto prestamo existente.",
+          "untr_content": "a) The purpose of this line is to update the `annualInterestRate` instance variable with a new value provided as an argument to the method. This allows you to change the interest rate of an existing loan object."
+        },
+        {
+          "content": "b) La sintaxis `this.annualInterestRate = annualInterestRate;` usa la palabra clave `this` para referirse a la variable de instancia `annualInterestRate` del objeto actual. Esto es necesario para distinguirla del parametro del metodo `annualInterestRate` que tiene el mismo nombre.",
+          "untr_content": "b) The syntax `this.annualInterestRate = annualInterestRate;` uses the `this` keyword to refer to the instance variable `annualInterestRate` of the current object. This is necessary to distinguish it from the method parameter `annualInterestRate` which has the same name."
+        },
+        {
+          "content": "c) Una idea equivocada comun podria ser olvidar usar `this`, lo que puede llevar a confusion entre la variable de instancia y el parametro del metodo, potencialmente causando errores logicos donde la variable de instancia no se actualiza como se pretende.",
+          "untr_content": "c) A common misconception might be forgetting to use `this`, which can lead to confusion between the instance variable and the method parameter, potentially causing logical errors where the instance variable is not updated as intended."
+        },
+        {
+          "content": "d) Como buena practica, siempre usa la palabra `this` en metodos setter cuando el nombre del parametro es el mismo que el de la variable de instancia. Esto asegura claridad y previene errores accidentales.",
+          "untr_content": "d) As a best practice, always use the `this` keyword in setter methods when the parameter name is the same as the instance variable name. This ensures clarity and prevents accidental errors."
+        }
+      ]
+    },
+    "46": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo publico llamado `getNumberOfYears` que retorna un valor entero.",
+          "untr_content": "This line defines a public method named `getNumberOfYears` that returns an integer value."
+        },
+        {
+          "content": "El proposito de este metodo es proporcionar acceso a la variable de instancia privada `numberOfYears` desde fuera de la clase `Loan1`.",
+          "untr_content": "The purpose of this method is to provide access to the private instance variable `numberOfYears` from outside the `Loan1` class."
+        },
+        {
+          "content": "Al usar un metodo getter, cumples con el principio de encapsulacion, que es una buena practica en programacion orientada a objetos. Esto permite controlar como se accede y modifica la variable `numberOfYears`.",
+          "untr_content": "By using a getter method, you adhere to the principle of encapsulation, which is a best practice in object-oriented programming. This allows you to control how the `numberOfYears` variable is accessed and modified."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que puedes acceder a variables privadas directamente desde fuera de la clase. Sin embargo, las variables privadas requieren metodos getter como este para ser accedidas externamente.",
+          "untr_content": "A common misconception might be thinking that you can access private variables directly from outside the class. However, private variables require getter methods like this one to be accessed externally."
+        },
+        {
+          "content": "El metodo simplemente retorna el valor de `numberOfYears`, que representa la duracion del periodo del prestamo en anos.",
+          "untr_content": "The method simply returns the value of `numberOfYears`, which represents the length of the loan period in years."
+        }
+      ]
+    },
+    "49": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo setter llamado setNumberOfYears para la clase Loan1, que te permite actualizar la variable de instancia numberOfYears despues de que un objeto Loan1 ha sido creado.",
+          "untr_content": "This line defines a setter method named setNumberOfYears for the Loan1 class, which allows you to update the numberOfYears instance variable after a Loan1 object has been created."
+        },
+        {
+          "content": "El metodo toma un parametro unico, numberOfYears, que representa el nuevo valor que quieres asignar a la variable de instancia numberOfYears.",
+          "untr_content": "The method takes a single parameter, numberOfYears, which represents the new value you want to assign to the numberOfYears instance variable."
+        },
+        {
+          "content": "Usar 'this.numberOfYears = numberOfYears;' dentro del metodo asegura que la variable de instancia numberOfYears se actualice con el valor pasado al metodo, evitando cualquier confusión con el parametro del mismo nombre.",
+          "untr_content": "Using 'this.numberOfYears = numberOfYears;' inside the method ensures that the instance variable numberOfYears is updated with the value passed to the method, avoiding any confusion with the parameter of the same name."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que el parametro y la variable de instancia estan automaticamente vinculados, pero debes asignar explicitamente el parametro a la variable de instancia usando 'this'.",
+          "untr_content": "A common misconception might be thinking that the parameter and the instance variable are automatically linked, but you must explicitly assign the parameter to the instance variable using 'this'."
+        },
+        {
+          "content": "Como buena practica se sugiere usar metodos setter como este para encapsular y controlar como se modifican las variables de instancia, lo que ayuda a mantener la integridad de los datos dentro de tu clase.",
+          "untr_content": "Best practice suggests using setter methods like this to encapsulate and control how instance variables are modified, which helps maintain the integrity of the data within your class."
+        }
+      ]
+    },
+    "50": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea forma parte del metodo setter setNumberOfYears, que te permite actualizar el numero de anos para el periodo del prestamo despues de que un objeto Loan1 ha sido creado.",
+          "untr_content": "This line is part of the setter method setNumberOfYears, which allows you to update the number of years for the loan period after a Loan1 object has been created."
+        },
+        {
+          "content": "El proposito de esta linea es asignar el valor pasado como parametro al metodo (numberOfYears) a la variable de instancia this.numberOfYears. Esto asegura que el estado del objeto se actualice con el nuevo periodo de prestamo.",
+          "untr_content": "The purpose of this line is to assign the value passed as a parameter to the method (numberOfYears) to the instance variable this.numberOfYears. This ensures that the object's state is updated with the new loan period."
+        },
+        {
+          "content": "La sintaxis this.numberOfYears se refiere a la variable de instancia del objeto actual, mientras que numberOfYears se refiere al parametro pasado al metodo. Usar 'this' ayuda a distinguir entre la variable de instancia y el parametro cuando tienen el mismo nombre.",
+          "untr_content": "The syntax this.numberOfYears refers to the instance variable of the current object, while numberOfYears refers to the parameter passed to the method. Using 'this' helps distinguish between the instance variable and the parameter when they have the same name."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar usar 'this' cuando el nombre del parametro es el mismo que el de la variable de instancia, lo que puede llevar a errores logicos donde la variable de instancia no se actualiza correctamente.",
+          "untr_content": "A common misconception might be forgetting to use 'this' when the parameter name is the same as the instance variable name, which can lead to logical errors where the instance variable is not updated correctly."
+        },
+        {
+          "content": "Como buena practica, siempre asegura que tus metodos setter actualicen correctamente las variables de instancia y considera validar la entrada para prevenir datos invalidos.",
+          "untr_content": "As a best practice, always ensure that your setter methods correctly update the instance variables and consider validating the input to prevent invalid data from being set."
+        }
+      ]
+    },
+    "52": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo publico llamado `getLoanAmount` que retorna un valor `double`.",
+          "untr_content": "This line defines a public method named `getLoanAmount` that returns a `double` value."
+        },
+        {
+          "content": "El proposito de este metodo es proporcionar acceso a la variable de instancia privada `loanAmount` desde fuera de la clase `Loan1`.",
+          "untr_content": "The purpose of this method is to provide access to the private instance variable `loanAmount` from outside the `Loan1` class."
+        },
+        {
+          "content": "En Java, es una practica comun usar metodos getter como este para acceder a campos privados, asegurando encapsulacion y ocultamiento de datos.",
+          "untr_content": "In Java, it's a common practice to use getter methods like this to access private fields, ensuring encapsulation and data hiding."
+        },
+        {
+          "content": "El metodo no toma ningun parametro y simplemente retorna el valor actual de `loanAmount`.",
+          "untr_content": "The method does not take any parameters and simply returns the current value of `loanAmount`."
+        },
+        {
+          "content": "Un error potencial a tener en cuenta es olvidar usar `return` para proporcionar el valor, lo que resultaria en un error de compilacion.",
+          "untr_content": "A potential error to watch out for is forgetting to use `return` to provide the value, which would result in a compilation error."
+        },
+        {
+          "content": "Usar metodos getter es una buena practica ya que te permite controlar como se accede y modifica la informacion, manteniendo la integridad del estado del objeto.",
+          "untr_content": "Using getter methods is a best practice as it allows you to control how the data is accessed and modified, maintaining the integrity of the object's state."
+        }
+      ]
+    },
+    "55": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea define un metodo setter llamado `setLoanAmount` para la clase `Loan1`, que te permite actualizar la variable de instancia `loanAmount` despues de que un objeto ha sido creado.",
+          "untr_content": "This line defines a setter method named `setLoanAmount` for the `Loan1` class, which allows you to update the `loanAmount` instance variable after an object has been created."
+        },
+        {
+          "content": "El metodo toma un parametro unico, `loanAmount`, que representa el nuevo monto del prestamo que quieres establecer. Este parametro es de tipo `double`, coincidiendo con el tipo de la variable de instancia que actualiza.",
+          "untr_content": "The method takes a single parameter, `loanAmount`, which represents the new loan amount you want to set. This parameter is of type `double`, matching the type of the instance variable it updates."
+        },
+        {
+          "content": "Dentro del metodo, la instruccion `this.loanAmount = loanAmount;` asigna el valor del parametro `loanAmount` a la variable de instancia `loanAmount`. La palabra `this` se usa para distinguir entre la variable de instancia y el parametro, que tienen el mismo nombre.",
+          "untr_content": "Inside the method, the `this.loanAmount = loanAmount;` statement assigns the value of the parameter `loanAmount` to the instance variable `loanAmount`. The `this` keyword is used to distinguish between the instance variable and the parameter, which have the same name."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser pensar que este metodo retorna un valor, pero dado que es un metodo `void`, no retorna nada. Su unico proposito es actualizar la variable de instancia.",
+          "untr_content": "A common misconception might be thinking that this method returns a value, but since it is a `void` method, it does not return anything. Its sole purpose is to update the instance variable."
+        },
+        {
+          "content": "Como buena practica, usar metodos setter como este es una buena forma de encapsular los datos dentro de una clase, permitiendo un acceso y modificacion controlados de las propiedades de la clase.",
+          "untr_content": "As a best practice, using setter methods like this one is a good way to encapsulate the data within a class, allowing controlled access and modification of the class's properties."
+        }
+      ]
+    },
+    "56": {
+      "content": "",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta linea forma parte del metodo setter setLoanAmount, que te permite actualizar la variable de instancia loanAmount de la clase Loan1.",
+          "untr_content": "This line is part of the setter method setLoanAmount, which allows you to update the loanAmount instance variable of the Loan1 class."
+        },
+        {
+          "content": "La palabra 'this' se usa para distinguir entre la variable de instancia loanAmount y el parametro loanAmount pasado al metodo. Esto asegura que la variable de instancia se actualice correctamente con el nuevo valor proporcionado.",
+          "untr_content": "The 'this' keyword is used to distinguish between the instance variable loanAmount and the parameter loanAmount passed to the method. This ensures that the instance variable is correctly updated with the new value provided."
+        },
+        {
+          "content": "Una idea equivocada comun podria ser olvidar usar 'this' cuando el nombre del parametro es el mismo que el de la variable de instancia, lo que puede llevar a errores logicos donde la variable de instancia no se actualiza como se pretendia.",
+          "untr_content": "A common misconception might be forgetting to use 'this' when the parameter name is the same as the instance variable name, which can lead to logical errors where the instance variable is not updated as intended."
+        },
+        {
+          "content": "Usar metodos setter como este es una buena practica en programacion orientada a objetos ya que encapsula los datos y proporciona acceso controlado para modificar las variables de instancia.",
+          "untr_content": "Using setter methods like this is a best practice in object-oriented programming as it encapsulates the data and provides controlled access to modify the instance variables."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "public Loan1(int annualInterestRate, double numberOfYears, double loanAmount) {",
+      "untr_code": "public Loan1(int annualInterestRate, double numberOfYears, double loanAmount) {",
+      "description": "Podrias pensar que la tasa de interes anual deberia ser un entero porque los porcentajes a menudo son numeros completos, pero en programacion las tasas de interes tipicamente se representan como doubles para permitir porcentajes fraccionarios. De manera similar, el numero de anos deberia ser un entero, ya que representa un conteo de anos completos. Usar este distractor causaria un error de incompatibilidad de tipos cuando intentes pasar un valor double para la tasa de interes, esperando un entero en su lugar. Este distractor tambien asume incorrectamente que el periodo del prestamo puede ser un double, lo que podria conducir a errores logicos en los calculos si no se desean anos fraccionarios. Siempre asegura que los tipos de datos coincidan con el uso previsto y los valores que esperas manejar.",
+      "untr_description": "You might think that the annual interest rate should be an integer because percentages are often whole numbers, but in programming, interest rates are typically represented as doubles to allow for fractional percentages. Similarly, the number of years should be an integer, as it represents a count of whole years. Using this distractor would cause a type mismatch error when you try to pass a double value for the interest rate, expecting an integer instead. This distractor also incorrectly assumes the loan period can be a double, which could lead to logical errors in calculations if fractional years are not intended. Always ensure that the data types match the intended use and the values you expect to handle.",
+      "line_number": 23
+    },
+    {
+      "code": "public Loan1(double interestRate, int years, double amount) {",
+      "untr_code": "public Loan1(double interestRate, int years, double amount) {",
+      "description": "Podrias pensar que los nombres de los parametros pueden ser arbitrarios mientras los tipos coincidan, pero usar nombres consistentes y descriptivos ayuda a mantener la claridad y reduce errores. Este distractor usa nombres de parametros diferentes, lo que puede llevar a confusiones y errores al asignar valores a las variables de instancia. Si usas este distractor, podrias asignar accidentalmente los valores equivocados a las variables de instancia, llevando a calculos incorrectos o errores logicos. Nombres consistentes ayudan a que tu y otros comprendan facilmente el codigo y su proposito, reduciendo el riesgo de tales errores.",
+      "untr_description": "You might think that parameter names can be arbitrary as long as the types match, but using consistent and descriptive names helps maintain clarity and reduces errors. This distractor uses different parameter names, which can lead to confusion and mistakes when assigning values to instance variables. If you use this distractor, you might accidentally assign the wrong values to the instance variables, leading to incorrect calculations or logic errors. Consistent naming ensures that you and others can easily understand the code and its purpose, reducing the risk of such errors.",
+      "line_number": 23
+    },
+    {
+      "code": "public Loan1(double interestRate, int years, double amount) {",
+      "untr_code": "public Loan1(double interestRate, int years, double amount) {",
+      "description": "Podrias elegir esta linea si confundes el proposito de un constructor por defecto con uno parametrizado. Esta linea intenta incorrectamente redefinir un constructor que ya existe para inicializar un prestamo con valores especificos. Usar este distractor resultaria en un error de compilacion debido a definiciones duplicadas de constructores. El constructor por defecto no deberia tomar parametros, ya que su proposito es inicializar un objeto con valores predeterminados sin requerir entrada; este distractor falla en el aspecto clave de proporcionar valores por defecto sin exigir datos.",
+      "untr_description": "You might choose this line if you confuse the purpose of a default constructor with a parameterized one. This line incorrectly attempts to redefine a constructor that already exists for initializing a loan with specific values. Using this distractor would result in a compilation error due to duplicate constructor definitions. The default constructor should not take parameters, as its purpose is to initialize an object with predefined default values. This distractor misses the key aspect of providing default values without requiring input, which is essential for a default constructor.",
+      "line_number": 29
+    }
+  ],
+  "tags": [
+    "spanish-latam;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "translations": {
+    "en": "68bdb308f6cc3d7a9cc096ba"
+  },
+  "collaborator_emails": [],
+  "programInput": "0.03 5 1000"
+}
