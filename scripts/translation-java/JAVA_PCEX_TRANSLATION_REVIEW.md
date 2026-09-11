@@ -28,7 +28,7 @@
      - `llm-translation;color=blue`
      - `gpt5mini;color=purple`
      - `validation-pending;color=orange`
-   - Once reviewed and approved, replace `validation-pending;color=orange` with `validation-approved;color=green` (or remove the pending tag).
+   - Once reviewed and approved, simply remove the `validation-pending;color=orange` tag from the source's tag list.
 
 ---
 
