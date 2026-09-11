@@ -1,0 +1,497 @@
+{
+  "id": "afe838998b6b252cdd115258",
+  "user": "moh70@pitt.edu",
+  "name": "La clase para representar una cuenta bancaria (Caso 1)",
+  "untr_name": "The Class for Representing a Bank Account (Case 1)",
+  "description": "Construir una clase que represente una cuenta bancaria basica. Esta clase debe contener datos que representen el nombre del propietario de la cuenta, el numero de cuenta y el saldo actual de la cuenta; todos los cuales solo pueden ser accedidos o modificados a traves de metodos getter y setter. Una instancia de la clase debe ser creada especificando tres parametros que se usan para inicializar los datos de la instancia (es decir, el objeto). Los demas metodos de esta clase deben realizar varios servicios sobre la cuenta (hacer depositos, retiros, agregar intereses a la cuenta). Estos metodos deben examinar los datos que se les pasan para asegurarse de que la transaccion solicitada sea valida.",
+  "untr_description": "Construct a class that represents a basic bank account. This class should contain data representing the name of the account’s owner, the account number, and the account’s current balance; all of which could be accessed or changed only through the getter and setter methods. An instance of the class should be created by specifying three parameters that are used to initialize the instance (i.e., object) data. The other methods of this class should perform various services on the account (making deposits, withdrawals, adding interest to the account). These methods should examine the data passed into them to make sure the requested transaction is valid.",
+  "language": "PYTHON",
+  "iso_language_code": "es",
+  "filename": "py_account1.py",
+  "code": "#Paso 1: Definir la clase\nclass Account1 :\n    #Paso 1.1: Inicializar la cuenta con los valores especificados\n    def __init__(self, owner, account, initial) :\n        self.__acct_name = owner\n        self.__acct_number = account\n        self.__balance = initial\n    #Paso 1.2: Definir un metodo para realizar la transaccion de deposito\n    def deposit(self, amount) :\n        if (amount > 0) :\n            self.__balance = self.__balance + amount\n        return self.__balance\n    #Paso 1.3: Definir un metodo para realizar una transaccion de retiro\n    def withdraw(self, amount, fee) :\n        if (amount > 0 and fee >= 0 and amount+fee < self.__balance) :\n            self.__balance = self.__balance - amount - fee\n        return self.__balance\n    #Paso 1.4: Definir un metodo para sumar intereses a la cuenta\n    def add_interest(self) :\n        self.__balance += (self.__balance * 0.035)\n        return self.__balance\n    #Paso 1.5: Definir los metodos para obtener el estado de la cuenta \n    def get_name(self) :\n        return self.__acct_name\n    def get_balance(self) :\n        return self.__balance\n    def get_acct_number(self) :\n        return self.__acct_number\n#Paso 2: Probar la clase\nacct1 = Account1(\"Tina Murphy\", 72354, 25.59)\nacct2 = Account1(\"Angelica Adams\", 69713, 500.00)\nacct3 = Account1(\"Edward Demsey\", 93757, 769.32)\nacct1.deposit(44.10)  \nadams_balance = acct2.deposit(75.25)\nprint(\"Saldo de {:s} despues del deposito: {:.2f}\".format(acct2.get_name(), adams_balance))\nprint(\"Saldo de {:s} despues del deposito: {:.2f}\".format(acct2.get_name(), acct2.withdraw (480, 1.50)))\nacct3.withdraw(-100.00, 1.50)  \nacct2.add_interest()\nprint(\"Saldo de {:s} despues de agregar intereses: {:.2f}\".format(acct2.get_name(), acct2.get_balance()))",
+  "untr_code": "#Step 1: Define the class\nclass Account1 :\n    #Step 1.1: Initialize the account with the specified values\n    def __init__(self, owner, account, initial) :\n        self.__acct_name = owner\n        self.__acct_number = account\n        self.__balance = initial\n    #Step 1.2: Define a method to perform the deposit transaction\n    def deposit(self, amount) :\n        if (amount > 0) :\n            self.__balance = self.__balance + amount\n        return self.__balance\n    #Step 1.3: Define a method to perform a withdraw transaction\n    def withdraw(self, amount, fee) :\n        if (amount > 0 and fee >= 0 and amount+fee < self.__balance) :\n            self.__balance = self.__balance - amount - fee\n        return self.__balance\n    #Step 1.4: Define a method to add interest to the account\n    def add_interest(self) :\n        self.__balance += (self.__balance * 0.035)\n        return self.__balance\n    #Step 1.5: Define the methods to get the  state of the account \n    def get_name(self) :\n        return self.__acct_name\n    def get_balance(self) :\n        return self.__balance\n    def get_acct_number(self) :\n        return self.__acct_number\n#Step 2: Test the class\nacct1 = Account1(\"Tina Murphy\", 72354, 25.59)\nacct2 = Account1(\"Angelica Adams\", 69713, 500.00)\nacct3 = Account1(\"Edward Demsey\", 93757, 769.32)\nacct1.deposit(44.10)  \nadams_balance = acct2.deposit(75.25)\nprint(\"{:s}'s balance after deposit: {:.2f}\".format(acct2.get_name(), adams_balance))\nprint(\"{:s}'s balance after deposit: {:.2f}\".format(acct2.get_name(), acct2.withdraw (480, 1.50)))\nacct3.withdraw(-100.00, 1.50)  \nacct2.add_interest()\nprint(\"{:s}'s balance after adding interest: {:.2f}\".format(acct2.get_name(), acct2.get_balance()))",
+  "lines": {
+    "1": {
+      "content": "#Step 1: Define the class",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "2": {
+      "content": "class Account1 :",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Definimos la clase Account1 para representar una cuenta bancaria con servicios basicos.",
+          "untr_content": "We define the class Account1 to represent a bank account with basic services."
+        }
+      ]
+    },
+    "3": {
+      "content": "    #Step 1.1: Initialize the account with the specified values",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": []
+    },
+    "4": {
+      "content": "    def __init__(self, owner, account, initial) :",
+      "blank": true,
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Para especificar el estado inicial de una cuenta bancaria, necesitamos tener un metodo __init__ en la clase Account1 que acepte valores iniciales para la cuenta bancaria. El __init__ acepta el nombre de la cuenta, el numero de cuenta y el saldo inicial y los almacena en el nuevo objeto Account1 como acct_name, acct_number y balance, respectivamente.",
+          "untr_content": "To specify the initial state of a bank account, we need to have an __init__ method in the class Account1 that accepts initial values for the bank account. The __init__ accepts the name of the bank account, account number, and initial balance and stores them into the new Account1 object’s acct_name, acct_number, and balance, respectively."
+        },
+        {
+          "content": "El metodo __init__ se ejecuta automaticamente por Python cada vez que se crea una instancia. El argumento (llamado self) es pasado automaticamente por el interprete cuando el metodo es invocado sobre una instancia de la clase.",
+          "untr_content": "The __init__ method is run automatically by Python each time an instance is created. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Tenga en cuenta que Python llena automaticamente el primer argumento con el objeto instancia que es el sujeto implicito de la llamada al metodo. Por lo tanto, cuando este metodo se invoca sobre una instancia de la clase, los tres ultimos parametros deben ser pasados al metodo.",
+          "untr_content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, the last three parameters must be passed to the method."
+        }
+      ]
+    },
+    "5": {
+      "content": "        self.__acct_name = owner",
+      "blank": false,
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "Esta sentencia establece el atributo de instancia acct_name al primer valor de parametro (owner).<br>self es la instancia de la clase y self.__acct_name es el nombre de la cuenta. Comenzamos el nombre del atributo con dos guiones bajos (self.__acct_name) para evitar acceder al atributo directamente desde fuera de la clase.",
+          "untr_content": "This statement sets the instance attribute acct_name to the first parameter value (owner).<br>self is the instance of the class and self.__acct_name is the account name. We start the attribute name by two underscore (self.__acct_name) to prevent accessing the attribute directly from outside of the class."
+        }
+      ]
+    },
+    "6": {
+      "content": "        self.__acct_number = account",
+      "blank": true,
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "Esta sentencia establece el atributo de instancia acct_number al segundo valor de parametro (account).<br>self es la instancia de la clase y self.__acct_number es el numero de cuenta. Comenzamos el nombre del atributo con dos guiones bajos (self.__acct_number) para evitar acceder al atributo directamente desde fuera de la clase.",
+          "untr_content": "This statement sets instance attribute acct_number to the second parameter value (account).<br>self is the instance of the class and self.__acct_number is the account number. We start the attribute name by two underscore (self.__acct_number) to prevent accessing the attribute directly from outside of the class."
+        }
+      ]
+    },
+    "7": {
+      "content": "        self.__balance = initial",
+      "blank": true,
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "Esta sentencia establece el atributo de instancia balance al tercer valor de parametro (initial).<br>self es la instancia de la clase y self.__balance es el saldo de la cuenta. Comenzamos el nombre del atributo con dos guiones bajos (self.__balance) para evitar acceder al atributo directamente desde fuera de la clase.",
+          "untr_content": "This statement sets instance attribute balance to the third parameter value (initial).<br>self is the instance of the class and self.__balance is the account's balance. We start the attribute name by two underscore (self.__balance) to prevent accessing the attribute directly from outside of the class."
+        }
+      ]
+    },
+    "8": {
+      "content": "    #Step 1.2: Define a method to perform the deposit transaction",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": []
+    },
+    "9": {
+      "content": "    def deposit(self, amount) :",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Este metodo deposita la cantidad especificada en esta cuenta y devuelve el nuevo saldo. El saldo no se modifica si la cantidad de deposito es invalida. Tenga en cuenta que el primer argumento (llamado self) es pasado automaticamente por el interprete cuando el metodo es invocado sobre una instancia de la clase.",
+          "untr_content": "This method deposits the specified amount into this account and returns the new balance. The balance is not modified if the deposit amount is invalid. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python llena automaticamente el primer argumento con el objeto instancia que es el sujeto implicito de la llamada al metodo. Por lo tanto, cuando este metodo se invoca sobre una instancia de la clase, solo el ultimo parametro (amount) debe ser pasado al metodo.",
+          "untr_content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, only the last parameter (amount) must be passed to the method."
+        }
+      ]
+    },
+    "10": {
+      "content": "        if (amount > 0) :",
+      "blank": false,
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "Antes de agregar la cantidad especificada al saldo, necesitamos realizar una prueba para verificar si la cantidad de deposito es valida.",
+          "untr_content": "Before we add the specified amount to the balance, we need to perform a test to check whether the deposit amount is valid."
+        },
+        {
+          "content": "La instruccion if prueba si la cantidad de deposito es mayor que 0. Si la cantidad de deposito es mayor que 0, entonces el cuerpo de esta instruccion if se ejecuta. De lo contrario, el cuerpo de esta instruccion if se omite.",
+          "untr_content": "The if statement tests whether the deposit amount is greater than 0. If the deposit amount is greater than 0, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        }
+      ]
+    },
+    "11": {
+      "content": "            self.__balance = self.__balance + amount",
+      "blank": false,
+      "indentLevel": 3,
+      "comments": []
+    },
+    "12": {
+      "content": "        return self.__balance",
+      "blank": false,
+      "indentLevel": 2,
+      "comments": []
+    },
+    "13": {
+      "content": "    #Step 1.3: Define a method to perform a withdraw transaction",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": []
+    },
+    "14": {
+      "content": "    def withdraw(self, amount, fee) :",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Este metodo retira la cantidad y la comision especificadas de esta cuenta y devuelve el nuevo saldo. El saldo no se modifica si la cantidad de retiro o la comision son invalidos o el saldo es insuficiente. Tenga en cuenta que el primer argumento (llamado self) es pasado automaticamente por el interprete cuando el metodo es invocado sobre una instancia de la clase.",
+          "untr_content": "This method withdraws the specified amount and fee from this account and returns the new balance. The balance is not modified if either the withdraw amount or fee are invalid or the balance is insufficient. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python llena automaticamente el primer argumento con el objeto instancia que es el sujeto implicito de la llamada al metodo. Por lo tanto, cuando este metodo se invoca sobre una instancia de la clase, solo los dos ultimos parametros deben ser pasados al metodo.",
+          "untr_content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, only the last two parameters must be passed to the method."
+        }
+      ]
+    },
+    "15": {
+      "content": "        if (amount > 0 and fee >= 0 and amount+fee < self.__balance) :",
+      "blank": false,
+      "indentLevel": 2,
+      "comments": [
+        {
+          "content": "Antes de retirar la cantidad y la comision especificadas de la cuenta, necesitamos realizar una prueba para verificar si la cantidad de retiro y la comision son validas y si el saldo es suficiente.",
+          "untr_content": "Before we withdraw the specified amount and fee from the account, we need to perform a test to check whether the withdraw amount and fee are valid and the balance is sufficient. "
+        },
+        {
+          "content": "La instruccion if prueba si la cantidad de retiro es mayor que cero, la comision es mayor o igual a cero, y el saldo es suficiente. Si la cantidad de retiro y la comision son validas y el saldo es suficiente, entonces el cuerpo de esta instruccion if se ejecuta. De lo contrario, el cuerpo de esta instruccion if se omite.",
+          "untr_content": "The if statement tests whether the withdraw amount is greater than zero, fee is greater than or equal to zero, and the balance is sufficient. If the withdraw amount and fee are valid and the balance is sufficient, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        },
+        {
+          "content": "Tenga en cuenta que el operador and produce el resultado True si ambas condiciones son True.",
+          "untr_content": "Note that the and operator yields the result True if both conditions are True."
+        }
+      ]
+    },
+    "16": {
+      "content": "            self.__balance = self.__balance - amount - fee",
+      "blank": false,
+      "indentLevel": 3,
+      "comments": []
+    },
+    "17": {
+      "content": "        return self.__balance",
+      "blank": false,
+      "indentLevel": 2,
+      "comments": []
+    },
+    "18": {
+      "content": "    #Step 1.4: Define a method to add interest to the account",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": []
+    },
+    "19": {
+      "content": "    def add_interest(self) :",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Este metodo agrega intereses a esta cuenta y devuelve el nuevo saldo. Tenga en cuenta que el primer argumento (llamado self) es pasado automaticamente por el interprete cuando el metodo es invocado sobre una instancia de la clase.",
+          "untr_content": "This method adds interest to this account and returns the new balance. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python llena automaticamente el primer argumento con el objeto instancia que es el sujeto implicito de la llamada al metodo. Por lo tanto, cuando este metodo se invoca sobre una instancia de la clase, no se debe pasar ningun parametro al metodo.",
+          "untr_content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ]
+    },
+    "20": {
+      "content": "        self.__balance += (self.__balance * 0.035)",
+      "blank": false,
+      "indentLevel": 2,
+      "comments": []
+    },
+    "21": {
+      "content": "        return self.__balance",
+      "blank": false,
+      "indentLevel": 2,
+      "comments": []
+    },
+    "22": {
+      "content": "    #Step 1.5: Define the methods to get the  state of the account ",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": []
+    },
+    "23": {
+      "content": "    def get_name(self) :",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Este metodo devuelve el nombre de la cuenta. Tenga en cuenta que el primer argumento (llamado self) es pasado automaticamente por el interprete cuando el metodo es invocado sobre una instancia de la clase.",
+          "untr_content": "This method returns the name of the account.Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python llena automaticamente el primer argumento con el objeto instancia que es el sujeto implicito de la llamada al metodo. Por lo tanto, cuando este metodo se invoca sobre una instancia de la clase, no se debe pasar ningun parametro al metodo.",
+          "untr_content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ]
+    },
+    "24": {
+      "content": "        return self.__acct_name",
+      "blank": false,
+      "indentLevel": 2,
+      "comments": []
+    },
+    "25": {
+      "content": "    def get_balance(self) :",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Este metodo devuelve el saldo actual de la cuenta. Tenga en cuenta que el primer argumento (llamado self) es pasado automaticamente por el interprete cuando el metodo es invocado sobre una instancia de la clase.",
+          "untr_content": "This method returns the current balance of the account. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python llena automaticamente el primer argumento con el objeto instancia que es el sujeto implicito de la llamada al metodo. Por lo tanto, cuando este metodo se invoca sobre una instancia de la clase, no se debe pasar ningun parametro al metodo.",
+          "untr_content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ]
+    },
+    "26": {
+      "content": "        return self.__balance",
+      "blank": false,
+      "indentLevel": 2,
+      "comments": []
+    },
+    "27": {
+      "content": "    def get_acct_number(self) :",
+      "blank": false,
+      "indentLevel": 1,
+      "comments": [
+        {
+          "content": "Este metodo devuelve el numero de cuenta de la cuenta. Tenga en cuenta que el primer argumento (llamado self) es pasado automaticamente por el interprete cuando el metodo es invocado sobre una instancia de la clase.",
+          "untr_content": "This method returns the account number of the account. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python llena automaticamente el primer argumento con el objeto instancia que es el sujeto implicito de la llamada al metodo. Por lo tanto, cuando este metodo se invoca sobre una instancia de la clase, no se debe pasar ningun parametro al metodo.",
+          "untr_content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ]
+    },
+    "28": {
+      "content": "        return self.__acct_number",
+      "blank": false,
+      "indentLevel": 2,
+      "comments": []
+    },
+    "29": {
+      "content": "#Step 2: Test the class",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": []
+    },
+    "30": {
+      "content": "acct1 = Account1(\"Tina Murphy\", 72354, 25.59)",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Creamos una instancia de la clase Account1 para demostrar la creacion y el uso de instancias de Account1",
+          "untr_content": "We create an instance of the class Account1 to demonstrate the creation and use of Account1 instances"
+        },
+        {
+          "content": "Esta sentencia crea una instancia de Account1 con el nombre de cuenta, numero de cuenta y saldo especificados.",
+          "untr_content": "This statement creates a Account1 instance with the specified account name, account number, and account balance."
+        },
+        {
+          "content": "Tenga en cuenta que podemos crear un objeto Account1 con el nombre de cuenta, numero de cuenta y saldo especificados solo cuando tenemos un metodo __init__ en la clase Account1 que acepta estos parametros en el orden en que se especifican.",
+          "untr_content": "Note that we can create an Account1 object with the specified account name, account number, and account balance only when we have a __init__ method in the Account1 class that accepts these parameters in the order that they are specified."
+        }
+      ]
+    },
+    "31": {
+      "content": "acct2 = Account1(\"Angelica Adams\", 69713, 500.00)",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia crea una instancia de Account1 con el nombre de cuenta, numero de cuenta y saldo especificados.",
+          "untr_content": "This statement creates a Account1 instance with the specified account name, account number, and account balance."
+        },
+        {
+          "content": "Tenga en cuenta que podemos crear un objeto Account1 con el nombre de cuenta, numero de cuenta y saldo especificados solo cuando tenemos un metodo __init__ en la clase Account1 que acepta estos parametros en el orden en que se especifican.",
+          "untr_content": "Note that we can create an Account1 object with the specified account name, account number, and account balance only when we have a __init__ method in the Account1 class that accepts these parameters in the order that they are specified."
+        }
+      ]
+    },
+    "32": {
+      "content": "acct3 = Account1(\"Edward Demsey\", 93757, 769.32)",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia crea una instancia de Account1 con el nombre de cuenta, numero de cuenta y saldo especificados.",
+          "untr_content": "This statement creates a Account1 instance with the specified account name, account number, and account balance."
+        },
+        {
+          "content": "Tenga en cuenta que podemos crear un objeto Account1 con el nombre de cuenta, numero de cuenta y saldo especificados solo cuando tenemos un metodo __init__ en la clase Account1 que acepta estos parametros en el orden en que se especifican.",
+          "untr_content": "Note that we can create an Account1 object with the specified account name, account number, and account balance only when we have a __init__ method in the Account1 class that accepts these parameters in the order that they are specified."
+        }
+      ]
+    },
+    "33": {
+      "content": "acct1.deposit(44.10)  ",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia invoca el metodo deposit de acct1 para depositar $44.10. Tenga en cuenta que acct1 es el sujeto implicito (instancia) pasado a self. Tambien note que es posible ignorar el valor devuelto por un metodo si el valor retornado no va a ser usado. En este caso, el metodo deposit igualmente se ejecutara normalmente, actualizando el saldo de la cuenta con la cantidad especificada.",
+          "untr_content": "This statement invokes the method deposit of the acct1 to deposit $44.10. Note that acct1 is the implied subject (instance) passed to self. Also note that it's possible to ignore the return value from a method if the returned value is not going to be used. In this case, the deposit method will still execute normally, updating the account balance with the specified amount."
+        }
+      ]
+    },
+    "34": {
+      "content": "adams_balance = acct2.deposit(75.25)",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia invoca el metodo deposit de acct2 para depositar $75.25. Tenga en cuenta que acct2 es el sujeto implicito (instancia) pasado a self. Aqui, el valor que devuelve el metodo deposit se asigna a la variable adams_balance.",
+          "untr_content": "This statement invokes the method deposit of the acct2 to deposit $75.25. Note that acct2 is the implied subject (instance) passed to self. Here, the value that is returned from the deposit method is assigned to variable adams_balance."
+        }
+      ]
+    },
+    "35": {
+      "content": "print(\"{:s}'s balance after deposit: {:.2f}\".format(acct2.get_name(), adams_balance))",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia imprime el saldo de acct2 despues de la transaccion de deposito usando la funcion format.<br>{:s} es reemplazado por el nombre de la cuenta. Invocamos el metodo get_name de acct2 para obtener el nombre de la cuenta. Tenga en cuenta que acct2 es el sujeto implicito (instancia) pasado a self.<br>{:.2f} imprime el saldo con dos decimales.",
+          "untr_content": "This statement prints the balance of acct2 after the deposit transaction using the format function.<br>{:s} is replaced by the account name. We invoke the method get_name of acct2 to get the account's name. Note that acct2 is the implied subject (instance) passed to self.<br>{:.2f} prints the balance with two decimal digits."
+        },
+        {
+          "content": "Tenga en cuenta que no es necesario almacenar el valor devuelto por el metodo invocado en una variable. Podriamos usar los valores devueltos directamente en la funcion format.",
+          "untr_content": "Note that we do not necessarily have to store the returned value from the invoked method in a variable. We could use the returned values directly in the format method."
+        },
+        {
+          "content": "La funcion format devuelve el resultado de reemplazar cada marcador {…} en la cadena plantilla con su argumento correspondiente pasado a la funcion format. Cualquier otra cosa que no este contenida entre llaves se imprimira literalmente, es decir, sin cambios.",
+          "untr_content": "The format function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function. Anything else, which is not contained in curly braces will be literally printed, i.e. without any changes."
+        },
+        {
+          "content": "La especificacion de formato dentro de un par de llaves comienza con : y seguida por el texto que especifica el tipo de dato. El tipo de dato s requiere un argumento de tipo cadena y el tipo de dato f requiere un argumento de punto flotante. Ocurrira un error si el argumento no es del tipo de dato esperado.",
+          "untr_content": "The format specification inside a pair of curly braces starts with a : and followed by the text that specifies the data type. The data type s requires a string argument and the data type f requires a floating-point argument. An error will occur if the argument is not the expected data type."
+        }
+      ]
+    },
+    "36": {
+      "content": "print(\"{:s}'s balance after deposit: {:.2f}\".format(acct2.get_name(), acct2.withdraw (480, 1.50)))",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia imprime el saldo de acct2 despues de la transaccion de retiro usando la funcion format.<br>{:s} es reemplazado por el nombre de la cuenta. Invocamos el metodo get_name de acct2 para obtener el nombre de la cuenta. Ademas, retiramos el dinero de acct2 invocando el metodo withdraw de acct2. Tenga en cuenta que acct2 es el sujeto implicito (instancia) pasado a self en ambos metodos.<br>{:.2f} imprime el saldo con dos decimales.",
+          "untr_content": "This statement prints the balance of acct2 after the withdraw transaction using the format function.<br>{:s} is replaced by the account name. We invoke the method get_name of acct2 to get the account's name. Also, we withdraw the money from acct2 by invoking the method withdraw of acct2. Note that acct2 is the implied subject (instance) passed to self in both methods.<br>{:.2f} prints the balance with two decimal digits."
+        },
+        {
+          "content": "La funcion format devuelve el resultado de reemplazar cada marcador {…} en la cadena plantilla con su argumento correspondiente pasado a la funcion format. Cualquier otra cosa que no este contenida entre llaves se imprimira literalmente, es decir, sin cambios.",
+          "untr_content": "The format function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function. Anything else, which is not contained in curly braces will be literally printed, i.e. without any changes."
+        },
+        {
+          "content": "La especificacion de formato dentro de un par de llaves comienza con : y seguida por el texto que especifica el tipo de dato. El tipo de dato s requiere un argumento de tipo cadena y el tipo de dato f requiere un argumento de punto flotante. Ocurrira un error si el argumento no es del tipo de dato esperado.",
+          "untr_content": "The format specification inside a pair of curly braces starts with a : and followed by the text that specifies the data type. The data type s requires a string argument and the data type f requires a floating-point argument. An error will occur if the argument is not the expected data type."
+        }
+      ]
+    },
+    "37": {
+      "content": "acct3.withdraw(-100.00, 1.50)  ",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia invoca el metodo withdraw de acct3 para retirar $-100 con una comision de $1.50. Aqui, acct3 es el sujeto implicito (instancia) pasado a self.<br>Tenga en cuenta que es posible ignorar el valor devuelto por un metodo si el valor retornado no va a ser usado. En este caso, el metodo withdraw igualmente se ejecutara normalmente. Sin embargo, puesto que el metodo withdraw evita el retiro de una cantidad negativa, esta transaccion se considera invalida y el saldo de acct3 no se actualizara.",
+          "untr_content": "This statement invokes the method withdraw of acct3 to withdraw $-100 with a fee of $1.50. Here, acct3 is the implied subject (instance) passed to self.<br>Note that it's possible to ignore the return value from a method if the returned value is not going to be used. In this case, the withdraw method will still execute normally. However, since the method withdraw prevents the withdrawal of a negative amount, this transaction is considered to be invalid and acct3's balance will not be updated."
+        }
+      ]
+    },
+    "38": {
+      "content": "acct2.add_interest()",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia invoca el metodo add_interest de acct2. Aqui, acct2 es el sujeto implicito (instancia) pasado a self. Tambien note que es posible ignorar el valor devuelto por un metodo si el valor retornado no va a ser usado. En este caso, el metodo add_interest igualmente se ejecutara normalmente, sumando los intereses ganados al saldo.",
+          "untr_content": "This statement invokes the method add_interest of the acct2. Here, acct2 is the implied subject (instance) passed to self. Also note that it's possible to ignore the return value from a method if the returned value is not going to be used. In this case, the add_interest method will still execute normally, adding the interest earned to the balance."
+        }
+      ]
+    },
+    "39": {
+      "content": "print(\"{:s}'s balance after adding interest: {:.2f}\".format(acct2.get_name(), acct2.get_balance()))",
+      "blank": false,
+      "indentLevel": 0,
+      "comments": [
+        {
+          "content": "Esta sentencia imprime el saldo de acct2 despues de que se agregaron los intereses a la cuenta.<br>{:s} es reemplazado por el nombre de la cuenta. Invocamos el metodo get_name de acct2 para obtener el nombre de la cuenta. Invocamos el metodo get_balance para obtener el saldo de la cuenta. Tenga en cuenta que acct2 es el sujeto implicito (instancia) pasado a self en ambos metodos.<br>{:.2f} imprime el saldo con dos decimales.",
+          "untr_content": "This statement prints the balance of acct2 after the interest is added to the account.<br>{:s} is replaced by the account name. We invoke the method get_name of acct2 to get the account's name. We invoke the method get_balance to get the account's balance. Note that acct2 is the implied subject (instance) passed to self in both methods.<br>{:.2f} prints balance with two decimal digits."
+        },
+        {
+          "content": "Tenga en cuenta que no es necesario almacenar los valores devueltos por los metodos invocados en una variable. Podriamos usar los valores devueltos directamente en la funcion format.",
+          "untr_content": "Note that we do not necessarily have to store the returned value from the invoked methods in a variable. We could use the returned values directly in the format method."
+        },
+        {
+          "content": "La funcion format devuelve el resultado de reemplazar cada marcador {…} en la cadena plantilla con su argumento correspondiente pasado a la funcion format. Cualquier otra cosa que no este contenida entre llaves se imprimira literalmente, es decir, sin cambios.",
+          "untr_content": "The format function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function. Anything else, which is not contained in curly braces will be literally printed, i.e. without any changes."
+        },
+        {
+          "content": "La especificacion de formato dentro de un par de llaves comienza con : y seguida por el texto que especifica el tipo de dato. El tipo de dato s requiere un argumento de tipo cadena y el tipo de dato f requiere un argumento de punto flotante. Ocurrira un error si el argumento no es del tipo de dato esperado.",
+          "untr_content": "The format specification inside a pair of curly braces starts with a : and followed by the text that specifies the data type. The data type s requires a string argument and the data type f requires a floating-point argument. An error will occur if the argument is not the expected data type."
+        }
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "def init(self, owner, account, initial) :",
+      "untr_code": "def init(self, owner, account, initial) :",
+      "description": "",
+      "untr_description": "",
+      "line_number": 0
+    },
+    {
+      "code": "def __init__(owner, account, initial) :",
+      "untr_code": "def __init__(owner, account, initial) :",
+      "description": "",
+      "untr_description": "",
+      "line_number": 0
+    },
+    {
+      "code": "def __init__(self, owner, account) :",
+      "untr_code": "def __init__(self, owner, account) :",
+      "description": "",
+      "untr_description": "",
+      "line_number": 0
+    },
+    {
+      "code": "initial = balance",
+      "untr_code": "initial = balance",
+      "description": "",
+      "untr_description": "",
+      "line_number": 0
+    }
+  ],
+  "tags": [
+    "spanish-latam;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "translations": {
+    "en": "664e3c2a91363872f0ba354b"
+  },
+  "collaborator_emails": [],
+  "programInput": ""
+}
