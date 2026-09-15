@@ -1,5 +1,5 @@
 const codes = [
-  'en', 'es', 'ar', 'fr', 'zh', 'hi', 'pt', 'ru', 'ja', 'de', 'bn', 'ur', 'tr', 'vi', 'ko', 'it', 'th', 'id', 'te', 'mr', 'ta', 'pa', 'gu', 'kn', 'ml', 'am', 'sw', 'ms', 'fa', 'pl', 'uk', 'ro', 'nl', 'el', 'sv', 'sr', 'no', 'cs', 'sk', 'hu', 'bg', 'hr', 'lt', 'lv', 'et', 'sl'
+  'en', 'es', 'ar', 'fr', 'zh', 'hi', 'pt', 'ru', 'ja', 'de', 'bn', 'ur', 'tr', 'vi', 'ko', 'it', 'th', 'id', 'te', 'mr', 'ta', 'pa', 'gu', 'kn', 'ml', 'am', 'sw', 'ms', 'fa', 'pl', 'uk', 'ro', 'nl', 'el', 'sv', 'sr', 'no', 'cs', 'sk', 'hu', 'bg', 'hr', 'bs', 'lt', 'lv', 'et', 'sl'
 ];
 
 export const isoLanguages = codes.map(code => {
