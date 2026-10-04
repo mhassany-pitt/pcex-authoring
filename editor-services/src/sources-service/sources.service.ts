@@ -55,13 +55,17 @@ export class SourcesService {
     if (target) {
       const translationIds = Object.values(target.translations || {}).filter(Boolean);
       const hasAccess = await this.sources.exists({
-        $or: [{ user }, { collaborator_emails: user }],
-        $or: [
-          { _id: { $in: translationIds } },
-          { 'translations.en': _id },
-          { 'translations.ar': _id },
-          { 'translations.es': _id },
-          { 'translations.bs': _id }
+        $and: [
+          { $or: [{ user }, { collaborator_emails: user }] },
+          {
+            $or: [
+              ...(translationIds.length > 0 ? [{ _id: { $in: translationIds } }] : []),
+              { 'translations.en': _id },
+              { 'translations.ar': _id },
+              { 'translations.es': _id },
+              { 'translations.bs': _id }
+            ]
+          }
         ]
       });
       if (hasAccess) {
