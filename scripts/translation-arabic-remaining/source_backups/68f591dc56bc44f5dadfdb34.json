@@ -1,0 +1,423 @@
+{
+  "id": "68f591dc56bc44f5dadfdb34",
+  "user": "moh70@pitt.edu",
+  "archived": false,
+  "name": "Reporting File Information (Case 2) ",
+  "description": " Construct a program that receives the full path to an input file from the user, reads that file and reports the number of lines, the longest line, the number of words on each line, and the length of the longest word on each line. Make sure that the program handles each specific exception that could occur.",
+  "tags": [
+    "java-ds",
+    "arabic",
+    "gpt-5-mini",
+    "hai-translation"
+  ],
+  "language": "JAVA",
+  "filename": "JInputStat2.java",
+  "code": "import java.io.*;\nimport java.util.Scanner;\npublic class JInputStat2 {\n\tpublic static void main(String[] args) {\n\t\tScanner scan = new Scanner(System.in);\n\t\tSystem.out.println(\"Enter the name of the file:\");\n\t\tString name = scan.next();\n\t\tJInputStat2 i2 = new JInputStat2();\n\t\ti2.getStat(name);\n\t}\n\t//Step 1: Define the method\n\tpublic void getStat(String file_name) {\n\t\t//Step 1.1: Define the variables that we need for reporting the file information\n\t\tint numLines = 0;\n\t\tString longestLine = \"\";\n\t\t//Step 1.2: Enclose the code that might throw an exception within the try block\n\t\ttry {\n\t\t\t//Step 1.2.1: Wrap a BufferedReader around a FileReader\n\t\t\tFileReader fr = new FileReader(file_name); \n\t\t\tBufferedReader br = new BufferedReader(fr); \n\t\t\t//Step 1.2.2: Use the BufferedReader object to read one line at a time\n\t\t\tString line = null;\n\t\t\twhile ( ( line = br.readLine() ) != null) {\n\t\t\t\tnumLines += 1;\n\t\t\t\tString[] tokens = line.split(\" \");\n\t\t\t\tint numWords = tokens.length;\n\t\t\t\t//Determine if the line is the longest line so far\n\t\t\t\tif (line.length() > longestLine.length()) {\n\t\t\t\t\tlongestLine = line;\n\t\t\t\t}\n\t\t\t\t//Find the length of the longest word in the line\n\t\t\t\tint longestWord = 0;\n\t\t\t\tfor (String w : tokens ) {\n\t\t\t\t\tif ( w.length() > longestWord ) {\n\t\t\t\t\t\tlongestWord = w.length();\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t//Print the line information\n\t\t\t\tSystem.out.println(\"Line \" + numLines + \" has \" + numWords + \" tokens (longest = \" + longestWord + \")\");\n\t\t\t}\n\t\t\tSystem.out.println(\"Longest line:\" + longestLine);\n\t\t\t//Step 1.2.3: Close the BufferedReader object attached to the file\n\t\t\tbr.close();\n\t\t}\n\t\t//Step 1.3: Handle all possible exceptions that may be thrown in the try block \n\t\tcatch (FileNotFoundException ex) {\n\t\t\tSystem.out.println(\"File not found\");\n\t\t} catch (IOException ex ) {\n\t\t\tSystem.out.println(\"Problem with the file!\");\n\t\t}\n\t}\n}",
+  "lines": {
+    "1": {
+      "comments": [],
+      "blank": false
+    },
+    "2": {
+      "comments": [],
+      "blank": false
+    },
+    "3": {
+      "comments": [],
+      "blank": false
+    },
+    "4": {
+      "comments": [],
+      "blank": false
+    },
+    "5": {
+      "comments": [
+        {
+          "content": "We need to read the file name that the user enters. To read the input string from the user, we need to define a Scanner object."
+        },
+        {
+          "content": "We can create a Scanner object using the operator new, as shown in this statement. The System.in object represents the standard input stream, which by default is the keyboard. It tells the java compiler that the input will be provided through keyboard."
+        }
+      ],
+      "blank": false
+    },
+    "6": {
+      "comments": [
+        {
+          "content": "We prompt the user to enter the name of the file."
+        }
+      ],
+      "blank": false
+    },
+    "7": {
+      "comments": [
+        {
+          "content": "We need to read the file name that the user enters and store it in a variable. We read the string by calling the next() method."
+        }
+      ],
+      "blank": false
+    },
+    "8": {
+      "comments": [
+        {
+          "content": "This statement creates a JInputStat2 object using the new keyword and empty parentheses. The variable i2 holds a reference to a JInputStat2 object."
+        }
+      ],
+      "blank": false
+    },
+    "9": {
+      "comments": [
+        {
+          "content": "This statement invokes the method getStat of the i2 and passes the file name received from the user as its argument."
+        }
+      ],
+      "blank": false
+    },
+    "10": {
+      "comments": [],
+      "blank": false
+    },
+    "11": {
+      "comments": [],
+      "blank": false
+    },
+    "12": {
+      "comments": [
+        {
+          "content": "We need to first declare the method that receives a file as its parameter, reads that file, and reports some information related to that file. We define this method as public to provide access to this method from outside of the class. Also, we define its return type as void, as it does not return any value."
+        }
+      ],
+      "blank": false
+    },
+    "13": {
+      "comments": [],
+      "blank": false
+    },
+    "14": {
+      "comments": [
+        {
+          "content": "We need this variable to track the line numbers. We set it to 0 because we have not started processing the lines yet."
+        }
+      ],
+      "blank": false
+    },
+    "15": {
+      "comments": [
+        {
+          "content": "We need this variable to track the longest line. This statement sets variable longestLine to the empty string. Later, we will update the content of this variable as we iterate through the lines in the file."
+        }
+      ],
+      "blank": false
+    },
+    "16": {
+      "comments": [],
+      "blank": false
+    },
+    "17": {
+      "comments": [
+        {
+          "content": "The try blocks tries to execute the code within it. The statements in the try block may throw several types of exception."
+        },
+        {
+          "content": "If an error is encountered, the try block code execution is stopped and transferred down to the except block(s)."
+        }
+      ],
+      "blank": false
+    },
+    "18": {
+      "comments": [],
+      "blank": false
+    },
+    "19": {
+      "comments": [
+        {
+          "content": "We want to read a text file; therefore, we need to use a FileReader and wrap it in a BufferedReader. This statement create a FileReader object using the new keyword and empty parentheses. The variable fr holds a reference to a FileReader object."
+        }
+      ],
+      "blank": false
+    },
+    "20": {
+      "comments": [
+        {
+          "content": "We wrap a BufferedReader around the FileReader because the BufferedReader buffers the input to make the reading process much faster. The variable br holds a reference to a BufferedReader object."
+        }
+      ],
+      "blank": false
+    },
+    "21": {
+      "comments": [],
+      "blank": false
+    },
+    "22": {
+      "comments": [
+        {
+          "content": "We define a string variable to hold the content of each line that the BufferedReader object reads from the file. We set it to null."
+        }
+      ],
+      "blank": false
+    },
+    "23": {
+      "comments": [
+        {
+          "content": "We need to read the lines as long as we have not reached the end of the file. Therefore, we need to use a loop structure. Since we don't know ahead of time how many times the loop will be repeated, we need to use a while loop. The condition in the while loop tests whether the body of the loop should be repeated, so it should test whether the line that is read is not null."
+        },
+        {
+          "content": "We could read a line by invoking the readLine method of the BufferedReader object. Here, we compare the result of calling the readLine method to null. We assign the result of calling the readLine method to variable line because we need to process it in the body of the while loop."
+        },
+        {
+          "content": "The body of the while loop is repeated as long as the line that is read is not null. The loop terminates when the loop condition evaluates to false, that is when the line that is read is null."
+        }
+      ],
+      "blank": false
+    },
+    "24": {
+      "comments": [
+        {
+          "content": "Once we start processing each line, we increment the line number by 1."
+        },
+        {
+          "content": "The += operator adds the value on the right-hand side of the assignment operator (i.e., 1) to the current value of the variable on the left-hand side (i.e., value of variable numLines) and the result is stored in the variable numLines. Thus, this statement is equivalent to the statement numLines = numLines + 1."
+        }
+      ],
+      "blank": false
+    },
+    "25": {
+      "comments": [
+        {
+          "content": "We need to split the line into words and store the words in an array."
+        },
+        {
+          "content": "We use split() method with \" \" as its argument because we want the split method to separate strings using a single space character."
+        }
+      ],
+      "blank": false
+    },
+    "26": {
+      "comments": [
+        {
+          "content": "We count the number of words in the line by calling the length method on the array of words."
+        }
+      ],
+      "blank": false
+    },
+    "27": {
+      "comments": [],
+      "blank": false
+    },
+    "28": {
+      "comments": [
+        {
+          "content": "To find the longest line, we need to compare the number of characters in the current line with the number of characters in the longest line we've found so far. If the current line has more characters, then we need to set the variable longestLine to the current line."
+        },
+        {
+          "content": "line.length() returns the number of characters in the current line.<br>longestLine.length() returns the number of characters in the longest line we've found so far."
+        },
+        {
+          "content": "Note that the length() method returns the number of characters in a string."
+        },
+        {
+          "content": "If the current line has more characters than the longest line we've found so far, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        }
+      ],
+      "blank": false
+    },
+    "29": {
+      "comments": [
+        {
+          "content": "This statement sets the longest line to the current line."
+        }
+      ],
+      "blank": false
+    },
+    "30": {
+      "comments": [],
+      "blank": false
+    },
+    "31": {
+      "comments": [],
+      "blank": false
+    },
+    "32": {
+      "comments": [
+        {
+          "content": "We need this variable to find the length of the longest word in the line. We set it to 0 because we have not started processing the words of the line yet."
+        }
+      ],
+      "blank": false
+    },
+    "33": {
+      "comments": [
+        {
+          "content": "We want to iterate over the words in the line and find the length of the longest word. We can use a for loop to iterate through the words in the list of words in the line."
+        },
+        {
+          "content": "This for loop assigns the name w to each of the words in the array of words in turn, from left to right, and then the statement in the loop body will be executed for each word."
+        }
+      ],
+      "blank": true
+    },
+    "34": {
+      "comments": [
+        {
+          "content": "To find the length of the longest word, we need to compare the number of characters in the visited word with the number of characters in the longest word that we've found so far. If the visited word has more characters, then we need to set the variable longestWord to the length of the visited word."
+        },
+        {
+          "content": "Note that the method w.length() returns the number of characters in the visited word."
+        },
+        {
+          "content": "If the visited word has more characters than the longest word that we've found so far, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        }
+      ],
+      "blank": true
+    },
+    "35": {
+      "comments": [
+        {
+          "content": "This statement sets the length of the longest word to the length of the visited word."
+        },
+        {
+          "content": "Note that the method w.length() returns the number of characters in the visited word."
+        }
+      ],
+      "blank": true
+    },
+    "36": {
+      "comments": [],
+      "blank": false
+    },
+    "37": {
+      "comments": [],
+      "blank": false
+    },
+    "38": {
+      "comments": [],
+      "blank": false
+    },
+    "39": {
+      "comments": [
+        {
+          "content": "This statement concatenates the content of the given strings and variables to print the file information. We concatenate the content of these variables using the + operator."
+        },
+        {
+          "content": "Note that the concatenating and printing are done in the same line. That is, we don't have to store the concatenated string to a new variable at first and then print it in the next line."
+        },
+        {
+          "content": "Note that the + operator creates a new string from the contents of its operands joined. This string will be printed by the print method and followed by the end-of-line character at the end."
+        }
+      ],
+      "blank": false
+    },
+    "40": {
+      "comments": [],
+      "blank": false
+    },
+    "41": {
+      "comments": [
+        {
+          "content": "This statement prints the given text followed by the longest line to the default output stream. The printed text is followed by the end-of-line character at the end."
+        },
+        {
+          "content": "Note that we concatenate the content of two strings using the + operator. Also, note that the concatenating and printing are done in the same line. That is, we don't have to store the concatenated string to a new variable at first and then print it in the next line."
+        }
+      ],
+      "blank": false
+    },
+    "42": {
+      "comments": [],
+      "blank": false
+    },
+    "43": {
+      "comments": [
+        {
+          "content": "We're done reading the file; so, we need to close the BufferedReader object. Closing a BufferedReader object will also close the Reader object from which the BufferedReader is reading. Therefore, we don't need to close the FileReader object (i.e., object referred by variable fr) when the BufferedReader object is closed ."
+        }
+      ],
+      "blank": false
+    },
+    "44": {
+      "comments": [],
+      "blank": false
+    },
+    "45": {
+      "comments": [],
+      "blank": false
+    },
+    "46": {
+      "comments": [
+        {
+          "content": "We need to handle the FileNotFoundException. This error occurs when the file could not be found."
+        },
+        {
+          "content": "The body of this catch block gets executed only if the file could not be found. Otherwise, the body of this catch statement is skipped."
+        }
+      ],
+      "blank": false
+    },
+    "47": {
+      "comments": [
+        {
+          "content": "This statement prints to the default standard output stream the error that caused the FileNotFoundException. The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "blank": false
+    },
+    "48": {
+      "comments": [
+        {
+          "content": "We need to handle the IOException. This error occurs when an error occurs when trying to read/close the file."
+        },
+        {
+          "content": "The body of this catch block gets executed only if an error occurs when trying to read/close the file. Otherwise, the body of this catch statement is skipped."
+        }
+      ],
+      "blank": false
+    },
+    "49": {
+      "comments": [
+        {
+          "content": "This statement prints to the default standard output stream the error that caused the IOException. The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "blank": false
+    },
+    "50": {
+      "comments": [],
+      "blank": false
+    },
+    "51": {
+      "comments": [],
+      "blank": false
+    },
+    "52": {
+      "comments": [],
+      "blank": false
+    }
+  },
+  "distractors": [
+    {
+      "code": "if ( w > longestWord ) {",
+      "description": ""
+    },
+    {
+      "code": "if ( w.length() < longestWord ) {",
+      "description": ""
+    },
+    {
+      "code": "longestWord = w;",
+      "description": ""
+    }
+  ],
+  "programInput": "input_stat.txt",
+  "collaborator_emails": [
+    "ahgamlo@kau.edu.sa",
+    "samihamarwan21@gmail.com",
+    "peterb@pitt.edu"
+  ],
+  "extraFiles": [],
+  "iso_language_code": "en",
+  "updated_at": "2026-04-01T19:48:22.354Z",
+  "stat": {
+    "size": 126104,
+    "lastTimeModified": 1760924139176.2566
+  }
+}

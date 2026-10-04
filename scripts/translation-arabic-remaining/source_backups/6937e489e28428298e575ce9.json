@@ -1,0 +1,74 @@
+{
+  "id": "6937e489e28428298e575ce9",
+  "extraFiles": [],
+  "user": "moh70@pitt.edu",
+  "archived": false,
+  "name": "Reporting the Total Hours Each Employee Worked (Case 2) (clone)",
+  "description": "Suppose we have an input file that contains information about how many hours each employee of a company has worked. The file looks like the following (Employee's identification number, Employee's name, Hours):\n101 Erica 7.5 8.5 10.25 8 8.5\n783 Erin 10.5 11.5 12 11 10.75\n114 Simone 8 8 8\n...\nConstruct a program that reads this file and calculates the total number of hours worked by each individual. Make sure that the program handles each specific exception that could occur.",
+  "tags": [
+    "java-ds",
+    "arabic",
+    "gpt-5-mini",
+    "hai-translation"
+  ],
+  "language": "JAVA",
+  "filename": "JWorkHours2.java",
+  "code": "import java.io.*;\nimport java.util.Scanner;\npublic class JWorkHours2 {\n    public static void main(String[] args) {\n        Scanner scan = new Scanner(System.in);\n        System.out.println(\"Enter the name of the file:\");\n        String name = scan.next();\n        JWorkHours2 jwh = new JWorkHours2();\n        jwh.reportWorkHours(name);\n    }\n    //Step 1: Define the method that processes the employees file\n    public void reportWorkHours(String fileName) {\n        //Step 1.1: Enclose the code that might throw an exception within the try block\n        try {\n            //Step 1.1.1: Wrap a BufferedReader around a FileReader\n            FileReader fr = new FileReader(fileName); \n            BufferedReader br = new BufferedReader(fr); \n            //Step 1.1.2: Use the BufferedReader object to read one line at a time\n            String line = null;\n            while ( ( line = br.readLine() ) != null) {\n                String[] tokens = line.split(\" \");\n                //Try to get the id of the employee as a number\n                try {\n                    int eid =  Integer.parseInt(tokens[0]);\n                } catch ( NumberFormatException ex) {\n                    System.out.println(\"Error in the employee's id.\");\n                }\n                String name = tokens[1];\n                double total = 0.0;\n                for (int i = 2; i < tokens.length; i++ ) {\n                    try {\n                        total += Double.parseDouble(tokens[i]);\n                    } catch (  NumberFormatException ex ) {\n                        System.out.println(\"Error in the hour.\");\n                    }\n                }\n                System.out.println(\"Total hours worked by \" + name + \" = \" + total);\n            }     \n            //Step 1.1.3: Close the BufferedReader object attached to the file\n            br.close();\n        }\n        //Step 1.2: Handle all possible exceptions that may be thrown in the try block \n        catch (FileNotFoundException ex) {\n            System.out.println(\"File not found\");\n        }  catch (IOException ex ) {\n            System.out.println(\"Problem with the file!\");\n        }\n    }\n}\n",
+  "lines": {
+    "23": {
+      "comments": [
+        {}
+      ],
+      "blank": true
+    },
+    "24": {
+      "comments": [
+        {}
+      ],
+      "blank": true
+    },
+    "25": {
+      "comments": [
+        {}
+      ],
+      "blank": true
+    },
+    "26": {
+      "comments": [
+        {}
+      ],
+      "blank": true
+    }
+  },
+  "distractors": [
+    {
+      "code": "int eid = Double.parseDouble(tokens[0]);",
+      "description": "",
+      "line_number": 24
+    },
+    {
+      "code": "int eid = tokens[0];",
+      "description": "",
+      "line_number": 24
+    },
+    {
+      "code": "catch ( NullPointerException ex) {",
+      "description": "",
+      "line_number": 25
+    },
+    {
+      "code": "catch ( ArrayIndexOutOfBoundsException ex ) {",
+      "description": "",
+      "line_number": 25
+    }
+  ],
+  "programInput": "hours2.txt",
+  "collaborator_emails": [
+    "ahgamlo@kau.edu.sa",
+    "samihamarwan21@gmail.com",
+    "peterb@pitt.edu"
+  ],
+  "iso_language_code": "en",
+  "updated_at": "2026-09-29T15:14:47.847Z",
+  "stat": null
+}
