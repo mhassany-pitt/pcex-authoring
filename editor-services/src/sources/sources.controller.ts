@@ -58,6 +58,25 @@ export class SourcesController {
     if (!source) throw new NotFoundException();
     const res: any = useId(source);
     res.stat = this.compiler.getSizeLastModified(id);
+
+    if (res.translations && Object.keys(res.translations).length > 0) {
+      const translationIds = Object.values(res.translations).filter(Boolean);
+      const linkedSources = await this.sources.db().find({ _id: { $in: translationIds } });
+      res.translations_details = linkedSources.map(s => {
+        const { _id: s_id, name, user, language, iso_language_code, description, tags, collaborator_emails } = s;
+        return {
+          id: s_id.toString(),
+          name,
+          user,
+          language,
+          iso_language_code,
+          description,
+          tags,
+          collaborator_emails
+        };
+      });
+    }
+
     return res;
   }
 

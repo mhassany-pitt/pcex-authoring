@@ -121,7 +121,25 @@ export class ActivitiesController {
     });
     if (!activity) throw new NotFoundException();
     const { linkings, ...rest } = activity;
-    return this.attachStat(useId(rest));
+    const res: any = this.attachStat(useId(rest));
+
+    if (res.translations && Object.keys(res.translations).length > 0) {
+      const translationIds = Object.values(res.translations).filter(Boolean);
+      const linkedActivities = await this.activities.db().find({ _id: { $in: translationIds } });
+      res.translations_details = linkedActivities.map(a => {
+        const { _id: a_id, name, user, iso_language_code, items, collaborator_emails } = a;
+        return {
+          id: a_id.toString(),
+          name,
+          user,
+          iso_language_code,
+          items,
+          collaborator_emails
+        };
+      });
+    }
+
+    return res;
   }
 
   @Patch(':id')

@@ -26,8 +26,8 @@
             class="p-button-sm p-button-secondary p-button-outlined -my-2 uppercase tracking-tight" (click)="back()">
           </button>
           <button pButton type="submit" label="SAVE" icon="pi pi-check" class="p-button-sm -my-2 uppercase tracking-tight"
-            [disabled]="form.invalid || _v['update'] || blankLineCount > 4" [loading]="_v['update']"
-            [title]="blankLineCount > 4 ? 'Cannot save: More than 4 blank lines (' + blankLineCount + '/4)' : 'Save changes'">
+            [disabled]="form.invalid || _v['update'] || blankLineCount > 4 || isReadOnly()" [loading]="_v['update']"
+            [title]="isReadOnly() ? 'Read-only: You are not the owner or collaborator' : (blankLineCount > 4 ? 'Cannot save: More than 4 blank lines (' + blankLineCount + '/4)' : 'Save changes')">
           </button>
         </div>
       </div>
@@ -47,8 +47,18 @@
         </button>
         <span>DANGLINGS EXPLANATIONS:[{{ _v['moh70-dangling-explanations']?.join(',') }}]</span>
         <span>DANGLINGS DISTRACTORS:[{{ _v['moh70-dangling-distractors']?.join(',') }}]</span>
-      </div>
       <!-- ------------------------------------------- -->
+
+      <!-- Read-only banner if user is viewing a linked translation owned by someone else -->
+      <div *ngIf="isReadOnly()"
+        class="border border-blue-200 bg-blue-50 text-blue-900 text-xs p-3 rounded-sm shadow-sm flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-info-circle text-blue-600 text-base"></i>
+          <span>
+            <strong>Read-Only Mode:</strong> This source is owned by <strong>{{ model.user }}</strong>. You can inspect its contents and translations, but changes cannot be saved.
+          </span>
+        </div>
+      </div>
 
       <!-- Validation warning banners for blank lines and distractors -->
       <div *ngIf="blankLineCount >= 4"
@@ -137,9 +147,15 @@
                     [style]="{ 'line-height': '0.75' }" [panelStyle]="{ 'max-width': '50vw' }">
                     
                     <ng-template pTemplate="selectedItem">
-                      <div *ngIf="t.id && getSource(t.id)" class="flex items-center py-0.5 overflow-hidden max-w-full">
-                        <span class="font-bold text-blue-700 text-xs break-words whitespace-normal leading-tight">
+                      <div *ngIf="t.id" class="flex items-center py-0.5 overflow-hidden max-w-full">
+                        <span *ngIf="getSource(t.id)" class="font-bold text-blue-700 text-xs break-words whitespace-normal leading-tight">
                           {{ getSource(t.id).language ? getSource(t.id).language + ' ' : '' }}| {{ getSource(t.id).name }}
+                          <span *ngIf="getSource(t.id).user && getSource(t.id).user !== app.user?.email" class="ml-1.5 text-gray-500 font-normal text-[11px]">
+                            ({{ getSource(t.id).user }})
+                          </span>
+                        </span>
+                        <span *ngIf="!getSource(t.id)" class="text-blue-700 font-medium text-xs break-words whitespace-normal leading-tight">
+                          <i class="pi pi-link mr-1 text-gray-400"></i>Linked Source ({{ t.id }})
                         </span>
                       </div>
                     </ng-template>

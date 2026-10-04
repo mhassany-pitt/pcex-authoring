@@ -179,6 +179,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.log({ type: 'model-loaded', value: this.model });
 
         this.translationRows = Object.entries(source.translations || {}).map(([iso, id]) => ({ iso, id }));
+        this.mergeTranslationsIntoSources();
       },
       error: (err: any) => {
         this.messages.add({
@@ -197,6 +198,7 @@ export class EditorComponent implements OnInit, OnDestroy {
           iso: s.iso_language_code,
           _filter_details: `${s.name} ${s.description} ${s.user} ${s.tags?.join(' ') || ''} ${s.collaborator_emails?.join(' ') || ''}`.toLowerCase()
         }));
+        this.mergeTranslationsIntoSources();
       }
     });
   }
@@ -1205,17 +1207,49 @@ export class EditorComponent implements OnInit, OnDestroy {
     window.open(`${location.origin}${location.pathname}#/editor/${id}`, '_blank');
   }
 
+  mergeTranslationsIntoSources() {
+    if (this.model?.translations_details?.length && this.allSources) {
+      for (const ts of this.model.translations_details) {
+        const existingIndex = this.allSources.findIndex((s: any) => s.id === ts.id);
+        const itemData = {
+          ...ts,
+          iso: ts.iso_language_code,
+          _filter_details: `${ts.name} ${ts.description || ''} ${ts.user} ${ts.tags?.join(' ') || ''} ${ts.collaborator_emails?.join(' ') || ''}`.toLowerCase(),
+          isExternal: ts.user !== this.app.user?.email && !ts.collaborator_emails?.includes(this.app.user?.email)
+        };
+        if (existingIndex >= 0) {
+          this.allSources[existingIndex] = { ...this.allSources[existingIndex], ...itemData };
+        } else {
+          this.allSources.push(itemData);
+        }
+      }
+    }
+  }
+
+  isReadOnly() {
+    if (!this.model?.id || !this.app.user?.email) return false;
+    if (this.app.user?.roles?.includes('app-admin')) return false;
+    return this.model.user !== this.app.user.email && !this.model.collaborator_emails?.includes(this.app.user.email);
+  }
+
   getAvailableSources(currentRow: any) {
     const usedIds = this.translationRows.filter(r => r !== currentRow).map(r => r.id);
-    return this.allSources.filter(s =>
-      s.id !== this.model.id &&
+    let list = (this.allSources || []).filter(s =>
+      s.id !== this.model?.id &&
       !usedIds.includes(s.id) &&
       s.iso === currentRow.iso
     );
+    if (currentRow.id && !list.some(s => s.id === currentRow.id)) {
+      const s = this.getSource(currentRow.id) || { id: currentRow.id, name: `Linked Source (${currentRow.id})`, iso: currentRow.iso };
+      list = [s, ...list];
+    }
+    return list;
   }
 
   getSource(id: string) {
-    return this.allSources.find(s => s.id === id);
+    const found = this.allSources?.find(s => s.id === id);
+    if (found) return found;
+    return this.model?.translations_details?.find((s: any) => s.id === id) || null;
   }
 
   getLanguageName(iso: string) {

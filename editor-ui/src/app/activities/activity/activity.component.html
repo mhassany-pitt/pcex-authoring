@@ -328,7 +328,21 @@
             *ngIf="t.id"
             class="flex items-center py-0.5 overflow-hidden text-xs font-bold text-blue-600"
           >
-            {{ getActivity(t.id)?.name }}
+            <span *ngIf="getActivity(t.id)">
+              {{ getActivity(t.id)?.name }}
+              <span
+                *ngIf="getActivity(t.id)?.user && getActivity(t.id)?.user !== app.user?.email"
+                class="ml-1.5 text-gray-500 font-normal text-[11px]"
+              >
+                ({{ getActivity(t.id)?.user }})
+              </span>
+            </span>
+            <span
+              *ngIf="!getActivity(t.id)"
+              class="text-blue-600 font-medium text-xs break-words whitespace-normal leading-tight"
+            >
+              <i class="pi pi-link mr-1 text-gray-400"></i>Linked Bundle ({{ t.id }})
+            </span>
           </div>
         </ng-template>
 

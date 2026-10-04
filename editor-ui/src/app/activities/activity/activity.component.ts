@@ -75,6 +75,7 @@ export class ActivityComponent implements OnInit {
           this.model = activity;
           if (!this.model.collaborator_emails) this.model.collaborator_emails = [];
           this.translationRows = Object.entries(activity.translations || {}).map(([iso, id]) => ({ iso, id }));
+          this.mergeTranslationsIntoActivities();
         },
         (error: any) => console.log(error)
       );
@@ -92,6 +93,7 @@ export class ActivityComponent implements OnInit {
           iso: a.iso_language_code,
           _search_details: `${a.name} ${a.user} ${a.collaborator_emails?.join(' ') || ''} ${a.items?.map((i: any) => i.details?.name).join(' ') || ''}`
         }));
+        this.mergeTranslationsIntoActivities();
       }
     );
   }
@@ -220,13 +222,37 @@ export class ActivityComponent implements OnInit {
     window.open(`${location.origin}${location.pathname}#/sources?id=${id}`, '_blank');
   }
 
+  mergeTranslationsIntoActivities() {
+    if (this.model?.translations_details?.length && this.allActivities) {
+      for (const ta of this.model.translations_details) {
+        const existingIndex = this.allActivities.findIndex((a: any) => a.id === ta.id);
+        const itemData = {
+          ...ta,
+          iso: ta.iso_language_code,
+          _search_details: `${ta.name} ${ta.user} ${ta.collaborator_emails?.join(' ') || ''} ${ta.items?.map((i: any) => i.details?.name).join(' ') || ''}`,
+          isExternal: ta.user !== this.app.user?.email && !ta.collaborator_emails?.includes(this.app.user?.email)
+        };
+        if (existingIndex >= 0) {
+          this.allActivities[existingIndex] = { ...this.allActivities[existingIndex], ...itemData };
+        } else {
+          this.allActivities.push(itemData);
+        }
+      }
+    }
+  }
+
   getAvailableActivities(currentRow: any) {
     const usedIds = this.translationRows.filter(r => r !== currentRow).map(r => r.id);
-    return this.allActivities.filter(a =>
-      a.id !== this.model.id &&
+    let list = (this.allActivities || []).filter(a =>
+      a.id !== this.model?.id &&
       !usedIds.includes(a.id) &&
       a.iso === currentRow.iso
     );
+    if (currentRow.id && !list.some((a: any) => a.id === currentRow.id)) {
+      const a = this.getActivity(currentRow.id) || { id: currentRow.id, name: `Linked Bundle (${currentRow.id})`, iso: currentRow.iso };
+      list = [a, ...list];
+    }
+    return list;
   }
 
   getSource(id: string) {
@@ -234,7 +260,9 @@ export class ActivityComponent implements OnInit {
   }
 
   getActivity(id: string) {
-    return this.allActivities.find(a => a.id === id);
+    const found = this.allActivities?.find(a => a.id === id);
+    if (found) return found;
+    return this.model?.translations_details?.find((a: any) => a.id === id) || null;
   }
 
   getFilteredSources() {
