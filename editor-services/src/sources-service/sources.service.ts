@@ -60,10 +60,20 @@ export class SourcesService {
           {
             $or: [
               ...(translationIds.length > 0 ? [{ _id: { $in: translationIds } }] : []),
-              { 'translations.en': _id },
-              { 'translations.ar': _id },
-              { 'translations.es': _id },
-              { 'translations.bs': _id }
+              {
+                $expr: {
+                  $in: [
+                    _id,
+                    {
+                      $map: {
+                        input: { $objectToArray: { $ifNull: ['$translations', {}] } },
+                        as: 't',
+                        in: { $toString: '$$t.v' }
+                      }
+                    }
+                  ]
+                }
+              }
             ]
           }
         ]
