@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList, NgZone } from '@angular/core';
 import { SourcesService } from '../sources.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -135,15 +135,40 @@ export class SourcesComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public app: AppService,
     private confirm: ConfirmationService,
+    private ngZone: NgZone,
   ) { }
+
+  private lastDropdownOpenTime = 0;
+
+  private onInteractionListener = (event: Event) => {
+    const target = event.target as HTMLElement;
+    if (target?.closest?.('.p-multiselect, .p-dropdown')) {
+      this.lastDropdownOpenTime = Date.now();
+    }
+  };
 
   private onScrollListener = (event: Event) => {
     const target = event.target as HTMLElement;
     if (target?.closest?.('.p-multiselect-panel, .p-dropdown-panel')) {
       return;
     }
-    this.closeOpenDropdowns();
+    if (Date.now() - this.lastDropdownOpenTime < 350) {
+      return;
+    }
+    if (this.hasOpenDropdown()) {
+      setTimeout(() => {
+        this.ngZone.run(() => {
+          this.closeOpenDropdowns();
+        });
+      }, 0);
+    }
   };
+
+  hasOpenDropdown(): boolean {
+    const hasMs = this.multiSelects?.some(ms => !!ms.overlayVisible);
+    const hasDd = this.dropdowns?.some(dd => !!dd.overlayVisible);
+    return !!(hasMs || hasDd);
+  }
 
   closeOpenDropdowns() {
     this.multiSelects?.forEach(ms => {
@@ -159,7 +184,11 @@ export class SourcesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    window.addEventListener('scroll', this.onScrollListener, true);
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('scroll', this.onScrollListener, true);
+      window.addEventListener('pointerdown', this.onInteractionListener, true);
+      window.addEventListener('keydown', this.onInteractionListener, true);
+    });
 
     // Read query params on initial load
     this.parseQueryParams(this.route.snapshot.queryParams);
@@ -185,6 +214,8 @@ export class SourcesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     window.removeEventListener('scroll', this.onScrollListener, true);
+    window.removeEventListener('pointerdown', this.onInteractionListener, true);
+    window.removeEventListener('keydown', this.onInteractionListener, true);
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
     if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
     this.queryParamsSub?.unsubscribe();
