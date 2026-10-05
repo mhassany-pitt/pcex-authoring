@@ -21,11 +21,80 @@ export class SourcesController {
 
   @Get()
   @UseGuards(AuthenticatedGuard)
-  async index(@Req() req: Request, @Query('include') include: string, @Query('allUsers') allUsers: string) {
+  async index(
+    @Req() req: Request,
+    @Query('include') include: string,
+    @Query('allUsers') allUsers: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('sort') sort?: string,
+    @Query('q') q?: string,
+    @Query('owner') owner?: string,
+    @Query('authors') authors?: string,
+    @Query('codeLangs') codeLangs?: string,
+    @Query('langs') langs?: string,
+    @Query('roles') roles?: string,
+    @Query('trans') trans?: string,
+    @Query('tags') tags?: string,
+  ) {
+    const isadmin = allUsers == 'true' && this.isAppAdmin(req);
+    const user = this.getUserEmail(req);
+    const archived = include == 'archived';
+
+    if (page !== undefined) {
+      const res = await this.sources.listPaginated({
+        isadmin,
+        user,
+        archived,
+        page: page ? parseInt(page, 10) : 1,
+        limit: limit ? parseInt(limit, 10) : 25,
+        sort,
+        q,
+        owner,
+        authors: authors ? authors.split(',').filter(Boolean) : undefined,
+        codeLangs: codeLangs ? codeLangs.split(',').filter(Boolean) : undefined,
+        langs: langs ? langs.split(',').filter(Boolean) : undefined,
+        roles: roles ? roles.split(',').filter(Boolean) : undefined,
+        trans: trans === 'true',
+        tags: tags ? tags.split(',').filter(Boolean) : undefined,
+      });
+
+      const mappedItems = res.items.map((source: any) => {
+        const { _id: id, archived, name, description, tags, 
+          iso_language_code, language, user, collaborator_emails, 
+          translations, created_at, updated_at, blank_lines_count } = source;
+        return {
+          id: id.toString(),
+          archived,
+          name,
+          description,
+          tags,
+          iso_language_code,
+          language,
+          user,
+          collaborator_emails,
+          translations,
+          created_at,
+          updated_at,
+          blank_lines_count,
+          stat: this.compiler.getSizeLastModified(id.toString())
+        };
+      });
+
+      return {
+        items: mappedItems,
+        total: res.total,
+        page: res.page,
+        limit: res.limit,
+        totalPages: res.totalPages,
+        filterOptions: res.filterOptions,
+      };
+    }
+
     return (await this.sources.list({
-      isadmin: allUsers == 'true' && this.isAppAdmin(req),
-      user: this.getUserEmail(req),
-      archived: include == 'archived'
+      isadmin,
+      user,
+      archived
     })).map(source => {
       const { _id: id, archived, name, description, tags, 
         iso_language_code, language, user, collaborator_emails, 

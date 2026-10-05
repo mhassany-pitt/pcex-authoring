@@ -1,10 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { SourcesService } from '../sources.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ActivitiesService } from '../activities.service';
 import { AppService } from '../app.service';
 import { ConfirmationService } from 'primeng/api';
+import { MultiSelect } from 'primeng/multiselect';
+import { Dropdown } from 'primeng/dropdown';
 import { getTagLabel, getTagClass, getTagStyle } from '../utilities';
 
 @Component({
@@ -17,6 +19,9 @@ export class SourcesComponent implements OnInit, OnDestroy {
   getTagLabel = getTagLabel;
   getTagClass = getTagClass;
   getTagStyle = getTagStyle;
+
+  @ViewChildren(MultiSelect) multiSelects!: QueryList<MultiSelect>;
+  @ViewChildren(Dropdown) dropdowns!: QueryList<Dropdown>;
 
   private readonly languageNames =
     typeof Intl !== 'undefined' && 'DisplayNames' in Intl
@@ -49,10 +54,34 @@ export class SourcesComponent implements OnInit, OnDestroy {
     localStorage.setItem('pcex-sources-archived', `${bool}`.toLowerCase());
   }
 
-  // Data
+  // Data & Pagination
   sources: any[] = [];
   filteredSources: any[] = [];
   isLoading = false;
+  page: number = 1;
+  pageSize: number = 25;
+  totalRecords: number = 0;
+  rowsPerPageOptions = [10, 25, 50, 100];
+
+  serverFilterOptions: {
+    authors: string[];
+    codeLangs: string[];
+    langs: string[];
+    tags: string[];
+  } = {
+    authors: [],
+    codeLangs: [],
+    langs: [],
+    tags: [],
+  };
+
+  get firstItemIndex(): number {
+    return this.totalRecords === 0 ? 0 : (this.page - 1) * this.pageSize + 1;
+  }
+
+  get lastItemIndex(): number {
+    return Math.min(this.page * this.pageSize, this.totalRecords);
+  }
 
   // Filter Models
   searchQuery: string = '';
@@ -108,7 +137,30 @@ export class SourcesComponent implements OnInit, OnDestroy {
     private confirm: ConfirmationService,
   ) { }
 
+  private onScrollListener = (event: Event) => {
+    const target = event.target as HTMLElement;
+    if (target?.closest?.('.p-multiselect-panel, .p-dropdown-panel')) {
+      return;
+    }
+    this.closeOpenDropdowns();
+  };
+
+  closeOpenDropdowns() {
+    this.multiSelects?.forEach(ms => {
+      if (ms.overlayVisible) {
+        ms.hide();
+      }
+    });
+    this.dropdowns?.forEach(dd => {
+      if (dd.overlayVisible) {
+        dd.hide();
+      }
+    });
+  }
+
   ngOnInit(): void {
+    window.addEventListener('scroll', this.onScrollListener, true);
+
     // Read query params on initial load
     this.parseQueryParams(this.route.snapshot.queryParams);
 
@@ -121,7 +173,7 @@ export class SourcesComponent implements OnInit, OnDestroy {
       this.queryParamsSub = this.route.queryParams.subscribe(p => {
         const changed = this.parseQueryParams(p);
         if (changed) {
-          this.applyFilters();
+          this.reload();
         }
         const id = p['id'];
         if (id && id !== this.highlightedId) {
@@ -132,6 +184,7 @@ export class SourcesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    window.removeEventListener('scroll', this.onScrollListener, true);
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
     if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
     this.queryParamsSub?.unsubscribe();
@@ -209,6 +262,18 @@ export class SourcesComponent implements OnInit, OnDestroy {
       changed = true;
     }
 
+    const newPage = Math.max(1, parseInt(params['page'], 10) || 1);
+    if (newPage !== this.page) {
+      this.page = newPage;
+      changed = true;
+    }
+
+    const newLimit = Math.max(1, parseInt(params['limit'], 10) || 25);
+    if (newLimit !== this.pageSize) {
+      this.pageSize = newLimit;
+      changed = true;
+    }
+
     if (params['archived'] !== undefined) {
       const isArchived = params['archived'] === 'true';
       if (isArchived !== this.archived) {
@@ -255,14 +320,9 @@ export class SourcesComponent implements OnInit, OnDestroy {
     return this.roleOptions.find(r => r.value === role)?.label || role;
   }
 
-  // Dynamic Options Extracted from Sources Data
+  // Dynamic Options from Server Filter Options
   get availableAuthors(): { label: string; value: string }[] {
-    const authors = new Set<string>();
-    for (const s of this.sources || []) {
-      if (s.user) authors.add(s.user);
-    }
-    return Array.from(authors)
-      .sort((a, b) => a.localeCompare(b))
+    return (this.serverFilterOptions?.authors || [])
       .map(u => ({
         label: u === this.app.user?.email ? `${u} (you)` : u,
         value: u,
@@ -270,40 +330,20 @@ export class SourcesComponent implements OnInit, OnDestroy {
   }
 
   get progLangOptions(): { label: string; value: string }[] {
-    const langs = new Set<string>();
-    for (const s of this.sources || []) {
-      if (s.language) langs.add(s.language);
-    }
-    return Array.from(langs)
-      .sort((a, b) => a.localeCompare(b))
+    return (this.serverFilterOptions?.codeLangs || [])
       .map(l => ({ label: l.toUpperCase(), value: l }));
   }
 
   get availableLanguages(): { label: string; value: string }[] {
-    const codes = new Set<string>();
-    for (const s of this.sources || []) {
-      if (s.iso_language_code) codes.add(s.iso_language_code);
-    }
-    return Array.from(codes)
+    return (this.serverFilterOptions?.langs || [])
       .map(code => ({
         label: this.getLanguageName(code) || code,
         value: code,
-      }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+      }));
   }
 
   get availableTags(): { label: string; value: string }[] {
-    const tags = new Set<string>();
-    for (const s of this.sources || []) {
-      if (Array.isArray(s.tags)) {
-        for (const t of s.tags) {
-          const clean = getTagLabel(t);
-          if (clean) tags.add(clean);
-        }
-      }
-    }
-    return Array.from(tags)
-      .sort((a, b) => a.localeCompare(b))
+    return (this.serverFilterOptions?.tags || [])
       .map(t => ({ label: t, value: t }));
   }
 
@@ -319,6 +359,7 @@ export class SourcesComponent implements OnInit, OnDestroy {
     this.hasTranslationsFilter = false;
     this.selectedTags = [];
     this.selectedSort = 'date_desc';
+    this.page = 1;
     this.onFilterChange();
   }
 
@@ -364,6 +405,7 @@ export class SourcesComponent implements OnInit, OnDestroy {
   }
 
   toggleArchiveFilter() {
+    this.page = 1;
     this.reload(() => {
       this.updateUrlParams(false);
     });
@@ -401,90 +443,15 @@ export class SourcesComponent implements OnInit, OnDestroy {
     return this.getUpdatedDate(source)?.getTime() || 0;
   }
 
-  // Core Filtering & Sorting
   applyFilters() {
-    const userEmail = this.app.user?.email?.toLowerCase();
-    const query = this.searchQuery?.trim().toLowerCase();
-
-    this.filteredSources = (this.sources || []).filter(source => {
-      // 1. Ownership filter
-      if (this.selectedOwner === 'mine') {
-        if (source.user?.toLowerCase() !== userEmail) return false;
-      } else if (this.selectedOwner === 'shared') {
-        const isOwner = source.user?.toLowerCase() === userEmail;
-        const isCollab = (source.collaborator_emails || []).some(
-          (c: string) => c.toLowerCase() === userEmail
-        );
-        if (!(!isOwner && isCollab)) return false;
-      }
-
-      // 2. Authors filter
-      if (this.selectedAuthors?.length) {
-        if (!this.selectedAuthors.includes(source.user)) return false;
-      }
-
-      // 3. Programming Languages filter
-      if (this.selectedProgLangs?.length) {
-        if (!source.language || !this.selectedProgLangs.includes(source.language)) return false;
-      }
-
-      // 4. Natural Languages filter
-      if (this.selectedLanguages?.length) {
-        if (!source.iso_language_code || !this.selectedLanguages.includes(source.iso_language_code)) return false;
-      }
-
-      // 5. Role filter
-      if (this.selectedRoles?.length) {
-        const blanks = source.blank_lines_count || 0;
-        const matchesExample = this.selectedRoles.includes('example') && blanks === 0;
-        const matchesChallenge = this.selectedRoles.includes('challenge') && blanks > 0;
-        if (!matchesExample && !matchesChallenge) return false;
-      }
-
-      // 6. Translations filter
-      if (this.hasTranslationsFilter) {
-        const hasTrans = source.translations && Object.keys(source.translations).length > 0;
-        if (!hasTrans) return false;
-      }
-
-      // 7. Tags filter
-      if (this.selectedTags?.length) {
-        const sourceTags = new Set((source.tags || []).map((t: string) => getTagLabel(t)));
-        const hasTagMatch = this.selectedTags.some(t => sourceTags.has(t));
-        if (!hasTagMatch) return false;
-      }
-
-      // 8. Keyword search filter
-      if (query) {
-        const details = (source._filter_details || '').toLowerCase();
-        if (!details.includes(query)) return false;
-      }
-
-      return true;
-    });
-
-    // Sorting
-    this.filteredSources.sort((a, b) => {
-      switch (this.selectedSort) {
-        case 'date_asc':
-          return this.getCreationTime(a) - this.getCreationTime(b);
-        case 'name_desc':
-          return (b.name || '').localeCompare(a.name || '');
-        case 'name_asc':
-          return (a.name || '').localeCompare(b.name || '');
-        case 'blanks_desc':
-          return (b.blank_lines_count || 0) - (a.blank_lines_count || 0);
-        case 'blanks_asc':
-          return (a.blank_lines_count || 0) - (b.blank_lines_count || 0);
-        case 'date_desc':
-        default:
-          return this.getCreationTime(b) - this.getCreationTime(a);
-      }
-    });
+    // Kept for backward-compatibility with any internal calls; reload handles filtering
+    this.reload();
   }
 
   updateUrlParams(replace = true) {
     const queryParams: any = {};
+    if (this.page > 1) queryParams.page = this.page;
+    if (this.pageSize !== 25) queryParams.limit = this.pageSize;
     if (this.searchQuery?.trim()) queryParams.q = this.searchQuery.trim();
     if (this.selectedOwner && this.selectedOwner !== 'all') queryParams.owner = this.selectedOwner;
     if (this.selectedAuthors?.length) queryParams.authors = this.selectedAuthors.join(',');
@@ -504,37 +471,52 @@ export class SourcesComponent implements OnInit, OnDestroy {
   }
 
   onSearchInput() {
-    this.applyFilters();
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
+      this.page = 1;
+      this.reload();
       this.updateUrlParams(true);
-    }, 200);
+    }, 250);
   }
 
   onFilterChange() {
-    this.applyFilters();
+    this.page = 1;
+    this.reload();
     this.updateUrlParams(false);
+  }
+
+  onPageChange(event: any) {
+    this.page = Math.floor(event.first / event.rows) + 1;
+    this.pageSize = event.rows;
+    this.reload();
+    this.updateUrlParams(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Load Data
   reload(then?: () => void) {
     this.isLoading = true;
-    this.api.sources({ archived: this.archived }).subscribe(
-      (sources: any) => {
-        this.sources = sources.map((source: any) => {
-          source._filter_details = [
-            source.name,
-            source.description,
-            source.language,
-            this.getLanguageName(source.iso_language_code),
-            ...(source.tags || []).map((t: string) => getTagLabel(t)),
-            ...(source.tags || []),
-            source.user,
-            ...(source.collaborator_emails || [])
-          ].filter(Boolean).join(' ');
-          return source;
-        });
-        this.applyFilters();
+    this.api.sources({
+      page: this.page,
+      limit: this.pageSize,
+      sort: this.selectedSort,
+      q: this.searchQuery?.trim() || undefined,
+      owner: this.selectedOwner !== 'all' ? this.selectedOwner : undefined,
+      authors: this.selectedAuthors?.length ? this.selectedAuthors.join(',') : undefined,
+      codeLangs: this.selectedProgLangs?.length ? this.selectedProgLangs.join(',') : undefined,
+      langs: this.selectedLanguages?.length ? this.selectedLanguages.join(',') : undefined,
+      roles: this.selectedRoles?.length ? this.selectedRoles.join(',') : undefined,
+      trans: this.hasTranslationsFilter ? 'true' : undefined,
+      tags: this.selectedTags?.length ? this.selectedTags.join(',') : undefined,
+      archived: this.archived,
+    }).subscribe(
+      (res: any) => {
+        this.sources = res.items || [];
+        this.filteredSources = this.sources;
+        this.totalRecords = res.total || 0;
+        if (res.filterOptions) {
+          this.serverFilterOptions = res.filterOptions;
+        }
         this.isLoading = false;
         then?.();
       },

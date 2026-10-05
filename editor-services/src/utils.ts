@@ -20,6 +20,10 @@ export const use_Id = (object): any => {
   } else return null;
 }
 
+export const escapeRegex = (str: string): string => {
+  return (str || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
 export const zfill = (num: number, size: number) => {
   return '0'.repeat(size - num.toString().length) + num;
 }

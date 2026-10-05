@@ -112,7 +112,7 @@
             <!-- Left: Count & Filter Chips -->
             <div class="flex flex-wrap items-center gap-2">
               <span class="text-xs font-bold text-gray-700 uppercase tracking-tight">
-                Showing {{ filteredSources.length }} of {{ sources.length }} sources
+                Showing {{ firstItemIndex }} – {{ lastItemIndex }} of {{ totalRecords }} sources
               </span>
 
               <!-- Filter Chips with (x) -->
@@ -248,8 +248,19 @@
             </div>
           </div>
 
+          <!-- Paginator -->
+          <p-paginator
+            *ngIf="totalRecords > 0"
+            [rows]="pageSize"
+            [totalRecords]="totalRecords"
+            [first]="(page - 1) * pageSize"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            (onPageChange)="onPageChange($event)"
+            styleClass="border-t border-gray-200 text-xs">
+          </p-paginator>
+
           <!-- Empty State -->
-          <div *ngIf="filteredSources.length === 0" class="p-8 text-center text-gray-400">
+          <div *ngIf="!isLoading && totalRecords === 0" class="p-8 text-center text-gray-400">
             <div class="text-sm">No sources matched your filter criteria</div>
             <button pButton type="button" label="Reset all filters" (click)="clearFilters()"
               class="p-button-text p-button-sm text-xs mt-2"></button>

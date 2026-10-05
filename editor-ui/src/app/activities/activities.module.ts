@@ -19,6 +19,7 @@ import { ChipsModule } from 'primeng/chips';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { PaginatorModule } from 'primeng/paginator';
 import { NavbarComponent } from '../navbar/navbar.component';
 
 @NgModule({
@@ -36,7 +37,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     InputTextModule, CheckboxModule,
     ConfirmDialogModule, TagModule,
     ChipsModule, InputGroupModule,
-    InputGroupAddonModule, NavbarComponent,
+    InputGroupAddonModule, PaginatorModule, NavbarComponent,
   ],
   providers: [
     ConfirmationService

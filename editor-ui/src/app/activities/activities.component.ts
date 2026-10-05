@@ -1,10 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { ActivitiesService } from '../activities.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AppService } from '../app.service';
 import { getNavMenuBar, getTagLabel, getTagClass, getTagStyle } from '../utilities';
 import { ConfirmationService } from 'primeng/api';
+import { MultiSelect } from 'primeng/multiselect';
+import { Dropdown } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-activities',
@@ -16,6 +18,9 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   getTagLabel = getTagLabel;
   getTagClass = getTagClass;
   getTagStyle = getTagStyle;
+
+  @ViewChildren(MultiSelect) multiSelects!: QueryList<MultiSelect>;
+  @ViewChildren(Dropdown) dropdowns!: QueryList<Dropdown>;
 
   private readonly languageNames =
     typeof Intl !== 'undefined' && 'DisplayNames' in Intl
@@ -42,6 +47,40 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   activities: any[] = [];
   filteredActivities: any[] = [];
   activity: any = null;
+
+  // Pagination & Counts
+  page: number = 1;
+  pageSize: number = 25;
+  totalRecords: number = 0;
+  rowsPerPageOptions = [10, 25, 50, 100];
+  isLoading = false;
+
+  serverFilterOptions: {
+    authors: string[];
+    codeLangs: string[];
+    langs: string[];
+    tags: string[];
+  } = {
+    authors: [],
+    codeLangs: [],
+    langs: [],
+    tags: [],
+  };
+
+  serverCounts = {
+    total: 0,
+    mine: 0,
+    published: 0,
+    paws: 0,
+  };
+
+  get firstItemIndex(): number {
+    return this.totalRecords === 0 ? 0 : (this.page - 1) * this.pageSize + 1;
+  }
+
+  get lastItemIndex(): number {
+    return Math.min(this.page * this.pageSize, this.totalRecords);
+  }
 
   // Filter state
   searchQuery: string = '';
@@ -90,21 +129,19 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   expandedItems: Record<string, boolean> = {};
 
   get totalCount(): number {
-    return this.activities?.length || 0;
+    return this.serverCounts.total;
   }
 
   get mineCount(): number {
-    const userEmail = this.app.user?.email?.toLowerCase();
-    if (!userEmail || !this.activities) return 0;
-    return this.activities.filter((a) => a.user?.toLowerCase() === userEmail).length;
+    return this.serverCounts.mine;
   }
 
   get publishedCount(): number {
-    return (this.activities || []).filter((a) => !!a.published).length;
+    return this.serverCounts.published;
   }
 
   get pawsSyncedCount(): number {
-    return (this.activities || []).filter((a) => !!a.linkings).length;
+    return this.serverCounts.paws;
   }
 
   filterByQuickStat(type: 'all' | 'mine' | 'published' | 'paws') {
@@ -131,12 +168,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   get availableAuthors(): { label: string; value: string }[] {
-    const authors = new Set<string>();
-    for (const a of this.activities || []) {
-      if (a.user) authors.add(a.user);
-    }
-    return Array.from(authors)
-      .sort((a, b) => a.localeCompare(b))
+    return (this.serverFilterOptions?.authors || [])
       .map((u) => ({
         label: u === this.app.user?.email ? `${u} (you)` : u,
         value: u,
@@ -144,44 +176,20 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   get availableCodeLanguages(): { label: string; value: string }[] {
-    const langs = new Set<string>();
-    for (const a of this.activities || []) {
-      if (a.language) langs.add(a.language);
-      for (const it of a.items || []) {
-        if (it.details?.language) langs.add(it.details.language);
-      }
-    }
-    return Array.from(langs)
-      .sort((a, b) => a.localeCompare(b))
+    return (this.serverFilterOptions?.codeLangs || [])
       .map((l) => ({ label: l, value: l }));
   }
 
   get availableLanguages(): { label: string; value: string }[] {
-    const codes = new Set<string>();
-    for (const a of this.activities || []) {
-      if (a.iso_language_code) codes.add(a.iso_language_code);
-      for (const item of a.items || []) {
-        if (item.details?.iso_language_code) codes.add(item.details.iso_language_code);
-      }
-    }
-    return Array.from(codes)
+    return (this.serverFilterOptions?.langs || [])
       .map((code) => ({
         label: this.getLanguageName(code) || code,
         value: code,
-      }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+      }));
   }
 
   get availableTags(): { label: string; value: string }[] {
-    const tags = new Set<string>();
-    for (const a of this.activities || []) {
-      for (const t of a.tags || []) if (t) tags.add(getTagLabel(t));
-      for (const it of a.items || []) {
-        for (const t of it.details?.tags || []) if (t) tags.add(getTagLabel(t));
-      }
-    }
-    return Array.from(tags)
-      .sort((a, b) => a.localeCompare(b))
+    return (this.serverFilterOptions?.tags || [])
       .map((t) => ({ label: t, value: t }));
   }
 
@@ -214,6 +222,27 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   searchTimeout: any;
   private queryParamsSub?: Subscription;
 
+  private onScrollListener = (event: Event) => {
+    const target = event.target as HTMLElement;
+    if (target?.closest?.('.p-multiselect-panel, .p-dropdown-panel')) {
+      return;
+    }
+    this.closeOpenDropdowns();
+  };
+
+  closeOpenDropdowns() {
+    this.multiSelects?.forEach(ms => {
+      if (ms.overlayVisible) {
+        ms.hide();
+      }
+    });
+    this.dropdowns?.forEach(dd => {
+      if (dd.overlayVisible) {
+        dd.hide();
+      }
+    });
+  }
+
   constructor(
     public api: ActivitiesService,
     public router: Router,
@@ -223,6 +252,8 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    window.addEventListener('scroll', this.onScrollListener, true);
+
     const qParams = this.route.snapshot.queryParams;
     this.parseQueryParams(qParams);
 
@@ -266,13 +297,14 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
         }
 
         if (changed) {
-          this.applyFilters();
+          this.reload();
         }
       });
     });
   }
 
   ngOnDestroy(): void {
+    window.removeEventListener('scroll', this.onScrollListener, true);
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
     if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
     this.queryParamsSub?.unsubscribe();
@@ -362,6 +394,18 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       changed = true;
     }
 
+    const newPage = Math.max(1, parseInt(params['page'], 10) || 1);
+    if (newPage !== this.page) {
+      this.page = newPage;
+      changed = true;
+    }
+
+    const newLimit = Math.max(1, parseInt(params['limit'], 10) || 25);
+    if (newLimit !== this.pageSize) {
+      this.pageSize = newLimit;
+      changed = true;
+    }
+
     if (params['archived'] !== undefined) {
       const isArchived = params['archived'] === 'true';
       if (isArchived !== this.archived) {
@@ -388,125 +432,14 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   applyFilters() {
-    if (!this.activities) {
-      this.filteredActivities = [];
-      return;
-    }
-
-    const query = (this.searchQuery || '').trim().toLowerCase();
-    const currentUser = this.app.user?.email?.toLowerCase();
-
-    this.filteredActivities = this.activities.filter((activity: any) => {
-      // 1. Owner filter
-      if (this.selectedOwner === 'mine') {
-        if (!currentUser || activity.user?.toLowerCase() !== currentUser) return false;
-      } else if (this.selectedOwner === 'shared') {
-        const collabs = (activity.collaborator_emails || []).map((e: string) => e?.toLowerCase());
-        if (!currentUser || !collabs.includes(currentUser)) return false;
-      }
-
-      // 2. Specific Authors filter
-      if (this.selectedAuthors?.length) {
-        const lowerAuthors = this.selectedAuthors.map((a) => a.toLowerCase());
-        if (!activity.user || !lowerAuthors.includes(activity.user.toLowerCase())) return false;
-      }
-
-      // 3. Item Composition filter
-      if (this.selectedItemTypes?.length) {
-        const hasMatch = (activity.items || []).some((it: any) =>
-          this.selectedItemTypes.includes(it.type)
-        );
-        if (!hasMatch) return false;
-      }
-
-      // 4. Code Language filter
-      if (this.selectedCodeLanguages?.length) {
-        const lowerLangs = this.selectedCodeLanguages.map((l) => l.toLowerCase());
-        const matchBundleLang = activity.language && lowerLangs.includes(activity.language.toLowerCase());
-        const matchItemLang = (activity.items || []).some(
-          (it: any) => it.details?.language && lowerLangs.includes(it.details.language.toLowerCase())
-        );
-        if (!matchBundleLang && !matchItemLang) return false;
-      }
-
-      // 5. Natural Language (ISO) filter
-      if (this.selectedLanguages?.length) {
-        const matchBundle = activity.iso_language_code && this.selectedLanguages.includes(activity.iso_language_code);
-        const matchItem = (activity.items || []).some(
-          (it: any) => it.details?.iso_language_code && this.selectedLanguages.includes(it.details.iso_language_code)
-        );
-        if (!matchBundle && !matchItem) return false;
-      }
-
-      // 6. Status filter
-      if (this.selectedStatuses?.length) {
-        const matchesStatus = this.selectedStatuses.some((st) => {
-          if (st === 'published') return !!activity.published;
-          if (st === 'paws') return !!activity.linkings;
-          if (st === 'draft') return !activity.published;
-          return false;
-        });
-        if (!matchesStatus) return false;
-      }
-
-      // 7. Translations filter
-      if (this.hasTranslationsFilter) {
-        const transCount = Object.keys(activity.translations || {}).length;
-        if (transCount === 0) return false;
-      }
-
-      // 8. Item Count Range filter
-      if (this.selectedItemCounts?.length) {
-        const count = activity.items?.length || 0;
-        const matchesCount = this.selectedItemCounts.some((range) => {
-          if (range === '1') return count === 1;
-          if (range === '2-4') return count >= 2 && count <= 4;
-          if (range === '5+') return count >= 5;
-          return false;
-        });
-        if (!matchesCount) return false;
-      }
-
-      // 9. Tag filter
-      if (this.selectedTags?.length) {
-        const bundleTags = (activity.tags || []).map((t: string) => getTagLabel(t));
-        const itemTags = (activity.items || []).flatMap((it: any) => (it.details?.tags || []).map((t: string) => getTagLabel(t)));
-        const allTags = new Set([...bundleTags, ...itemTags]);
-        const hasTagMatch = this.selectedTags.some((t) => allTags.has(t));
-        if (!hasTagMatch) return false;
-      }
-
-      // 10. Keyword Search filter
-      if (query) {
-        const details = (activity._filter_details || '').toLowerCase();
-        if (!details.includes(query)) return false;
-      }
-
-      return true;
-    });
-
-    // Apply Sorting
-    this.filteredActivities.sort((a: any, b: any) => {
-      switch (this.selectedSort) {
-        case 'date_asc':
-          return this.getCreationTime(a) - this.getCreationTime(b);
-        case 'name_desc':
-          return (b.name || '').localeCompare(a.name || '');
-        case 'name_asc':
-          return (a.name || '').localeCompare(b.name || '');
-        case 'items_desc':
-          return (b.items?.length || 0) - (a.items?.length || 0);
-        case 'items_asc':
-          return (a.items?.length || 0) - (b.items?.length || 0);
-        case 'date_desc':
-        default:
-          return this.getCreationTime(b) - this.getCreationTime(a);
-      }
-    });
+    // Kept for backward compatibility; reload handles filtering
+    this.reload();
   }
 
   updateUrlParams(replace = true) {
     const queryParams: any = {};
+    if (this.page > 1) queryParams.page = this.page;
+    if (this.pageSize !== 25) queryParams.limit = this.pageSize;
     if (this.searchQuery?.trim()) queryParams.q = this.searchQuery.trim();
     if (this.selectedOwner && this.selectedOwner !== 'all') queryParams.owner = this.selectedOwner;
     if (this.selectedAuthors?.length) queryParams.authors = this.selectedAuthors.join(',');
@@ -537,16 +470,26 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   onSearchInput() {
-    this.applyFilters();
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
+      this.page = 1;
+      this.reload();
       this.updateUrlParams(true);
-    }, 200);
+    }, 250);
   }
 
   onFilterChange() {
-    this.applyFilters();
+    this.page = 1;
+    this.reload();
     this.updateUrlParams(false);
+  }
+
+  onPageChange(event: any) {
+    this.page = Math.floor(event.first / event.rows) + 1;
+    this.pageSize = event.rows;
+    this.reload();
+    this.updateUrlParams(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   clearFilters() {
@@ -562,15 +505,14 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.selectedItemCounts = [];
     this.selectedTags = [];
     this.selectedSort = 'date_desc';
-    this.applyFilters();
-    this.updateUrlParams(false);
+    this.page = 1;
+    this.onFilterChange();
   }
 
   clearSearch() {
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchQuery = '';
-    this.applyFilters();
-    this.updateUrlParams(false);
+    this.onFilterChange();
   }
 
   clearOwnerFilter() {
@@ -676,6 +618,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   toggleArchiveFilter() {
+    this.page = 1;
     this.reload(() => {
       this.updateUrlParams(false);
     });
@@ -721,34 +664,33 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   reload(then?: () => void) {
     this.create = false;
-    this.api.activities({ archived: this.archived }).subscribe(
-      (activities: any) => {
-        this.activities = activities.map((activity: any) => {
-          activity._filter_details = [
-            activity.id,
-            activity.name,
-            activity.user,
-            activity.language,
-            activity.iso_language_code,
-            this.getLanguageName(activity.iso_language_code),
-            ...(activity.collaborator_emails || []),
-            ...(activity.tags || []),
-            ...activity.items.map((item: any) => {
-              return [
-                item.item,
-                item.details?.name,
-                item.details?.description,
-                item.details?.language,
-                item.details?.iso_language_code,
-                this.getLanguageName(item.details?.iso_language_code),
-                ...(item.details?.tags || []),
-              ].join(' ');
-            })
-          ].join(' ');
-          return activity;
-        });
-
-        this.applyFilters();
+    this.isLoading = true;
+    this.api.activities({
+      page: this.page,
+      limit: this.pageSize,
+      sort: this.selectedSort,
+      q: this.searchQuery?.trim() || undefined,
+      owner: this.selectedOwner !== 'all' ? this.selectedOwner : undefined,
+      authors: this.selectedAuthors?.length ? this.selectedAuthors.join(',') : undefined,
+      types: this.selectedItemTypes?.length ? this.selectedItemTypes.join(',') : undefined,
+      codeLangs: this.selectedCodeLanguages?.length ? this.selectedCodeLanguages.join(',') : undefined,
+      langs: this.selectedLanguages?.length ? this.selectedLanguages.join(',') : undefined,
+      statuses: this.selectedStatuses?.length ? this.selectedStatuses.join(',') : undefined,
+      trans: this.hasTranslationsFilter ? 'true' : undefined,
+      counts: this.selectedItemCounts?.length ? this.selectedItemCounts.join(',') : undefined,
+      tags: this.selectedTags?.length ? this.selectedTags.join(',') : undefined,
+      archived: this.archived,
+    }).subscribe(
+      (res: any) => {
+        this.activities = res.items || [];
+        this.filteredActivities = this.activities;
+        this.totalRecords = res.total || 0;
+        if (res.filterOptions) {
+          this.serverFilterOptions = res.filterOptions;
+        }
+        if (res.counts) {
+          this.serverCounts = res.counts;
+        }
 
         const editId = this.route.snapshot.queryParams['edit'];
         if (editId && editId !== 'new') {
@@ -758,9 +700,13 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
           }
         }
 
+        this.isLoading = false;
         then?.();
       },
-      (error: any) => console.log(error)
+      (error: any) => {
+        console.error(error);
+        this.isLoading = false;
+      }
     );
   }
 

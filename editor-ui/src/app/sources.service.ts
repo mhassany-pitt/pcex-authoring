@@ -19,10 +19,21 @@ export class SourcesService {
   //   return this.http.get(`${environment.apiUrl}/sources/samples`, { withCredentials: true });
   // }
 
-  sources({ archived, allUsers }: any) {
+  sources(options: any = {}) {
     const params = new URLSearchParams();
-    if (archived) params.set('include', 'archived');
-    if (allUsers) params.set('allUsers', 'true');
+    if (options.archived) params.set('include', 'archived');
+    if (options.allUsers) params.set('allUsers', 'true');
+    if (options.page !== undefined) params.set('page', String(options.page));
+    if (options.limit !== undefined) params.set('limit', String(options.limit));
+    if (options.sort) params.set('sort', options.sort);
+    if (options.q) params.set('q', options.q);
+    if (options.owner && options.owner !== 'all') params.set('owner', options.owner);
+    if (options.authors) params.set('authors', options.authors);
+    if (options.codeLangs) params.set('codeLangs', options.codeLangs);
+    if (options.langs) params.set('langs', options.langs);
+    if (options.roles) params.set('roles', options.roles);
+    if (options.trans) params.set('trans', 'true');
+    if (options.tags) params.set('tags', options.tags);
 
     return this.http.get(`${environment.apiUrl}/sources${params.toString() ? `?${params.toString()}` : ''}`, { withCredentials: true });
   }

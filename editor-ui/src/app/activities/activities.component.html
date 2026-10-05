@@ -261,8 +261,8 @@
               <span
                 class="text-xs font-bold text-gray-700 uppercase tracking-tight"
               >
-                Showing {{ filteredActivities.length }} of
-                {{ activities.length }} bundles
+                Showing {{ firstItemIndex }} – {{ lastItemIndex }} of
+                {{ totalRecords }} bundles
               </span>
 
               <!-- Filter Chips with (x) -->
@@ -684,9 +684,20 @@
             </div>
           </div>
 
+          <!-- Paginator -->
+          <p-paginator
+            *ngIf="totalRecords > 0"
+            [rows]="pageSize"
+            [totalRecords]="totalRecords"
+            [first]="(page - 1) * pageSize"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            (onPageChange)="onPageChange($event)"
+            styleClass="border-t border-gray-200 text-xs"
+          ></p-paginator>
+
           <!-- Empty State -->
           <div
-            *ngIf="filteredActivities.length === 0"
+            *ngIf="!isLoading && totalRecords === 0"
             class="p-8 text-center text-xs text-gray-400"
           >
             No record matched, revise your filter criteria.

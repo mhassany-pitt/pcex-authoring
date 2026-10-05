@@ -15,6 +15,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { PaginatorModule } from 'primeng/paginator';
 import { NavbarComponent } from '../navbar/navbar.component';
 
 @NgModule({
@@ -29,6 +30,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     CheckboxModule, DropdownModule,
     ConfirmDialogModule, TagModule,
     MultiSelectModule, SelectButtonModule,
+    PaginatorModule,
     NavbarComponent,
   ],
   providers: [

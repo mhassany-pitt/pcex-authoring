@@ -86,11 +86,75 @@ export class ActivitiesController {
 
   @Get()
   @UseGuards(AuthenticatedGuard)
-  async index(@Req() req: Request, @Query('include') include: string, @Query('allUsers') allUsers: string) {
+  async index(
+    @Req() req: Request,
+    @Query('include') include: string,
+    @Query('allUsers') allUsers: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('sort') sort?: string,
+    @Query('q') q?: string,
+    @Query('owner') owner?: string,
+    @Query('authors') authors?: string,
+    @Query('types') types?: string,
+    @Query('codeLangs') codeLangs?: string,
+    @Query('langs') langs?: string,
+    @Query('statuses') statuses?: string,
+    @Query('trans') trans?: string,
+    @Query('counts') counts?: string,
+    @Query('tags') tags?: string,
+  ) {
+    const isadmin = allUsers == 'true' && this.isAppAdmin(req);
+    const user = this.getUserEmail(req);
+    const archived = include == 'archived';
+
+    if (page !== undefined) {
+      const res = await this.activities.listPaginated({
+        isadmin,
+        user,
+        archived,
+        page: page ? parseInt(page, 10) : 1,
+        limit: limit ? parseInt(limit, 10) : 25,
+        sort,
+        q,
+        owner,
+        authors: authors ? authors.split(',').filter(Boolean) : undefined,
+        types: types ? types.split(',').filter(Boolean) : undefined,
+        codeLangs: codeLangs ? codeLangs.split(',').filter(Boolean) : undefined,
+        langs: langs ? langs.split(',').filter(Boolean) : undefined,
+        statuses: statuses ? statuses.split(',').filter(Boolean) : undefined,
+        trans: trans === 'true',
+        counts: counts ? counts.split(',').filter(Boolean) : undefined,
+        tags: tags ? tags.split(',').filter(Boolean) : undefined,
+      });
+
+      const mappedItems = res.items.map(activity => {
+        const { _id: id, published, archived, 
+          name, items, linkings, user, iso_language_code, translations,
+          collaborator_emails, created_at, updated_at } = activity;
+        return this.attachStat({ 
+          id: id.toString(), published, archived, name, items, iso_language_code, translations,
+          linkings: Object.keys(linkings || {}).length > 0, 
+          user, collaborator_emails, 
+          created_at, updated_at 
+        });
+      });
+
+      return {
+        items: mappedItems,
+        total: res.total,
+        page: res.page,
+        limit: res.limit,
+        totalPages: res.totalPages,
+        filterOptions: res.filterOptions,
+        counts: res.counts,
+      };
+    }
+
     return (await this.activities.list({
-      isadmin: allUsers == 'true' && this.isAppAdmin(req),
-      user: this.getUserEmail(req),
-      archived: include == 'archived'
+      isadmin,
+      user,
+      archived
     })).map(activity => {
       const { _id: id, published, archived, 
         name, items, linkings, user, iso_language_code, translations,
