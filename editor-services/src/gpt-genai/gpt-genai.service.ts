@@ -22,23 +22,23 @@ export class GptGenaiService {
   }
 
   async generate({ config, user, action, id, language, statement, solution,
-    line_number, n_distractors, distractor, translation, model }) {
+    line_number, n_distractors, distractor, translation, model }, onProgress?: (event: any) => void) {
     if (action == 'identify-and-explain') {
-      return await this.identifyAndExplainLines({ config, user, id, language, statement, solution });
+      return await this.identifyAndExplainLines({ config, user, id, language, statement, solution }, onProgress);
     } else if (action == 'explain-line') {
-      return await this.explainTheLine({ config, user, id, language, statement, solution, line_number });
+      return await this.explainTheLine({ config, user, id, language, statement, solution, line_number }, onProgress);
     } else if (action == 'generate-distractors') {
-      return await this.generateDistractors({ config, user, id, language, statement, solution, line_number, n_distractors });
+      return await this.generateDistractors({ config, user, id, language, statement, solution, line_number, n_distractors }, onProgress);
     } else if (action == 'generate-distractor-explanation') {
-      return await this.generateDistractorExplanation({ config, user, id, language, statement, solution, line_number, distractor });
+      return await this.generateDistractorExplanation({ config, user, id, language, statement, solution, line_number, distractor }, onProgress);
     } else if (action == 'translate-model') {
-      return await this.translateModel({ config, user, id, model, translation });
+      return await this.translateModel({ config, user, id, model, translation }, onProgress);
     } else {
       throw new Error(`Invalid action: ${action}`);
     }
   }
 
-  async identifyAndExplainLines({ config, user, id, language, statement, solution }) {
+  async identifyAndExplainLines({ config, user, id, language, statement, solution }, onProgress?: (event: any) => void) {
     const path = `${this.root}/${user}/${id}/`;
     const file = `${path}/${new Date().toISOString()}.json`;
     await ensureDir(path);
@@ -46,7 +46,7 @@ export class GptGenaiService {
     const prompt = expTemplate
       .replace(/<<task>>/g, expTaskIdentifyAndExplain.replace(/<<target_language>>/g,
         config.target_language ? ` in ${config.target_language}` : ''))
-      .replace(/<<line_number>>/g, 'line number')
+      .replace(/<<line_number>>/g, '1')
       .replace(/<<problem_language>>/g, language)
       .replace(/<<problem_statement>>/g, statement)
       .replace(/<<problem_solution>>/g, prepLn2Solution(solution));
@@ -65,13 +65,21 @@ export class GptGenaiService {
         strict: true,
         schema: JSON.parse(expJsonSchema),
       } as any
-    });
+    }, onProgress);
     await writeFile(file, JSON.stringify({ request: input, response }));
 
-    return JSON.parse(this.removeJsonQuotes(response.output_text));
+    const parsed = JSON.parse(this.removeJsonQuotes(response.output_text));
+    const normalized: { [ln: string]: string[] } = {};
+    Object.keys(parsed).forEach(k => {
+      const cleanNum = k.replace(/\D+/g, '');
+      if (cleanNum) {
+        normalized[cleanNum] = parsed[k];
+      }
+    });
+    return normalized;
   }
 
-  async explainTheLine({ config, user, id, language, statement, solution, line_number }) {
+  async explainTheLine({ config, user, id, language, statement, solution, line_number }, onProgress?: (event: any) => void) {
     const path = `${this.root}/${user}/${id}/`;
     const file = `${path}/${new Date().toISOString()}.json`;
     await ensureDir(path);
@@ -97,13 +105,19 @@ export class GptGenaiService {
         strict: true,
         schema: JSON.parse(expJsonSchema),
       } as any
-    });
+    }, onProgress);
     await writeFile(file, JSON.stringify({ request: input, response }));
 
-    return JSON.parse(this.removeJsonQuotes(response.output_text));
+    const parsed = JSON.parse(this.removeJsonQuotes(response.output_text));
+    const normalized: { [ln: string]: string[] } = {};
+    Object.keys(parsed).forEach(k => {
+      const cleanNum = k.replace(/\D+/g, '') || String(line_number);
+      normalized[cleanNum] = parsed[k];
+    });
+    return normalized;
   }
 
-  async generateDistractors({ config, user, id, language, statement, solution, line_number, n_distractors }) {
+  async generateDistractors({ config, user, id, language, statement, solution, line_number, n_distractors }, onProgress?: (event: any) => void) {
     const path = `${this.root}/${user}/${id}/`;
     const file = `${path}/${new Date().toISOString()}.json`;
     await ensureDir(path);
@@ -134,13 +148,19 @@ export class GptGenaiService {
         strict: true,
         schema: JSON.parse(distJsonSchema),
       } as any
-    });
+    }, onProgress);
     await writeFile(file, JSON.stringify({ request: input, response }));
 
-    return JSON.parse(this.removeJsonQuotes(response.output_text));
+    const parsed = JSON.parse(this.removeJsonQuotes(response.output_text));
+    const normalized: { [ln: string]: any[] } = {};
+    Object.keys(parsed).forEach(k => {
+      const cleanNum = k.replace(/\D+/g, '') || String(line_number);
+      normalized[cleanNum] = parsed[k];
+    });
+    return normalized;
   }
 
-  async generateDistractorExplanation({ config, user, id, language, statement, solution, line_number, distractor }) {
+  async generateDistractorExplanation({ config, user, id, language, statement, solution, line_number, distractor }, onProgress?: (event: any) => void) {
     const path = `${this.root}/${user}/${id}/`;
     const file = `${path}/${new Date().toISOString()}.json`;
     await ensureDir(path);
@@ -168,13 +188,15 @@ export class GptGenaiService {
         strict: true,
         schema: JSON.parse(distExpJsonSchema),
       } as any
-    });
+    }, onProgress);
     await writeFile(file, JSON.stringify({ request: input, response }));
 
-    return JSON.parse(this.removeJsonQuotes(response.output_text));
+    const parsed = JSON.parse(this.removeJsonQuotes(response.output_text));
+    const explanation = parsed.explanation || (typeof parsed === 'string' ? parsed : parsed[Object.keys(parsed)[0]]) || '';
+    return { explanation };
   }
 
-  async translateModel({ config, user, id, model, translation }) {
+  async translateModel({ config, user, id, model, translation }, onProgress?: (event: any) => void) {
     const path = `${this.root}/${user}/${id}/`;
     const file = `${path}/${new Date().toISOString()}-translation.json`;
     await ensureDir(path);
@@ -240,7 +262,7 @@ export class GptGenaiService {
     ];
     await writeFile(file, JSON.stringify({ request: input }));
 
-    const response = await this.promptGPT({ config, input, format: { type: 'text' } });
+    const response = await this.promptGPT({ config, input, format: { type: 'text' } }, onProgress);
     await writeFile(file, JSON.stringify({ request: input, response }));
 
     const translated = response.output_text;
@@ -334,7 +356,7 @@ export class GptGenaiService {
     return config;
   }
 
-  private async promptGPT({ input, config, format }): Promise<any> {
+  private async promptGPT({ input, config, format }, onProgress?: (event: any) => void): Promise<any> {
     const {
       // IGNORE these params
       // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -363,7 +385,7 @@ export class GptGenaiService {
 
     const isCustomOrOllama = !!baseUrl;
 
-    if (!isCustomOrOllama && (openai as any).responses?.create) {
+    if (!onProgress && !isCustomOrOllama && (openai as any).responses?.create) {
       try {
         const payload = { ...params, model, text: { ...text, format }, input };
         return await (openai as any).responses.create(payload);
@@ -378,9 +400,11 @@ export class GptGenaiService {
       content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content)
     }));
 
+    const defaultMaxTokens = parseInt(this.config.get('OPENAI_MAX_TOKENS') || '32000', 10);
     const chatPayload: any = {
       model,
       messages,
+      max_tokens: params.max_tokens || params.max_completion_tokens || defaultMaxTokens,
       ...params
     };
 
@@ -390,22 +414,135 @@ export class GptGenaiService {
       };
     }
 
+    if (onProgress) {
+      chatPayload.stream = true;
+      chatPayload.stream_options = { include_usage: true };
+      const stream = await openai.chat.completions.create(chatPayload) as any;
+      let accumulatedContent = '';
+      let accumulatedThinking = '';
+      let inThinkTag = false;
+      let finishReason: any = null;
+      let finalUsage: any = null;
+
+      for await (const chunk of stream) {
+        if (chunk.usage) {
+          finalUsage = chunk.usage;
+          onProgress({ type: 'usage', usage: chunk.usage });
+        }
+
+        const choice = chunk.choices?.[0];
+        if (choice?.finish_reason) {
+          finishReason = choice.finish_reason;
+        }
+        const delta = choice?.delta;
+        if (!delta) continue;
+
+        // 1. Check for explicit reasoning_content / reasoning delta
+        const rText = delta?.reasoning_content || delta?.reasoning || '';
+        if (rText) {
+          accumulatedThinking += rText;
+          onProgress({ type: 'thinking', text: rText, fullThinking: accumulatedThinking });
+        }
+
+        // 2. Check for content delta, handling inline <think>...</think> tags if present
+        const cText = delta?.content || '';
+        if (cText) {
+          let remaining = cText;
+          while (remaining.length > 0) {
+            if (inThinkTag) {
+              const closeIdx = remaining.indexOf('</think>');
+              if (closeIdx !== -1) {
+                const thinkChunk = remaining.slice(0, closeIdx);
+                if (thinkChunk) {
+                  accumulatedThinking += thinkChunk;
+                  onProgress({ type: 'thinking', text: thinkChunk, fullThinking: accumulatedThinking });
+                }
+                inThinkTag = false;
+                remaining = remaining.slice(closeIdx + 8);
+              } else {
+                accumulatedThinking += remaining;
+                onProgress({ type: 'thinking', text: remaining, fullThinking: accumulatedThinking });
+                remaining = '';
+              }
+            } else {
+              const openIdx = remaining.indexOf('<think>');
+              if (openIdx !== -1) {
+                const contentChunk = remaining.slice(0, openIdx);
+                if (contentChunk) {
+                  accumulatedContent += contentChunk;
+                  onProgress({ type: 'content', text: contentChunk, fullContent: accumulatedContent });
+                }
+                inThinkTag = true;
+                remaining = remaining.slice(openIdx + 7);
+              } else {
+                accumulatedContent += remaining;
+                onProgress({ type: 'content', text: remaining, fullContent: accumulatedContent });
+                remaining = '';
+              }
+            }
+          }
+        }
+      }
+
+      return {
+        output_text: accumulatedContent,
+        thinking_text: accumulatedThinking,
+        usage: finalUsage,
+        choices: [
+          {
+            message: {
+              role: 'assistant',
+              content: accumulatedContent,
+              reasoning_content: accumulatedThinking || undefined,
+            },
+            finish_reason: finishReason || 'stop',
+            index: 0,
+          }
+        ]
+      };
+    }
+
     const completion = await openai.chat.completions.create(chatPayload);
-    const outputText = completion.choices[0]?.message?.content || '';
+    let outputText = (completion as any).choices?.[0]?.message?.content || '';
+    let thinkingText = (completion as any).choices?.[0]?.message?.reasoning_content || '';
+
+    if (outputText.includes('<think>')) {
+      const thinkMatch = outputText.match(/<think>([\s\S]*?)<\/think>/);
+      if (thinkMatch) {
+        thinkingText = (thinkingText ? thinkingText + '\n' : '') + thinkMatch[1];
+      }
+      outputText = outputText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+    }
 
     return {
       output_text: outputText,
-      choices: completion.choices,
+      thinking_text: thinkingText,
+      choices: (completion as any).choices,
       ...completion
     };
   } 
 
   private removeJsonQuotes(resp: string) {
     if (!resp) return '';
-    for (const quote of ['"""', "'''", '```']) {
-      if (resp.startsWith(quote + 'json')) resp = resp.substring(7);
-      if (resp.endsWith(quote)) resp = resp.substring(0, resp.length - 3);
+    let cleaned = resp.trim();
+    for (const quote of ['```json', '```', '"""', "'''"]) {
+      if (cleaned.startsWith(quote)) {
+        cleaned = cleaned.slice(quote.length);
+        break;
+      }
     }
-    return resp.trim();
+    for (const quote of ['```', '"""', "'''"]) {
+      if (cleaned.endsWith(quote)) {
+        cleaned = cleaned.slice(0, -quote.length);
+        break;
+      }
+    }
+    cleaned = cleaned.trim();
+    const firstBrace = cleaned.indexOf('{');
+    const lastBrace = cleaned.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      return cleaned.substring(firstBrace, lastBrace + 1);
+    }
+    return cleaned;
   }
 }

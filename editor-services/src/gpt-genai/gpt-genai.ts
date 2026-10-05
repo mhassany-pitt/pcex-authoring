@@ -11,12 +11,14 @@ async function runWorkerThread() {
         const genai = app.get(GptGenaiService);
         const inputs = workerData;
         console.log('[gpt-genai worker] starting generation', { action: inputs?.action, id: inputs?.id, user: inputs?.user });
-        const result = await genai.generate(inputs);
+        const result = await genai.generate(inputs, (event) => {
+            parentPort?.postMessage({ event: 'progress', ...event });
+        });
         console.log('[gpt-genai worker] generation finished, posting result');
-        parentPort.postMessage(result);
+        parentPort?.postMessage({ event: 'done', result });
     } catch (error: any) {
         console.error('[gpt-genai worker] ERROR during generation:', error);
-        parentPort?.postMessage({ error: error?.message || String(error) });
+        parentPort?.postMessage({ event: 'error', error: error?.message || String(error) });
     } finally {
         console.log('[gpt-genai worker] closing application context');
         await app.close().catch(() => undefined);

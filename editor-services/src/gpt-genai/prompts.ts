@@ -11,7 +11,9 @@ export const distExpJsonSchema = `{${$schema},"type": "object","properties": {"e
 
 export const assistantTemplate = `You are a learning support bot focused on introductory programming.
 
-Use simple, clear language and avoid advanced technical terms unless absolutely necessary.`;
+Use simple, clear language and avoid advanced technical terms unless absolutely necessary.
+When generating output, you must respond strictly in valid JSON matching the requested structure.
+Do not output markdown code fences (\`\`\`json), commentary, or conversational text outside the JSON object.`;
 
 export const expTaskIdentifyAndExplain = `Given the following PCEX, explain the essential lines<<target_language>>.`;
 export const expTaskExplainLn = `Given the following PCEX, explain Line <<line_number>><<target_language>>.`;
@@ -19,15 +21,20 @@ export const expTemplate = `
 A program construction example (PCEX) includes a problem statement and solution. 
 
 In a PCEX, only essential lines are explained. These explanations:
-
     a) Clarify the purpose of the line within the program and how it contributes to the intended outcome, 
     b) Break down the syntax and semantics of the code to address any complexities, 
     c) Highlight potential errors and common misconceptions to provide insight into what learners might misunderstand, and 
     d) Suggest best practices for effective usage to encourage sound coding habits. 
 
-These explanations should directly address the reader using 'you' to make the guidance personal and engaging.
+These explanations should directly address the reader using 'you' to make the guidance personal and engaging. Do not start explanations with category labels or prefixes (such as 'Purpose:', 'Syntax:', 'Common Misconception:', or 'Best Practice:'). Write each explanation as natural, engaging guidance.
 
 An essential line implement the core logic of the solution, excluding common <<problem_language>> elements like main class and method definitions.
+
+CRITICAL FORMAT RULES:
+1. Return ONLY a single valid JSON object.
+2. The JSON keys MUST be line numbers as numeric strings (e.g., "1", "2", "6", "10"). Do NOT write "Line 1" or include any text in keys.
+3. Each key must map to an array of string explanations for that line (provide as many explanations as needed to thoroughly cover the line, typically 2 to 5). Do NOT prefix strings with labels like 'Purpose:', 'Syntax:', 'Common Misconception:', or 'Best Practice:'.
+4. Do NOT wrap the JSON in markdown code fences (\`\`\`json). Output raw JSON.
 
 YOUR TASK:
 <<task>>
@@ -36,15 +43,18 @@ PROBLEM STATEMENT:
 <<problem_statement>>
 
 PROBLEM SOLUTION:
+Each line is prefixed with its line number (e.g. /*Line 1*/):
 '''<<problem_language>>
 <<problem_solution>>
 '''
 
 EXAMPLE OUTPUT:
-Format your output strictly in the following JSON structure, without including anything else.
 {
-    "<<line_number>>": ["explanation 1", ..., "explanation n"], 
-    ... 
+  "<<line_number>>": [
+    "Explanation 1 for this line...",
+    "Explanation 2 for this line...",
+    "Explanation N (provide as many explanations as needed for this line)..."
+  ]
 }`.trim();
 
 // --------------
@@ -52,6 +62,12 @@ Format your output strictly in the following JSON structure, without including a
 export const distTaskGenerate = `Given the following problem statement and solution, generate <<n_distractors>>plausible distractors solely for Line <<line_number>>. The generated distractors must target common misconceptions that students may have and are valid for this program and specifically for Line <<line_number>>.<<target_language_instruction>>`;
 export const distTemplate = `
 The following problem statement and solution will serve as a program construction challenge question, with Line <<line_number>> masked. In an introductory programming course, e.g.: CS1, students will be asked to choose the correct answer from several options, including one correct answer and multiple incorrect alternatives.
+
+CRITICAL FORMAT RULES:
+1. Return ONLY a single valid JSON object.
+2. The top-level key MUST be the masked line number as a numeric string: "<<line_number>>". Do NOT write "Line <<line_number>>".
+3. The value must be an array of distractor objects, each containing "distractor", "misconceptions", and "explanation".
+4. Do NOT wrap the JSON in markdown code fences (\`\`\`json). Output raw JSON.
 
 YOUR TASK:
 <<task>>
@@ -70,22 +86,24 @@ LINE <<line_number>>:
 '''
 
 EXAMPLE OUTPUT:
-Format your output strictly in the following JSON structure, without including anything else.
 {
-    "<<line_number>>": [
-        {
-            "distractor": "The distractor line",
-            "misconceptions": [ "Targeted misconception A", ... ],
-            "explanation": "A step-by-step explanation, explaining the targeted misconceptions, detailing why a student might select it due to the misconceptions. Describe how using the distractor instead of the correct line would impact the program, noting any errors or unintended behaviors. Contrast the distractor with the correct line by highlighting what key aspects are missing or misimplemented, and clarify why the distractor is invalid. Do not reveal or mention the correct answer in the explanation. These explanations should directly address the reader using 'you' to make the guidance personal and engaging. Ensure the explanation is clear and provides enough context to understand why the distractor is a plausible but incorrect choice."
-        }, ...
-    ]
-}
-`.trim();
+  "<<line_number>>": [
+    {
+      "distractor": "Incorrect candidate line of code",
+      "misconceptions": [ "Targeted student misconception" ],
+      "explanation": "A step-by-step explanation, explaining the targeted misconceptions, detailing why a student might select it due to the misconceptions. Describe how using the distractor instead of the correct line would impact the program, noting any errors or unintended behaviors. Contrast the distractor with the correct line by highlighting what key aspects are missing or misimplemented, and clarify why the distractor is invalid. Do not reveal or mention the correct answer in the explanation. These explanations should directly address the reader using 'you' to make the guidance personal and engaging. Ensure the explanation is clear and provides enough context to understand why the distractor is a plausible but incorrect choice."
+    }
+  ]
+}`.trim();
 
 // --------------
 
 export const distExpTemplate = `
 The following problem statement and solution will serve as a program construction challenge question, with Line <<line_number>> masked. In an introductory programming course, e.g.: CS1, students will be asked to choose the correct answer from several options, including one correct answer and multiple incorrect alternatives.
+
+CRITICAL FORMAT RULES:
+1. Return ONLY a single valid JSON object: {"explanation": "..."}.
+2. Do NOT wrap the JSON in markdown code fences. Output raw JSON.
 
 YOUR TASK:
 Given the following problem statement and solution, explain the DISTRACTOR for Line <<line_number>>. <<target_language_instruction>> Keep the explanation concise and very short.
@@ -102,11 +120,9 @@ PROBLEM SOLUTION:
 '''
 
 EXAMPLE OUTPUT:
-Format your output strictly in the following JSON structure, without including anything else.
 {
-    "explanation": "A step-by-step explanation, explaining the targeted misconceptions, detailing why a student might select it due to the misconceptions. Describe how using the distractor instead of the correct line would impact the program, noting any errors or unintended behaviors. Contrast the distractor with the correct line by highlighting what key aspects are missing or misimplemented, and clarify why the distractor is invalid. Do not reveal or mention the correct answer in the explanation. These explanations should directly address the reader using 'you' to make the guidance personal and engaging. Ensure the explanation is clear and provides enough context to understand why the distractor is a plausible but incorrect choice."
-}
-`.trim();
+  "explanation": "A step-by-step explanation, explaining the targeted misconceptions, detailing why a student might select it due to the misconceptions. Describe how using the distractor instead of the correct line would impact the program, noting any errors or unintended behaviors. Contrast the distractor with the correct line by highlighting what key aspects are missing or misimplemented, and clarify why the distractor is invalid. Do not reveal or mention the correct answer in the explanation. These explanations should directly address the reader using 'you' to make the guidance personal and engaging. Ensure the explanation is clear and provides enough context to understand why the distractor is a plausible but incorrect choice."
+}`.trim();
 
 // --------------
 

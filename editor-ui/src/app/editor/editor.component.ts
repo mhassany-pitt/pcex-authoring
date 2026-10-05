@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivitiesService } from '../activities.service';
 import { arrayMoveMutable } from 'array-move';
-import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { environment } from '../../environments/environment';
 import { getNavMenuBar, getTagLabel, getTagClass, getTagStyle } from '../utilities';
@@ -131,8 +131,483 @@ export class EditorComponent implements OnInit, OnDestroy {
     'generated-explanations': [],
   };
 
+  thinkingStartTime = 0;
+
+  thinkingState = {
+    active: false,
+    hasThinking: false,
+    text: '',
+    streamedContent: '',
+    elapsedSeconds: 0,
+    thoughtSeconds: 0,
+    finishedThinking: false,
+    expanded: false,
+    timer: null as any,
+    actionLabel: 'Generating...',
+    totalTokens: 0,
+    tokensPerSec: '0',
+    lastSnippet: '',
+    serverUsage: null as any,
+  };
+
+  updateTokenMetrics(serverUsage?: any) {
+    if (!this.thinkingStartTime) return;
+    if (serverUsage) {
+      this.thinkingState.serverUsage = serverUsage;
+    }
+    const usage = this.thinkingState.serverUsage;
+    const elapsedMs = performance.now() - this.thinkingStartTime;
+    this.thinkingState.elapsedSeconds = Math.max(1, Math.floor(elapsedMs / 1000));
+
+    if (usage?.completion_tokens) {
+      this.thinkingState.totalTokens = usage.completion_tokens;
+    } else {
+      // Calculate from cumulative characters to avoid chunk fragmentation rounding bias:
+      // In BPE tokenizers (OpenAI, Qwen, GLM), 1 token is ~3.8-4 characters of text/code.
+      const totalChars = (this.thinkingState.text?.length || 0) + (this.thinkingState.streamedContent?.length || 0);
+      this.thinkingState.totalTokens = Math.round(totalChars / 3.8);
+    }
+
+    const elapsedSec = Math.max(0.5, elapsedMs / 1000);
+    if (this.thinkingState.totalTokens > 0) {
+      this.thinkingState.tokensPerSec = (this.thinkingState.totalTokens / elapsedSec).toFixed(1);
+    }
+  }
+
+  startThinking(actionLabel: string) {
+    if (this.thinkingState.timer) {
+      clearInterval(this.thinkingState.timer);
+    }
+    this.thinkingStartTime = performance.now();
+    this.thinkingState = {
+      active: true,
+      hasThinking: false,
+      text: '',
+      streamedContent: '',
+      elapsedSeconds: 0,
+      thoughtSeconds: 0,
+      finishedThinking: false,
+      expanded: false,
+      timer: setInterval(() => {
+        this.ngZone.run(() => {
+          this.updateTokenMetrics();
+          this.cdr.markForCheck();
+        });
+      }, 500),
+      actionLabel,
+      totalTokens: 0,
+      tokensPerSec: '0',
+      lastSnippet: '',
+      serverUsage: null,
+    };
+    this.cdr.markForCheck();
+  }
+
+  onUsage(usage: any) {
+    this.updateTokenMetrics(usage);
+    this.cdr.markForCheck();
+  }
+
+  onThinkingProgress(text: string) {
+    this.thinkingState.hasThinking = true;
+    this.thinkingState.text += text;
+    this.updateTokenMetrics();
+    const clean = this.thinkingState.text.replace(/[\r\n\t]+/g, ' ').trim();
+    if (clean) {
+      this.thinkingState.lastSnippet = clean.length > 70 ? '...' + clean.slice(-70) : clean;
+    }
+    this.scrollThinkingToBottom();
+    this.cdr.markForCheck();
+  }
+
+  onContentProgress(text?: string) {
+    if (this.thinkingState.hasThinking && !this.thinkingState.finishedThinking) {
+      this.thinkingState.finishedThinking = true;
+      this.thinkingState.thoughtSeconds = this.thinkingState.elapsedSeconds;
+    }
+    if (text) {
+      this.thinkingState.streamedContent += text;
+      this.updateTokenMetrics();
+      const clean = text.replace(/[\r\n\t]+/g, ' ').trim();
+      if (clean) {
+        this.thinkingState.lastSnippet = clean.length > 70 ? '...' + clean.slice(-70) : clean;
+      }
+      if (!this.thinkingState.hasThinking) {
+        this.scrollThinkingToBottom();
+      }
+    }
+    this.cdr.markForCheck();
+  }
+
+  stopThinking(finalUsage?: any) {
+    if (this.thinkingState.timer) {
+      clearInterval(this.thinkingState.timer);
+      this.thinkingState.timer = null;
+    }
+    this.thinkingState.active = false;
+    if (this.thinkingState.hasThinking && !this.thinkingState.thoughtSeconds) {
+      this.thinkingState.thoughtSeconds = this.thinkingState.elapsedSeconds;
+    }
+    this.updateTokenMetrics(finalUsage);
+    this.cdr.markForCheck();
+  }
+
+  closeThinkingBanner() {
+    if (this.thinkingState.timer) {
+      clearInterval(this.thinkingState.timer);
+      this.thinkingState.timer = null;
+    }
+    this.thinkingStartTime = 0;
+    this.thinkingState.active = false;
+    this.thinkingState.hasThinking = false;
+    this.thinkingState.text = '';
+    this.thinkingState.streamedContent = '';
+    this.thinkingState.expanded = false;
+    this.thinkingState.lastSnippet = '';
+    this.thinkingState.totalTokens = 0;
+    this.thinkingState.tokensPerSec = '0';
+    this.thinkingState.serverUsage = null;
+    this.cdr.markForCheck();
+  }
+
+  scrollThinkingToBottom() {
+    setTimeout(() => {
+      const box = document.querySelector('#thinking-box');
+      if (box) box.scrollTop = box.scrollHeight;
+      const preview = document.querySelector('#thinking-preview');
+      if (preview) preview.scrollTop = preview.scrollHeight;
+    }, 30);
+  }
+
+  async streamGenAI(payload: any, callbacks: {
+    onProgress: (event: any) => void,
+    onDone: (result: any) => void,
+    onError: (error: any) => void
+  }) {
+    try {
+      const response = await fetch(`${environment.apiUrl}/gpt-genai?stream=true`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/event-stream',
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        let errData: any = {};
+        try {
+          errData = await response.json();
+        } catch {
+          errData = { message: response.statusText };
+        }
+        this.ngZone.run(() => {
+          callbacks.onError({ status: response.status, error: errData });
+          this.cdr.markForCheck();
+        });
+        return;
+      }
+
+      if (!response.body) {
+        throw new Error('Response body is null');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let receivedDone = false;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || !trimmed.startsWith('data: ')) continue;
+          const jsonStr = trimmed.slice(6);
+          try {
+            const msg = JSON.parse(jsonStr);
+            if (msg.event === 'progress') {
+              this.ngZone.run(() => {
+                callbacks.onProgress(msg);
+                this.cdr.markForCheck();
+              });
+            } else if (msg.event === 'done') {
+              receivedDone = true;
+              this.ngZone.run(() => {
+                callbacks.onDone(msg.result);
+                this.cdr.markForCheck();
+              });
+            } else if (msg.event === 'error') {
+              this.ngZone.run(() => {
+                callbacks.onError({ status: 422, error: { message: msg.error } });
+                this.cdr.markForCheck();
+              });
+            }
+          } catch (e) {
+            console.warn('Failed to parse SSE line:', trimmed, e);
+          }
+        }
+      }
+
+      if (buffer.trim().startsWith('data: ')) {
+        const jsonStr = buffer.trim().slice(6);
+        try {
+          const msg = JSON.parse(jsonStr);
+          if (msg.event === 'done' && !receivedDone) {
+            this.ngZone.run(() => {
+              callbacks.onDone(msg.result);
+              this.cdr.markForCheck();
+            });
+          } else if (msg.event === 'error') {
+            this.ngZone.run(() => {
+              callbacks.onError({ status: 422, error: { message: msg.error } });
+              this.cdr.markForCheck();
+            });
+          }
+        } catch (e) {}
+      }
+    } catch (err: any) {
+      this.ngZone.run(() => {
+        callbacks.onError({ status: 500, error: { message: err?.message || String(err) } });
+        this.cdr.markForCheck();
+      });
+    }
+  }
+
+  parsePartialLineExplanations(str: string): { [ln: string]: string[] } {
+    const result: { [ln: string]: string[] } = {};
+    let i = 0;
+    const len = str.length;
+
+    while (i < len) {
+      const keyMatch = str.slice(i).match(/"(?:Line\s*|line\s*)?(\d+)"\s*:\s*\[/i);
+      if (!keyMatch || keyMatch.index === undefined) break;
+
+      const lineNum = keyMatch[1];
+      i = i + keyMatch.index + keyMatch[0].length;
+
+      const explanations: string[] = [];
+      let inArray = true;
+
+      while (i < len && inArray) {
+        while (i < len && (str[i] === ' ' || str[i] === '\t' || str[i] === '\r' || str[i] === '\n' || str[i] === ',')) {
+          i++;
+        }
+        if (i >= len) break;
+
+        if (str[i] === ']') {
+          i++;
+          inArray = false;
+          break;
+        }
+
+        if (str[i] === '"') {
+          i++;
+          let strVal = '';
+          let escaped = false;
+          while (i < len) {
+            const ch = str[i];
+            if (escaped) {
+              strVal += '\\' + ch;
+              escaped = false;
+              i++;
+            } else if (ch === '\\') {
+              escaped = true;
+              i++;
+            } else if (ch === '"') {
+              i++;
+              break;
+            } else {
+              strVal += ch;
+              i++;
+            }
+          }
+          try {
+            explanations.push(JSON.parse(`"${strVal}"`));
+          } catch {
+            explanations.push(strVal.replace(/\\"/g, '"').replace(/\\\\/g, '\\').replace(/\\n/g, '\n'));
+          }
+        } else {
+          break;
+        }
+      }
+
+      if (explanations.length > 0) {
+        result[lineNum] = explanations;
+      }
+    }
+
+    return result;
+  }
+
+  parsePartialDistExplanation(str: string): string | null {
+    const keyMatch = str.match(/"explanation"\s*:\s*"/);
+    if (!keyMatch || keyMatch.index === undefined) return null;
+    let i = keyMatch.index + keyMatch[0].length;
+    const len = str.length;
+    let val = '';
+    let escaped = false;
+    while (i < len) {
+      const ch = str[i];
+      if (escaped) {
+        val += '\\' + ch;
+        escaped = false;
+        i++;
+      } else if (ch === '\\') {
+        escaped = true;
+        i++;
+      } else if (ch === '"') {
+        break;
+      } else {
+        val += ch;
+        i++;
+      }
+    }
+    try {
+      return JSON.parse(`"${val}"`);
+    } catch {
+      return val.replace(/\\"/g, '"').replace(/\\\\/g, '\\').replace(/\\n/g, '\n');
+    }
+  }
+
+  parsePartialDistractors(str: string): { [ln: string]: any[] } {
+    const result: { [ln: string]: any[] } = {};
+    let i = 0;
+    const len = str.length;
+
+    const decodeJsonStr = (val: string) => {
+      try {
+        return JSON.parse(`"${val}"`);
+      } catch {
+        return val.replace(/\\"/g, '"').replace(/\\\\/g, '\\').replace(/\\n/g, '\n');
+      }
+    };
+
+    while (i < len) {
+      const keyMatch = str.slice(i).match(/"(?:Line\s*|line\s*)?(\d+)"\s*:\s*\[/i);
+      if (!keyMatch || keyMatch.index === undefined) break;
+
+      const lineNum = keyMatch[1];
+      i = i + keyMatch.index + keyMatch[0].length;
+
+      const items: any[] = [];
+      let inLineArray = true;
+
+      while (i < len && inLineArray) {
+        while (i < len && str[i] !== '{' && str[i] !== ']') {
+          i++;
+        }
+        if (i >= len) break;
+        if (str[i] === ']') {
+          i++;
+          inLineArray = false;
+          break;
+        }
+
+        i++; // skip '{'
+        let distractorVal = '';
+        let explanationVal = '';
+        let hasDist = false;
+        let hasExp = false;
+
+        let braceDepth = 1;
+        let inString = false;
+        let escaped = false;
+        let currentKey = '';
+        let capturingVal = false;
+        let currentVal = '';
+
+        while (i < len && braceDepth > 0) {
+          const ch = str[i];
+
+          if (inString) {
+            if (escaped) {
+              currentVal += '\\' + ch;
+              escaped = false;
+              i++;
+            } else if (ch === '\\') {
+              escaped = true;
+              i++;
+            } else if (ch === '"') {
+              inString = false;
+              i++;
+              if (capturingVal) {
+                if (currentKey === 'distractor') {
+                  distractorVal = decodeJsonStr(currentVal);
+                  hasDist = true;
+                } else if (currentKey === 'explanation') {
+                  explanationVal = decodeJsonStr(currentVal);
+                  hasExp = true;
+                }
+                capturingVal = false;
+                currentKey = '';
+                currentVal = '';
+              } else {
+                currentKey = currentVal;
+                currentVal = '';
+              }
+            } else {
+              currentVal += ch;
+              i++;
+            }
+          } else {
+            if (ch === '"') {
+              inString = true;
+              currentVal = '';
+              i++;
+            } else if (ch === ':') {
+              if (currentKey === 'distractor' || currentKey === 'explanation') {
+                capturingVal = true;
+              }
+              i++;
+            } else if (ch === '{') {
+              braceDepth++;
+              i++;
+            } else if (ch === '}') {
+              braceDepth--;
+              i++;
+              if (braceDepth === 0) break;
+            } else {
+              i++;
+            }
+          }
+        }
+
+        if (inString && capturingVal) {
+          if (currentKey === 'distractor') {
+            distractorVal = decodeJsonStr(currentVal);
+            hasDist = true;
+          } else if (currentKey === 'explanation') {
+            explanationVal = decodeJsonStr(currentVal);
+            hasExp = true;
+          }
+        }
+
+        if (hasDist || hasExp) {
+          items.push({
+            distractor: distractorVal,
+            explanation: explanationVal
+          });
+        }
+      }
+
+      if (items.length > 0) {
+        result[lineNum] = items;
+      }
+    }
+
+    return result;
+  }
+
   constructor(
     private ngZone: NgZone,
+    private cdr: ChangeDetectorRef,
     private activities: ActivitiesService,
     private api: SourcesService,
     public router: Router,
@@ -220,6 +695,9 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.thinkingState.timer) {
+      clearInterval(this.thinkingState.timer);
+    }
     this.log({ type: 'on-ui-destroy' });
   }
 
@@ -788,7 +1266,7 @@ export class EditorComponent implements OnInit, OnDestroy {
       this.messages.add({
         severity: 'warn',
         summary: 'Model Reset Required',
-        detail: `The default model has changed to '${this.defaultGptConfig?.model}'. Please click 'RESET' in the configuration dialog to update before generating.`,
+        detail: `The default model has changed to '${this.defaultGptConfig.model}'. Please click 'RESET' in the configuration dialog to update before generating.`,
         life: 10000,
       });
       this.loadOpenAIGPTConfig();
@@ -796,22 +1274,91 @@ export class EditorComponent implements OnInit, OnDestroy {
     }
 
     this._v[type] = true;
-    this.http.post(`${environment.apiUrl}/gpt-genai`, payload, { withCredentials: true }).subscribe({
-      next: (resp: any) => {
+    this.startThinking(type === 'explain-line' ? `Explaining line ${payload.line_number}...` : 'Generating explanations...');
+
+    const initialCommentsByLine: { [ln: number]: any[] } = {};
+    const streamCommentsByLine: { [ln: number]: any[] } = {};
+    Object.keys(this.model.lines || {}).forEach((lnStr) => {
+      const ln = parseInt(lnStr);
+      initialCommentsByLine[ln] = (this.model.lines[ln]?.comments || []).filter((e: any) => e.content);
+    });
+
+    let accumulatedContent = '';
+
+    this.streamGenAI(payload, {
+      onProgress: (event: any) => {
+        if (event.type === 'thinking') {
+          this.onThinkingProgress(event.text || '');
+        } else if (event.type === 'content') {
+          this.onContentProgress(event.text);
+          accumulatedContent += (event.text || '');
+          const partial = this.parsePartialLineExplanations(accumulatedContent);
+          Object.keys(partial).forEach((lnStr) => {
+            const ln = parseInt(lnStr.replace(/\D+/g, ''), 10);
+            if (!ln) return;
+            if (!this.model.lines[ln]) {
+              this.model.lines[ln] = { blank: false, comments: [] };
+            }
+            const line = this.model.lines[ln];
+            const initial = initialCommentsByLine[ln] || [];
+            if (!streamCommentsByLine[ln]) {
+              streamCommentsByLine[ln] = [];
+            }
+            const streamList = streamCommentsByLine[ln];
+            const exps = partial[lnStr];
+            exps.forEach((expText: string, idx: number) => {
+              if (!streamList[idx]) {
+                const commentObj = { content: expText, gpt: expText };
+                streamList.push(commentObj);
+                if (!this._v['generated-explanations'].includes(commentObj)) {
+                  this._v['generated-explanations'].push(commentObj);
+                }
+              } else {
+                streamList[idx].content = expText;
+                streamList[idx].gpt = expText;
+              }
+            });
+            line.comments = [...initial, ...streamList];
+            if (ln === this.selectedLineNum) {
+              this.selectedLine = this.model.lines[ln];
+            }
+          });
+          this.reloadLineMarkers();
+        } else if (event.type === 'usage') {
+          this.onUsage(event.usage);
+        }
+      },
+      onDone: (resp: any) => {
+        this.stopThinking();
         this.log({ type, payload, explanations: resp, lines: this.model.lines });
 
-        // merge generated explanations
-        Object.keys(resp).forEach((ln) => {
-          const line = this.model.lines[parseInt(ln)];
-          const explanations = resp[ln].map((e: any) => ({ content: e, gpt: e }));
-          this.model.lines[parseInt(ln)] = {
-            ...(line || { blank: false }),
-            comments: [
-              ...(line?.comments ? line.comments.filter((e: any) => e.content) : []),
-              ...explanations,
-            ],
-          };
-          explanations.forEach((e: any) => this._v['generated-explanations'].push(e));
+        // merge generated explanations in-place
+        Object.keys(resp).forEach((lnStr) => {
+          const ln = parseInt(lnStr.replace(/\D+/g, ''), 10);
+          if (!ln) return;
+          if (!this.model.lines[ln]) {
+            this.model.lines[ln] = { blank: false, comments: [] };
+          }
+          const line = this.model.lines[ln];
+          const initial = initialCommentsByLine[ln] || [];
+          const streamList = streamCommentsByLine[ln] || [];
+          resp[lnStr].forEach((e: any, idx: number) => {
+            if (!streamList[idx]) {
+              const commentObj = { content: e, gpt: e };
+              streamList.push(commentObj);
+            } else {
+              streamList[idx].content = e;
+              streamList[idx].gpt = e;
+            }
+            if (!this._v['generated-explanations'].includes(streamList[idx])) {
+              this._v['generated-explanations'].push(streamList[idx]);
+            }
+          });
+          streamList.length = resp[lnStr].length;
+          line.comments = [...initial, ...streamList];
+          if (ln === this.selectedLineNum) {
+            this.selectedLine = this.model.lines[ln];
+          }
         });
 
         delete this._v[type];
@@ -819,8 +1366,21 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.selectLine(this.selectedLineNum, true, true);
         then?.();
       },
-      error: (error) => {
+      onError: (error: any) => {
+        this.stopThinking();
         this.log({ type, payload, error: error.error });
+
+        // revert lines to initial comments
+        Object.keys(initialCommentsByLine).forEach((lnStr) => {
+          const ln = parseInt(lnStr);
+          if (this.model.lines[ln]) {
+            this.model.lines[ln].comments = [...initialCommentsByLine[ln]];
+          }
+        });
+        if (this.selectedLineNum && this.model.lines[this.selectedLineNum]) {
+          this.selectedLine = this.model.lines[this.selectedLineNum];
+        }
+        this.reloadLineMarkers();
 
         if (error.status == 422) {
           const msg = error.error?.message || '';
@@ -869,17 +1429,39 @@ export class EditorComponent implements OnInit, OnDestroy {
       distractor: distractor.code,
     };
 
+    const initialDescription = distractor.description;
     this._v['generate:distractor-explanation' + i] = true;
-    this.http.post(`${environment.apiUrl}/gpt-genai`, payload, { withCredentials: true }).subscribe({
-      next: ({ explanation }: any) => {
+    this.startThinking(`Generating explanation for distractor ${i + 1}...`);
+
+    let accumulatedContent = '';
+
+    this.streamGenAI(payload, {
+      onProgress: (event: any) => {
+        if (event.type === 'thinking') {
+          this.onThinkingProgress(event.text || '');
+        } else if (event.type === 'content') {
+          this.onContentProgress(event.text);
+          accumulatedContent += (event.text || '');
+          const partialExp = this.parsePartialDistExplanation(accumulatedContent);
+          if (partialExp !== null) {
+            distractor.description = partialExp;
+          }
+        } else if (event.type === 'usage') {
+          this.onUsage(event.usage);
+        }
+      },
+      onDone: ({ explanation }: any) => {
+        this.stopThinking();
         this.log({ type: 'generate:distractor-explanation', payload, explanation });
 
         distractor.description = explanation;
 
         delete this._v['generate:distractor-explanation' + i];
       },
-      error: (error) => {
+      onError: (error: any) => {
+        this.stopThinking();
         this.log({ type: 'generate:distractor-explanation', payload, error: error.error });
+        distractor.description = initialDescription;
 
         if (error.status == 422) {
           const msg = error.error?.message || '';
@@ -928,30 +1510,94 @@ export class EditorComponent implements OnInit, OnDestroy {
     };
 
     this._v['generate:distractors'] = true;
-    this.http.post(`${environment.apiUrl}/gpt-genai`, payload, { withCredentials: true }).subscribe({
-      next: (resp: any) => {
-        this.log({ type: 'generate:distractors', payload, distractors: resp, list: this.distractors });
+    this.startThinking('Generating distractors...');
 
-        // merge generated explanations
-        Object.keys(resp).forEach((ln) => {
-          const line = this.model.lines[parseInt(ln)];
-          resp[ln].forEach((d: any) => {
-            this.model.distractors.push({
-              line_number: parseInt(ln),
-              code: d.distractor,
-              description: d.explanation,
-              gpt: d,
+    const initialDistractors = [...this.model.distractors];
+    const streamDistractorItems: any[] = [];
+    let accumulatedContent = '';
+
+    this.streamGenAI(payload, {
+      onProgress: (event: any) => {
+        if (event.type === 'thinking') {
+          this.onThinkingProgress(event.text || '');
+        } else if (event.type === 'content') {
+          this.onContentProgress(event.text);
+          accumulatedContent += (event.text || '');
+          const partialDist = this.parsePartialDistractors(accumulatedContent);
+          let itemIdx = 0;
+          Object.keys(partialDist).forEach((ln) => {
+            const lineNum = parseInt(ln.replace(/\D+/g, ''), 10) || this.selectedLineNum;
+            partialDist[ln].forEach((d: any) => {
+              if (!streamDistractorItems[itemIdx]) {
+                const newDist = {
+                  line_number: lineNum,
+                  code: d.distractor,
+                  description: d.explanation,
+                  gpt: d,
+                };
+                streamDistractorItems.push(newDist);
+              } else {
+                const existing = streamDistractorItems[itemIdx];
+                existing.line_number = lineNum;
+                existing.code = d.distractor;
+                existing.description = d.explanation;
+                existing.gpt = d;
+                const editorEntry = this.distEditors?.find(e => e.distractor === existing);
+                if (editorEntry?.editor && editorEntry.editor.getValue() !== d.distractor) {
+                  editorEntry.editor.setValue(d.distractor);
+                }
+              }
+              itemIdx++;
             });
           });
+          this.model.distractors = [...initialDistractors, ...streamDistractorItems];
+          this.reloadDistractors();
+        } else if (event.type === 'usage') {
+          this.onUsage(event.usage);
+        }
+      },
+      onDone: (resp: any) => {
+        this.stopThinking();
+        this.log({ type: 'generate:distractors', payload, distractors: resp, list: this.distractors });
+
+        let itemIdx = 0;
+        Object.keys(resp).forEach((ln) => {
+          const lineNum = parseInt(ln.replace(/\D+/g, ''), 10) || this.selectedLineNum;
+          resp[ln].forEach((d: any) => {
+            if (!streamDistractorItems[itemIdx]) {
+              streamDistractorItems.push({
+                line_number: lineNum,
+                code: d.distractor,
+                description: d.explanation,
+                gpt: d,
+              });
+            } else {
+              const existing = streamDistractorItems[itemIdx];
+              existing.line_number = lineNum;
+              existing.code = d.distractor;
+              existing.description = d.explanation;
+              existing.gpt = d;
+              const editorEntry = this.distEditors?.find(e => e.distractor === existing);
+              if (editorEntry?.editor && editorEntry.editor.getValue() !== d.distractor) {
+                editorEntry.editor.setValue(d.distractor);
+              }
+            }
+            itemIdx++;
+          });
         });
+        streamDistractorItems.length = itemIdx;
+        this.model.distractors = [...initialDistractors, ...streamDistractorItems];
 
         delete this._v['generate:distractors'];
 
         this.selectLine(this.selectedLineNum, true, true);
         then?.();
       },
-      error: (error) => {
+      onError: (error: any) => {
+        this.stopThinking();
         this.log({ type: 'generate:distractors', payload, error: error.error });
+        this.model.distractors = initialDistractors;
+        this.reloadDistractors();
 
         if (error.status == 422) {
           const msg = error.error?.message || '';
@@ -1172,8 +1818,33 @@ export class EditorComponent implements OnInit, OnDestroy {
     };
 
     this.log({ type: 'generate:translate-model', payload });
-    this.http.post(`${environment.apiUrl}/gpt-genai`, payload, { withCredentials: true }).subscribe({
-      next: (resp: any) => {
+    this.startThinking('Translating source problem...');
+
+    let accumulatedContent = '';
+
+    this.streamGenAI(payload, {
+      onProgress: (event: any) => {
+        if (event.type === 'thinking') {
+          this.onThinkingProgress(event.text || '');
+        } else if (event.type === 'content') {
+          this.onContentProgress(event.text);
+          accumulatedContent += (event.text || '');
+          if (accumulatedContent.includes('[[PROGRAM-NAME]]')) {
+            const namePart = accumulatedContent.substring(accumulatedContent.indexOf('[[PROGRAM-NAME]]') + 16);
+            const nextTagIdx = namePart.indexOf('[[PROGRAM-DESCRIPTION]]');
+            this.model.name = (nextTagIdx !== -1 ? namePart.slice(0, nextTagIdx) : namePart).trim();
+          }
+          if (accumulatedContent.includes('[[PROGRAM-DESCRIPTION]]')) {
+            const descPart = accumulatedContent.substring(accumulatedContent.indexOf('[[PROGRAM-DESCRIPTION]]') + 23);
+            const nextTagIdx = descPart.indexOf('[[SOURCE-CODE]]');
+            this.model.description = (nextTagIdx !== -1 ? descPart.slice(0, nextTagIdx) : descPart).trim();
+          }
+        } else if (event.type === 'usage') {
+          this.onUsage(event.usage);
+        }
+      },
+      onDone: (resp: any) => {
+        this.stopThinking();
         this.log({ type: 'generate:translate-model', payload: { ...payload, translated: resp } });
         this.model = resp;
         this._v['allow-untranslated-view'] = !!resp.untr_name || !!resp.untr_description;
@@ -1182,16 +1853,18 @@ export class EditorComponent implements OnInit, OnDestroy {
         setTimeout(() => this.selectLine(this.selectedLineNum, true, true), 300);
 
         this.messages.add({ severity: 'success', summary: 'Success', detail: 'Source translated successfully' });
+        delete this._v['translate'];
       },
-      error: (error) => {
+      onError: (error: any) => {
+        this.stopThinking();
         this.log({ type: 'generate:translate-model', payload, error: error.error });
 
         if (error.status == 422) this.messages.add({
           severity: 'error', summary: 'Error',
-          detail: error.error.message
+          detail: error.error?.message || error.error
         });
-      },
-      complete: () => delete this._v['translate']
+        delete this._v['translate'];
+      }
     });
   }
 
