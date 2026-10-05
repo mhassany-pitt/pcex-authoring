@@ -134,7 +134,7 @@ export class ActivitiesController {
           collaborator_emails, created_at, updated_at } = activity;
         return this.attachStat({ 
           id: id.toString(), published, archived, name, items, iso_language_code, translations,
-          linkings: Object.keys(linkings || {}).length > 0, 
+          linkings: typeof linkings === 'boolean' ? linkings : (typeof linkings === 'object' && linkings !== null ? Object.keys(linkings).length > 0 : false), 
           user, collaborator_emails, 
           created_at, updated_at 
         });
@@ -161,7 +161,7 @@ export class ActivitiesController {
         collaborator_emails, created_at, updated_at } = activity;
       return this.attachStat({ 
         id, published, archived, name, items, iso_language_code, translations,
-        linkings: Object.keys(linkings || {}).length > 0, 
+        linkings: typeof linkings === 'boolean' ? linkings : (typeof linkings === 'object' && linkings !== null ? Object.keys(linkings).length > 0 : false), 
         user, collaborator_emails, 
         created_at, updated_at 
       });

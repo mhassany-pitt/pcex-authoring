@@ -76,8 +76,15 @@ export class ActivitiesService {
       this.activities.countDocuments({ ...baseFilter, user: params.user }),
       this.activities.countDocuments({ ...baseFilter, published: true }),
       this.activities.countDocuments({
-        ...baseFilter,
-        $expr: { $gt: [{ $size: { $objectToArray: { $ifNull: ['$linkings', {}] } } }, 0] }
+        $and: [
+          baseFilter,
+          {
+            $or: [
+              { linkings: true },
+              { linkings: { $type: 'object', $ne: {} } }
+            ]
+          }
+        ]
       }),
     ]);
 
@@ -144,9 +151,8 @@ export class ActivitiesService {
         statusOrs.push({ published: true });
       }
       if (params.statuses.includes('paws')) {
-        statusOrs.push({
-          $expr: { $gt: [{ $size: { $objectToArray: { $ifNull: ['$linkings', {}] } } }, 0] }
-        });
+        statusOrs.push({ linkings: true });
+        statusOrs.push({ linkings: { $type: 'object', $ne: {} } });
       }
       if (params.statuses.includes('draft')) {
         statusOrs.push({ published: { $ne: true } });
@@ -158,7 +164,10 @@ export class ActivitiesService {
 
     if (params.trans) {
       andConditions.push({
-        $expr: { $gt: [{ $size: { $objectToArray: { $ifNull: ['$translations', {}] } } }, 0] }
+        $or: [
+          { translations: true },
+          { translations: { $type: 'object', $ne: {} } }
+        ]
       });
     }
 
@@ -243,7 +252,13 @@ export class ActivitiesService {
       { $match: matchConditions },
       {
         $addFields: {
-          items_count: { $size: { $ifNull: ['$items', []] } }
+          items_count: {
+            $cond: {
+              if: { $isArray: '$items' },
+              then: { $size: '$items' },
+              else: 0
+            }
+          }
         }
       }
     ];
@@ -322,7 +337,15 @@ export class ActivitiesService {
                     _id,
                     {
                       $map: {
-                        input: { $objectToArray: { $ifNull: ['$translations', {}] } },
+                        input: {
+                          $objectToArray: {
+                            $cond: [
+                              { $eq: [{ $type: '$translations' }, 'object'] },
+                              '$translations',
+                              {}
+                            ]
+                          }
+                        },
                         as: 't',
                         in: { $toString: '$$t.v' }
                       }

@@ -104,9 +104,17 @@ export class SourcesService {
     }
 
     if (params.trans) {
-      matchConditions.$expr = {
-        $gt: [{ $size: { $objectToArray: { $ifNull: ['$translations', {}] } } }, 0]
+      const transCondition = {
+        $or: [
+          { translations: true },
+          { translations: { $type: 'object', $ne: {} } }
+        ]
       };
+      if (matchConditions.$and) {
+        matchConditions.$and.push(transCondition);
+      } else {
+        matchConditions.$and = [transCondition];
+      }
     }
 
     if (params.tags?.length) {
@@ -173,11 +181,39 @@ export class SourcesService {
       {
         $addFields: {
           blank_lines_count: {
-            $size: {
-              $filter: {
-                input: { $objectToArray: { $ifNull: ['$lines', {}] } },
-                as: 'l',
-                cond: { $eq: ['$$l.v.blank', true] }
+            $cond: {
+              if: { $eq: [{ $type: '$lines' }, 'object'] },
+              then: {
+                $size: {
+                  $filter: {
+                    input: {
+                      $objectToArray: {
+                        $cond: [
+                          { $eq: [{ $type: '$lines' }, 'object'] },
+                          '$lines',
+                          {}
+                        ]
+                      }
+                    },
+                    as: 'l',
+                    cond: { $eq: ['$$l.v.blank', true] }
+                  }
+                }
+              },
+              else: {
+                $cond: {
+                  if: { $isArray: '$lines' },
+                  then: {
+                    $size: {
+                      $filter: {
+                        input: '$lines',
+                        as: 'l',
+                        cond: { $eq: ['$$l.blank', true] }
+                      }
+                    }
+                  },
+                  else: 0
+                }
               }
             }
           }
@@ -258,7 +294,15 @@ export class SourcesService {
                     _id,
                     {
                       $map: {
-                        input: { $objectToArray: { $ifNull: ['$translations', {}] } },
+                        input: {
+                          $objectToArray: {
+                            $cond: [
+                              { $eq: [{ $type: '$translations' }, 'object'] },
+                              '$translations',
+                              {}
+                            ]
+                          }
+                        },
                         as: 't',
                         in: { $toString: '$$t.v' }
                       }
