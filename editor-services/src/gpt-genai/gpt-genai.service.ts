@@ -298,9 +298,15 @@ export class GptGenaiService {
     return model;
   }
 
+  getDefaultConfig() {
+    return {
+      model: this.config.get('OPENAI_MODEL') || 'qwen3.5:397b-cloud',
+      baseURL: this.config.get('OPENAI_BASE_URL') || 'https://ollama.com/v1',
+    };
+  }
+
   async validate(config: any) {
-    const defaultModel = this.config.get('OPENAI_MODEL') || 'qwen3.5:397b-cloud';
-    const defaultBaseURL = this.config.get('OPENAI_BASE_URL') || 'https://ollama.com/v1';
+    const { model: defaultModel, baseURL: defaultBaseURL } = this.getDefaultConfig();
     const serverApiKey = this.config.get('OPENAI_API_KEY');
 
     const userModel = config.model;

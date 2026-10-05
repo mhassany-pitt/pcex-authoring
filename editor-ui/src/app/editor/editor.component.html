@@ -238,8 +238,10 @@
             </div>
 
             <!-- identify and explain lines -->
-            <button pButton type="button" title="Configure GPT (globally)" icon="pi pi-cog"
-              class="p-button-sm p-button-help p-button-outlined" (click)="loadOpenAIGPTConfig()">
+            <button pButton type="button" [title]="modelHasChanged ? 'Default model has changed - click to configure and reset' : 'Configure GPT (globally)'"
+              icon="pi pi-cog"
+              [class]="modelHasChanged ? 'p-button-sm p-button-warning' : 'p-button-sm p-button-help p-button-outlined'"
+              (click)="loadOpenAIGPTConfig()">
             </button>
             <button pButton type="button" label="IDENTIFY AND EXPLAIN LINES" title="Identify and Explain Lines of code"
               icon="genai-icon" class="p-button-sm p-button-secondary p-button-outlined uppercase tracking-tight"
@@ -525,8 +527,23 @@
 <!-- gpt-config -->
 <p-dialog *ngIf="_v['show-gpt-config']" [(visible)]="_v['show-gpt-config']" header="OPENAI-GPT CONFIGURATION"
   [modal]="true" [style]="{'width': '35rem'}" (onShow)="log({ type: 'open-gpt-config' })"
-  (onHide)="log({ type: 'close-gpt-config' });">
+  (onHide)="log({ type: 'close-gpt-config' }); modelResetSuccess = false;">
   <form #form="ngForm" (ngSubmit)="saveOpenAIGPTConfig()" class="flex flex-col gap-2">
+    <div *ngIf="modelHasChanged" class="p-3 bg-amber-50 border border-amber-300 rounded text-amber-900 text-xs flex flex-col gap-1">
+      <div class="font-bold flex items-center gap-1.5 text-amber-800">
+        <i class="pi pi-exclamation-triangle text-sm"></i>
+        <span>Default Model Changed</span>
+      </div>
+      <div>
+        The default model has changed to <strong>{{ defaultGptConfig?.model }}</strong> (currently configured: <em>{{ outdatedModel }}</em>). Click the <strong>RESET</strong> button below to use this model as the default model in the popup.
+      </div>
+    </div>
+
+    <div *ngIf="modelResetSuccess" class="p-2.5 bg-green-50 border border-green-300 rounded text-green-800 text-xs flex items-center gap-1.5">
+      <i class="pi pi-check-circle text-sm"></i>
+      <span>Default model restored to <strong>{{ defaultGptConfig?.model }}</strong>. Click <strong>SAVE</strong> to apply.</span>
+    </div>
+
     <span class="text-xs text-gray-600">
       You need an API key if you specify a model other than the default model or a custom baseURL. The default model and baseURL use the server's configured settings.
     </span>

@@ -98,12 +98,26 @@ export class EditorComponent implements OnInit, OnDestroy {
     }, true);
   }
 
-  GPT_CONF_PLACEHOLDER = JSON.stringify({
+  defaultGptConfig: { model: string, baseURL: string } = {
     model: "qwen3.5:397b-cloud",
-    baseURL: "https://ollama.com/v1",
-    // apiKey: "<<YOUR_API_KEY>>",
-    // organization: "<<YOUR_ORGANIZATION>>",
-  }, null, 2);
+    baseURL: "https://ollama.com/v1"
+  };
+  modelHasChanged = false;
+  outdatedModel: string = '';
+  modelResetSuccess = false;
+
+  get gptConfigPlaceholder(): string {
+    return JSON.stringify({
+      model: this.defaultGptConfig?.model || "qwen3.5:397b-cloud",
+      baseURL: this.defaultGptConfig?.baseURL || "https://ollama.com/v1",
+      // apiKey: "<<YOUR_API_KEY>>",
+      // organization: "<<YOUR_ORGANIZATION>>",
+    }, null, 2);
+  }
+
+  get GPT_CONF_PLACEHOLDER(): string {
+    return this.gptConfigPlaceholder;
+  }
 
   openAIGPTConfig: string = '';
   translation: any = {};
@@ -201,6 +215,8 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.mergeTranslationsIntoSources();
       }
     });
+
+    this.checkGptConfig();
   }
 
   ngOnDestroy(): void {
@@ -768,6 +784,17 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   onGenExplanations({ type, payload, then }: any) {
+    if (this.modelHasChanged) {
+      this.messages.add({
+        severity: 'warn',
+        summary: 'Model Reset Required',
+        detail: `The default model has changed to '${this.defaultGptConfig?.model}'. Please click 'RESET' in the configuration dialog to update before generating.`,
+        life: 10000,
+      });
+      this.loadOpenAIGPTConfig();
+      return;
+    }
+
     this._v[type] = true;
     this.http.post(`${environment.apiUrl}/gpt-genai`, payload, { withCredentials: true }).subscribe({
       next: (resp: any) => {
@@ -795,11 +822,25 @@ export class EditorComponent implements OnInit, OnDestroy {
       error: (error) => {
         this.log({ type, payload, error: error.error });
 
-        if (error.status == 422) this.messages.add({
-          severity: 'error', summary: 'Error',
-          detail: error.error.message,
-          life: 10000
-        });
+        if (error.status == 422) {
+          const msg = error.error?.message || '';
+          if (msg.includes('retired') || msg.includes('API key is required if you are using a model other than')) {
+            this.modelHasChanged = true;
+            this.messages.add({
+              severity: 'error',
+              summary: 'Model Retired or Invalid',
+              detail: `${msg}. Please open GPT configuration (gear icon) and click 'RESET' to use the default model.`,
+              life: 15000
+            });
+            this.loadOpenAIGPTConfig();
+          } else {
+            this.messages.add({
+              severity: 'error', summary: 'Error',
+              detail: msg,
+              life: 10000
+            });
+          }
+        }
 
         delete this._v[type];
       }
@@ -807,6 +848,17 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   onGenDistExplanation(distractor: any, i: number) {
+    if (this.modelHasChanged) {
+      this.messages.add({
+        severity: 'warn',
+        summary: 'Model Reset Required',
+        detail: `The default model has changed to '${this.defaultGptConfig?.model}'. Please click 'RESET' in the configuration dialog to update before generating.`,
+        life: 10000,
+      });
+      this.loadOpenAIGPTConfig();
+      return;
+    }
+
     const payload = {
       action: 'generate-distractor-explanation',
       id: this.model.id,
@@ -829,10 +881,24 @@ export class EditorComponent implements OnInit, OnDestroy {
       error: (error) => {
         this.log({ type: 'generate:distractor-explanation', payload, error: error.error });
 
-        if (error.status == 422) this.messages.add({
-          severity: 'error', summary: 'Error',
-          detail: error.error.message
-        });
+        if (error.status == 422) {
+          const msg = error.error?.message || '';
+          if (msg.includes('retired') || msg.includes('API key is required if you are using a model other than')) {
+            this.modelHasChanged = true;
+            this.messages.add({
+              severity: 'error',
+              summary: 'Model Retired or Invalid',
+              detail: `${msg}. Please open GPT configuration (gear icon) and click 'RESET' to use the default model.`,
+              life: 15000
+            });
+            this.loadOpenAIGPTConfig();
+          } else {
+            this.messages.add({
+              severity: 'error', summary: 'Error',
+              detail: msg
+            });
+          }
+        }
 
         delete this._v['generate:distractor-explanation' + i];
       }
@@ -840,6 +906,17 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   onGenDistractors(then?: () => void) {
+    if (this.modelHasChanged) {
+      this.messages.add({
+        severity: 'warn',
+        summary: 'Model Reset Required',
+        detail: `The default model has changed to '${this.defaultGptConfig?.model}'. Please click 'RESET' in the configuration dialog to update before generating.`,
+        life: 10000,
+      });
+      this.loadOpenAIGPTConfig();
+      return;
+    }
+
     const payload = {
       action: 'generate-distractors',
       id: this.model.id,
@@ -876,10 +953,24 @@ export class EditorComponent implements OnInit, OnDestroy {
       error: (error) => {
         this.log({ type: 'generate:distractors', payload, error: error.error });
 
-        if (error.status == 422) this.messages.add({
-          severity: 'error', summary: 'Error',
-          detail: error.error.message
-        });
+        if (error.status == 422) {
+          const msg = error.error?.message || '';
+          if (msg.includes('retired') || msg.includes('API key is required if you are using a model other than')) {
+            this.modelHasChanged = true;
+            this.messages.add({
+              severity: 'error',
+              summary: 'Model Retired or Invalid',
+              detail: `${msg}. Please open GPT configuration (gear icon) and click 'RESET' to use the default model.`,
+              life: 15000
+            });
+            this.loadOpenAIGPTConfig();
+          } else {
+            this.messages.add({
+              severity: 'error', summary: 'Error',
+              detail: msg
+            });
+          }
+        }
 
         delete this._v['generate:distractors'];
       }
@@ -935,15 +1026,45 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
   }
 
+  checkGptConfig() {
+    this.api.loadGptConfig().subscribe({
+      next: (resp: any) => {
+        if (resp?.defaults) {
+          this.defaultGptConfig = resp.defaults;
+        }
+        const config = resp?.value || {};
+        const savedModel = config.model;
+        const defaultModel = this.defaultGptConfig?.model;
+        const hasApiKey = !!(config.apiKey || config.api_key);
+        if (savedModel && defaultModel && savedModel !== defaultModel && !hasApiKey) {
+          this.modelHasChanged = true;
+          this.outdatedModel = savedModel;
+          this.messages.add({
+            severity: 'warn',
+            summary: 'Default Model Changed',
+            detail: `The default model has changed to '${defaultModel}'. Please click the gear icon and click 'RESET' to update your configuration.`,
+            life: 12000,
+          });
+        }
+      },
+      error: () => {}
+    });
+  }
+
   resetOpenAIGPTConfig() {
-    this.openAIGPTConfig = this.GPT_CONF_PLACEHOLDER;
+    this.openAIGPTConfig = this.gptConfigPlaceholder;
+    this.modelHasChanged = false;
+    this.modelResetSuccess = true;
   }
 
   loadOpenAIGPTConfig(then?: () => void) {
     this.api.loadGptConfig().subscribe({
-      next: (config: any) => {
-        config = config?.value || {};
-        this.resetOpenAIGPTConfig();
+      next: (resp: any) => {
+        if (resp?.defaults) {
+          this.defaultGptConfig = resp.defaults;
+        }
+        const config = resp?.value || {};
+        this.openAIGPTConfig = this.gptConfigPlaceholder;
         this.translation = {
           target_language: config.target_language,
           translate_classes: config.translate_classes,
@@ -960,7 +1081,19 @@ export class EditorComponent implements OnInit, OnDestroy {
         delete config.translate_comments;
         if (Object.keys(config).length > 0) {
           this.openAIGPTConfig = JSON.stringify(config, null, 2);
+          const savedModel = config.model;
+          const defaultModel = this.defaultGptConfig?.model;
+          const hasApiKey = !!(config.apiKey || config.api_key);
+          if (savedModel && defaultModel && savedModel !== defaultModel && !hasApiKey) {
+            this.modelHasChanged = true;
+            this.outdatedModel = savedModel;
+          } else {
+            this.modelHasChanged = false;
+          }
+        } else {
+          this.modelHasChanged = false;
         }
+        this.modelResetSuccess = false;
         if (then) then();
         else this._v['show-gpt-config'] = true;
       },
@@ -973,13 +1106,28 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   saveOpenAIGPTConfig(then?: () => void) {
+    let parsedConfig: any = {};
+    try {
+      if (this.openAIGPTConfig && this.openAIGPTConfig.trim().length > 0) {
+        parsedConfig = JSON.parse(this.openAIGPTConfig);
+      }
+    } catch (e) {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Invalid JSON',
+        detail: 'Please check your OpenAI-GPT configuration JSON syntax.'
+      });
+      return;
+    }
     const config = {
-      ...JSON.parse(this.openAIGPTConfig),
+      ...parsedConfig,
       ...this.translation
     };
     this.api.setGptConfig(config).subscribe({
       next: (resp: any) => {
         this.log({ type: 'gpt-config-saved', value: config });
+        this.modelHasChanged = false;
+        this.modelResetSuccess = false;
         if (then) then();
         else this.messages.add({
           severity: 'success',
@@ -1000,6 +1148,16 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   openTranslateDialog() {
+    if (this.modelHasChanged) {
+      this.messages.add({
+        severity: 'warn',
+        summary: 'Model Reset Required',
+        detail: `The default model has changed to '${this.defaultGptConfig?.model}'. Please click 'RESET' in the configuration dialog before translating.`,
+        life: 10000,
+      });
+      this.loadOpenAIGPTConfig();
+      return;
+    }
     this.loadOpenAIGPTConfig(() => {
       this._v['translate'] = true;
     });
