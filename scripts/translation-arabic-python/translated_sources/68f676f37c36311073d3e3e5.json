@@ -1,0 +1,626 @@
+{
+  "id": "68f676f37c36311073d3e3e5",
+  "user": "moh70@pitt.edu",
+  "archived": false,
+  "name": "الفئة لتمثيل حساب مصرفي (الحالة 2)",
+  "description": "بناء فئة تمثل حسابًا بنكيًا أساسيًا. يجب أن تحتوي هذه الفئة على بيانات تمثل اسم مالك الحساب، رقم الحساب، والرصيد الحالي للحساب؛ وكلها يمكن الوصول إليها أو تغييرها فقط عبر طرق الحصول والتعيين (getter و setter). ينبغي إنشاء مثيل من الفئة بتحديد ثلاث معلمات تُستخدم لتهيئة بيانات المثيل (أي، كائن). ينبغي أن تقوم الطرق الأخرى في هذه الفئة بما يلي:\n - توفير وصف من سطر واحد للحساب، و\n - أداء خدمات مختلفة على الحساب (إجراء إيداعات، سحوبات، إضافة فائدة إلى الحساب). يجب على هذه الطرق فحص البيانات الممررة إليها للتأكد من أن المعاملة المطلوبة صالحة.",
+  "tags": [
+    "python-intro",
+    "arabic;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "language": "PYTHON",
+  "filename": "py_account2.py",
+  "code": "#Khatwa 1: Ta3rif al-fasl\nclass Account2 :\n    #Khatwa 1.1: Ibda al-hisab bil-qiyam al-mu3ayyana\n    def __init__(self, owner, account, initial) :\n        self.__acct_name = owner\n        self.__acct_number = account\n        self.__balance = initial\n    #Khatwa 1.2: Ta3rif metoda li-i3taa wasf satar wa7id lil-hisab\n    def __str__(self) :\n        return \"{:d}{:>20s}{:>10.2f}\".format(self.__acct_number, self.__acct_name, self.__balance)\n    #Khatwa 1.3: Ta3rif metoda li-tanfidh 3amaliyat al-idaa3\n    def deposit(self, amount) :\n        if (amount > 0) :\n            self.__balance = self.__balance + amount\n        return self.__balance\n    #Khatwa 1.4: Ta3rif metoda li-tanfidh 3amaliyat al-sahb\n    def withdraw(self, amount, fee) :\n        if (amount > 0 and fee >= 0 and amount+fee < self.__balance) :\n            self.__balance = self.__balance - amount - fee\n        return self.__balance\n    #Khatwa 1.5: Ta3rif metoda li-idaafat al-fa2ida ila al-hisab\n    def add_interest(self) :\n        self.__balance += (self.__balance * 0.035)\n        return self.__balance\n    #Khatwa 1.6: Ta3rif metodat li-husool 3ala halat al-hisab\n    def get_name(self) :\n        return self.__acct_name\n    def get_balance(self) :\n        return self.__balance\n    def get_acct_number(self) :\n        return self.__acct_number\n#Khatwa 2: Ikhtibar al-fasl\nacct1 = Account2(\"Tina Murphy\", 72354, 25.59)\nacct2 = Account2(\"Angelica Adams\", 69713, 500.00)\nacct3 = Account2(\"Edward Demsey\", 93757, 769.32)\nprint(acct1)\nprint(acct2)\nprint(acct3)",
+  "lines": {
+    "1": {
+      "comments": [],
+      "blank": false
+    },
+    "2": {
+      "comments": [
+        {
+          "content": "نعرّف الفئة Account2 لتمثيل حساب بنكي بخدمات أساسية بالإضافة إلى خدمة لتوفير وصف الحساب."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We define the class Account2 to represent a bank account with basic services as well as a service to provide the account description."
+        }
+      ],
+      "commentList": [
+        "نعرّف الفئة Account2 لتمثيل حساب بنكي بخدمات أساسية بالإضافة إلى خدمة لتوفير وصف الحساب."
+      ]
+    },
+    "3": {
+      "comments": [],
+      "blank": false
+    },
+    "4": {
+      "comments": [
+        {
+          "content": "لتحديد الحالة الابتدائية لحساب بنكي، نحتاج إلى وجود طريقة __init__ في الفئة Account2 التي تقبل قيمًا ابتدائية للحساب البنكي. تستقبل __init__ اسم الحساب، رقم الحساب، والرصيد الابتدائي وتخزنها في خصائص كائن Account2 الجديدة acct_name و acct_number و balance، على التوالي."
+        },
+        {
+          "content": "تُشغل طريقة __init__ تلقائيًا بواسطة بايثون في كل مرة يُنشأ فيها مثيل. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عندما تُستدعى الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير الثلاث معاملات الأخيرة إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "To specify the initial state of a bank account, we need to have an __init__ method in the class Account2 that accepts initial values for the bank account. The __init__ accepts the name of the bank account, account number, and initial balance and stores them into the new Account2 object’s acct_name, acct_number, and balance, respectively."
+        },
+        {
+          "content": "The __init__ method is run automatically by Python each time an instance is created. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, the last three parameters must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "لتحديد الحالة الابتدائية لحساب بنكي، نحتاج إلى وجود طريقة __init__ في الفئة Account2 التي تقبل قيمًا ابتدائية للحساب البنكي. تستقبل __init__ اسم الحساب، رقم الحساب، والرصيد الابتدائي وتخزنها في خصائص كائن Account2 الجديدة acct_name و acct_number و balance، على التوالي.",
+        "تُشغل طريقة __init__ تلقائيًا بواسطة بايثون في كل مرة يُنشأ فيها مثيل. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عندما تُستدعى الطريقة على مثيل من الفئة.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير الثلاث معاملات الأخيرة إلى الطريقة."
+      ]
+    },
+    "5": {
+      "comments": [
+        {
+          "content": "هذا السطر يعين الخاصية الخاصة بالمثيل acct_name إلى قيمة المعامل الأول (owner). self هو مثيل الفئة و self.__acct_name هو اسم الحساب. نبدأ اسم الخاصية بشرطتين سفليتين (self.__acct_name) لمنع الوصول إلى الخاصية مباشرة من خارج الفئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets the instance attribute acct_name to the first parameter value (owner).<br>self is the instance of the class and self.__acct_name is the account name. We start the attribute name by two underscore (self.__acct_name) to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يعين الخاصية الخاصة بالمثيل acct_name إلى قيمة المعامل الأول (owner). self هو مثيل الفئة و self.__acct_name هو اسم الحساب. نبدأ اسم الخاصية بشرطتين سفليتين (self.__acct_name) لمنع الوصول إلى الخاصية مباشرة من خارج الفئة."
+      ]
+    },
+    "6": {
+      "comments": [
+        {
+          "content": "هذا السطر يعين الخاصية الخاصة بالمثيل acct_number إلى قيمة المعامل الثاني (account). self هو مثيل الفئة و self.__acct_number هو رقم الحساب. نبدأ اسم الخاصية بشرطتين سفليتين (self.__acct_number) لمنع الوصول إلى الخاصية مباشرة من خارج الفئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets instance attribute acct_number to the second parameter value (account).<br>self is the instance of the class and self.__acct_number is the account number. We start the attribute name by two underscore (self.__acct_number) to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يعين الخاصية الخاصة بالمثيل acct_number إلى قيمة المعامل الثاني (account). self هو مثيل الفئة و self.__acct_number هو رقم الحساب. نبدأ اسم الخاصية بشرطتين سفليتين (self.__acct_number) لمنع الوصول إلى الخاصية مباشرة من خارج الفئة."
+      ]
+    },
+    "7": {
+      "comments": [
+        {
+          "content": "هذا السطر يعين الخاصية الخاصة بالمثيل balance إلى قيمة المعامل الثالث (initial). self هو مثيل الفئة و self.__balance هو رصيد الحساب. نبدأ اسم الخاصية بشرطتين سفليتين (self.__balance) لمنع الوصول إلى الخاصية مباشرة من خارج الفئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets instance attribute balance to the third parameter value (initial).<br>self is the instance of the class and self.__balance is the account's balance. We start the attribute name by two underscore (self.__balance) to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يعين الخاصية الخاصة بالمثيل balance إلى قيمة المعامل الثالث (initial). self هو مثيل الفئة و self.__balance هو رصيد الحساب. نبدأ اسم الخاصية بشرطتين سفليتين (self.__balance) لمنع الوصول إلى الخاصية مباشرة من خارج الفئة."
+      ]
+    },
+    "8": {
+      "comments": [],
+      "blank": false
+    },
+    "9": {
+      "comments": [
+        {
+          "content": "تُعيد هذه الطريقة وصفًا من سطر واحد للحساب كسلسلة. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عندما تُستدعى الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "لاحظ أن هذه الطريقة تُستدعى تلقائيًا عندما نمرر كائن Account2 إلى دالة الطباعة print (أو عندما نربط كائن Account2 بسلسلة نصية)."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "This method returns a one-line description of the account as a string. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that this method is called automatically when we pass an Account2's object to a print method (or when we concatenate an Account2's object to a string)."
+        }
+      ],
+      "commentList": [
+        "تُعيد هذه الطريقة وصفًا من سطر واحد للحساب كسلسلة. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عندما تُستدعى الطريقة على مثيل من الفئة.",
+        "لاحظ أن هذه الطريقة تُستدعى تلقائيًا عندما نمرر كائن Account2 إلى دالة الطباعة print (أو عندما نربط كائن Account2 بسلسلة نصية)."
+      ]
+    },
+    "10": {
+      "comments": [
+        {
+          "content": "يعيد هذا السطر خصائص الحساب. نستخدم دالة format لتنسيق السلسلة بحيث تكون كل القيم بمحاذاة إلى اليمين مع مسافات كافية بينها.\n{:d} يستبدل برقم الحساب\n{:>20s} يبرر اسم الحساب الى اليمين في حقل عرضه 20 حرفًا\n{:>10.2f} يبرر الرصيد الى اليمين مع رقمين منزليين عشرِيّين في حقل عرضه 10 أحرف."
+        },
+        {
+          "content": "تعيد دالة format نتيجة استبدال كل عنصر نائب {...} في قالب السلسلة بالوسيط المقابل الممرر إلى دالة format. أي شيء آخر غير محتوى الأقواس المعقوفة يُطبع حرفيًا، أي بدون أي تغييرات."
+        },
+        {
+          "content": "كذلك، يبدأ مواصف التنسيق داخل قوسين معقوفين بعلامة : ويتبعها النص الذي يحدد نوع البيانات. يتطلب النوع d وسيطًا عشريًا، ويتطلب النوع s وسيطًا سلسلة نصية، ويتطلب النوع f وسيطًا عددًا عشريًا. سيحدث خطأ إذا لم يكن الوسيط من نوع البيانات المتوقع."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "This statement returns the account attributes. We call format function to format the string so that all values are right-aligned with sufficient spacing between values.<br>{:d} is replaced by the account number<br>{:>20s} right-justifies the account's name in a field that is 20-characters wide<br>{:>10.2f} right-justifies the balance with two decimal digits in a field that is 10-characters wide. "
+        },
+        {
+          "content": "The format function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function. Anything else, which is not contained in curly braces will be literally printed, i.e. without any changes."
+        },
+        {
+          "content": "Also, the format specification inside a pair of curly braces starts with a : and followed by the text that specifies the data type. The data type d requires a decimal argument, the data type s requires a string argument, and the data type f requires a floating-point argument. An error will occur if the argument is not the expected data type."
+        }
+      ],
+      "commentList": [
+        "يعيد هذا السطر خصائص الحساب. نستخدم دالة format لتنسيق السلسلة بحيث تكون كل القيم بمحاذاة إلى اليمين مع مسافات كافية بينها.\n{:d} يستبدل برقم الحساب\n{:>20s} يبرر اسم الحساب الى اليمين في حقل عرضه 20 حرفًا\n{:>10.2f} يبرر الرصيد الى اليمين مع رقمين منزليين عشرِيّين في حقل عرضه 10 أحرف.",
+        "تعيد دالة format نتيجة استبدال كل عنصر نائب {...} في قالب السلسلة بالوسيط المقابل الممرر إلى دالة format. أي شيء آخر غير محتوى الأقواس المعقوفة يُطبع حرفيًا، أي بدون أي تغييرات.",
+        "كذلك، يبدأ مواصف التنسيق داخل قوسين معقوفين بعلامة : ويتبعها النص الذي يحدد نوع البيانات. يتطلب النوع d وسيطًا عشريًا، ويتطلب النوع s وسيطًا سلسلة نصية، ويتطلب النوع f وسيطًا عددًا عشريًا. سيحدث خطأ إذا لم يكن الوسيط من نوع البيانات المتوقع."
+      ]
+    },
+    "11": {
+      "comments": [],
+      "blank": false
+    },
+    "12": {
+      "comments": [
+        {
+          "content": "تُودِع هذه الطريقة المبلغ المحدد في هذا الحساب وتُعيد الرصيد الجديد. لا يتغير الرصيد إذا كان مبلغ الايداع غير صالح. لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعامل الأخير فقط (amount) إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method deposits the specified amount into this account and returns the new balance. The balance is not modified if the deposit amount is invalid. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, only the last parameter (amount) must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "تُودِع هذه الطريقة المبلغ المحدد في هذا الحساب وتُعيد الرصيد الجديد. لا يتغير الرصيد إذا كان مبلغ الايداع غير صالح. لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعامل الأخير فقط (amount) إلى الطريقة."
+      ]
+    },
+    "13": {
+      "comments": [
+        {
+          "content": "قبل أن نضيف المبلغ المحدد إلى الرصيد، نحتاج إلى إجراء اختبار للتحقق مما إذا كان مبلغ الايداع صالحًا."
+        },
+        {
+          "content": "يفحص بيان if ما إذا كان مبلغ الايداع أكبر من 0. إذا كان مبلغ الايداع أكبر من 0، فتنفذ جسم هذا الشرط. وإلا فيتم تجاوز جسم هذا الشرط."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "Before we add the specified amount to the balance, we need to perform a test to check whether the deposit amount is valid."
+        },
+        {
+          "content": "The if statement tests whether the deposit amount is greater than 0. If the deposit amount is greater than 0, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        }
+      ],
+      "commentList": [
+        "قبل أن نضيف المبلغ المحدد إلى الرصيد، نحتاج إلى إجراء اختبار للتحقق مما إذا كان مبلغ الايداع صالحًا.",
+        "يفحص بيان if ما إذا كان مبلغ الايداع أكبر من 0. إذا كان مبلغ الايداع أكبر من 0، فتنفذ جسم هذا الشرط. وإلا فيتم تجاوز جسم هذا الشرط."
+      ]
+    },
+    "14": {
+      "comments": [],
+      "blank": false
+    },
+    "15": {
+      "comments": [],
+      "blank": false
+    },
+    "16": {
+      "comments": [],
+      "blank": false
+    },
+    "17": {
+      "comments": [
+        {
+          "content": "تسحب هذه الطريقة المبلغ والرسوم المحددة من هذا الحساب وتُعيد الرصيد الجديد. لا يتغير الرصيد إذا كان مبلغ السحب أو الرسوم غير صالحة أو إذا كان الرصيد غير كافٍ. لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعاملين الأخيرين فقط إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method withdraws the specified amount and fee from this account and returns the new balance. The balance is not modified if either the withdraw amount or fee are invalid or the balance is insufficient. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, only the last two parameters must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "تسحب هذه الطريقة المبلغ والرسوم المحددة من هذا الحساب وتُعيد الرصيد الجديد. لا يتغير الرصيد إذا كان مبلغ السحب أو الرسوم غير صالحة أو إذا كان الرصيد غير كافٍ. لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعاملين الأخيرين فقط إلى الطريقة."
+      ]
+    },
+    "18": {
+      "comments": [
+        {
+          "content": "قبل أن نسحب المبلغ والرسوم المحددة من الحساب، نحتاج إلى إجراء اختبار للتحقق مما إذا كان مبلغ السحب والرسوم صالحين وما إذا كان الرصيد كافيًا."
+        },
+        {
+          "content": "يفحص بيان if ما إذا كان مبلغ السحب أكبر من صفر، والرسوم أكبر من أو تساوي صفر، وأن الرصيد كافٍ. إذا كانت قيمة السحب والرسوم صالحة وكان الرصيد كافيًا، ينفذ جسم هذا الشرط. وإلا فيتم تجاوز جسم هذا الشرط."
+        },
+        {
+          "content": "لاحظ أن عامل and يُرجع True إذا كانت كلا الشرطين True."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "Before we withdraw the specified amount and fee from the account, we need to perform a test to check whether the withdraw amount and fee are valid and the balance is sufficient. "
+        },
+        {
+          "content": "The if statement tests whether the withdraw amount is greater than zero, fee is greater than or equal to zero, and the balance is sufficient. If the withdraw amount and fee are valid and the balance is sufficient, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        },
+        {
+          "content": "Note that the and operator yields the result True if both conditions are True."
+        }
+      ],
+      "commentList": [
+        "قبل أن نسحب المبلغ والرسوم المحددة من الحساب، نحتاج إلى إجراء اختبار للتحقق مما إذا كان مبلغ السحب والرسوم صالحين وما إذا كان الرصيد كافيًا.",
+        "يفحص بيان if ما إذا كان مبلغ السحب أكبر من صفر، والرسوم أكبر من أو تساوي صفر، وأن الرصيد كافٍ. إذا كانت قيمة السحب والرسوم صالحة وكان الرصيد كافيًا، ينفذ جسم هذا الشرط. وإلا فيتم تجاوز جسم هذا الشرط.",
+        "لاحظ أن عامل and يُرجع True إذا كانت كلا الشرطين True."
+      ]
+    },
+    "19": {
+      "comments": [],
+      "blank": false
+    },
+    "20": {
+      "comments": [],
+      "blank": false
+    },
+    "21": {
+      "comments": [],
+      "blank": false
+    },
+    "22": {
+      "comments": [
+        {
+          "content": "تضيف هذه الطريقة الفائدة إلى الحساب وتُعيد الرصيد الجديد (0.035 تمثل فائدة 3.5%). لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يلزم تمرير أي معلمة إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method adds interest to the account and returns the new balance (0.035 indicates the interest of 3.5%). Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "تضيف هذه الطريقة الفائدة إلى الحساب وتُعيد الرصيد الجديد (0.035 تمثل فائدة 3.5%). لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يلزم تمرير أي معلمة إلى الطريقة."
+      ]
+    },
+    "23": {
+      "comments": [],
+      "blank": false
+    },
+    "24": {
+      "comments": [],
+      "blank": false
+    },
+    "25": {
+      "comments": [],
+      "blank": false
+    },
+    "26": {
+      "comments": [
+        {
+          "content": "تُعيد هذه الطريقة اسم الحساب. لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يلزم تمرير أي معلمة إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method returns the name of the account.Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "تُعيد هذه الطريقة اسم الحساب. لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يلزم تمرير أي معلمة إلى الطريقة."
+      ]
+    },
+    "27": {
+      "comments": [],
+      "blank": false
+    },
+    "28": {
+      "comments": [
+        {
+          "content": "تُعيد هذه الطريقة الرصيد الحالي للحساب. لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يلزم تمرير أي معلمة إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method returns the current balance of the account. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "تُعيد هذه الطريقة الرصيد الحالي للحساب. لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يلزم تمرير أي معلمة إلى الطريقة."
+      ]
+    },
+    "29": {
+      "comments": [],
+      "blank": false
+    },
+    "30": {
+      "comments": [
+        {
+          "content": "تُعيد هذه الطريقة رقم حساب الحساب. لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يلزم تمرير أي معلمة إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method returns the account number of the account. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "تُعيد هذه الطريقة رقم حساب الحساب. لاحظ أن الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع الطريقة الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يلزم تمرير أي معلمة إلى الطريقة."
+      ]
+    },
+    "31": {
+      "comments": [],
+      "blank": false
+    },
+    "32": {
+      "comments": [],
+      "blank": false
+    },
+    "33": {
+      "comments": [
+        {
+          "content": "ننشئ مثيلاً من الفئة Account2 لعرض كيفية إنشاء واستخدام مثيلات Account2."
+        },
+        {
+          "content": "ينشئ هذا السطر مثيل Account2 بالاسم رقم الحساب والرصيد المحددين."
+        },
+        {
+          "content": "لاحظ أننا نستطيع إنشاء كائن Account2 بالاسم ورقم الحساب والرصيد المحددين فقط عندما تتضمن الفئة Account2 طريقة __init__ التي تقبل هذه المعاملات بالترتيب المحدد."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We create an instance of the class Account2 to demonstrate the creation and use of Account2 instances"
+        },
+        {
+          "content": "This statement creates a Account2 instance with the specified account name, account number, and account balance."
+        },
+        {
+          "content": "Note that we can create an Account2 object with the specified account name, account number, and account balance only when we have a __init__ method in the Account2 class that accepts these parameters in the order that they are specified."
+        }
+      ],
+      "commentList": [
+        "ننشئ مثيلاً من الفئة Account2 لعرض كيفية إنشاء واستخدام مثيلات Account2.",
+        "ينشئ هذا السطر مثيل Account2 بالاسم رقم الحساب والرصيد المحددين.",
+        "لاحظ أننا نستطيع إنشاء كائن Account2 بالاسم ورقم الحساب والرصيد المحددين فقط عندما تتضمن الفئة Account2 طريقة __init__ التي تقبل هذه المعاملات بالترتيب المحدد."
+      ]
+    },
+    "34": {
+      "comments": [
+        {
+          "content": "ينشئ هذا السطر مثيل Account2 بالاسم رقم الحساب والرصيد المحددين."
+        },
+        {
+          "content": "لاحظ أننا نستطيع إنشاء كائن Account2 بالاسم ورقم الحساب والرصيد المحددين فقط عندما تتضمن الفئة Account2 طريقة __init__ التي تقبل هذه المعاملات بالترتيب المحدد."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement creates a Account2 instance with the specified account name, account number, and account balance."
+        },
+        {
+          "content": "Note that we can create an Account2 object with the specified account name, account number, and account balance only when we have a __init__ method in the Account2 class that accepts these parameters in the order that they are specified."
+        }
+      ],
+      "commentList": [
+        "ينشئ هذا السطر مثيل Account2 بالاسم رقم الحساب والرصيد المحددين.",
+        "لاحظ أننا نستطيع إنشاء كائن Account2 بالاسم ورقم الحساب والرصيد المحددين فقط عندما تتضمن الفئة Account2 طريقة __init__ التي تقبل هذه المعاملات بالترتيب المحدد."
+      ]
+    },
+    "35": {
+      "comments": [
+        {
+          "content": "ينشئ هذا السطر مثيل Account2 بالاسم رقم الحساب والرصيد المحددين."
+        },
+        {
+          "content": "لاحظ أننا نستطيع إنشاء كائن Account2 بالاسم ورقم الحساب والرصيد المحددين فقط عندما تتضمن الفئة Account2 طريقة __init__ التي تقبل هذه المعاملات بالترتيب المحدد."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement creates a Account2 instance with the specified account name, account number, and account balance."
+        },
+        {
+          "content": "Note that we can create an Account2 object with the specified account name, account number, and account balance only when we have a __init__ method in the Account2 class that accepts these parameters in the order that they are specified."
+        }
+      ],
+      "commentList": [
+        "ينشئ هذا السطر مثيل Account2 بالاسم رقم الحساب والرصيد المحددين.",
+        "لاحظ أننا نستطيع إنشاء كائن Account2 بالاسم ورقم الحساب والرصيد المحددين فقط عندما تتضمن الفئة Account2 طريقة __init__ التي تقبل هذه المعاملات بالترتيب المحدد."
+      ]
+    },
+    "36": {
+      "comments": [
+        {
+          "content": "عندما نمرر كائن Account2 إلى دالة print (أو عندما نربطه بسلسلة نصية)، تُستدعى طريقة __str__ لذلك الكائن تلقائيًا. لذلك، يطبع هذا السطر السلسلة التي تُعيدها __str__. هنا، acct1 هو الموضوع الضمني (المثيل) الممرر إلى self."
+        },
+        {
+          "content": "يتبع النص المطبوع حرف نهاية السطر في النهاية."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "When we pass an Account2's object to a print method (or when we concatenate an Account2's object to a character string), the __str__ method of that object gets called automatically. Therefore, this statement prints the string that is returned from invoking the __str__ method. Here, acct1 is the implied subject (instance) passed to self."
+        },
+        {
+          "content": "The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "عندما نمرر كائن Account2 إلى دالة print (أو عندما نربطه بسلسلة نصية)، تُستدعى طريقة __str__ لذلك الكائن تلقائيًا. لذلك، يطبع هذا السطر السلسلة التي تُعيدها __str__. هنا، acct1 هو الموضوع الضمني (المثيل) الممرر إلى self.",
+        "يتبع النص المطبوع حرف نهاية السطر في النهاية."
+      ]
+    },
+    "37": {
+      "comments": [
+        {
+          "content": "عندما نمرر كائن Account2 إلى دالة print (أو عندما نربطه بسلسلة نصية)، تُستدعى طريقة __str__ لذلك الكائن تلقائيًا. لذلك، يطبع هذا السطر السلسلة التي تُعيدها __str__. هنا، acct2 هو الموضوع الضمني (المثيل) الممرر إلى self."
+        },
+        {
+          "content": "يتبع النص المطبوع حرف نهاية السطر في النهاية."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "When we pass an Account2's object to a print method (or when we concatenate an Account2's object to a character string), the __str__ method of that object gets called automatically. Therefore, this statement prints the string that is returned from invoking the __str__ method. Here, acct2 is the implied subject (instance) passed to self."
+        },
+        {
+          "content": "The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "عندما نمرر كائن Account2 إلى دالة print (أو عندما نربطه بسلسلة نصية)، تُستدعى طريقة __str__ لذلك الكائن تلقائيًا. لذلك، يطبع هذا السطر السلسلة التي تُعيدها __str__. هنا، acct2 هو الموضوع الضمني (المثيل) الممرر إلى self.",
+        "يتبع النص المطبوع حرف نهاية السطر في النهاية."
+      ]
+    },
+    "38": {
+      "comments": [
+        {
+          "content": "عندما نمرر كائن Account2 إلى دالة print (أو عندما نربطه بسلسلة نصية)، تُستدعى طريقة __str__ لذلك الكائن تلقائيًا. لذلك، يطبع هذا السطر السلسلة التي تُعيدها __str__. هنا، acct3 هو الموضوع الضمني (المثيل) الممرر إلى self."
+        },
+        {
+          "content": "يتبع النص المطبوع حرف نهاية السطر في النهاية."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "When we pass an Account2's object to a print method (or when we concatenate an Account2's object to a character string), the __str__ method of that object gets called automatically. Therefore, this statement prints the string that is returned from invoking the __str__ method. Here, acct3 is the implied subject (instance) passed to self."
+        },
+        {
+          "content": "The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "عندما نمرر كائن Account2 إلى دالة print (أو عندما نربطه بسلسلة نصية)، تُستدعى طريقة __str__ لذلك الكائن تلقائيًا. لذلك، يطبع هذا السطر السلسلة التي تُعيدها __str__. هنا، acct3 هو الموضوع الضمني (المثيل) الممرر إلى self.",
+        "يتبع النص المطبوع حرف نهاية السطر في النهاية."
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "def __str__() :",
+      "description": "",
+      "untr_code": "def __str__() :",
+      "untr_description": ""
+    },
+    {
+      "code": "def __str__(self, owner, account, initial ) :",
+      "description": "",
+      "untr_code": "def __str__(self, owner, account, initial ) :",
+      "untr_description": ""
+    },
+    {
+      "code": "def str(self) :",
+      "description": "",
+      "untr_code": "def str(self) :",
+      "untr_description": ""
+    },
+    {
+      "code": "description = \"{:d}{:>20s}{:>10.2f}\".format(self.__acct_number, self.__acct_name, self.__balance)",
+      "description": "",
+      "untr_code": "description = \"{:d}{:>20s}{:>10.2f}\".format(self.__acct_number, self.__acct_name, self.__balance)",
+      "untr_description": ""
+    },
+    {
+      "code": "return \"{:d}{:>20s}{:>10.2f}\".format(self.acct_number, self.acct_name, self.balance)",
+      "description": "",
+      "untr_code": "return \"{:d}{:>20s}{:>10.2f}\".format(self.acct_number, self.acct_name, self.balance)",
+      "untr_description": ""
+    },
+    {
+      "code": "description = \"{:s}{:>20s}{:>10d}\".format(self.__acct_number, self.__acct_name, self.__balance)",
+      "description": "",
+      "untr_code": "description = \"{:s}{:>20s}{:>10d}\".format(self.__acct_number, self.__acct_name, self.__balance)",
+      "untr_description": ""
+    }
+  ],
+  "programInput": "",
+  "collaborator_emails": [
+    "zainakhalil002@gmail.com",
+    "peterb@pitt.edu"
+  ],
+  "extraFiles": [],
+  "iso_language_code": "ar",
+  "updated_at": "2026-04-01T19:48:15.272Z",
+  "stat": {
+    "size": 67542,
+    "lastTimeModified": 1760982774101.8423
+  },
+  "untr_name": "The Class for Representing a Bank Account (Case 2)",
+  "untr_description": "Construct a class that represents a basic bank account. This class should contain data representing the name of the account’s owner, the account number, and the account’s current balance; all of which could be accessed or changed only through the getter and setter methods. An instance of the class should be created by specifying three parameters that are used to initialize the instance (i.e., object) data. The other methods of this class should:\\n - provide a one-line description of the account, and\\n - perform various services on the account (making deposits, withdrawals, adding interest to the account). These methods should examine the data passed into them to make sure the requested transaction is valid.",
+  "untr_code": "#Step 1: Define the class\nclass Account2 :\n    #Step 1.1: Initialize the account with the specified values\n    def __init__(self, owner, account, initial) :\n        self.__acct_name = owner\n        self.__acct_number = account\n        self.__balance = initial\n    #Step 1.2: Define a method to provide a one-line description of the account\n    def __str__(self) :\n        return \"{:d}{:>20s}{:>10.2f}\".format(self.__acct_number, self.__acct_name, self.__balance)\n    #Step 1.3: Define a method to perform the deposit transaction\n    def deposit(self, amount) :\n        if (amount > 0) :\n            self.__balance = self.__balance + amount\n        return self.__balance\n    #Step 1.4: Define a method to perform a withdraw transaction\n    def withdraw(self, amount, fee) :\n        if (amount > 0 and fee >= 0 and amount+fee < self.__balance) :\n            self.__balance = self.__balance - amount - fee\n        return self.__balance\n    #Step 1.5: Define a method to add interest to the account\n    def add_interest(self) :\n        self.__balance += (self.__balance * 0.035)\n        return self.__balance\n    #Step 1.6: Define the methods to get the  state of the account \n    def get_name(self) :\n        return self.__acct_name\n    def get_balance(self) :\n        return self.__balance\n    def get_acct_number(self) :\n        return self.__acct_number\n#Step 2: Test the class\nacct1 = Account2(\"Tina Murphy\", 72354, 25.59)\nacct2 = Account2(\"Angelica Adams\", 69713, 500.00)\nacct3 = Account2(\"Edward Demsey\", 93757, 769.32)\nprint(acct1)\nprint(acct2)\nprint(acct3)",
+  "translations": {
+    "en": "664e3c3091363872f0ba354d"
+  }
+}

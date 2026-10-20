@@ -1,0 +1,487 @@
+{
+  "id": "68f67861f411992204a3d861",
+  "user": "moh70@pitt.edu",
+  "archived": false,
+  "name": "إنشاء قاموس لأزواج الطالب-الدرجات (الحالة 2)",
+  "description": "افترض أن لدينا قائمة بالطلاب وقائمة بدرجاتهم المقابلة في الاختبار. أنشئ برنامجًا يحتوي على دالتين:\n- دالة تستقبل هاتين القائمتين وتُرجع قاموسًا يربط كل طالب بالدرجات الخاصة به، و\n- دالة تستقبل القاموس الذي أنشأته الدالة السابقة وتحسب المتوسط الحسابي لدرجات كل طالب",
+  "tags": [
+    "python-intro",
+    "arabic;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "language": "PYTHON",
+  "filename": "py_score_dict2.py",
+  "code": "#Khatwa 1: Ta'rif al-function allati tansha al-qamus\ndef create_dictionary(std_lst, test_lst):\n    #Khatwa 1.1: Insha' qamus fadi\n    res_dict={}\n    #Khatwa 1.2: TaHdeeth madkhalat al-qamus wa nahnu natamarra ala al-mafaateeh fi al-qawa'im al-mu'ataya\n    for i in range(len(std_lst)):\n        if std_lst[i]  in res_dict:\n            res_dict[ std_lst[i] ].append( test_lst[i] )\n        else:\n            res_dict[ std_lst[i] ] = [ test_lst[i] ]\n    return res_dict\n#Khatwa 2: Ta'rif al-function allati tahsib motawassat darajat kull talib\ndef average(new_dict):\n    #Khatwa 2.1: Tamarrur 'ala al-talabah fi al-qamus\n    for std_name in new_dict :\n        #Khatwa 2.1.1: Tamarrur 'ala qa'imat darajat al-talib wa idhafat kull darajah ila al-mujmoo' al-jari\n        total = 0;\n        for score in new_dict[std_name]:\n            total+= score\n        #Khatwa 2.1.2: Hisab wa tiskhir motawassat darajat al-talib\n        average = total/len(new_dict[std_name])\n        print(std_name, average)\n#Khatwa 3: Nad' al-functions\nnames = ['Joe', 'Tom', 'Barbara', 'Sue', 'Sally', 'Joe', 'Sue']\nscores=[10, 23, 13, 18, 12, 9, 15]\naverage( create_dictionary(names, scores) )",
+  "lines": {
+    "1": {
+      "comments": [],
+      "blank": false
+    },
+    "2": {
+      "comments": [
+        {
+          "content": "نحتاج أولاً إلى إعلان الدالة حتى نتمكن من استدعائها لاحقًا. تُعلن الأسطر التالية الدالة create_dictionary التي تأخذ قائمة بالطلاب (المشار إليها بالمتغير std_lst) وقائمة بدرجاتهم المقابلة (المشار إليها بالمتغير test_lst) وتُرجع قاموسًا يربط كل طالب بالدرجات الخاصة به."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to first declare the function so that we can call it later. The following lines declare the function create_dictionary that takes a list of students (referred by variable std_lst) and a list of their corresponding test scores (referred by variable test_lst) and returns a dictionary that maps each student to the scores of that student.<br><br>Note that all statements following the header line are indented."
+        }
+      ],
+      "commentList": [
+        "نحتاج أولاً إلى إعلان الدالة حتى نتمكن من استدعائها لاحقًا. تُعلن الأسطر التالية الدالة create_dictionary التي تأخذ قائمة بالطلاب (المشار إليها بالمتغير std_lst) وقائمة بدرجاتهم المقابلة (المشار إليها بالمتغير test_lst) وتُرجع قاموسًا يربط كل طالب بالدرجات الخاصة به."
+      ]
+    },
+    "3": {
+      "comments": [],
+      "blank": false
+    },
+    "4": {
+      "comments": [
+        {
+          "content": "نحتاج أولاً إلى تعريف قاموس يُشار إليه بالمتغير res_dict لتخزين درجات كل طالب. نهيئه بقاموس فارغ عن طريق تعيينه إلى زوج قوسين معقوفين {}.\n\nنحتاج إلى قاموس لتخزين أزواج المفتاح-القيمة حيث يمثل كل مفتاح طالبًا والقيمة المرتبطة به تمثل قائمة درجات الطالب."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We first need to define a dictionary referred by variable res_dict for storing the scores of each student. We initialize it with an empty dictionary by setting it to a pair of braces {}.<br><br>We need need dictionary to store key-value pairs where each key represents a student and the value that is mapped to that key represents the list of the student's scores."
+        }
+      ],
+      "commentList": [
+        "نحتاج أولاً إلى تعريف قاموس يُشار إليه بالمتغير res_dict لتخزين درجات كل طالب. نهيئه بقاموس فارغ عن طريق تعيينه إلى زوج قوسين معقوفين {}.\n\nنحتاج إلى قاموس لتخزين أزواج المفتاح-القيمة حيث يمثل كل مفتاح طالبًا والقيمة المرتبطة به تمثل قائمة درجات الطالب."
+      ]
+    },
+    "5": {
+      "comments": [],
+      "blank": false
+    },
+    "6": {
+      "comments": [
+        {
+          "content": "نحتاج إلى الحصول على كل طالب والدرجة المقابلة له. يمكننا فعل ذلك عن طريق التكرار عبر الفهارس في القوائم المعطاة.\n\nنحتاج أن تبدأ فهارس القوائم من 0 مع كل عدد صحيح حتى لكن لا يشمل طول القائمة. نحصل على هذا التسلسل باستدعاء الدالة range(len(std_lst))."
+        },
+        {
+          "content": "لاحظ أن الدالة len(std_lst) تُرجع عدد القيم في قائمة الطلاب. كما يمكنك استخدام len(test_lst) داخل range لأن القائمتين تحتويان على نفس عدد القيم."
+        },
+        {
+          "content": "لاحظ أنه يجب أن تكون كل التعليمات داخل الحلقة مُزاحة بمقدار مسافة بادئة بالنسبة لعنوان الحلقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to get each student and corresponding test scores for that student. We can do this by iterating over the indexes in the given lists.<br><br>We need the list indexes to start at 0 with every integer number up to but not including the list length. We get this sequence by calling the range(len(std_lst)) function."
+        },
+        {
+          "content": "Note that the function len(std_lst) returns the number of the values in the students list. Also note that we could use len(test_lst) in the range function as both lists have equal number of values."
+        },
+        {
+          "content": "Note that all statements inside the loop need to be indented with respect to the loop header."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى الحصول على كل طالب والدرجة المقابلة له. يمكننا فعل ذلك عن طريق التكرار عبر الفهارس في القوائم المعطاة.\n\nنحتاج أن تبدأ فهارس القوائم من 0 مع كل عدد صحيح حتى لكن لا يشمل طول القائمة. نحصل على هذا التسلسل باستدعاء الدالة range(len(std_lst)).",
+        "لاحظ أن الدالة len(std_lst) تُرجع عدد القيم في قائمة الطلاب. كما يمكنك استخدام len(test_lst) داخل range لأن القائمتين تحتويان على نفس عدد القيم.",
+        "لاحظ أنه يجب أن تكون كل التعليمات داخل الحلقة مُزاحة بمقدار مسافة بادئة بالنسبة لعنوان الحلقة."
+      ]
+    },
+    "7": {
+      "comments": [
+        {
+          "content": "لتحديد ما إذا كان الطالب عند الفهرس i في قائمة الطلاب موجودًا مسبقًا كمفتاح في القاموس، نستخدم العامل in لاختبار العضوية. حيث يقوم عامل in ضمنيًا بمسح مفاتيح القاموس بحثًا عن تطابق."
+        },
+        {
+          "content": "std_lst[i] تعطينا الطالب عند الفهرس i في قائمة الطلاب."
+        },
+        {
+          "content": "إذا كان الطالب عند الفهرس i موجودًا بالفعل كمفتاح في القاموس، فإن جسم شرط if هذا سيتم تنفيذه. وإلا، يتم تخطي جسم هذا الشرط."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "To determine if the student at index i of the students list already exists as the key in the dictionary, we employ the in operator to test membership. Because the in operator implicitly scans the keys in the dictionary looking for a match."
+        },
+        {
+          "content": "std_lst[i] gives us the student at index i in the students list."
+        },
+        {
+          "content": "If the student at index i of the students list already exists as the key in the dictionary, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        }
+      ],
+      "commentList": [
+        "لتحديد ما إذا كان الطالب عند الفهرس i في قائمة الطلاب موجودًا مسبقًا كمفتاح في القاموس، نستخدم العامل in لاختبار العضوية. حيث يقوم عامل in ضمنيًا بمسح مفاتيح القاموس بحثًا عن تطابق.",
+        "std_lst[i] تعطينا الطالب عند الفهرس i في قائمة الطلاب.",
+        "إذا كان الطالب عند الفهرس i موجودًا بالفعل كمفتاح في القاموس، فإن جسم شرط if هذا سيتم تنفيذه. وإلا، يتم تخطي جسم هذا الشرط."
+      ]
+    },
+    "8": {
+      "comments": [
+        {
+          "content": "عندما يكون الطالب عند الفهرس i موجودًا كمفتاح في القاموس، نستدعي دالة append(test_lst[i]) لإضافة الدرجة عند الفهرس i من قائمة الدرجات إلى نهاية القائمة التي تحتوي درجات الطالب."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "When the student at index i of the students list already exists as the key in the dictionary, we call the function append(test_lst[i]) to add the test score at index i of the score list to the end of the list that holds student's test scores."
+        }
+      ],
+      "commentList": [
+        "عندما يكون الطالب عند الفهرس i موجودًا كمفتاح في القاموس، نستدعي دالة append(test_lst[i]) لإضافة الدرجة عند الفهرس i من قائمة الدرجات إلى نهاية القائمة التي تحتوي درجات الطالب."
+      ]
+    },
+    "9": {
+      "comments": [
+        {
+          "content": "عندما لا يوجد الطالب عند الفهرس i كمفتاح في القاموس، نحتاج إلى إضافة مدخل جديد إلى القاموس لهذا الطالب."
+        },
+        {
+          "content": "يتم تنفيذ العبارة داخل جسم هذا else عندما لا يوجد الطالب عند الفهرس i كمفتاح في القاموس. وإلا، يتم تخطي جسم هذا else."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "When the student at index i of the students list does not exist as the key in the dictionary, we need to add a new entry to the dictionary for the student."
+        },
+        {
+          "content": "The statement inside the body of this else statement is executed when the student at index i of the students list does not exist as the key in the dictionary. Otherwise, the body of this else statement is skipped."
+        }
+      ],
+      "commentList": [
+        "عندما لا يوجد الطالب عند الفهرس i كمفتاح في القاموس، نحتاج إلى إضافة مدخل جديد إلى القاموس لهذا الطالب.",
+        "يتم تنفيذ العبارة داخل جسم هذا else عندما لا يوجد الطالب عند الفهرس i كمفتاح في القاموس. وإلا، يتم تخطي جسم هذا else."
+      ]
+    },
+    "10": {
+      "comments": [
+        {
+          "content": "نحتاج إلى إضافة الطالب عند الفهرس i في قائمة الطلاب كمفتاح جديد إلى القاموس. نحتاج إلى تهيئة القيمة المرتبطة بهذا المفتاح بقائمة تحتوي على الدرجة عند الفهرس i من قائمة الدرجات."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to add the student at index i in the students list as a new key to the dictionary. We need to initialize the value mapped to this key with a list that has the test score at index i of the scores list."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى إضافة الطالب عند الفهرس i في قائمة الطلاب كمفتاح جديد إلى القاموس. نحتاج إلى تهيئة القيمة المرتبطة بهذا المفتاح بقائمة تحتوي على الدرجة عند الفهرس i من قائمة الدرجات."
+      ]
+    },
+    "11": {
+      "comments": [
+        {
+          "content": "الآن بعد أن أنشأنا القاموس، نحتاج إلى إرجاعه."
+        },
+        {
+          "content": "عبارة return، عند الوصول إليها، تنهي استدعاء الدالة وتُعيد النتيجة إلى المستدعي."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "Now that we created the dictionary, we need to return it."
+        },
+        {
+          "content": "The return statement, when reached, ends the function call and sends the result back to the caller."
+        }
+      ],
+      "commentList": [
+        "الآن بعد أن أنشأنا القاموس، نحتاج إلى إرجاعه.",
+        "عبارة return، عند الوصول إليها، تنهي استدعاء الدالة وتُعيد النتيجة إلى المستدعي."
+      ]
+    },
+    "12": {
+      "comments": [],
+      "blank": false
+    },
+    "13": {
+      "comments": [
+        {
+          "content": "نحتاج أولاً إلى إعلان الدالة حتى نتمكن من استدعائها لاحقًا. تُعلن الأسطر التالية الدالة average التي تأخذ قاموسًا يربط الطلاب بدرجاتهم وتحسب المتوسط الحسابي لدرجات كل طالب. يمثل القاموس بالمتغير new_dict.\n\nلاحظ أن كل العبارات التي تلي سطر رأس الدالة يجب أن تكون مُزاحة بمقدار مسافة بادئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to first declare the function so that we can call it later. The following lines declare the function average that takes a dictionary mapping students to their scores and calculates the average score of each student. The dictionary is referred by variable new_dict.<br><br>Note that all statements following the header line are indented."
+        }
+      ],
+      "commentList": [
+        "نحتاج أولاً إلى إعلان الدالة حتى نتمكن من استدعائها لاحقًا. تُعلن الأسطر التالية الدالة average التي تأخذ قاموسًا يربط الطلاب بدرجاتهم وتحسب المتوسط الحسابي لدرجات كل طالب. يمثل القاموس بالمتغير new_dict.\n\nلاحظ أن كل العبارات التي تلي سطر رأس الدالة يجب أن تكون مُزاحة بمقدار مسافة بادئة."
+      ]
+    },
+    "14": {
+      "comments": [],
+      "blank": false
+    },
+    "15": {
+      "comments": [
+        {
+          "content": "نحتاج إلى التكرار عبر الطلاب في القاموس وحساب متوسط درجاتهم. يمكننا الحصول على الطلاب عن طريق التكرار عبر المفاتيح في القاموس باستخدام حلقة for."
+        },
+        {
+          "content": "تقوم حلقة for هذه بتعيين الاسم std_name لكل مفتاح في القاموس بالترتيب من اليسار إلى اليمين، ثم يتم تنفيذ عبارات جسم الحلقة لكل مفتاح.\n\nلاحظ أن كل مفتاح في القاموس يمثل طالبًا."
+        },
+        {
+          "content": "لاحظ أن كل التعليمات داخل الحلقة يجب أن تكون مُزاحة بمقدار مسافة بادئة بالنسبة لعنوان الحلقة."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "We need to iterate over the students in the dictionary and calculate their average score. We can get the students by iterating through the keys in the dictionary using a for loop."
+        },
+        {
+          "content": "This for loop assigns the name std_name to each of the keys in the dictionary in turn, from left to right, and then the statement in the loop body will be executed for each character.<br><br>Note that each key in the dictionary represents a student."
+        },
+        {
+          "content": "Note that all statements inside the loop need to be indented with respect to the loop header."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى التكرار عبر الطلاب في القاموس وحساب متوسط درجاتهم. يمكننا الحصول على الطلاب عن طريق التكرار عبر المفاتيح في القاموس باستخدام حلقة for.",
+        "تقوم حلقة for هذه بتعيين الاسم std_name لكل مفتاح في القاموس بالترتيب من اليسار إلى اليمين، ثم يتم تنفيذ عبارات جسم الحلقة لكل مفتاح.\n\nلاحظ أن كل مفتاح في القاموس يمثل طالبًا.",
+        "لاحظ أن كل التعليمات داخل الحلقة يجب أن تكون مُزاحة بمقدار مسافة بادئة بالنسبة لعنوان الحلقة."
+      ]
+    },
+    "16": {
+      "comments": [],
+      "blank": false
+    },
+    "17": {
+      "comments": [
+        {
+          "content": "نحتاج لمتغير total للحفاظ على مجموع حالي، أي مجموع درجات الطالب. وبطبيعة الحال يجب تهيئة total بالقيمة 0."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need variable total to maintain a running total, which means the sum of the student's scores. Of course, the total should be initialized with 0."
+        }
+      ],
+      "commentList": [
+        "نحتاج لمتغير total للحفاظ على مجموع حالي، أي مجموع درجات الطالب. وبطبيعة الحال يجب تهيئة total بالقيمة 0."
+      ]
+    },
+    "18": {
+      "comments": [
+        {
+          "content": "لحساب المتوسط لكل طالب، نحتاج إلى التكرار عبر قائمة درجات الطالب. نفعل ذلك باستخدام حلقة for تتكرر عبر قائمة درجات الطالب."
+        },
+        {
+          "content": "تقوم حلقة for هذه بتعيين الاسم score لكل قيمة في قائمة درجات الطالب بالتتابع، ثم تُنفذ عبارات جسم الحلقة لكل قيمة.\n\nلاحظ أن new_dict[std_name] تُرجع قائمة درجات الطالب."
+        },
+        {
+          "content": "لاحظ أن كل التعليمات داخل الحلقة يجب أن تكون مُزاحة بمقدار مسافة بادئة بالنسبة لعنوان الحلقة."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "To calculate the average score of each student, we need to iterate over the list of student's scores. We do this by using a for loop that iterates through the list of student's scores."
+        },
+        {
+          "content": "This for loop assigns the name score to each of the values in the list of student's score in turn, from left to right, and then the statement in the loop body will be executed for each character.<br><br>Note that new_dict[std_name] returns the student's scores."
+        },
+        {
+          "content": "Note that all statements inside the loop need to be indented with respect to the loop header."
+        }
+      ],
+      "commentList": [
+        "لحساب المتوسط لكل طالب، نحتاج إلى التكرار عبر قائمة درجات الطالب. نفعل ذلك باستخدام حلقة for تتكرر عبر قائمة درجات الطالب.",
+        "تقوم حلقة for هذه بتعيين الاسم score لكل قيمة في قائمة درجات الطالب بالتتابع، ثم تُنفذ عبارات جسم الحلقة لكل قيمة.\n\nلاحظ أن new_dict[std_name] تُرجع قائمة درجات الطالب.",
+        "لاحظ أن كل التعليمات داخل الحلقة يجب أن تكون مُزاحة بمقدار مسافة بادئة بالنسبة لعنوان الحلقة."
+      ]
+    },
+    "19": {
+      "comments": [
+        {
+          "content": "نحتاج إلى إضافة كل درجة إلى المجموع الجاري المخزن في المتغير total. لذا، في كل تكرار، نضيف قيمة score إلى المتغير total ونخزن النتيجة في المتغير total."
+        },
+        {
+          "content": "العامل += يضيف قيمة المتغير score إلى قيمة المتغير total وتخزن النتيجة في المتغير total. لذا، هذه العبارة مكافئة للعبارة total = total + score."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to add each student's score to the running total that is stored in variable total. So, in each iteration, we add the student's score to the variable total and store the result into the variable total."
+        },
+        {
+          "content": "The += operator adds the value of variable score to the value of the variable total and the result is stored in the variable total. Thus, this statement is equivalent to the statement total = total + score."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى إضافة كل درجة إلى المجموع الجاري المخزن في المتغير total. لذا، في كل تكرار، نضيف قيمة score إلى المتغير total ونخزن النتيجة في المتغير total.",
+        "العامل += يضيف قيمة المتغير score إلى قيمة المتغير total وتخزن النتيجة في المتغير total. لذا، هذه العبارة مكافئة للعبارة total = total + score."
+      ]
+    },
+    "20": {
+      "comments": [],
+      "blank": false
+    },
+    "21": {
+      "comments": [
+        {
+          "content": "نحسب المتوسط بقسمة مجموع درجات الطالب على عدد درجات الطالب.\n\nدالة len(new_dict[std_name]) تُرجع عدد الدرجات في القائمة المرتبطة بالطالب."
+        },
+        {
+          "content": "لاحظ أنه بما أننا نريد الاحتفاظ بالجزء الكسري لنتيجة القسمة، نستخدم القسمة الحقيقية باستخدام العامل /."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "We calculate the average by dividing the sum of student's scores by the number of student's scores.<br><br>The function len(new_dict[std_name]) returns the number of the scores in the list that is mapped to the student."
+        },
+        {
+          "content": "Note that since we want to keep the fractional part of the division result, we need to use the real division by using / operator."
+        }
+      ],
+      "commentList": [
+        "نحسب المتوسط بقسمة مجموع درجات الطالب على عدد درجات الطالب.\n\nدالة len(new_dict[std_name]) تُرجع عدد الدرجات في القائمة المرتبطة بالطالب.",
+        "لاحظ أنه بما أننا نريد الاحتفاظ بالجزء الكسري لنتيجة القسمة، نستخدم القسمة الحقيقية باستخدام العامل /."
+      ]
+    },
+    "22": {
+      "comments": [
+        {
+          "content": "هذه العبارة تطبع إلى مخرج النص الافتراضي اسم الطالب متبوعًا بمتوسط درجاته. يظهر النص المطبوع الوسيطتين المعطيتين للدالة print مفصولتين بمحدد الحقول الافتراضي (أي مسافة واحدة) ويتبعه حرف نهاية السطر في النهاية."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints to the default standard output stream the student's name followed by the average of the student's scores. The printed text shows the arguments of the print function separated by the default delimiter (i.e., single space character) and followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تطبع إلى مخرج النص الافتراضي اسم الطالب متبوعًا بمتوسط درجاته. يظهر النص المطبوع الوسيطتين المعطيتين للدالة print مفصولتين بمحدد الحقول الافتراضي (أي مسافة واحدة) ويتبعه حرف نهاية السطر في النهاية."
+      ]
+    },
+    "23": {
+      "comments": [],
+      "blank": false
+    },
+    "24": {
+      "comments": [
+        {
+          "content": "نعرف قائمة يشار إليها بالمتغير names للاحتفاظ بأسماء الطلاب. نهيئ القائمة بفصل العناصر بفواصل ووضع المجموعة بين قوسين مربعين [ ]."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We define list referred by variable names to hold the students names. We initialize the list by separating elements with a comma and enclosing the collection in square brackets [ ]."
+        }
+      ],
+      "commentList": [
+        "نعرف قائمة يشار إليها بالمتغير names للاحتفاظ بأسماء الطلاب. نهيئ القائمة بفصل العناصر بفواصل ووضع المجموعة بين قوسين مربعين [ ]."
+      ]
+    },
+    "25": {
+      "comments": [
+        {
+          "content": "نعرف قائمة يشار إليها بالمتغير scores للاحتفاظ بالدرجات. نهيئ القائمة بفصل العناصر بفواصل ووضع المجموعة بين قوسين مربعين [ ]."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We define list referred by variable scores to hold the test scores. We initialize the list by separating elements with a comma and enclosing the collection in square brackets [ ]."
+        }
+      ],
+      "commentList": [
+        "نعرف قائمة يشار إليها بالمتغير scores للاحتفاظ بالدرجات. نهيئ القائمة بفصل العناصر بفواصل ووضع المجموعة بين قوسين مربعين [ ]."
+      ]
+    },
+    "26": {
+      "comments": [
+        {
+          "content": "هذه العبارة تستدعي أولًا الدالة create_dictionary وتمرر القائمتين names و scores كوسيطتين لها. ثم تستدعي الدالة average بتمرير القاموس الذي أعادته create_dictionary."
+        },
+        {
+          "content": "لاحظ أننا لا نحتاج بالضرورة إلى تخزين القاموس المعاد من create_dictionary في متغير. يمكننا استخدام القاموس الذي تُعيده هذه الدالة مباشرة في الدالة average."
+        },
+        {
+          "content": "لاحظ أن استدعاء الدالة يجب أن يتم بعد تعريف الدالة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement first calls the create_dictionary function and passes the names and scores lists as its arguments. Then, it calls the average function passing it the returned dictionary from the create_dictionary function."
+        },
+        {
+          "content": "Note that we do not necessarily have to store the returned dictionary from the create_dictionary function call in a variable. We could use the dictionary returned from this function call directly in the average function."
+        },
+        {
+          "content": "Note that the function call must be done after the function is declared."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تستدعي أولًا الدالة create_dictionary وتمرر القائمتين names و scores كوسيطتين لها. ثم تستدعي الدالة average بتمرير القاموس الذي أعادته create_dictionary.",
+        "لاحظ أننا لا نحتاج بالضرورة إلى تخزين القاموس المعاد من create_dictionary في متغير. يمكننا استخدام القاموس الذي تُعيده هذه الدالة مباشرة في الدالة average.",
+        "لاحظ أن استدعاء الدالة يجب أن يتم بعد تعريف الدالة."
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "for i in range(new_dict) :",
+      "description": "",
+      "untr_code": "for i in range(new_dict) :",
+      "untr_description": ""
+    },
+    {
+      "code": "for score in new_dict :",
+      "description": "",
+      "untr_code": "for score in new_dict :",
+      "untr_description": ""
+    },
+    {
+      "code": "for std_name in new_dict[score]:",
+      "description": "",
+      "untr_code": "for std_name in new_dict[score]:",
+      "untr_description": ""
+    },
+    {
+      "code": "for score in new_dict:",
+      "description": "",
+      "untr_code": "for score in new_dict:",
+      "untr_description": ""
+    },
+    {
+      "code": "average = total/len(new_dict)",
+      "description": "",
+      "untr_code": "average = total/len(new_dict)",
+      "untr_description": ""
+    }
+  ],
+  "programInput": "",
+  "collaborator_emails": [
+    "zainakhalil002@gmail.com",
+    "peterb@pitt.edu"
+  ],
+  "extraFiles": [],
+  "iso_language_code": "ar",
+  "updated_at": "2026-10-20T15:04:57.680Z",
+  "stat": {
+    "size": 167680,
+    "lastTimeModified": 1760983147233.7666
+  },
+  "untr_name": "Creating a Dictionary of Student-Scores Pairs (Case 2)",
+  "untr_description": "Assume we have a list of students and a list of their corresponding test scores. Construct a program that has two functions:\\n- a function that receives these two lists and returns a dictionary that maps each student to the scores of that student, and \\n- a function that receives the dictionary created by the above function and calculates the average score of each student",
+  "untr_code": "#Step 1: Define the function that creates the dictionary\ndef create_dictionary(std_lst, test_lst):\n    #Step 1.1: Create an empty dictionary \n    res_dict={}\n    #Step 1.2: Update the dictionary entries as we iterate through the indexes in the given lists\n    for i in range(len(std_lst)):\n        if std_lst[i]  in res_dict:\n            res_dict[ std_lst[i] ].append( test_lst[i] )\n        else:\n            res_dict[ std_lst[i] ] = [ test_lst[i] ]\n    return res_dict\n#Step 2: Define the function that calculates the average of each student's scores\ndef average(new_dict):\n    #Step 2.1: Iterate through the students in the dictionary\n    for std_name in new_dict :\n        #Step 2.1.1: Iterate through the list of student's scores, add each score to the running total\n        total = 0;\n        for score in new_dict[std_name]:\n            total+= score\n        #Step 2.1.2: Calculate and print the average of student's scores\n        average = total/len(new_dict[std_name])\n        print(std_name, average)\n#Step 3: Call the functions\nnames = ['Joe', 'Tom', 'Barbara', 'Sue', 'Sally', 'Joe', 'Sue']\nscores=[10, 23, 13, 18, 12, 9, 15]\naverage( create_dictionary(names, scores) )",
+  "translations": {
+    "en": "6a91ae6732e78ede45c116bd"
+  }
+}

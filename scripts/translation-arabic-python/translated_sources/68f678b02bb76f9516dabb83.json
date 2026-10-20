@@ -1,0 +1,750 @@
+{
+  "id": "68f678b02bb76f9516dabb83",
+  "user": "moh70@pitt.edu",
+  "archived": false,
+  "name": "الفصل لتمثيل تلفاز (الحالة 1)",
+  "description": "بناء فصل يمثل تلفازًا. يجب أن يحتوي الفصل على بيانات تمثل حالة التلفاز (مشتغل او مطفأ، القناة الحالية). يجب الوصول الى حالة التلفاز او تغييرها فقط عبر طرق الحصول والتعيين (getter و setter). يجب ان يتضمن الفصل طرقًا لتغيير حالة التلفاز (تشغيل/اطفاء، تغيير القنوات). افترض ان نطاق القنوات الصالح هو من 1 الى 120 (شاملا).",
+  "tags": [
+    "python-intro",
+    "arabic;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "language": "PYTHON",
+  "filename": "py_tv1.py",
+  "code": "#Khatwa 1: Ta'reef al-fasl\nclass TV1 :\n    #Khatwa 1.1: Ibtida' halat al-TV\n    def __init__(self):\n        self.__on = False\n        self.__channel = 1   \n    #Khatwa 1.2: Ta'reef al-turuq lighiyyar halat al-TV (tashghil/itta'fi)\n    def turn_on(self) :\n        self.__on = True\n    def turn_off(self) :\n        self.__on = False\n    #Khatwa 1.3: Ta'reef al-turuq lighiyyar al-qanaat lil-TV\n    def set_channel(self, new_channel) :\n        if self.__on and new_channel >= 1 and new_channel <= 120 :\n            self.__channel = new_channel\n    def channel_up(self) :\n        if self.__on and self.__channel < 120 :\n            self.__channel += 1\n    def channel_down(self) :\n        if self.__on and self.__channel > 1 :\n            self.__channel -= 1\n    #Khatwa 1.4: Ta'reef al-turuq li-istikhraj halat al-TV al-haliyya\n    def get_channel(self) :\n        return self.__channel\n    def is_on(self) :\n        return self.__on\n#Khatwa 2: Ikhtibar al-fasl\ntv1 = TV1()\ntv1.turn_on()\ntv1.set_channel(30)\ntv2 = TV1()\ntv2.turn_on()\ntv2.channel_up()\ntv2.channel_up()\ntv2.channel_down()\nprint(\"qanat tv1 hiya \" + str(tv1.get_channel()))\nprint(\"qanat tv2 hiya \" + str(tv2.get_channel()))",
+  "lines": {
+    "1": {
+      "comments": [],
+      "blank": false
+    },
+    "2": {
+      "comments": [
+        {
+          "content": "نعرّف الصنف المسمى TV1 لتمثيل تلفاز."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We define the class named TV1 to represent a TV."
+        }
+      ],
+      "commentList": [
+        "نعرّف الصنف المسمى TV1 لتمثيل تلفاز."
+      ]
+    },
+    "3": {
+      "comments": [],
+      "blank": false
+    },
+    "4": {
+      "comments": [
+        {
+          "content": "نريد تهيئة خصائص التلفاز عند إنشاء مثيل من الصنف TV1. نفعل ذلك بتعريف دالة __init__، التي تنفذ تلقائيًا في بايثون كلما تم إنشاء مثيل للصنف. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عندما تُستدعى الدالة على مثيل من الصنف."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عندما تُستدعى هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We want to initialize the attributes of the TV when we create an instance of the TV1 class. We do this by defining an __init__ method, which is run automatically by Python each time an instance is created. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "نريد تهيئة خصائص التلفاز عند إنشاء مثيل من الصنف TV1. نفعل ذلك بتعريف دالة __init__، التي تنفذ تلقائيًا في بايثون كلما تم إنشاء مثيل للصنف. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عندما تُستدعى الدالة على مثيل من الصنف.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عندما تُستدعى هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+      ]
+    },
+    "5": {
+      "comments": [
+        {
+          "content": "هذه العبارة تضبط حالة التشغيل/الاطفاء للتلفاز على False لأننا نفترض أن التلفاز افتراضيًا مطفأ.<br>self هو مثيل الصنف و self.__on يبين ما اذا كان التلفاز قيد التشغيل. تكون قيمة self.__on True عندما يكون التلفاز قيد التشغيل، و False خلاف ذلك. نبدأ اسم الخاصية بشرطتين سفلية (self.__on) لمنع الوصول الى الخاصية مباشرة من خارج الصنف."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets the on/off state of the TV to False because, by default, the TV is off.<br>self is the instance of the class and self.__on shows whether the TV is on. The self.__on is True when the TV is on, and False otherwise. We start the attribute name by two underscore (self.__on) to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تضبط حالة التشغيل/الاطفاء للتلفاز على False لأننا نفترض أن التلفاز افتراضيًا مطفأ.<br>self هو مثيل الصنف و self.__on يبين ما اذا كان التلفاز قيد التشغيل. تكون قيمة self.__on True عندما يكون التلفاز قيد التشغيل، و False خلاف ذلك. نبدأ اسم الخاصية بشرطتين سفلية (self.__on) لمنع الوصول الى الخاصية مباشرة من خارج الصنف."
+      ]
+    },
+    "6": {
+      "comments": [
+        {
+          "content": "هذه العبارة تضبط قناة التلفاز إلى 1 لأننا نفترض أن القناة الافتراضية هي 1.<br>self هو مثيل الصنف و self.__channel يبين القناة الحالية للتلفاز. نبدأ اسم الخاصية بشرطتين سفلية (self.__channel) لمنع الوصول المباشر من خارج الصنف."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets the TV channel to 1 because, we assume that the default channel of the TV is 1.<br>self is the instance of the class and self.__channel shows the current TV channel. We start the attribute name by two underscore (self.__channel) to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تضبط قناة التلفاز إلى 1 لأننا نفترض أن القناة الافتراضية هي 1.<br>self هو مثيل الصنف و self.__channel يبين القناة الحالية للتلفاز. نبدأ اسم الخاصية بشرطتين سفلية (self.__channel) لمنع الوصول المباشر من خارج الصنف."
+      ]
+    },
+    "7": {
+      "comments": [],
+      "blank": false
+    },
+    "8": {
+      "comments": [
+        {
+          "content": "هذه الدالة تشغل التلفاز. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method turns on the TV. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الدالة تشغل التلفاز. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+      ]
+    },
+    "9": {
+      "comments": [
+        {
+          "content": "هذه العبارة تضبط حالة التشغيل الى True لتشغيل التلفاز.<br>self هو مثيل الصنف و self.__on يبين ما اذا كان التلفاز قيد التشغيل. نبدأ اسم الخاصية بشرطتين سفلية (self.__on) لمنع الوصول المباشر من خارج الصنف."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets the on/off state of the TV to True to turn on the TV.<br>self is the instance of the class and self.__on shows whether the TV is on. We start the attribute name by two underscore (self.__on) to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تضبط حالة التشغيل الى True لتشغيل التلفاز.<br>self هو مثيل الصنف و self.__on يبين ما اذا كان التلفاز قيد التشغيل. نبدأ اسم الخاصية بشرطتين سفلية (self.__on) لمنع الوصول المباشر من خارج الصنف."
+      ]
+    },
+    "10": {
+      "comments": [
+        {
+          "content": "هذه الدالة تطفئ التلفاز. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method turns off the TV. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الدالة تطفئ التلفاز. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+      ]
+    },
+    "11": {
+      "comments": [
+        {
+          "content": "هذه العبارة تضبط حالة التشغيل الى False لإطفاء التلفاز.<br>self هو مثيل الصنف و self.__on يبين ما اذا كان التلفاز قيد التشغيل. نبدأ اسم الخاصية بشرطتين سفلية (self.__on) لمنع الوصول المباشر من خارج الصنف."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets the on/off state of the TV to False to turn off the TV.<br>self is the instance of the class and self.__on shows whether the TV is on. We start the attribute name by two underscore (self.__on) to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تضبط حالة التشغيل الى False لإطفاء التلفاز.<br>self هو مثيل الصنف و self.__on يبين ما اذا كان التلفاز قيد التشغيل. نبدأ اسم الخاصية بشرطتين سفلية (self.__on) لمنع الوصول المباشر من خارج الصنف."
+      ]
+    },
+    "12": {
+      "comments": [],
+      "blank": false
+    },
+    "13": {
+      "comments": [
+        {
+          "content": "هذه الدالة تضبط القناة الحالية للتلفاز إلى القناة المحددة كوسيط للدالة (new_channel). الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، يجب تمرير المعامل الأخير فقط (new_channel)."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "This method sets the current channel of the TV to a channel (new_channel) that is specified as the method's parameter. The first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, only the last parameter (new_channel) must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الدالة تضبط القناة الحالية للتلفاز إلى القناة المحددة كوسيط للدالة (new_channel). الوسيط الأول (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، يجب تمرير المعامل الأخير فقط (new_channel)."
+      ]
+    },
+    "14": {
+      "comments": [
+        {
+          "content": "نحتاج الى إجراء اختبار للتحقق مما اذا كانت الشروط المطلوبة لضبط القناة الحالية موجودة. يمكن ضبط قناة التلفاز على القيمة المعطاة فقط عندما يكون التلفاز قيد التشغيل وكانت القناة ضمن النطاق الصالح. النطاق الصالح للقناة هو من 1 الى 120 (شاملا)."
+        },
+        {
+          "content": "عبارة if تختبر ما اذا كان التلفاز قيد التشغيل وكان new_channel اكبر من او يساوي 1 واصغر من او يساوي 120. اذا كان التلفاز قيد التشغيل و new_channel ضمن النطاق، يتم تنفيذ جسم عبارة if، وإلا يتم تجاهله."
+        },
+        {
+          "content": "لاحظ أن العامل and يعطي النتيجة True اذا كانت الشرطين كلاهما True."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "We need to perform a test to check whether the conditions for setting the current channel of the TV to the given channel exist. The current channel of the TV could be set to the given channel only when the TV is on and the given channel is within the valid channel range. A valid range for the TV channel is from 1 to 120 (both inclusive)."
+        },
+        {
+          "content": "The if statement tests whether the TV is on and the given channel is greater than or equal to 1 and less than or equal to 120. If the TV is on and the given channel is greater than or equal to 1 and less than or equal to 120, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        },
+        {
+          "content": "Note that the and operator yields the result True if both conditions are True."
+        }
+      ],
+      "commentList": [
+        "نحتاج الى إجراء اختبار للتحقق مما اذا كانت الشروط المطلوبة لضبط القناة الحالية موجودة. يمكن ضبط قناة التلفاز على القيمة المعطاة فقط عندما يكون التلفاز قيد التشغيل وكانت القناة ضمن النطاق الصالح. النطاق الصالح للقناة هو من 1 الى 120 (شاملا).",
+        "عبارة if تختبر ما اذا كان التلفاز قيد التشغيل وكان new_channel اكبر من او يساوي 1 واصغر من او يساوي 120. اذا كان التلفاز قيد التشغيل و new_channel ضمن النطاق، يتم تنفيذ جسم عبارة if، وإلا يتم تجاهله.",
+        "لاحظ أن العامل and يعطي النتيجة True اذا كانت الشرطين كلاهما True."
+      ]
+    },
+    "15": {
+      "comments": [
+        {
+          "content": "هذه العبارة تضبط القناة الحالية للتلفاز الى القيمة المعطاة (new_channel).<br>self هو مثيل الصنف و self.__channel يبين القناة الحالية للتلفاز. نبدأ اسم الخاصية بشرطتين سفلية (self.__channel) لمنع الوصول المباشر من خارج الصنف."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "This statement sets the current TV channel to the given value (new_channel).<br>self is the instance of the class and self.__channel shows the current TV channel. We start the attribute name by two underscore (self.__channel) to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تضبط القناة الحالية للتلفاز الى القيمة المعطاة (new_channel).<br>self هو مثيل الصنف و self.__channel يبين القناة الحالية للتلفاز. نبدأ اسم الخاصية بشرطتين سفلية (self.__channel) لمنع الوصول المباشر من خارج الصنف."
+      ]
+    },
+    "16": {
+      "comments": [
+        {
+          "content": "هذه الدالة تزيد رقم القناة الحالية للتلفاز بمقدار 1. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف.<br><br>هذه الدالة لا تملك معلمات لأن البيانات الوحيدة التي نحتاج استخدامها في هذه الدالة هي خصائص المثيل للصنف (حالة التشغيل والقناة الحالية) ويمكننا الوصول مباشرة الى خصائص المثيل من داخل طرق الصنف."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method increases the current channel number of the TV by 1. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class.<br><br>This method does not have any parameters because the only data that we need to use in this method are the instance attributes of the class (the TV on/off state and the current channel of the TV) and we can directly access the instance attributes from the methods that are inside the class. "
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الدالة تزيد رقم القناة الحالية للتلفاز بمقدار 1. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف.<br><br>هذه الدالة لا تملك معلمات لأن البيانات الوحيدة التي نحتاج استخدامها في هذه الدالة هي خصائص المثيل للصنف (حالة التشغيل والقناة الحالية) ويمكننا الوصول مباشرة الى خصائص المثيل من داخل طرق الصنف.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+      ]
+    },
+    "17": {
+      "comments": [
+        {
+          "content": "نحتاج الى اختبار للتحقق مما اذا كانت شروط زيادة القناة الحالية بمقدار 1 متوفرة. يمكن زيادة القناة الحالية بمقدار 1 فقط عندما يكون التلفاز قيد التشغيل وكانت القناة الحالية اقل من 120."
+        },
+        {
+          "content": "عبارة if تختبر ما اذا كان التلفاز قيد التشغيل وكانت القناة الحالية أقل من 120. اذا تحققت الشروط ينفذ جسم عبارة if، وإلا يتم تجاهله."
+        },
+        {
+          "content": "لاحظ أن العامل and يعطي النتيجة True اذا كانت الشرطين كلاهما True."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to perform a test to check whether the conditions for increasing the current channel number by 1 exist. The current channel of the TV could be increased by 1 only when the TV is on and the current channel is less than 120."
+        },
+        {
+          "content": "The if statement tests whether the TV is on and the current channel is less than 120. If the TV is on and the current channel is less than 120, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        },
+        {
+          "content": "Note that the and operator yields the result True if both conditions are True."
+        }
+      ],
+      "commentList": [
+        "نحتاج الى اختبار للتحقق مما اذا كانت شروط زيادة القناة الحالية بمقدار 1 متوفرة. يمكن زيادة القناة الحالية بمقدار 1 فقط عندما يكون التلفاز قيد التشغيل وكانت القناة الحالية اقل من 120.",
+        "عبارة if تختبر ما اذا كان التلفاز قيد التشغيل وكانت القناة الحالية أقل من 120. اذا تحققت الشروط ينفذ جسم عبارة if، وإلا يتم تجاهله.",
+        "لاحظ أن العامل and يعطي النتيجة True اذا كانت الشرطين كلاهما True."
+      ]
+    },
+    "18": {
+      "comments": [
+        {
+          "content": "هذه العبارة تزيد رقم القناة الحالية بمقدار 1.<br>self هو مثيل الصنف و self.__channel يبين القناة الحالية للتلفاز. نبدأ اسم الخاصية بشرطتين سفلية (self.__channel) لمنع الوصول المباشر من خارج الصنف."
+        },
+        {
+          "content": "معامل الزيادة (+=) يضيف 1 الى قيمة الخاصية self.__channel ويخزن النتيجة مرة اخرى في self.__channel. لذلك، هو مكافئ عمليًا للعبارة self.__channel = self.__channel + 1."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement increases the current channel number of the TV by 1.<br>self is the instance of the class and self.__channel shows the current TV channel. We start the attribute name by two underscore (self.__channel) to prevent accessing the attribute directly from outside of the class."
+        },
+        {
+          "content": "The increment operator (+=) adds 1 to the value of instance attribute self.__channel and the result is stored back into the instance attribute self.__channel. Therefore, it is functionally equivalent to the statement self.__channel = self.__channel + 1."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تزيد رقم القناة الحالية بمقدار 1.<br>self هو مثيل الصنف و self.__channel يبين القناة الحالية للتلفاز. نبدأ اسم الخاصية بشرطتين سفلية (self.__channel) لمنع الوصول المباشر من خارج الصنف.",
+        "معامل الزيادة (+=) يضيف 1 الى قيمة الخاصية self.__channel ويخزن النتيجة مرة اخرى في self.__channel. لذلك، هو مكافئ عمليًا للعبارة self.__channel = self.__channel + 1."
+      ]
+    },
+    "19": {
+      "comments": [
+        {
+          "content": "هذه الدالة تنقص رقم القناة الحالية بمقدار 1. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف.<br><br>هذه الدالة لا تملك معلمات لأن البيانات الوحيدة التي نحتاج استخدامها في هذه الدالة هي خصائص المثيل للصنف (حالة التشغيل والقناة الحالية) ويمكننا الوصول مباشرة الى خصائص المثيل من داخل طرق الصنف."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method decrease the current channel number of the TV by 1. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class.<br><br>This method does not have any parameters because the only data that we need to use in this method are the instance attributes of the class (the TV on/off state and the current channel of the TV) and we can directly access the instance attributes from the methods that are inside the class. "
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الدالة تنقص رقم القناة الحالية بمقدار 1. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف.<br><br>هذه الدالة لا تملك معلمات لأن البيانات الوحيدة التي نحتاج استخدامها في هذه الدالة هي خصائص المثيل للصنف (حالة التشغيل والقناة الحالية) ويمكننا الوصول مباشرة الى خصائص المثيل من داخل طرق الصنف.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+      ]
+    },
+    "20": {
+      "comments": [
+        {
+          "content": "نحتاج الى اختبار للتحقق مما اذا كانت شروط إنقاص القناة الحالية بمقدار 1 متوفرة. يمكن إنقاص القناة الحالية بمقدار 1 فقط عندما يكون التلفاز قيد التشغيل وكانت القناة الحالية أكبر من 1."
+        },
+        {
+          "content": "عبارة if تختبر ما اذا كان التلفاز قيد التشغيل وكانت القناة الحالية أكبر من 1. اذا تحققت الشروط ينفذ جسم عبارة if، وإلا يتم تجاهله."
+        },
+        {
+          "content": "لاحظ أن العامل and يعطي النتيجة True اذا كانت الشرطين كلاهما True."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to perform a test to check whether the conditions for decreasing the current channel number by 1 exist. The channel of the TV could be decreased by 1 only when the TV is on and the current channel is greater than 1."
+        },
+        {
+          "content": "The if statement tests whether the TV is on and the current channel is greater than 1. If the TV is on and the current channel is greater than 1, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        },
+        {
+          "content": "Note that the and operator yields the result True if both conditions are True."
+        }
+      ],
+      "commentList": [
+        "نحتاج الى اختبار للتحقق مما اذا كانت شروط إنقاص القناة الحالية بمقدار 1 متوفرة. يمكن إنقاص القناة الحالية بمقدار 1 فقط عندما يكون التلفاز قيد التشغيل وكانت القناة الحالية أكبر من 1.",
+        "عبارة if تختبر ما اذا كان التلفاز قيد التشغيل وكانت القناة الحالية أكبر من 1. اذا تحققت الشروط ينفذ جسم عبارة if، وإلا يتم تجاهله.",
+        "لاحظ أن العامل and يعطي النتيجة True اذا كانت الشرطين كلاهما True."
+      ]
+    },
+    "21": {
+      "comments": [
+        {
+          "content": "هذه العبارة تنقص رقم القناة الحالية بمقدار 1.<br>self هو مثيل الصنف و self.__channel يبين القناة الحالية للتلفاز. نبدأ اسم الخاصية بشرطتين سفلية (self.__channel) لمنع الوصول المباشر من خارج الصنف."
+        },
+        {
+          "content": "معامل النقص (-=) يطرح 1 من قيمة الخاصية self.__channel ويخزن النتيجة مرة اخرى في self.__channel. لذلك، هو مكافئ عمليًا للعبارة self.__channel = self.__channel - 1."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement decreases the channel number of the TV by 1.<br>self is the instance of the class and self.__channel shows the current TV channel. We start the attribute name by two underscore (self.__channel) to prevent accessing the attribute directly from outside of the class."
+        },
+        {
+          "content": "The decrement operator (-=) subtracts 1 from the value of instance attribute self.__channel and the result is stored back into the instance attribute self.__channel. Therefore, it is functionally equivalent to the statement self.__channel = self.__channel - 1. "
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تنقص رقم القناة الحالية بمقدار 1.<br>self هو مثيل الصنف و self.__channel يبين القناة الحالية للتلفاز. نبدأ اسم الخاصية بشرطتين سفلية (self.__channel) لمنع الوصول المباشر من خارج الصنف.",
+        "معامل النقص (-=) يطرح 1 من قيمة الخاصية self.__channel ويخزن النتيجة مرة اخرى في self.__channel. لذلك، هو مكافئ عمليًا للعبارة self.__channel = self.__channel - 1."
+      ]
+    },
+    "22": {
+      "comments": [],
+      "blank": false
+    },
+    "23": {
+      "comments": [
+        {
+          "content": "هذه الدالة تُعيد القناة الحالية للتلفاز. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method returns the current channel of the TV. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الدالة تُعيد القناة الحالية للتلفاز. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+      ]
+    },
+    "24": {
+      "comments": [
+        {
+          "content": "هذه العبارة تُرجع القناة الحالية للتلفاز.<br>self هو مثيل الصنف و self.__channel هي القناة الحالية للمثيل. نبدأ اسم الخاصية بشرطتين سفلية (self.__channel) لمنع الوصول المباشر من خارج الصنف."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement returns the current channel of the TV.<br>self is the instance of the class and self.__channel is the current channel of the instance. We start the attribute name by two underscore (self.__channel) to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تُرجع القناة الحالية للتلفاز.<br>self هو مثيل الصنف و self.__channel هي القناة الحالية للمثيل. نبدأ اسم الخاصية بشرطتين سفلية (self.__channel) لمنع الوصول المباشر من خارج الصنف."
+      ]
+    },
+    "25": {
+      "comments": [
+        {
+          "content": "هذه الدالة تُعيد ما اذا كان التلفاز مشتغلا/مطفأ. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method returns whether the TV is on/off. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الدالة تُعيد ما اذا كان التلفاز مشتغلا/مطفأ. الوسيط (المسمى self) يُمرر تلقائيًا بواسطة المفسر عند استدعاء الدالة على مثيل من الصنف.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو الموضوع الضمني لاستدعاء الدالة. لذلك، عند استدعاء هذه الدالة على مثيل من الصنف، لا يلزم تمرير معلمة."
+      ]
+    },
+    "26": {
+      "comments": [
+        {
+          "content": "هذه العبارة تُعيد ما اذا كان التلفاز مشتغلا/مطفأ.<br>self هو مثيل الصنف و self.__on يبين ما اذا كان التلفاز قيد التشغيل. نبدأ اسم الخاصية بشرطتين سفلية (self.__on) لمنع الوصول المباشر من خارج الصنف."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement returns whether the TV is on/off.<br>self is the instance of the class and self.__on shows whether the TV is on. We start the attribute name by two underscore (self.__on) to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تُعيد ما اذا كان التلفاز مشتغلا/مطفأ.<br>self هو مثيل الصنف و self.__on يبين ما اذا كان التلفاز قيد التشغيل. نبدأ اسم الخاصية بشرطتين سفلية (self.__on) لمنع الوصول المباشر من خارج الصنف."
+      ]
+    },
+    "27": {
+      "comments": [],
+      "blank": false
+    },
+    "28": {
+      "comments": [
+        {
+          "content": "ننشئ مثيلاً من الصنف TV1 لعرض كيفية انشاء واستخدام مثيلات TV1"
+        },
+        {
+          "content": "هذه العبارة تنشئ مثيلاً من TV1. المتغير tv1 يحمل مرجعًا الى مثيل TV1."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We create an instance of the class TV1 to demonstrate the creation and use of TV1 instances"
+        },
+        {
+          "content": "This statement creates a TV1 instance. The variable tv1 holds a reference to a TV1 instance."
+        }
+      ],
+      "commentList": [
+        "ننشئ مثيلاً من الصنف TV1 لعرض كيفية انشاء واستخدام مثيلات TV1",
+        "هذه العبارة تنشئ مثيلاً من TV1. المتغير tv1 يحمل مرجعًا الى مثيل TV1."
+      ]
+    },
+    "29": {
+      "comments": [
+        {
+          "content": "هذه العبارة تستدعي دالة turn_on على tv1 لتشغيل هذا التلفاز. لاحظ أن tv1 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement invokes the method turn_on of the tv1 to turn on this TV. Note that tv1 is the implied subject (instance) passed to self."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تستدعي دالة turn_on على tv1 لتشغيل هذا التلفاز. لاحظ أن tv1 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+      ]
+    },
+    "30": {
+      "comments": [
+        {
+          "content": "هذه العبارة تستدعي دالة set_channel على tv1 لضبط قناته الى 30. لاحظ أن tv1 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement invokes the method set_channel of the tv1 to set its channel to 30. Note that tv1 is the implied subject (instance) passed to self."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تستدعي دالة set_channel على tv1 لضبط قناته الى 30. لاحظ أن tv1 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+      ]
+    },
+    "31": {
+      "comments": [
+        {
+          "content": "هذه العبارة تنشئ مثيلاً آخر من TV1. المتغير tv2 يحمل مرجعًا الى مثيل TV1."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement creates another TV1 instance. The variable tv2 holds a reference to a TV1 instance."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تنشئ مثيلاً آخر من TV1. المتغير tv2 يحمل مرجعًا الى مثيل TV1."
+      ]
+    },
+    "32": {
+      "comments": [
+        {
+          "content": "هذه العبارة تستدعي دالة turn_on على tv2 لتشغيل هذا التلفاز. لاحظ أن tv2 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement invokes the method turn_on of the tv2 to turn on this TV. Note that tv2 is the implied subject (instance) passed to self."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تستدعي دالة turn_on على tv2 لتشغيل هذا التلفاز. لاحظ أن tv2 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+      ]
+    },
+    "33": {
+      "comments": [
+        {
+          "content": "هذه العبارة تستدعي دالة channel_up على tv2 لزيادة رقم القناة بمقدار 1. لاحظ أن tv2 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement invokes the method channel_up of the tv2 to increase the channel number of this TV by 1. Note that tv2 is the implied subject (instance) passed to self."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تستدعي دالة channel_up على tv2 لزيادة رقم القناة بمقدار 1. لاحظ أن tv2 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+      ]
+    },
+    "34": {
+      "comments": [
+        {
+          "content": "هذه العبارة تستدعي دالة channel_up على tv2 لزيادة رقم القناة بمقدار 1. لاحظ أن tv2 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement invokes the method channel_up of the tv2 to increase the channel number of this TV by 1. Note that tv2 is the implied subject (instance) passed to self."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تستدعي دالة channel_up على tv2 لزيادة رقم القناة بمقدار 1. لاحظ أن tv2 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+      ]
+    },
+    "35": {
+      "comments": [
+        {
+          "content": "هذه العبارة تستدعي دالة channel_down على tv2 لتقليل رقم القناة بمقدار 1. لاحظ أن tv2 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement invokes the method channel_down of the tv2 to decrease the channel number of this TV by 1. Note that tv2 is the implied subject (instance) passed to self."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تستدعي دالة channel_down على tv2 لتقليل رقم القناة بمقدار 1. لاحظ أن tv2 هو الموضوع الضمني (المثيل) الذي يمرّر الى self."
+      ]
+    },
+    "36": {
+      "comments": [
+        {
+          "content": "هذه العبارة تدمج محتوى السلاسل والمتغيرات المعطاة لطباعة القناة الحالية لـ tv1. للحصول على القناة الحالية ل tv1، نستدعي دالة get_channel على tv1. لاحظ أنه لا يلزم بالضرورة تخزين قيمة العائد في متغير؛ يمكن استخدام القيمة المعادة مباشرة في دالة الطباعة."
+        },
+        {
+          "content": "لاحظ أننا نربط القناة الحالية ل tv1 مع السلسلة المعطاة باستخدام العامل +. القناة رقمية ولا يمكن ربطها مع سلاسل الا بعد تحويلها صراحة الى سلسلة باستخدام الدالة str."
+        },
+        {
+          "content": "لاحظ أن عملية الربط والطباعة تتم في نفس السطر. أي، لا نحتاج الى تخزين السلسلة المدموجة في متغير ثم طباعتها في سطر آخر."
+        },
+        {
+          "content": "لاحظ أن العامل + ينشئ سلسلة جديدة من محتويات عمليتيه المتصلتين. هذه السلسلة ستُطبع بواسطة دالة print ويتبعها حرف نهاية السطر."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement concatenates the content of the given strings and variables to print the current channel of tv1. To get the current channel of tv1, we invoke the method get_channel of tv1. Note that we do not necessarily have to store the returned value of this method in a variable. We could use the returned value directly in the print statement."
+        },
+        {
+          "content": "Note that We concatenate the current channel of tv1 with the given string using the + operator. The channel is a number and can be concatenated with strings only when it is explicitly converted to a string using the str function."
+        },
+        {
+          "content": "Note that the concatenating and printing are done in the same line. That is, we don't have to store the concatenated string to a new variable at first and then print it in the next line."
+        },
+        {
+          "content": "Note that the + operator creates a new string from the contents of its operands joined. This string will be printed by the print function and followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تدمج محتوى السلاسل والمتغيرات المعطاة لطباعة القناة الحالية لـ tv1. للحصول على القناة الحالية ل tv1، نستدعي دالة get_channel على tv1. لاحظ أنه لا يلزم بالضرورة تخزين قيمة العائد في متغير؛ يمكن استخدام القيمة المعادة مباشرة في دالة الطباعة.",
+        "لاحظ أننا نربط القناة الحالية ل tv1 مع السلسلة المعطاة باستخدام العامل +. القناة رقمية ولا يمكن ربطها مع سلاسل الا بعد تحويلها صراحة الى سلسلة باستخدام الدالة str.",
+        "لاحظ أن عملية الربط والطباعة تتم في نفس السطر. أي، لا نحتاج الى تخزين السلسلة المدموجة في متغير ثم طباعتها في سطر آخر.",
+        "لاحظ أن العامل + ينشئ سلسلة جديدة من محتويات عمليتيه المتصلتين. هذه السلسلة ستُطبع بواسطة دالة print ويتبعها حرف نهاية السطر."
+      ]
+    },
+    "37": {
+      "comments": [
+        {
+          "content": "هذه العبارة تدمج محتوى السلاسل والمتغيرات المعطاة لطباعة القناة الحالية لـ tv2. للحصول على القناة الحالية ل tv2، نستدعي دالة get_channel على tv2. لاحظ أنه لا يلزم بالضرورة تخزين قيمة العائد في متغير؛ يمكن استخدام القيمة المعادة مباشرة في دالة الطباعة."
+        },
+        {
+          "content": "لاحظ أننا نربط القناة الحالية ل tv2 مع السلسلة المعطاة باستخدام العامل +. القناة رقمية ولا يمكن ربطها مع سلاسل الا بعد تحويلها صراحة الى سلسلة باستخدام الدالة str."
+        },
+        {
+          "content": "لاحظ أن عملية الربط والطباعة تتم في نفس السطر. أي، لا نحتاج الى تخزين السلسلة المدموجة في متغير ثم طباعتها في سطر آخر."
+        },
+        {
+          "content": "لاحظ أن العامل + ينشئ سلسلة جديدة من محتويات عمليتيه المتصلتين. هذه السلسلة ستُطبع بواسطة دالة print ويتبعها حرف نهاية السطر."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement concatenates the content of the given strings and variables to print the current channel of tv2. To get the current channel of tv2, we invoke the method get_channel of tv2. Note that we do not necessarily have to store the returned value of this method in a variable. We could use the returned value directly in the print statement."
+        },
+        {
+          "content": "Note that We concatenate the current channel of tv2 with the given string using the + operator. The channel is a number and can be concatenated with strings only when it is explicitly converted to a string using the str function."
+        },
+        {
+          "content": "Note that the concatenating and printing are done in the same line. That is, we don't have to store the concatenated string to a new variable at first and then print it in the next line."
+        },
+        {
+          "content": "Note that the + operator creates a new string from the contents of its operands joined. This string will be printed by the print function and followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تدمج محتوى السلاسل والمتغيرات المعطاة لطباعة القناة الحالية لـ tv2. للحصول على القناة الحالية ل tv2، نستدعي دالة get_channel على tv2. لاحظ أنه لا يلزم بالضرورة تخزين قيمة العائد في متغير؛ يمكن استخدام القيمة المعادة مباشرة في دالة الطباعة.",
+        "لاحظ أننا نربط القناة الحالية ل tv2 مع السلسلة المعطاة باستخدام العامل +. القناة رقمية ولا يمكن ربطها مع سلاسل الا بعد تحويلها صراحة الى سلسلة باستخدام الدالة str.",
+        "لاحظ أن عملية الربط والطباعة تتم في نفس السطر. أي، لا نحتاج الى تخزين السلسلة المدموجة في متغير ثم طباعتها في سطر آخر.",
+        "لاحظ أن العامل + ينشئ سلسلة جديدة من محتويات عمليتيه المتصلتين. هذه السلسلة ستُطبع بواسطة دالة print ويتبعها حرف نهاية السطر."
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "def set_channel(new_channel) :",
+      "description": "",
+      "untr_code": "def set_channel(new_channel) :",
+      "untr_description": ""
+    },
+    {
+      "code": "def set_channel(self) :",
+      "description": "",
+      "untr_code": "def set_channel(self) :",
+      "untr_description": ""
+    },
+    {
+      "code": "if new_channel >= 1 and new_channel <= 120 :",
+      "description": "",
+      "untr_code": "if new_channel >= 1 and new_channel <= 120 :",
+      "untr_description": ""
+    },
+    {
+      "code": "if self.__on or new_channel >= 1 or new_channel <= 120 : )",
+      "description": "",
+      "untr_code": "if self.__on or new_channel >= 1 or new_channel <= 120 : )",
+      "untr_description": ""
+    },
+    {
+      "code": "new_channel = self.__channel",
+      "description": "",
+      "untr_code": "new_channel = self.__channel",
+      "untr_description": ""
+    }
+  ],
+  "programInput": "",
+  "collaborator_emails": [
+    "zainakhalil002@gmail.com",
+    "peterb@pitt.edu"
+  ],
+  "extraFiles": [],
+  "iso_language_code": "ar",
+  "updated_at": "2026-04-01T19:48:13.521Z",
+  "stat": {
+    "size": 191030,
+    "lastTimeModified": 1760983225829.1733
+  },
+  "untr_name": "The Class for Representing a TV (Case 1)",
+  "untr_description": "Construct a class that represents a TV. The class should contain data that represents the TV's state (power on or off, current channel). The state of the TV could be accessed or changed only through the getter and setter methods. The class should also include methods to change the state of the TV (turn on/off, change channels). Assume that the valid channel range is from 1 to 120 (both inclusive).",
+  "untr_code": "#Step 1: Define the class\nclass TV1 :\n    #Step 1.1: Initialize the state of the TV\n    def __init__(self):\n        self.__on = False\n        self.__channel = 1   \n    #Step 1.2: Define the methods to change the on/off state of the TV \n    def turn_on(self) :\n        self.__on = True\n    def turn_off(self) :\n        self.__on = False\n    #Step 1.3: Define the methods to change the channel of the TV \n    def set_channel(self, new_channel) :\n        if self.__on and new_channel >= 1 and new_channel <= 120 :\n            self.__channel = new_channel\n    def channel_up(self) :\n        if self.__on and self.__channel < 120 :\n            self.__channel += 1\n    def channel_down(self) :\n        if self.__on and self.__channel > 1 :\n            self.__channel -= 1\n    #Step 1.4: Define the methods to get the current state of the TV \n    def get_channel(self) :\n        return self.__channel\n    def is_on(self) :\n        return self.__on\n#Step 2: Test the class\ntv1 = TV1()\ntv1.turn_on()\ntv1.set_channel(30)\ntv2 = TV1()\ntv2.turn_on()\ntv2.channel_up()\ntv2.channel_up()\ntv2.channel_down()\nprint(\"tv1's channel is \" + str(tv1.get_channel()))\nprint(\"tv2's channel is \" + str(tv2.get_channel()))",
+  "translations": {
+    "en": "664e423b91363872f0ba36ad"
+  }
+}

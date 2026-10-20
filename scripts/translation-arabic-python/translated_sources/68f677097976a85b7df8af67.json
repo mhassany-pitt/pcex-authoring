@@ -1,0 +1,605 @@
+{
+  "id": "68f677097976a85b7df8af67",
+  "user": "moh70@pitt.edu",
+  "archived": false,
+  "name": "الإبلاغ عن معلومات الملف (الحالة 1)",
+  "description": "بناء برنامج يستقبل المسار الكامل لملف إدخال من المستخدم، يقرأ ذلك الملف ويبلغ عن عدد الأسطر، أطول سطر، عدد الكلمات في كل سطر، وطول أطول كلمة في كل سطر. تأكد من أن البرنامج يتعامل مع كل استثناء محتمل بشكل محدد.",
+  "tags": [
+    "python-intro",
+    "arabic;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "language": "PYTHON",
+  "filename": "py_input_stat1.py",
+  "code": "#Khutwa 1: Ta'reef al-dala\ndef get_stat(file_name):\n    #Khutwa 1.1: Ta`teen qima ibtida'iya lilmughayyar alladhi nahtaju li i`lan ma`lumat al-milaff\n    num_lines = 0\n    longest_line = \"\"\n    #Khutwa 1.2: Huwt al-kod alladhi qad yurmi istithna' dakhel blok try\n    try :\n        #Khutwa 1.2.1: Iftah al-milaff wa'amil tasheel likulli satr fi al-milaff\n        myfile = open( file_name, \"r\")\n        for line in myfile:\n            num_lines += 1\n            num_words = len(line.split())\n            #Tahdeed eza kan hadha al-satr huwa atwal satr ila al-aan\n            if (len(line) > len(longest_line)) :\n                longest_line = line\n            #Ijd length atwal kalima fi al-satr\n            longest_word = 0\n            for w in line.split() :\n                if len(w) > longest_word :\n                    longest_word = len(w)\n            #Tabea ma`lumat al-satr\n            print(\"Satr \" + str(num_lines) + \" fih \" + str(num_words) + \" kalimat (atwal = \" + str(longest_word) + \")\")\n        print(\"Al-satr al-atwal:\" + longest_line)\n        #Khutwa 1.2.2: Ighlaq al-milaff\n        myfile.close()\n    #Khutwa 1.3: Ta`amul ma`a jami` al-istithna'at al-mumkin an turmaa fi blok try\n    except FileNotFoundError:\n        print(\"Al-milaff lam yujad.\")\n    except IOError:\n        print(\"Mushkila ma'a al-milaff!\")\n#Khutwa 2: Niadi al-dala\nname = input(\"Adkhil al-masaar al-kamil lilmilaff: \" )\nget_stat( name )",
+  "lines": {
+    "1": {
+      "comments": [],
+      "blank": false
+    },
+    "2": {
+      "comments": [
+        {
+          "content": "نحتاج أولاً إلى إعلان الدالة التي تستقبل مسارًا كاملاً لملف، تقرأ ذلك الملف، وتبلغ ببعض المعلومات المتعلقة بالملف. المسار الكامل المعطى للملف يُشار إليه بالمتغير file_name.<br><br>لاحظ أن جميع العبارات التي تلي سطر رأس الدالة يجب أن تكون مستوفاة بمسافة بادئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to first declare the function that receives a full path for a file, reads that file, and reports some information related to that file. The given full file path is referred by variable file_name.<br><br>Note that all statements following the header line are indented."
+        }
+      ],
+      "commentList": [
+        "نحتاج أولاً إلى إعلان الدالة التي تستقبل مسارًا كاملاً لملف، تقرأ ذلك الملف، وتبلغ ببعض المعلومات المتعلقة بالملف. المسار الكامل المعطى للملف يُشار إليه بالمتغير file_name.<br><br>لاحظ أن جميع العبارات التي تلي سطر رأس الدالة يجب أن تكون مستوفاة بمسافة بادئة."
+      ]
+    },
+    "3": {
+      "comments": [],
+      "blank": false
+    },
+    "4": {
+      "comments": [
+        {
+          "content": "نحتاج هذا المتغير لتتبع أرقام الأسطر. نُعطيه القيمة 0 لأننا لم نبدأ بعد بمعالجة الأسطر."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need this variable to track the line numbers. We set it to 0 because we have not started processing the lines yet."
+        }
+      ],
+      "commentList": [
+        "نحتاج هذا المتغير لتتبع أرقام الأسطر. نُعطيه القيمة 0 لأننا لم نبدأ بعد بمعالجة الأسطر."
+      ]
+    },
+    "5": {
+      "comments": [
+        {
+          "content": "نحتاج هذا المتغير لتتبع أطول سطر. هذا السطر يهيئ المتغير longest_line كسلسلة فارغة. لاحقًا سنُحدّث محتوى هذا المتغير أثناء تكرارنا عبر أسطر الملف."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need this variable to track the longest line. This statement sets variable longest_line to the empty string. Later, we will update the content of this variable as we iterate through the lines in the file."
+        }
+      ],
+      "commentList": [
+        "نحتاج هذا المتغير لتتبع أطول سطر. هذا السطر يهيئ المتغير longest_line كسلسلة فارغة. لاحقًا سنُحدّث محتوى هذا المتغير أثناء تكرارنا عبر أسطر الملف."
+      ]
+    },
+    "6": {
+      "comments": [],
+      "blank": false
+    },
+    "7": {
+      "comments": [
+        {
+          "content": "عبارة try تحاول تنفيذ الكود الذي بداخلها. العبارات في كتلة try قد تُثير عدة أنواع من الاستثناءات."
+        },
+        {
+          "content": "إذا واجه البرنامج خطأً، يتوقف تنفيذ كود كتلة try وينتقل إلى كتلة except المناسبة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "The try blocks tries to execute the code within it. The statements in the try block may throw several types of exception."
+        },
+        {
+          "content": "If an error is encountered, the try block code execution is stopped and transferred down to the except block(s)."
+        }
+      ],
+      "commentList": [
+        "عبارة try تحاول تنفيذ الكود الذي بداخلها. العبارات في كتلة try قد تُثير عدة أنواع من الاستثناءات.",
+        "إذا واجه البرنامج خطأً، يتوقف تنفيذ كود كتلة try وينتقل إلى كتلة except المناسبة."
+      ]
+    },
+    "8": {
+      "comments": [],
+      "blank": false
+    },
+    "9": {
+      "comments": [
+        {
+          "content": "الدالة open تفتح الملف. المتغير file_name يحدد المسار إلى هذا الملف. نريد قراءة الملف؛ لذلك نفتح الملف في وضع القراءة \"r\"."
+        },
+        {
+          "content": "بإمكاننا أيضًا استدعاء open دون تحديد الوضع، لأن الافتراضي عند تمرير اسم الملف فقط هو وضع القراءة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "The open function opens the file. The variable file_name specifies the path to this file. We want to read the file; therefore, we open it in the read mode \"r\"."
+        },
+        {
+          "content": "We could also call the open function without specifying the mode, because when only the filename is passed, the open function opens the file in read mode."
+        }
+      ],
+      "commentList": [
+        "الدالة open تفتح الملف. المتغير file_name يحدد المسار إلى هذا الملف. نريد قراءة الملف؛ لذلك نفتح الملف في وضع القراءة \"r\".",
+        "بإمكاننا أيضًا استدعاء open دون تحديد الوضع، لأن الافتراضي عند تمرير اسم الملف فقط هو وضع القراءة."
+      ]
+    },
+    "10": {
+      "comments": [
+        {
+          "content": "لقراءة الأسطر من ملف، يمكننا التكرار على كائن الملف."
+        },
+        {
+          "content": "حلقة for هذه تُعطي اسم line لكل سطر في الملف تباعًا من بداية الملف حتى نهايته، ثم تُنفذ العبارة داخل جسم الحلقة لكل سطر."
+        },
+        {
+          "content": "لاحظ أن جميع العبارات داخل الحلقة يجب أن تكون مستوفاة بمسافة بادئة نسبة إلى ترويسة الحلقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "For reading lines from a file, we can loop over the file object."
+        },
+        {
+          "content": "This for loop assigns the name line to each of the lines in the file in turn, from the beginning of the file to the end, and then the statement in the loop body will be executed for each line."
+        },
+        {
+          "content": "Note that all statements inside the loop need to be indented with respect to the loop header."
+        }
+      ],
+      "commentList": [
+        "لقراءة الأسطر من ملف، يمكننا التكرار على كائن الملف.",
+        "حلقة for هذه تُعطي اسم line لكل سطر في الملف تباعًا من بداية الملف حتى نهايته، ثم تُنفذ العبارة داخل جسم الحلقة لكل سطر.",
+        "لاحظ أن جميع العبارات داخل الحلقة يجب أن تكون مستوفاة بمسافة بادئة نسبة إلى ترويسة الحلقة."
+      ]
+    },
+    "11": {
+      "comments": [
+        {
+          "content": "بمجرد أن نبدأ بمعالجة كل سطر، نزيد رقم السطر بمقدار 1."
+        },
+        {
+          "content": "معامل += يضيف القيمة على يمين عامل الإسناد (أي 1) إلى القيمة الحالية للمتغير على يسار عامل الإسناد (أي قيمة المتغير num_lines) ويتم تخزين النتيجة في المتغير num_lines. لذا هذه العبارة مكافئة للعبارة num_lines = num_lines + 1."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "Once we start processing each line, we increment the line number by 1."
+        },
+        {
+          "content": "The += operator adds the value on the right-hand side of the assignment operator (i.e., 1) to the current value of the variable on the left-hand side (i.e., value of variable num_lines) and the result is stored in the variable num_lines. Thus, this statement is equivalent to the statement num_lines = num_lines + 1."
+        }
+      ],
+      "commentList": [
+        "بمجرد أن نبدأ بمعالجة كل سطر، نزيد رقم السطر بمقدار 1.",
+        "معامل += يضيف القيمة على يمين عامل الإسناد (أي 1) إلى القيمة الحالية للمتغير على يسار عامل الإسناد (أي قيمة المتغير num_lines) ويتم تخزين النتيجة في المتغير num_lines. لذا هذه العبارة مكافئة للعبارة num_lines = num_lines + 1."
+      ]
+    },
+    "12": {
+      "comments": [
+        {
+          "content": "للحصول على عدد الكلمات في السطر، نحتاج لتقسيم السطر إلى كلمات، وعدّ عدد الكلمات. نقسم السطر إلى قائمة كلمات باستدعاء الدالة split. الدالة len() تُرجع عدد الكلمات في القائمة التي تُعاد من split."
+        },
+        {
+          "content": "لاحظ أننا لا نحتاج بالضرورة لتخزين قائمة الكلمات التي تُرجعها split في متغير. للحصول على عدد الكلمات في هذه القائمة، يمكننا استخدام القائمة المرجعية مباشرة داخل len()."
+        },
+        {
+          "content": "أيضًا لاحظ أن split بشكل افتراضي يعتبر أي عدد من أحرف الفراغ المتجاورة كفاصل بين الكلمات."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "To get the number of words in the line, we need to split the line into words, and count the number of words. We split the line into a list of words by calling the split function. The len() function returns the number of words in the list that is returned by the split function. "
+        },
+        {
+          "content": "Note that we don't necessarily need to store the list of words returned by the split function in a variable. To get the number of words in this list, we could use the returned list from the split function directly in the len() function ."
+        },
+        {
+          "content": "Also, note that, by default, the split function considers any number of whitespace characters as a word boundary."
+        }
+      ],
+      "commentList": [
+        "للحصول على عدد الكلمات في السطر، نحتاج لتقسيم السطر إلى كلمات، وعدّ عدد الكلمات. نقسم السطر إلى قائمة كلمات باستدعاء الدالة split. الدالة len() تُرجع عدد الكلمات في القائمة التي تُعاد من split.",
+        "لاحظ أننا لا نحتاج بالضرورة لتخزين قائمة الكلمات التي تُرجعها split في متغير. للحصول على عدد الكلمات في هذه القائمة، يمكننا استخدام القائمة المرجعية مباشرة داخل len().",
+        "أيضًا لاحظ أن split بشكل افتراضي يعتبر أي عدد من أحرف الفراغ المتجاورة كفاصل بين الكلمات."
+      ]
+    },
+    "13": {
+      "comments": [],
+      "blank": false
+    },
+    "14": {
+      "comments": [
+        {
+          "content": "لإيجاد أطول سطر، نحتاج لمقارنة عدد الحروف في السطر الحالي بعدد الحروف في أطول سطر وجدناه حتى الآن. إذا كان السطر الحالي يحتوي على حروف أكثر، عندها نُعيّن المتغير longest_line إلى السطر الحالي."
+        },
+        {
+          "content": "len(line) تُرجع عدد الحروف في السطر الحالي.<br>len(longest_line) تُرجع عدد الحروف في أطول سطر وجدناه حتى الآن."
+        },
+        {
+          "content": "إذا كان للسطر الحالي عدد حروف أكبر من أطول سطر وجدناه حتى الآن، ينفذ جسم هذه الجملة الشرطية. وإلا فيُتخطى جسم هذه الجملة الشرطية."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "To find the longest line, we need to compare the number of characters in the current line with the number of characters in the longest line we've found so far. If the current line has more characters, then we need to set the variable longest_line to the current line."
+        },
+        {
+          "content": "len(line) returns the number of characters in the current line.<br>len(longest_line) returns the number of characters in the longest line we've found so far."
+        },
+        {
+          "content": "If the current line has more characters than the longest line we've found so far, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        }
+      ],
+      "commentList": [
+        "لإيجاد أطول سطر، نحتاج لمقارنة عدد الحروف في السطر الحالي بعدد الحروف في أطول سطر وجدناه حتى الآن. إذا كان السطر الحالي يحتوي على حروف أكثر، عندها نُعيّن المتغير longest_line إلى السطر الحالي.",
+        "len(line) تُرجع عدد الحروف في السطر الحالي.<br>len(longest_line) تُرجع عدد الحروف في أطول سطر وجدناه حتى الآن.",
+        "إذا كان للسطر الحالي عدد حروف أكبر من أطول سطر وجدناه حتى الآن، ينفذ جسم هذه الجملة الشرطية. وإلا فيُتخطى جسم هذه الجملة الشرطية."
+      ]
+    },
+    "15": {
+      "comments": [
+        {
+          "content": "هذه العبارة تُعيّن أطول سطر إلى السطر الحالي."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets the longest line to the current line."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تُعيّن أطول سطر إلى السطر الحالي."
+      ]
+    },
+    "16": {
+      "comments": [],
+      "blank": false
+    },
+    "17": {
+      "comments": [
+        {
+          "content": "نحتاج هذا المتغير لإيجاد طول أطول كلمة في السطر. نُعطيه القيمة 0 لأننا لم نبدأ بعد بمعالجة كلمات السطر."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "We need this variable to find the length of the longest word in the line. We set it to 0 because we have not started processing the words of the line yet."
+        }
+      ],
+      "commentList": [
+        "نحتاج هذا المتغير لإيجاد طول أطول كلمة في السطر. نُعطيه القيمة 0 لأننا لم نبدأ بعد بمعالجة كلمات السطر."
+      ]
+    },
+    "18": {
+      "comments": [
+        {
+          "content": "نريد التكرار عبر الكلمات في السطر وإيجاد طول أطول كلمة. يمكننا استخدام حلقة for للتكرار عبر الكلمات في قائمة كلمات السطر."
+        },
+        {
+          "content": "حلقة for هذه تُعطي الاسم w لكل كلمة في قائمة الكلمات بالتتابع من اليسار إلى اليمين، ثم تُنفّذ العبارة داخل جسم الحلقة لكل كلمة."
+        },
+        {
+          "content": "لاحظ أننا يمكن أن نتكرر عبر قائمة الكلمات المُعادة من split بدون الحاجة لتخزين تلك القائمة في متغير. يمكننا استخدام القائمة المرجعية مباشرة في رأس حلقة for."
+        },
+        {
+          "content": "أيضًا لاحظ أن split بشكل افتراضي يعتبر أي عدد من أحرف الفراغ المتجاورة كفاصل بين الكلمات. ولاحظ أيضًا أن جميع العبارات داخل الحلقة يجب أن تكون مستوفاة بمسافة بادئة نسبة إلى ترويسة الحلقة."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "We want to iterate over the words in the line and find the length of the longest word. We can use a for loop to iterate through the words in the list of words in the line."
+        },
+        {
+          "content": "This for loop assigns the name w to each of the words in the list of words in turn, from left to right, and then the statement in the loop body will be executed for each word."
+        },
+        {
+          "content": "Note that we could iterate through the list of words that will be returned by the split function without necessarily having to store that list in a variable. We could use the returned list from the split function directly in the for loop header."
+        },
+        {
+          "content": "Also, note that, by default, the split function considers any number of whitespace characters as a word boundary. Also, note that all statements inside the loop need to be indented with respect to the loop header."
+        }
+      ],
+      "commentList": [
+        "نريد التكرار عبر الكلمات في السطر وإيجاد طول أطول كلمة. يمكننا استخدام حلقة for للتكرار عبر الكلمات في قائمة كلمات السطر.",
+        "حلقة for هذه تُعطي الاسم w لكل كلمة في قائمة الكلمات بالتتابع من اليسار إلى اليمين، ثم تُنفّذ العبارة داخل جسم الحلقة لكل كلمة.",
+        "لاحظ أننا يمكن أن نتكرر عبر قائمة الكلمات المُعادة من split بدون الحاجة لتخزين تلك القائمة في متغير. يمكننا استخدام القائمة المرجعية مباشرة في رأس حلقة for.",
+        "أيضًا لاحظ أن split بشكل افتراضي يعتبر أي عدد من أحرف الفراغ المتجاورة كفاصل بين الكلمات. ولاحظ أيضًا أن جميع العبارات داخل الحلقة يجب أن تكون مستوفاة بمسافة بادئة نسبة إلى ترويسة الحلقة."
+      ]
+    },
+    "19": {
+      "comments": [
+        {
+          "content": "لإيجاد طول أطول كلمة، نحتاج لمقارنة عدد الحروف في الكلمة الحالية بعدد الحروف في أطول كلمة وجدناها حتى الآن. إذا كانت الكلمة الحالية أطول، عندها نُعيّن المتغير longest_word إلى طول الكلمة الحالية."
+        },
+        {
+          "content": "لاحظ أن الدالة len(w) تُرجع عدد الحروف في الكلمة الحالية."
+        },
+        {
+          "content": "إذا كانت الكلمة الحالية تحتوي على حروف أكثر من أطول كلمة وجدناها حتى الآن، ينفّذ جسم هذه الجملة الشرطية. وإلا فيُتخطى جسم هذه الجملة الشرطية."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "To find the length of the longest word, we need to compare the number of characters in the visited word with the number of characters in the longest word that we've found so far. If the visited word has more characters, then we need to set the variable longest_word to the length of the visited word."
+        },
+        {
+          "content": "Note that the function len(w) returns the number of characters in the visited word."
+        },
+        {
+          "content": "If the visited word has more characters than the longest word that we've found so far, then the body of this if statement gets executed. Otherwise, the body of this if statement is skipped."
+        }
+      ],
+      "commentList": [
+        "لإيجاد طول أطول كلمة، نحتاج لمقارنة عدد الحروف في الكلمة الحالية بعدد الحروف في أطول كلمة وجدناها حتى الآن. إذا كانت الكلمة الحالية أطول، عندها نُعيّن المتغير longest_word إلى طول الكلمة الحالية.",
+        "لاحظ أن الدالة len(w) تُرجع عدد الحروف في الكلمة الحالية.",
+        "إذا كانت الكلمة الحالية تحتوي على حروف أكثر من أطول كلمة وجدناها حتى الآن، ينفّذ جسم هذه الجملة الشرطية. وإلا فيُتخطى جسم هذه الجملة الشرطية."
+      ]
+    },
+    "20": {
+      "comments": [
+        {
+          "content": "هذه العبارة تُعيّن طول أطول كلمة إلى طول الكلمة الحالية."
+        },
+        {
+          "content": "لاحظ أن الدالة len(w) تُرجع عدد الحروف في الكلمة الحالية."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "This statement sets the length of the longest word to the length of the visited word."
+        },
+        {
+          "content": "Note that the function len(w) returns the number of characters in the visited word."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تُعيّن طول أطول كلمة إلى طول الكلمة الحالية.",
+        "لاحظ أن الدالة len(w) تُرجع عدد الحروف في الكلمة الحالية."
+      ]
+    },
+    "21": {
+      "comments": [],
+      "blank": false
+    },
+    "22": {
+      "comments": [
+        {
+          "content": "هذه العبارة تُركّب محتوى السلاسل والنصوص والمتغيرات المعطاة لطباعة معلومات السطر. نركّب محتوى هذه المتغيرات باستخدام العامل +. المتغيرات num_lines و num_words و longest_word تحمل قيمًا عددية ولا يمكن تجميع قيمها مع سلاسل نصية إلا بعد تحويلها صراحة إلى سلاسل باستخدام الدالة str."
+        },
+        {
+          "content": "لاحظ أن عملية التركيب والطباعة تتمان في نفس السطر. أي أننا لسنا بحاجة لتخزين السلسلة المركبة في متغير جديد أولاً ثم طباعتها في السطر التالي."
+        },
+        {
+          "content": "لاحظ أن العامل + يُنشئ سلسلة جديدة من محتويات عوامل التشغيل الموصولة. هذه السلسلة ستُطبع بواسطة الدالة print متبوعة بفاصل نهاية السطر في نهايتها."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement concatenates the content of the given strings and variables to print the file information. We concatenate the content of these variables using the + operator. Variables num_lines, num_words, and longest_word hold integer values and their values can be concatenated with strings only when they're explicitly converted to a string using the str function."
+        },
+        {
+          "content": "Note that the concatenating and printing are done in the same line. That is, we don't have to store the concatenated string to a new variable at first and then print it in the next line."
+        },
+        {
+          "content": "Note that the + operator creates a new string from the contents of its operands joined. This string will be printed by the print function and followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تُركّب محتوى السلاسل والنصوص والمتغيرات المعطاة لطباعة معلومات السطر. نركّب محتوى هذه المتغيرات باستخدام العامل +. المتغيرات num_lines و num_words و longest_word تحمل قيمًا عددية ولا يمكن تجميع قيمها مع سلاسل نصية إلا بعد تحويلها صراحة إلى سلاسل باستخدام الدالة str.",
+        "لاحظ أن عملية التركيب والطباعة تتمان في نفس السطر. أي أننا لسنا بحاجة لتخزين السلسلة المركبة في متغير جديد أولاً ثم طباعتها في السطر التالي.",
+        "لاحظ أن العامل + يُنشئ سلسلة جديدة من محتويات عوامل التشغيل الموصولة. هذه السلسلة ستُطبع بواسطة الدالة print متبوعة بفاصل نهاية السطر في نهايتها."
+      ]
+    },
+    "23": {
+      "comments": [
+        {
+          "content": "هذه العبارة تطبع النص المعطي متبوعًا بأطول سطر إلى مخرَج الإخراج الافتراضي. النص المطبوع يتبعه فاصل نهاية السطر في نهايته."
+        },
+        {
+          "content": "لاحظ أننا نركّب محتوى سلسلتين نصيتين باستخدام العامل +. أيضًا لاحظ أن عملية التركيب والطباعة تتمان في نفس السطر. أي أننا لسنا بحاجة لتخزين السلسلة المركبة في متغير جديد أولاً ثم طباعتها في السطر التالي."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints the given text followed by the longest line to the default output stream. The printed text is followed by the end-of-line character at the end."
+        },
+        {
+          "content": "Note that we concatenate the content of two strings using the + operator. Also, note that the concatenating and printing are done in the same line. That is, we don't have to store the concatenated string to a new variable at first and then print it in the next line."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تطبع النص المعطي متبوعًا بأطول سطر إلى مخرَج الإخراج الافتراضي. النص المطبوع يتبعه فاصل نهاية السطر في نهايته.",
+        "لاحظ أننا نركّب محتوى سلسلتين نصيتين باستخدام العامل +. أيضًا لاحظ أن عملية التركيب والطباعة تتمان في نفس السطر. أي أننا لسنا بحاجة لتخزين السلسلة المركبة في متغير جديد أولاً ثم طباعتها في السطر التالي."
+      ]
+    },
+    "24": {
+      "comments": [],
+      "blank": false
+    },
+    "25": {
+      "comments": [
+        {
+          "content": "انتهينا من قراءة الملف؛ لذا نستخدم close() لإغلاقه وتحرير أي موارد نظامية احتلها الملف المفتوح."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We're done with reading the file; therefore, we use close() to close it and free up any system resources taken up by the open file."
+        }
+      ],
+      "commentList": [
+        "انتهينا من قراءة الملف؛ لذا نستخدم close() لإغلاقه وتحرير أي موارد نظامية احتلها الملف المفتوح."
+      ]
+    },
+    "26": {
+      "comments": [],
+      "blank": false
+    },
+    "27": {
+      "comments": [
+        {
+          "content": "نحتاج للتعامل مع FileNotFoundError. يحدث هذا الخطأ عندما لا يمكن العثور على الملف."
+        },
+        {
+          "content": "ينفّذ جسم هذا البلوك except فقط إذا لم يتم العثور على الملف. وإلا فيتم تخطيه."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to handle the FileNotFoundError. This error occurs when the file could not be found."
+        },
+        {
+          "content": "The body of this except block gets executed only if the file could not be found. Otherwise, the body of this except statement is skipped."
+        }
+      ],
+      "commentList": [
+        "نحتاج للتعامل مع FileNotFoundError. يحدث هذا الخطأ عندما لا يمكن العثور على الملف.",
+        "ينفّذ جسم هذا البلوك except فقط إذا لم يتم العثور على الملف. وإلا فيتم تخطيه."
+      ]
+    },
+    "28": {
+      "comments": [
+        {
+          "content": "هذه العبارة تطبع إلى مخرج الإخراج القياسي الافتراضي الخطأ الذي تسبب في FileNotFoundError. النص المطبوع يتبعه فاصل نهاية السطر في نهايته."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints to the default standard output stream the error that caused the FileNotFoundError. The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تطبع إلى مخرج الإخراج القياسي الافتراضي الخطأ الذي تسبب في FileNotFoundError. النص المطبوع يتبعه فاصل نهاية السطر في نهايته."
+      ]
+    },
+    "29": {
+      "comments": [
+        {
+          "content": "نحتاج للتعامل مع IOError. يحدث هذا الخطأ عندما يحدث خطأ أثناء محاولة القراءة/الإغلاق للملف."
+        },
+        {
+          "content": "ينفّذ جسم هذا البلوك except فقط إذا حدث خطأ عند محاولة القراءة/الإغلاق. وإلا فيتم تخطيه."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to handle the IOError. This error occurs when an error occurs when trying to read/close the file."
+        },
+        {
+          "content": "The body of this except block gets executed only if an error occurs when trying to read/close the file. Otherwise, the body of this except statement is skipped."
+        }
+      ],
+      "commentList": [
+        "نحتاج للتعامل مع IOError. يحدث هذا الخطأ عندما يحدث خطأ أثناء محاولة القراءة/الإغلاق للملف.",
+        "ينفّذ جسم هذا البلوك except فقط إذا حدث خطأ عند محاولة القراءة/الإغلاق. وإلا فيتم تخطيه."
+      ]
+    },
+    "30": {
+      "comments": [
+        {
+          "content": "هذه العبارة تطبع إلى مخرج الإخراج القياسي الافتراضي الخطأ الذي تسبب في IOError. النص المطبوع يتبعه فاصل نهاية السطر في نهايته."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints to the default standard output stream the error that caused the IOError. The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تطبع إلى مخرج الإخراج القياسي الافتراضي الخطأ الذي تسبب في IOError. النص المطبوع يتبعه فاصل نهاية السطر في نهايته."
+      ]
+    },
+    "31": {
+      "comments": [],
+      "blank": false
+    },
+    "32": {
+      "comments": [
+        {
+          "content": "نحتاج لقراءة المسار الكامل الذي يدخله المستخدم. للقيام بذلك نستخدم الدالة input(). هذه العبارة تعرض رسالة مطالبة للمستخدم لإدخال المسار الكامل لملف، ثم تقرأ النص الذي يدخله المستخدم وتضعه في المتغير name. القيمة المخزنة في المتغير name ستكون من نوع سلسلة نصية."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to read the full file path that the user enters. To do this, we need to use the input() function. This statement prompts the user to enter the full path for a file, then reads the text entered by the user and places it in the variable name. The value that will be stored in variable name is a string."
+        }
+      ],
+      "commentList": [
+        "نحتاج لقراءة المسار الكامل الذي يدخله المستخدم. للقيام بذلك نستخدم الدالة input(). هذه العبارة تعرض رسالة مطالبة للمستخدم لإدخال المسار الكامل لملف، ثم تقرأ النص الذي يدخله المستخدم وتضعه في المتغير name. القيمة المخزنة في المتغير name ستكون من نوع سلسلة نصية."
+      ]
+    },
+    "33": {
+      "comments": [
+        {
+          "content": "هذه العبارة تستدعي الدالة get_stat وتمرر name كوسيط لها. لاحظ أن استدعاء الدالة يجب أن يتم بعد تعريف الدالة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement calls the get_stat function and passes the name as its arguments. Note that the function call must be done after the function is declared."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تستدعي الدالة get_stat وتمرر name كوسيط لها. لاحظ أن استدعاء الدالة يجب أن يتم بعد تعريف الدالة."
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "if len(w) > len(longest_line) :",
+      "description": "",
+      "untr_code": "if len(w) > len(longest_line) :",
+      "untr_description": ""
+    },
+    {
+      "code": "if w > longest_word :",
+      "description": "",
+      "untr_code": "if w > longest_word :",
+      "untr_description": ""
+    },
+    {
+      "code": "longest_word = w",
+      "description": "",
+      "untr_code": "longest_word = w",
+      "untr_description": ""
+    }
+  ],
+  "programInput": "/Users/input_stat.txt",
+  "collaborator_emails": [
+    "zainakhalil002@gmail.com",
+    "peterb@pitt.edu"
+  ],
+  "extraFiles": [],
+  "iso_language_code": "ar",
+  "updated_at": "2026-04-01T19:48:15.037Z",
+  "stat": {
+    "size": 393369,
+    "lastTimeModified": 1760982812601.0405
+  },
+  "untr_name": "Reporting File Information (Case 1) ",
+  "untr_description": " Construct a program that receives the full path to an input file from the user, reads that file and reports the number of lines, the longest line, the number of words on each line, and the length of the longest word on each line. Make sure that the program handles each specific exception that could occur.",
+  "untr_code": "#Step 1: Define the function\ndef get_stat(file_name):\n    #Step 1.1: Assign initial value to variable that we need for reporting the file information\n    num_lines = 0\n    longest_line = \"\"\n    #Step 1.2: Enclose the code that might throw an exception within the try block\n    try :\n        #Step 1.2.1: Open the file and process each line in the file\n        myfile = open( file_name, \"r\")\n        for line in myfile:\n            num_lines += 1\n            num_words = len(line.split())\n            #Determine if the line is the longest line so far\n            if (len(line) > len(longest_line)) :\n                longest_line = line\n            #Find the length of the longest word in the line\n            longest_word = 0\n            for w in line.split() :\n                if len(w) > longest_word :\n                    longest_word = len(w)\n            #Print the line information\n            print(\"Line \" + str(num_lines) + \" has \" + str(num_words) + \" tokens (longest = \" + str(longest_word) + \")\")\n        print(\"Longest line:\" + longest_line)\n        #Step 1.2.2: Close the file\n        myfile.close()\n    #Step 1.3: Handle all possible exceptions that may be thrown in the try block \n    except FileNotFoundError:\n        print(\"File not found.\")\n    except IOError:\n        print(\"Problem with the file!\")\n#Step 2: Call the function\nname = input(\"Enter the full path of a file: \" )\nget_stat( name )",
+  "translations": {
+    "en": "6a91ae6532e78ede45c116a1"
+  }
+}

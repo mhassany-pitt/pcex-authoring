@@ -1,0 +1,684 @@
+{
+  "id": "68f67a9ecc710741b75b3c7a",
+  "user": "moh70@pitt.edu",
+  "archived": false,
+  "name": "الفئة لتمثيل قرض (الحالة 2)",
+  "description": "قم ببناء فئة تمثل قرضًا. يجب أن تحتوي هذه الفئة على بيانات تمثل معدل الفائدة السنوي، ومبلغ القرض، وطول فترة القرض (بالسنوات)؛ والتي لا يمكن الوصول إليها أو تغييرها إلا من خلال طرق الحصول (getter) والإعداد (setter). يجب إنشاء مثيل من الفئة بتحديد معدل الفائدة السنوي، وطول فترة القرض بالسنوات، ومبلغ القرض.\\nيجب أن تحسب الطرق الأخرى في هذه الفئة مبلغ الدفعات الشهرية للقرض وكذلك إجمالي الدفعات.",
+  "tags": [
+    "python-intro",
+    "arabic;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "language": "PYTHON",
+  "filename": "py_loan2.py",
+  "code": "#Khatwa 1: Ta'reef al-fia\nclass Loan2 :\n    #Khatwa 1.1: Ibtida al-qard bil-qiyam al-muhaddadah \n    def __init__(self, annual_interest_rate, number_of_years, loan_amount) :\n        self.__annual_interest_rate = annual_interest_rate\n        self.__number_of_years = number_of_years\n        self.__loan_amount = loan_amount\n    #Khatwa 1.2: Ta'reef al-method alati tahsib mablagh al-dafaat al-shahriyya 'ala al-qard\n    def get_monthly_payment(self) :\n        monthly_interest_rate = self.__annual_interest_rate / 12\n        monthly_payment = self.__loan_amount * monthly_interest_rate / (1 -\n                (1 / (1 + monthly_interest_rate) ** (self.__number_of_years * 12) ))\n        return monthly_payment    \n    #Khatwa 1.3: Ta'reef al-method alati tahsib mablagh al-dafaat al-kulliyya 'ala al-qard\n    def get_total_payment(self) :\n        total_payment = self.get_monthly_payment() * self.__number_of_years * 12\n        return total_payment\n    #Khatwa 1.4: Ta'reef al-methodat li-husool/ta`yeed khasais al-qard\n    def get_annual_interest_rate(self) :\n        return self.__annual_interest_rate\n    def set_annual_interest_rate(self, annual_interest_rate) :\n        self.__annual_interest_rate = annual_interest_rate\n    def get_number_of_years(self) :\n        return self.__number_of_years\n    def set_number_of_years(self, number_of_years) :\n        self.__number_of_years = number_of_years\n    def get_loan_amount(self) :\n        return self.__loan_amount\n    def set_loan_amount(self, loan_amount) :\n        self.__loan_amount = loan_amount\n#Khatwa 2: Ikhtibar al-fia\nannual_interest_rate = float(input(\"Adkhil nisbat al-faeeda al-sanawiya: \"))\nnumber_of_years = int(input(\"Adkhil adad al-sanawat li-muddat al-qard: \"))\nloan_amount = (float(input(\"Adkhil mablagh al-qard: \")))\nloan2 = Loan2(annual_interest_rate, number_of_years, loan_amount)\nprint(\"Al-dafaa al-shahriyya lil-qard hiya: {:.2f} \".format(loan2.get_monthly_payment()))\nprint(\"Al-dafaa al-kulli lil-qard huwa: {:.2f} \".format(loan2.get_total_payment()))",
+  "lines": {
+    "1": {
+      "comments": [],
+      "blank": false
+    },
+    "2": {
+      "comments": [
+        {
+          "content": "نعرف الفئة Loan2 لتمثيل قرض مع خدمة لحساب الدفعات الشهرية والإجمالية."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We define the class Loan2 to represent a loan with a service for calculating monthly and total payments."
+        }
+      ],
+      "commentList": [
+        "نعرف الفئة Loan2 لتمثيل قرض مع خدمة لحساب الدفعات الشهرية والإجمالية."
+      ]
+    },
+    "3": {
+      "comments": [],
+      "blank": false
+    },
+    "4": {
+      "comments": [
+        {
+          "content": "لتحديد القيم الابتدائية للقرض، نحتاج إلى وجود طريقة __init__ في الفئة Loan2 تقبل القيم الابتدائية لخصائص القرض. تستقبل __init__ معدل الفائدة السنوي للقرض، وعدد السنوات لفترة السداد، ومبلغ القرض وتخزنها في خصائص الكائن الجديد Loan2: annual_interest_rate، number_of_years، و loan_amount على التوالي."
+        },
+        {
+          "content": "يتم تشغيل طريقة __init__ تلقائيًا من قبل بايثون في كل مرة يُنشأ فيها مثيل. الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بالكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعاملات الثلاثة الأخيرة إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "To specify the initial values for the loan, we need to have an __init__ method in the class Loan2 that accepts initial values for the loan's properties. The __init__ accepts the annual interest rate for the loan, the number of years for the loan period, and the loan amount and stores them into the new Loan2 object’s annual_interest_rate, number_of_years, and loan_amount, respectively."
+        },
+        {
+          "content": "The __init__ method is run automatically by Python each time an instance is created. The argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, the last three parameters must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "لتحديد القيم الابتدائية للقرض، نحتاج إلى وجود طريقة __init__ في الفئة Loan2 تقبل القيم الابتدائية لخصائص القرض. تستقبل __init__ معدل الفائدة السنوي للقرض، وعدد السنوات لفترة السداد، ومبلغ القرض وتخزنها في خصائص الكائن الجديد Loan2: annual_interest_rate، number_of_years، و loan_amount على التوالي.",
+        "يتم تشغيل طريقة __init__ تلقائيًا من قبل بايثون في كل مرة يُنشأ فيها مثيل. الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بالكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعاملات الثلاثة الأخيرة إلى الطريقة."
+      ]
+    },
+    "5": {
+      "comments": [
+        {
+          "content": "هذا السطر يعيّن سمة المثيل __annual_interest_rate إلى قيمة الوسيط الأول (annual_interest_rate). self هو المثيل من الفئة و self.__annual_interest_rate هو معدل الفائدة السنوي للقرض. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets instance attribute annual_interest_rate to the first parameter value (annual_interest_rate).<br>self is the instance of the class and self.__annual_interest_rate is the loan's annual interest rate. We start the attribute name by two underscore to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يعيّن سمة المثيل __annual_interest_rate إلى قيمة الوسيط الأول (annual_interest_rate). self هو المثيل من الفئة و self.__annual_interest_rate هو معدل الفائدة السنوي للقرض. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+      ]
+    },
+    "6": {
+      "comments": [
+        {
+          "content": "هذا السطر يعيّن سمة المثيل __number_of_years إلى قيمة الوسيط الثاني (number_of_years). self هو المثيل من الفئة و self.__number_of_years هو طول فترة القرض بالسنوات. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets instance attribute number_of_years to the second parameter value (number_of_years).<br>self is the instance of the class and self.__number_of_years is the length of the loan period in years. We start the attribute name by two underscore to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يعيّن سمة المثيل __number_of_years إلى قيمة الوسيط الثاني (number_of_years). self هو المثيل من الفئة و self.__number_of_years هو طول فترة القرض بالسنوات. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+      ]
+    },
+    "7": {
+      "comments": [
+        {
+          "content": "هذا السطر يعيّن سمة المثيل __loan_amount إلى قيمة الوسيط الثالث (loan_amount). self هو المثيل من الفئة و self.__loan_amount هو مبلغ القرض. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets instance attribute loan_amount to the third parameter value (loan_amount). <br>self is the instance of the class and self.__loan_amount is the amount of the loan. We start the attribute name by two underscore to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يعيّن سمة المثيل __loan_amount إلى قيمة الوسيط الثالث (loan_amount). self هو المثيل من الفئة و self.__loan_amount هو مبلغ القرض. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+      ]
+    },
+    "8": {
+      "comments": [],
+      "blank": false
+    },
+    "9": {
+      "comments": [
+        {
+          "content": "هذه الطريقة تحسب وتعيد مقدار الدفعة الشهرية للقرض. لاحظ أن الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يجب تمرير أي معاملات إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method calculates and returns the amount of monthly payments on the loan. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الطريقة تحسب وتعيد مقدار الدفعة الشهرية للقرض. لاحظ أن الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يجب تمرير أي معاملات إلى الطريقة."
+      ]
+    },
+    "10": {
+      "comments": [
+        {
+          "content": "لحساب مقدار الدفعة الشهرية للقرض، نحتاج إلى معرفة معدل الفائدة الشهري. نحصل على المعدل الشهري بتقسيم معدل الفائدة السنوي على عدد الشهور في السنة، أي 12."
+        },
+        {
+          "content": "self هو المثيل من الفئة و self.__annual_interest_rate هو معدل الفائدة السنوي للقرض. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "To calculate the amount of monthly payments on the loan, we need to know the monthly interest rate. We get the monthly interest rate of the loan by dividing the annual interest rate by the number of months in the year, i.e., 12."
+        },
+        {
+          "content": "self is the instance of the class and self.__annual_interest_rate is the loan's annual interest rate. We start the attribute name by two underscore to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "لحساب مقدار الدفعة الشهرية للقرض، نحتاج إلى معرفة معدل الفائدة الشهري. نحصل على المعدل الشهري بتقسيم معدل الفائدة السنوي على عدد الشهور في السنة، أي 12.",
+        "self هو المثيل من الفئة و self.__annual_interest_rate هو معدل الفائدة السنوي للقرض. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+      ]
+    },
+    "11": {
+      "comments": [
+        {
+          "content": "التعبير الرياضي في هذا السطر يحسب مقدار الدفعة الشهرية للقرض."
+        },
+        {
+          "content": "self هو المثيل من الفئة، self.__loan_amount هو مبلغ القرض، self.__number_of_years هو طول فترة القرض بالسنوات. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+        },
+        {
+          "content": "لاحظ أن ** هو معامل الأس الذي يرفع المعامل الأيسر إلى أس المعامل الأيمن."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "The mathematical expression in this statement calculates the amount of the monthly payments on the loan. "
+        },
+        {
+          "content": "self is the instance of the class, self.__loan_amount is the amount of loan, self.__number_of_years is the length of the loan period in years. We start the attribute name by two underscore to prevent accessing the attribute directly from outside of the class."
+        },
+        {
+          "content": "Note that ** is the exponent operator that raises its left operand to the power of its right operand."
+        }
+      ],
+      "commentList": [
+        "التعبير الرياضي في هذا السطر يحسب مقدار الدفعة الشهرية للقرض.",
+        "self هو المثيل من الفئة، self.__loan_amount هو مبلغ القرض، self.__number_of_years هو طول فترة القرض بالسنوات. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة.",
+        "لاحظ أن ** هو معامل الأس الذي يرفع المعامل الأيسر إلى أس المعامل الأيمن."
+      ]
+    },
+    "12": {
+      "comments": [],
+      "blank": false
+    },
+    "13": {
+      "comments": [],
+      "blank": false
+    },
+    "14": {
+      "comments": [],
+      "blank": false
+    },
+    "15": {
+      "comments": [
+        {
+          "content": "هذه الطريقة تحسب وتعيد إجمالي المدفوعات للقرض. لاحظ أن الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يجب تمرير أي معاملات إلى الطريقة."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "This method calculates and returns the total payment for the loan. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الطريقة تحسب وتعيد إجمالي المدفوعات للقرض. لاحظ أن الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يجب تمرير أي معاملات إلى الطريقة."
+      ]
+    },
+    "16": {
+      "comments": [
+        {
+          "content": "يمكننا حساب إجمالي المدفوعات بضرب مقدار الدفعة الشهرية في عدد الشهور الكلي لفترة القرض. self.__number_of_years * 12 يعطينا عدد الشهور في فترة القرض. self.get_monthly_payment() يعطينا الدفعة الشهرية للقرض. لاحظ أننا نستخدم self. لاستدعاء طريقة من داخل طريقة أخرى في نفس الفئة."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "We can calculate the total payment by multiplying the amount of monthly payments by the total months in the loan period.<br>self.__number_of_years * 12: gives us the number of months in the loan period.<br>self.get_monthly_payment(): gives us the monthly payment for the loan. Note that we need to use self. to call a method of the class from another method in the same class."
+        }
+      ],
+      "commentList": [
+        "يمكننا حساب إجمالي المدفوعات بضرب مقدار الدفعة الشهرية في عدد الشهور الكلي لفترة القرض. self.__number_of_years * 12 يعطينا عدد الشهور في فترة القرض. self.get_monthly_payment() يعطينا الدفعة الشهرية للقرض. لاحظ أننا نستخدم self. لاستدعاء طريقة من داخل طريقة أخرى في نفس الفئة."
+      ]
+    },
+    "17": {
+      "comments": [
+        {
+          "content": "هذا السطر يعيد إجمالي المدفوعات للقرض."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "This statement returns the total payment for the loan."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يعيد إجمالي المدفوعات للقرض."
+      ]
+    },
+    "18": {
+      "comments": [],
+      "blank": false
+    },
+    "19": {
+      "comments": [
+        {
+          "content": "هذه الطريقة تعيد معدل الفائدة السنوي لهذا القرض. لاحظ أن الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يجب تمرير أي معاملات إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method returns the annual interest rate of this loan. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الطريقة تعيد معدل الفائدة السنوي لهذا القرض. لاحظ أن الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يجب تمرير أي معاملات إلى الطريقة."
+      ]
+    },
+    "20": {
+      "comments": [],
+      "blank": false
+    },
+    "21": {
+      "comments": [
+        {
+          "content": "هذه الطريقة تضبط معدل الفائدة السنوي للقرض إلى القيمة المحددة كوسيط للطريقة. الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعامل الأخير فقط (annual_interest_rate) إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method sets the annual interest of the loan to the value that is specified as the method's parameter. The first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, only the last parameter (annual_interest_rate) must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الطريقة تضبط معدل الفائدة السنوي للقرض إلى القيمة المحددة كوسيط للطريقة. الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعامل الأخير فقط (annual_interest_rate) إلى الطريقة."
+      ]
+    },
+    "22": {
+      "comments": [
+        {
+          "content": "هذا السطر يعيّن سمة المثيل __annual_interest_rate إلى القيمة المعطاة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets the instance attribute annual_interest_rate to the given value.<br>self is the instance of the class and self.__annual_interest_rate is the loan's annual interest rate. We start the attribute name by two underscore to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يعيّن سمة المثيل __annual_interest_rate إلى القيمة المعطاة."
+      ]
+    },
+    "23": {
+      "comments": [
+        {
+          "content": "هذه الطريقة تعيد عدد سنوات فترة القرض. لاحظ أن الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يجب تمرير أي معاملات إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method returns the number of years for the loan period. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الطريقة تعيد عدد سنوات فترة القرض. لاحظ أن الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يجب تمرير أي معاملات إلى الطريقة."
+      ]
+    },
+    "24": {
+      "comments": [],
+      "blank": false
+    },
+    "25": {
+      "comments": [
+        {
+          "content": "هذه الطريقة تضبط عدد سنوات فترة القرض إلى القيمة المحددة كوسيط للطريقة. الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعامل الأخير فقط (number_of_years) إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method sets the number of years for the loan period to the value that is specified as the method's parameter. The first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, only the last parameter (number_of_years) must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الطريقة تضبط عدد سنوات فترة القرض إلى القيمة المحددة كوسيط للطريقة. الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعامل الأخير فقط (number_of_years) إلى الطريقة."
+      ]
+    },
+    "26": {
+      "comments": [
+        {
+          "content": "هذا السطر يعيّن سمة المثيل __number_of_years إلى القيمة المعطاة. self هو المثيل من الفئة و self.__number_of_years هو طول فترة القرض بالسنوات. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets the instance attribute number_of_years to the given value.<br>self is the instance of the class and self.__number_of_years is the length of the loan periods in years. We start the attribute name by two underscore to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يعيّن سمة المثيل __number_of_years إلى القيمة المعطاة. self هو المثيل من الفئة و self.__number_of_years هو طول فترة القرض بالسنوات. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+      ]
+    },
+    "27": {
+      "comments": [
+        {
+          "content": "هذه الطريقة تعيد مبلغ القرض. لاحظ أن الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يجب تمرير أي معاملات إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method returns the loan amount. Note that the first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, no parameter must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الطريقة تعيد مبلغ القرض. لاحظ أن الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة.",
+        "يملأ بايثون الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، لا يجب تمرير أي معاملات إلى الطريقة."
+      ]
+    },
+    "28": {
+      "comments": [],
+      "blank": false
+    },
+    "29": {
+      "comments": [
+        {
+          "content": "هذه الطريقة تضبط مبلغ القرض إلى القيمة المحددة كوسيط للطريقة. الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة."
+        },
+        {
+          "content": "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعامل الأخير فقط (loan_amount) إلى الطريقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This method sets the loan amount to the value that is specified as the method's parameter. The first argument (named self) is passed in automatically by the interpreter when the method is invoked on an instance of the class."
+        },
+        {
+          "content": "Note that Python automatically fills the first argument in with the instance object that is the implied subject of the method call. Therefore, when this method is invoked on an instance of the class, only the last parameter (loan_amount) must be passed to the method."
+        }
+      ],
+      "commentList": [
+        "هذه الطريقة تضبط مبلغ القرض إلى القيمة المحددة كوسيط للطريقة. الوسيط الأول (المسمي self) يُمرَّر تلقائيًا بواسطة المترجم عند استدعاء الطريقة على مثيل من الفئة.",
+        "لاحظ أن بايثون يملأ الوسيط الأول تلقائيًا بكائن المثيل الذي هو موضوع النداء الضمني. لذلك، عندما تُستدعى هذه الطريقة على مثيل من الفئة، يجب تمرير المعامل الأخير فقط (loan_amount) إلى الطريقة."
+      ]
+    },
+    "30": {
+      "comments": [
+        {
+          "content": "هذا السطر يعيّن سمة المثيل __loan_amount إلى القيمة المعطاة. self هو المثيل من الفئة و self.__loan_amount هو مبلغ القرض. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement sets the instance attribute loan_amount to the given value.<br>self is the instance of the class and self.__loan_amount is the amount of the loan. We start the attribute name by two underscore to prevent accessing the attribute directly from outside of the class."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يعيّن سمة المثيل __loan_amount إلى القيمة المعطاة. self هو المثيل من الفئة و self.__loan_amount هو مبلغ القرض. نبدأ اسم السمة بشرطتين سفليتين لمنع الوصول إليها مباشرة من خارج الفئة."
+      ]
+    },
+    "31": {
+      "comments": [],
+      "blank": false
+    },
+    "32": {
+      "comments": [
+        {
+          "content": "نحتاج إلى قراءة القيمة التي يدخلها المستخدم لمعدل الفائدة السنوي للقرض. لقراءة إدخال المستخدم من سطر الأوامر نستخدم الدالة input(). هذا السطر يطبع نصًا على الشاشة \"Enter the annual interest rate: \" ثم يقرأ النص الذي يدخله المستخدم.<br><br>القيمة المقروءة ستكون سلسلة نصية ويجب تحويلها إلى عدد عشري (float). نحوّل سلسلة الإدخال إلى قيمة float باستخدام الدالة float()."
+        },
+        {
+          "content": "يمكن تحويل القيمة من سلسلة إلى float فقط إذا كانت السلسلة تمثل قيمة عشرية صالحة. أيضًا لاحظ أننا لا نضطر بالضرورة إلى تخزين القيمة المرجعة من دالة input في متغير؛ يمكننا استخدام نداء input مباشرة كوسيطة لدالة float."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to read the value that the user enters for the loan's annual interest rate. To read the user input from command line, we use the input() function. This statement prints a text on the screen \"Enter the annual interest rate: \", then reads the text entered by the user.<br><br>The value that will be read is a string and we need to convert it to a float. We convert the input string to its float representation by using the float() function."
+        },
+        {
+          "content": "The conversion of the value from string to float can only be done if the string could be translated into a valid floating-point value. Also note that we do not necessarily have to store the returned value from the input function in a variable. We could use the input function call directly as the float function parameter."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى قراءة القيمة التي يدخلها المستخدم لمعدل الفائدة السنوي للقرض. لقراءة إدخال المستخدم من سطر الأوامر نستخدم الدالة input(). هذا السطر يطبع نصًا على الشاشة \"Enter the annual interest rate: \" ثم يقرأ النص الذي يدخله المستخدم.<br><br>القيمة المقروءة ستكون سلسلة نصية ويجب تحويلها إلى عدد عشري (float). نحوّل سلسلة الإدخال إلى قيمة float باستخدام الدالة float().",
+        "يمكن تحويل القيمة من سلسلة إلى float فقط إذا كانت السلسلة تمثل قيمة عشرية صالحة. أيضًا لاحظ أننا لا نضطر بالضرورة إلى تخزين القيمة المرجعة من دالة input في متغير؛ يمكننا استخدام نداء input مباشرة كوسيطة لدالة float."
+      ]
+    },
+    "33": {
+      "comments": [
+        {
+          "content": "نحتاج إلى قراءة ومعالجة القيمة التي يدخلها المستخدم لطول فترة القرض بالسنوات. لقراءة إدخال المستخدم من سطر الأوامر نستخدم الدالة input(). هذا السطر يطبع نصًا على الشاشة \"Enter the number of years for the loan period: \" ثم يقرأ النص الذي يدخله المستخدم.<br><br>القيمة المقروءة ستكون سلسلة نصية ويجب تحويلها إلى عدد صحيح (int). نحوّل سلسلة الإدخال إلى قيمة int باستخدام الدالة int()."
+        },
+        {
+          "content": "يمكن تحويل القيمة من سلسلة إلى int فقط إذا كانت السلسلة تمثل رقمًا صحيحًا صالحًا. أيضًا لاحظ أننا لا نضطر بالضرورة إلى تخزين القيمة المرجعة من دالة input في متغير؛ يمكننا استخدام نداء input مباشرة كوسيطة لدالة int."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to read and process the value that the user enters for the length of the loan period. To read the user input from command line, we use the input() function. This statement prints a text on the screen \"Enter the number of years for the loan period: \", then reads the text entered by the user.<br><br>The value that will be read is a string and we need to convert it to an integer. We convert the input string to its integer representation by using the int() function."
+        },
+        {
+          "content": "The conversion of the value from string to int can only be done if the string actually presents a number. Also note that we do not necessarily have to store the returned value from the input function in a variable. We could use the input function call directly as the int function parameter."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى قراءة ومعالجة القيمة التي يدخلها المستخدم لطول فترة القرض بالسنوات. لقراءة إدخال المستخدم من سطر الأوامر نستخدم الدالة input(). هذا السطر يطبع نصًا على الشاشة \"Enter the number of years for the loan period: \" ثم يقرأ النص الذي يدخله المستخدم.<br><br>القيمة المقروءة ستكون سلسلة نصية ويجب تحويلها إلى عدد صحيح (int). نحوّل سلسلة الإدخال إلى قيمة int باستخدام الدالة int().",
+        "يمكن تحويل القيمة من سلسلة إلى int فقط إذا كانت السلسلة تمثل رقمًا صحيحًا صالحًا. أيضًا لاحظ أننا لا نضطر بالضرورة إلى تخزين القيمة المرجعة من دالة input في متغير؛ يمكننا استخدام نداء input مباشرة كوسيطة لدالة int."
+      ]
+    },
+    "34": {
+      "comments": [
+        {
+          "content": "نحتاج إلى قراءة القيمة التي يدخلها المستخدم لمبلغ القرض. لقراءة إدخال المستخدم من سطر الأوامر نستخدم الدالة input(). هذا السطر يطبع نصًا على الشاشة \"Enter the loan amount: \" ثم يقرأ النص الذي يدخله المستخدم.<br><br>القيمة المقروءة ستكون سلسلة نصية ويجب تحويلها إلى عدد عشري (float). نحوّل سلسلة الإدخال إلى قيمة float باستخدام الدالة float()."
+        },
+        {
+          "content": "يمكن تحويل القيمة من سلسلة إلى float فقط إذا كانت السلسلة تمثل قيمة عشرية صالحة. أيضًا لاحظ أننا لا نضطر بالضرورة إلى تخزين القيمة المرجعة من دالة input في متغير؛ يمكننا استخدام نداء input مباشرة كوسيطة لدالة float."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to read the value that the user enters for the loan amount. To read the user input from command line, we use the input() function. This statement prints a text on the screen \"Enter the loan amount: \", then reads the text entered by the user.<br><br>The value that will be read is a string and we need to convert it to a float. We convert the input string to its float representation by using the float() function."
+        },
+        {
+          "content": "The conversion of the value from string to float can only be done if the string could be translated into a valid floating-point value. Also note that we do not necessarily have to store the returned value from the input function in a variable. We could use the input function call directly as the float function parameter."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى قراءة القيمة التي يدخلها المستخدم لمبلغ القرض. لقراءة إدخال المستخدم من سطر الأوامر نستخدم الدالة input(). هذا السطر يطبع نصًا على الشاشة \"Enter the loan amount: \" ثم يقرأ النص الذي يدخله المستخدم.<br><br>القيمة المقروءة ستكون سلسلة نصية ويجب تحويلها إلى عدد عشري (float). نحوّل سلسلة الإدخال إلى قيمة float باستخدام الدالة float().",
+        "يمكن تحويل القيمة من سلسلة إلى float فقط إذا كانت السلسلة تمثل قيمة عشرية صالحة. أيضًا لاحظ أننا لا نضطر بالضرورة إلى تخزين القيمة المرجعة من دالة input في متغير؛ يمكننا استخدام نداء input مباشرة كوسيطة لدالة float."
+      ]
+    },
+    "35": {
+      "comments": [
+        {
+          "content": "ننشئ مثيلاً من الفئة Loan2 لتوضيح إنشاء واستخدام مثيلات Loan2. هذا السطر ينشئ كائن Loan2 بالمعدل السنوي، وعدد السنوات لفترة القرض، ومبلغ القرض المحددة."
+        },
+        {
+          "content": "لاحظ أنه يمكننا إنشاء كائن Loan2 بالقيم المحددة فقط عندما تكون لدينا طريقة __init__ في الفئة Loan2 تقبل هذه المعاملات بالترتيب المحدد."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We create an instance of the class Loan2 to demonstrate the creation and use of Loan2 instances. This statement creates a Loan2 object with the specified annual interest rate, number of years for the loan period, and loan amount."
+        },
+        {
+          "content": "Note that we can create a Loan2  object with the specified annual interest rate, number of years for the loan period, and loan amount only when we have a __init__ method in the Loan2 class that accepts these parameters in the order that they are specified."
+        }
+      ],
+      "commentList": [
+        "ننشئ مثيلاً من الفئة Loan2 لتوضيح إنشاء واستخدام مثيلات Loan2. هذا السطر ينشئ كائن Loan2 بالمعدل السنوي، وعدد السنوات لفترة القرض، ومبلغ القرض المحددة.",
+        "لاحظ أنه يمكننا إنشاء كائن Loan2 بالقيم المحددة فقط عندما تكون لدينا طريقة __init__ في الفئة Loan2 تقبل هذه المعاملات بالترتيب المحدد."
+      ]
+    },
+    "36": {
+      "comments": [
+        {
+          "content": "هذا السطر يطبع الدفعة الشهرية للقرض. نحصل على مقدار الدفعة الشهرية باستدعاء الطريقة get_monthly_payment على الكائن loan2. لاحظ أن loan2 هو الموضوع الضمني (المثيل) الممرَّر إلى self في كلا الطريقتين.<br>{:.2f} يطبع المبلغ بعشريتين."
+        },
+        {
+          "content": "لاحظ أننا لا نحتاج بالضرورة إلى تخزين القيمة المرجعة من الاستدعاء في متغير؛ يمكننا استخدام القيمة المرجعة مباشرة في دالة format."
+        },
+        {
+          "content": "تعيد دالة format النتيجة بعد استبدال كل عنصر نائب {…} في سلسلة القالب بالوسيط المقابل الذي مرّرناه إلى format. أي نص آخر غير الموجود بين أقواس معقوفة سيطبع حرفيًا، أي دون تغيير."
+        },
+        {
+          "content": "مواصفة التنسيق داخل الأقواس المعقوفة تبدأ بعلامة : وتليها نص يحدد نوع البيانات. النوع f يتطلب وسيطة من النوع العشري. سيحدث خطأ إذا لم يكن الوسيط من النوع المتوقع."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints the monthly payments on the loan. We get the amount of monthly payments by invoking the method get_monthly_payment of loan. Note that loan2 is the implied subject (instance) passed to self in both methods.<br>{:.2f} prints the amount of monthly payments with two decimal digits."
+        },
+        {
+          "content": "Note that we do not necessarily have to store the returned value from the invoked method in a variable. We could use the returned value directly in the format method."
+        },
+        {
+          "content": "The format function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function. Anything else, which is not contained in curly braces will be literally printed, i.e. without any changes."
+        },
+        {
+          "content": "The format specification inside a pair of curly braces starts with a : and followed by the text that specifies the data type. The data type f requires a floating-point argument. An error will occur if the argument is not the expected data type."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يطبع الدفعة الشهرية للقرض. نحصل على مقدار الدفعة الشهرية باستدعاء الطريقة get_monthly_payment على الكائن loan2. لاحظ أن loan2 هو الموضوع الضمني (المثيل) الممرَّر إلى self في كلا الطريقتين.<br>{:.2f} يطبع المبلغ بعشريتين.",
+        "لاحظ أننا لا نحتاج بالضرورة إلى تخزين القيمة المرجعة من الاستدعاء في متغير؛ يمكننا استخدام القيمة المرجعة مباشرة في دالة format.",
+        "تعيد دالة format النتيجة بعد استبدال كل عنصر نائب {…} في سلسلة القالب بالوسيط المقابل الذي مرّرناه إلى format. أي نص آخر غير الموجود بين أقواس معقوفة سيطبع حرفيًا، أي دون تغيير.",
+        "مواصفة التنسيق داخل الأقواس المعقوفة تبدأ بعلامة : وتليها نص يحدد نوع البيانات. النوع f يتطلب وسيطة من النوع العشري. سيحدث خطأ إذا لم يكن الوسيط من النوع المتوقع."
+      ]
+    },
+    "37": {
+      "comments": [
+        {
+          "content": "هذا السطر يطبع إجمالي المدفوعات للقرض. نحصل على إجمالي المدفوعات باستدعاء الطريقة get_total_payment على الكائن loan2. لاحظ أن loan2 هو الموضوع الضمني (المثيل) الممرَّر إلى self في كلا الطريقتين.<br>{:.2f} يطبع المبلغ بعشريتين."
+        },
+        {
+          "content": "لاحظ أننا لا نحتاج بالضرورة إلى تخزين القيمة المرجعة من الاستدعاء في متغير؛ يمكننا استخدام القيمة المرجعة مباشرة في دالة format."
+        },
+        {
+          "content": "تعيد دالة format النتيجة بعد استبدال كل عنصر نائب {…} في سلسلة القالب بالوسيط المقابل الذي مرّرناه إلى format. أي نص آخر غير الموجود بين أقواس معقوفة سيطبع حرفيًا، أي دون تغيير."
+        },
+        {
+          "content": "مواصفة التنسيق داخل الأقواس المعقوفة تبدأ بعلامة : وتليها نص يحدد نوع البيانات. النوع f يتطلب وسيطة من النوع العشري. سيحدث خطأ إذا لم يكن الوسيط من النوع المتوقع."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints the total payments for the loan. We get the amount of total payments by invoking the method get_total_payment of loan. Note that loan2 is the implied subject (instance) passed to self in both methods.<br>{:.2f} prints the amount of total payments with two decimal digits."
+        },
+        {
+          "content": "Note that we do not necessarily have to store the returned value from the invoked method in a variable. We could use the returned value directly in the format method."
+        },
+        {
+          "content": "The format function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function. Anything else, which is not contained in curly braces will be literally printed, i.e. without any changes."
+        },
+        {
+          "content": "The format specification inside a pair of curly braces starts with a : and followed by the text that specifies the data type. The data type f requires a floating-point argument. An error will occur if the argument is not the expected data type."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يطبع إجمالي المدفوعات للقرض. نحصل على إجمالي المدفوعات باستدعاء الطريقة get_total_payment على الكائن loan2. لاحظ أن loan2 هو الموضوع الضمني (المثيل) الممرَّر إلى self في كلا الطريقتين.<br>{:.2f} يطبع المبلغ بعشريتين.",
+        "لاحظ أننا لا نحتاج بالضرورة إلى تخزين القيمة المرجعة من الاستدعاء في متغير؛ يمكننا استخدام القيمة المرجعة مباشرة في دالة format.",
+        "تعيد دالة format النتيجة بعد استبدال كل عنصر نائب {…} في سلسلة القالب بالوسيط المقابل الذي مرّرناه إلى format. أي نص آخر غير الموجود بين أقواس معقوفة سيطبع حرفيًا، أي دون تغيير.",
+        "مواصفة التنسيق داخل الأقواس المعقوفة تبدأ بعلامة : وتليها نص يحدد نوع البيانات. النوع f يتطلب وسيطة من النوع العشري. سيحدث خطأ إذا لم يكن الوسيط من النوع المتوقع."
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "total_payment = get_monthly_payment() * number_of_years * 12",
+      "description": "",
+      "untr_code": "total_payment = get_monthly_payment() * number_of_years * 12",
+      "untr_description": ""
+    },
+    {
+      "code": "total_payment = Loan2.get_monthly_payment() * numberOfYears * 12",
+      "description": "",
+      "untr_code": "total_payment = Loan2.get_monthly_payment() * numberOfYears * 12",
+      "untr_description": ""
+    },
+    {
+      "code": "total_payment = number_of_years * 12",
+      "description": "",
+      "untr_code": "total_payment = number_of_years * 12",
+      "untr_description": ""
+    },
+    {
+      "code": "def get_total_payment() :",
+      "description": "",
+      "untr_code": "def get_total_payment() :",
+      "untr_description": ""
+    }
+  ],
+  "programInput": "0.03 5 1000",
+  "collaborator_emails": [
+    "zainakhalil002@gmail.com",
+    "peterb@pitt.edu"
+  ],
+  "extraFiles": [],
+  "iso_language_code": "ar",
+  "updated_at": "2026-04-01T19:48:11.771Z",
+  "stat": {
+    "size": 135093,
+    "lastTimeModified": 1760983716380.7117
+  },
+  "untr_name": "The Class for Representing a Loan (Case 2)",
+  "untr_description": "Construct a class that represents a loan. This class should contain data representing the interest rate, loan amount, and the length of loan period (in years); all of which could be accessed or changed only through the getter and setter methods. An instance of the class should be created by specifying annual interest rate, length of loan period, and loan amount.\\nThe other methods of the this class should calculate the amount of monthly payments on the loan as well as the total payment.",
+  "untr_code": "#Step 1: Define the class\nclass Loan2 :\n    #Step 1.1: Initialize the loan with the specified values \n    def __init__(self, annual_interest_rate, number_of_years, loan_amount) :\n        self.__annual_interest_rate = annual_interest_rate\n        self.__number_of_years = number_of_years\n        self.__loan_amount = loan_amount\n    #Step 1.2: Define the method that calculates the amount of monthly payments on the loan\n    def get_monthly_payment(self) :\n        monthly_interest_rate = self.__annual_interest_rate / 12\n        monthly_payment = self.__loan_amount * monthly_interest_rate / (1 -\n                (1 / (1 + monthly_interest_rate) ** (self.__number_of_years * 12) ))\n        return monthly_payment    \n    #Step 1.3: Define the method that calculates the amount of total payments on the loan\n    def get_total_payment(self) :\n        total_payment = self.get_monthly_payment() * self.__number_of_years * 12\n        return total_payment\n    #Step 1.4: Define the methods to get/set the properties of the loan\n    def get_annual_interest_rate(self) :\n        return self.__annual_interest_rate\n    def set_annual_interest_rate(self, annual_interest_rate) :\n        self.__annual_interest_rate = annual_interest_rate\n    def get_number_of_years(self) :\n        return self.__number_of_years\n    def set_number_of_years(self, number_of_years) :\n        self.__number_of_years = number_of_years\n    def get_loan_amount(self) :\n        return self.__loan_amount\n    def set_loan_amount(self, loan_amount) :\n        self.__loan_amount = loan_amount\n#Step 2: Test the class\nannual_interest_rate = float(input(\"Enter the annual interest rate: \"))\nnumber_of_years = int(input(\"Enter the number of years for the loan period: \"))\nloan_amount = (float(input(\"Enter the loan amount: \")))\nloan2 = Loan2(annual_interest_rate, number_of_years, loan_amount)\nprint(\"The monthly payment for the loan is: {:.2f} \".format(loan2.get_monthly_payment()))\nprint(\"The total payment for the loan is: {:.2f} \".format(loan2.get_total_payment()))",
+  "translations": {
+    "en": "6a91ae6c32e78ede45c116ff"
+  }
+}

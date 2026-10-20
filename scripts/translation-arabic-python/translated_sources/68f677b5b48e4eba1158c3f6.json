@@ -1,0 +1,587 @@
+{
+  "id": "68f677b5b48e4eba1158c3f6",
+  "user": "moh70@pitt.edu",
+  "archived": false,
+  "name": "الإبلاغ عن إجمالي الساعات التي عملها كل موظف (الحالة 2)",
+  "description": "نفترض أن لدينا ملف إدخال يحتوي معلومات عن عدد الساعات التي عملها كل موظف في الشركة. يبدو الملف كما يلي (معرّف الموظف، اسم الموظف، الساعات):\\n101 Erica 7.5 8.5 10.25 8 8.5\\n783 Erin 10.5 11.5 12 11 10.75\\n114 Simone 8 8 8\\n...\\nبِنِ برنامج يقرأ هذا الملف ويحسب إجمالي عدد الساعات التي عملها كل فرد. تأكد من أن البرنامج يتعامل مع كل استثناء محدد قد يحدث.",
+  "tags": [
+    "python-intro",
+    "arabic;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "language": "PYTHON",
+  "filename": "py_work_hours2.py",
+  "code": "#Khatwa 1: Ta'reef al-dala\ndef report_work_hours(file_name):\n    #Khatwa 1.1: Huwt al-kod alladhi qad yutliqu istithna fi bloka try\n    try :\n        #Khatwa 1.1.1: Iftah al-milaff wa i3mal 3ala kulla satar fi al-milaff\n        myfile = open( file_name, \"r\")\n        for line in myfile:\n            tokens = line.split()\n            #Hawil al-husool 3ala raqam al-muwazzaf ka raqam\n            try :\n                eid = int(tokens[0])\n            except ValueError :\n                print(\"Khata fi raqam al-muwazzaf.\")\n            name = tokens[1]\n            total = 0.0;\n            for i in range(2, len(tokens)) :\n                try :\n                    total += float(tokens[i])\n                except ValueError:\n                    print(\"Khata fi sa3at al-muwazzaf.\")\n            print(\"Majmu al-saat li \" + name  + \" = \" + str(total))\n        #Khatwa 1.1.2: Aghlaq al-milaff\n        myfile.close()\n    #Khatwa 1.2: Ta3amul ma3a jami3 al-istithna'at al-mumkin an tatarash fi bloka try\n    except FileNotFoundError:\n        print(\"Al-milaff lam yujaad\")\n    except IOError:\n        print(\"Mushkila fi al-milaff!\")\n#Khatwa 2: Nadi al-dala\nname = input(\"Adkhil al-masar al-kamil li al-milaff: \")\nreport_work_hours(name)",
+  "lines": {
+    "1": {
+      "comments": [],
+      "blank": false
+    },
+    "2": {
+      "comments": [
+        {
+          "content": "نحتاج أولًا إلى تعريف الدالة التي تستقبل مسارًا كاملاً لملف يحتوي معلومات عن عدد الساعات التي عملها كل موظف في الشركة، تقرأ هذا الملف، وتحسب إجمالي الساعات التي عملها كل فرد. المسار الكامل للملف المشار إليه في المتغير file_name. ملاحظة: جميع العبارات التي تلي سطر رأس الدالة يجب أن تكون متداخلة (indented)."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to first declare the function that receives a full path for a file that contains information about how many hours each employee of a company has worked, reads this file, and calculates the total number of hours worked by each individual. The given full file path is referred by variable file_name.<br><br>Note that all statements following the header line are indented."
+        }
+      ],
+      "commentList": [
+        "نحتاج أولًا إلى تعريف الدالة التي تستقبل مسارًا كاملاً لملف يحتوي معلومات عن عدد الساعات التي عملها كل موظف في الشركة، تقرأ هذا الملف، وتحسب إجمالي الساعات التي عملها كل فرد. المسار الكامل للملف المشار إليه في المتغير file_name. ملاحظة: جميع العبارات التي تلي سطر رأس الدالة يجب أن تكون متداخلة (indented)."
+      ]
+    },
+    "3": {
+      "comments": [],
+      "blank": false
+    },
+    "4": {
+      "comments": [
+        {
+          "content": "كتلة try تحاول تنفيذ الكود الموجود داخلها. العبارات في كتلة try قد ترفع عدة أنواع من الاستثناءات."
+        },
+        {
+          "content": "إذا ظهر خطأ، يتوقف تنفيذ كود كتلة try وينتقل إلى كتلة except المناسبة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "The try blocks tries to execute the code within it. The statements in the try block may throw several types of exception."
+        },
+        {
+          "content": "If an error is encountered, the try block code execution is stopped and transferred down to the except block(s)."
+        }
+      ],
+      "commentList": [
+        "كتلة try تحاول تنفيذ الكود الموجود داخلها. العبارات في كتلة try قد ترفع عدة أنواع من الاستثناءات.",
+        "إذا ظهر خطأ، يتوقف تنفيذ كود كتلة try وينتقل إلى كتلة except المناسبة."
+      ]
+    },
+    "5": {
+      "comments": [],
+      "blank": false
+    },
+    "6": {
+      "comments": [
+        {
+          "content": "الدالة open تفتح الملف. المتغير file_name يحدد مسار هذا الملف. نريد قراءة الملف؛ لذلك نفتح الملف في نمط \"r\" للقراءة."
+        },
+        {
+          "content": "يمكننا أيضًا استدعاء open بدون تحديد النمط، لأن المفتاح الافتراضي عند تمرير اسم الملف فقط هو فتح الملف في وضع القراءة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "The open function opens the file. The variable file_name specifies the path to this file. We want to read the file; therefore, we open it in the read mode \"r\"."
+        },
+        {
+          "content": "We could also call the open function without specifying the mode, because when only the filename is passed, the open function opens the file in read mode."
+        }
+      ],
+      "commentList": [
+        "الدالة open تفتح الملف. المتغير file_name يحدد مسار هذا الملف. نريد قراءة الملف؛ لذلك نفتح الملف في نمط \"r\" للقراءة.",
+        "يمكننا أيضًا استدعاء open بدون تحديد النمط، لأن المفتاح الافتراضي عند تمرير اسم الملف فقط هو فتح الملف في وضع القراءة."
+      ]
+    },
+    "7": {
+      "comments": [
+        {
+          "content": "لقراءة الأسطر من ملف، يمكننا التكرار عبر كائن الملف باستخدام حلقة for."
+        },
+        {
+          "content": "تقوم حلقة for بتعيين الاسم line لكل سطر في الملف بالتتابع من بداية الملف إلى نهايته، ثم يتم تنفيذ جسم الحلقة لكل سطر."
+        },
+        {
+          "content": "لاحظ أن جميع العبارات داخل الحلقة يجب أن تكون متداخلة (indented) بالنسبة إلى رأس الحلقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "For reading lines from a file, we can loop over the file object."
+        },
+        {
+          "content": "This for loop assigns the name line to each of the lines in the file in turn, from the beginning of the file to the end, and then the statement in the loop body will be executed for each line."
+        },
+        {
+          "content": "Note that all statements inside the loop need to be indented with respect to the loop header."
+        }
+      ],
+      "commentList": [
+        "لقراءة الأسطر من ملف، يمكننا التكرار عبر كائن الملف باستخدام حلقة for.",
+        "تقوم حلقة for بتعيين الاسم line لكل سطر في الملف بالتتابع من بداية الملف إلى نهايته، ثم يتم تنفيذ جسم الحلقة لكل سطر.",
+        "لاحظ أن جميع العبارات داخل الحلقة يجب أن تكون متداخلة (indented) بالنسبة إلى رأس الحلقة."
+      ]
+    },
+    "8": {
+      "comments": [
+        {
+          "content": "نحتاج إلى تقسيم السطر إلى كلمات وتخزين الكلمات في قائمة."
+        },
+        {
+          "content": "نستخدم الدالة split() بدون معاملات لأننا نريد أن تفصل الدالة السلسلة باستخدام الأحرف البيضاء (المسافة) كفواصل. لاحظ أنه بشكل افتراضي تعتبر هذه الدالة أي عدد من أحرف المسافة البيضاء كحدود للكلمات."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to split the line into words and store the words in a list."
+        },
+        {
+          "content": "We use split() function with no arguments because we want the split function to separate strings using space character. Note that, by default, this function considers any number of whitespace characters as a word boundary."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى تقسيم السطر إلى كلمات وتخزين الكلمات في قائمة.",
+        "نستخدم الدالة split() بدون معاملات لأننا نريد أن تفصل الدالة السلسلة باستخدام الأحرف البيضاء (المسافة) كفواصل. لاحظ أنه بشكل افتراضي تعتبر هذه الدالة أي عدد من أحرف المسافة البيضاء كحدود للكلمات."
+      ]
+    },
+    "9": {
+      "comments": [],
+      "blank": false
+    },
+    "10": {
+      "comments": [
+        {
+          "content": "إذا حدث خطأ أثناء الحصول على معرّف الموظف، يتوقف تنفيذ كود كتلة try وينتقل إلى كتلة except المناسبة."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "If an error is encountered during getting the id of the employee, the try block code execution is stopped and transferred down to the except block(s)."
+        }
+      ],
+      "commentList": [
+        "إذا حدث خطأ أثناء الحصول على معرّف الموظف، يتوقف تنفيذ كود كتلة try وينتقل إلى كتلة except المناسبة."
+      ]
+    },
+    "11": {
+      "comments": [
+        {
+          "content": "نحتاج إلى الحصول على معرّف الموظف من خلال الوصول إلى العنصر الأول في قائمة tokens. معرّف الموظف رقم، لذلك نحول القيمة إلى عدد صحيح باستدعاء int()."
+        },
+        {
+          "content": "tokens[0] تعطينا العنصر عند الفهرس 0 من القائمة الذي يمثل معرف الموظف."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "We need to get the id of the employee by accessing the first element in the list of line tokens. The id of an employee is a number; therefore, we convert it to a number by calling the int() function."
+        },
+        {
+          "content": "tokens[0] gives us the element at index 0 of the list that represents the employee's id."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى الحصول على معرّف الموظف من خلال الوصول إلى العنصر الأول في قائمة tokens. معرّف الموظف رقم، لذلك نحول القيمة إلى عدد صحيح باستدعاء int().",
+        "tokens[0] تعطينا العنصر عند الفهرس 0 من القائمة الذي يمثل معرف الموظف."
+      ]
+    },
+    "12": {
+      "comments": [
+        {
+          "content": "نحتاج إلى معالجة ValueError. يحدث هذا الخطأ عندما لا يكون معرف الموظف رقمًا ونستدعي int() لتحويله إلى عدد صحيح."
+        },
+        {
+          "content": "يتم تنفيذ جسم هذا except فقط إذا كان معرف الموظف ليس رقمًا. خلاف ذلك يتم تخطي جسم هذا except."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "We need to handle the ValueError. This error occurs when the employee's id is not a number and we call the function int() to convert that value to an int."
+        },
+        {
+          "content": "The body of this except block gets executed only if the employee's id is not a number. Otherwise, the body of this except statement is skipped."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى معالجة ValueError. يحدث هذا الخطأ عندما لا يكون معرف الموظف رقمًا ونستدعي int() لتحويله إلى عدد صحيح.",
+        "يتم تنفيذ جسم هذا except فقط إذا كان معرف الموظف ليس رقمًا. خلاف ذلك يتم تخطي جسم هذا except."
+      ]
+    },
+    "13": {
+      "comments": [
+        {
+          "content": "هذه العبارة تطبع إلى المخرج القياسي الافتراضي رسالة الخطأ التي تسببت في ValueError. النص المطبوع يتبعه حرف نهاية السطر."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "This statement prints to the default standard output stream the error that caused the ValueError. The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تطبع إلى المخرج القياسي الافتراضي رسالة الخطأ التي تسببت في ValueError. النص المطبوع يتبعه حرف نهاية السطر."
+      ]
+    },
+    "14": {
+      "comments": [
+        {
+          "content": "tokens[1] تعطينا العنصر عند الفهرس 1 من القائمة الذي يمثل اسم الموظف."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "tokens[1] gives us the element at index 1 of the list that represents the employee's name."
+        }
+      ],
+      "commentList": [
+        "tokens[1] تعطينا العنصر عند الفهرس 1 من القائمة الذي يمثل اسم الموظف."
+      ]
+    },
+    "15": {
+      "comments": [
+        {
+          "content": "نحتاج متغير total للحفاظ على مجموع تراكمي، أي مجموع الساعات التي عملها الموظف. بالتأكيد يجب تهيئة المتغير بصفر."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need variable total to maintain a running total, which means the sum of the hours the employee worked. Of course, the total should be initialized with 0."
+        }
+      ],
+      "commentList": [
+        "نحتاج متغير total للحفاظ على مجموع تراكمي، أي مجموع الساعات التي عملها الموظف. بالتأكيد يجب تهيئة المتغير بصفر."
+      ]
+    },
+    "16": {
+      "comments": [
+        {
+          "content": "نستخدم حلقة for للتكرار عبر الساعات المبلغ عنها للموظف. يمكن الحصول على الساعات من العنصر الثالث وحتى آخر عنصر في قائمة tokens. نحتاج أن تبدأ الفهارس من 2 وحتى len(tokens)-1. نحصل على هذا التسلسل باستدعاء range(2,len(tokens))."
+        },
+        {
+          "content": "لاحظ أن الحلقة تبدأ عند 2 لأن القيمة عند الفهرس 0 هي معرف الموظف والقيمة عند الفهرس 1 هي اسم الموظف. تبدأ الساعات المبلّغ عنها من العنصر الثالث في قائمة tokens. كما أن len(tokens) ترجع عدد العناصر في القائمة."
+        },
+        {
+          "content": "لاحظ أن جميع العبارات داخل الحلقة يجب أن تكون متداخلة بالنسبة إلى رأس الحلقة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We use a for loop to iterate over the hours reported for the employee. We can get the hours that the employee has worked by accessing the third through the last element in the list of line tokens. We need the indexes to start at 2 with every integer number up to but not including the list length. We get this sequence by calling the range(2,len(tokens)) function."
+        },
+        {
+          "content": "Note that the loop starts at 2 because the value at the index 0 of the list is the employee's id and the value at index 1 of the list is the employee's name. The hours the employee has worked start from the third element in the list of line tokens. Also, note that the function len(tokens) returns the number of the values in the list of line tokens."
+        },
+        {
+          "content": "Note that all statements inside the loop need to be indented with respect to the loop header."
+        }
+      ],
+      "commentList": [
+        "نستخدم حلقة for للتكرار عبر الساعات المبلغ عنها للموظف. يمكن الحصول على الساعات من العنصر الثالث وحتى آخر عنصر في قائمة tokens. نحتاج أن تبدأ الفهارس من 2 وحتى len(tokens)-1. نحصل على هذا التسلسل باستدعاء range(2,len(tokens)).",
+        "لاحظ أن الحلقة تبدأ عند 2 لأن القيمة عند الفهرس 0 هي معرف الموظف والقيمة عند الفهرس 1 هي اسم الموظف. تبدأ الساعات المبلّغ عنها من العنصر الثالث في قائمة tokens. كما أن len(tokens) ترجع عدد العناصر في القائمة.",
+        "لاحظ أن جميع العبارات داخل الحلقة يجب أن تكون متداخلة بالنسبة إلى رأس الحلقة."
+      ]
+    },
+    "17": {
+      "comments": [
+        {
+          "content": "إذا وقع خطأ أثناء حساب إجمالي الساعات، يتوقف تنفيذ كتلة try وينتقل إلى كتلة except المناسبة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "If an error is encountered during calculating the total hours the employee has worked, the try block code execution is stopped and transferred down to the except block(s)."
+        }
+      ],
+      "commentList": [
+        "إذا وقع خطأ أثناء حساب إجمالي الساعات، يتوقف تنفيذ كتلة try وينتقل إلى كتلة except المناسبة."
+      ]
+    },
+    "18": {
+      "comments": [
+        {
+          "content": "نحتاج إلى إضافة كل ساعة مبلّغ عنها إلى المجموع الجاري المخزن في المتغير total. لذلك في كل تكرار نضيف الساعة إلى total ونخزن النتيجة في total.<br><br>نحصل على الساعة المبلّغ عنها من العنصر tokens[i] ثم نحولها إلى float باستدعاء float()."
+        },
+        {
+          "content": "لاحظ أنه بإمكاننا إجراء التحويل إلى float وجمعه في نفس السطر. وأيضًا كل قيمة في قائمة tokens هي سلسلة؛ لذلك نحتاج لتحويل الساعات إلى أرقام. نستخدم float() لأن الساعات قد تحتوي على فاصلة عشرية."
+        },
+        {
+          "content": "عامل += يضيف القيمة إلى total ويخزن النتيجة في total. هذه العبارة مكافئة للعبارة total = total + float(tokens[i])."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to add each reported hour to the running total that is stored in variable total. So, in each iteration, we add the reported hour to the variable total and store the result into the variable total.<br><br>We get the reported hour by accessing the element at index i of the list of line tokens. We need to covert this value to a float by calling the float function."
+        },
+        {
+          "content": "Note that we could perform the float conversion and addition in the same line. Also, note that each value that is stored in the list of line tokens is a string. Therefore, we need to convert the hours employee has worked into a number. We convert each hour to a number by calling the float() function because the reported hours could have a decimal point."
+        },
+        {
+          "content": "The += operator adds the reported hour to the value of the variable total and the result is stored in the variable total. Thus, this statement is equivalent to the statement total = total + float(tokens[i])."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى إضافة كل ساعة مبلّغ عنها إلى المجموع الجاري المخزن في المتغير total. لذلك في كل تكرار نضيف الساعة إلى total ونخزن النتيجة في total.<br><br>نحصل على الساعة المبلّغ عنها من العنصر tokens[i] ثم نحولها إلى float باستدعاء float().",
+        "لاحظ أنه بإمكاننا إجراء التحويل إلى float وجمعه في نفس السطر. وأيضًا كل قيمة في قائمة tokens هي سلسلة؛ لذلك نحتاج لتحويل الساعات إلى أرقام. نستخدم float() لأن الساعات قد تحتوي على فاصلة عشرية.",
+        "عامل += يضيف القيمة إلى total ويخزن النتيجة في total. هذه العبارة مكافئة للعبارة total = total + float(tokens[i])."
+      ]
+    },
+    "19": {
+      "comments": [
+        {
+          "content": "نحتاج إلى معالجة ValueError. يحدث هذا الخطأ عندما تكون قيمة ساعة غير رقمية وتُستدعى float() لتحويلها."
+        },
+        {
+          "content": "يتم تنفيذ جسم هذا except فقط إذا كانت إحدى الساعات المبلّغ عنها في السطر ليست رقمًا. خلاف ذلك يتم تخطيه."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to handle the ValueError. This error occurs when an hour that is reported for the employee is not a number and we call the function float() to convert that value to a float."
+        },
+        {
+          "content": "The body of this except block gets executed only if a reported hour in the line is not a number. Otherwise, the body of this except statement is skipped."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى معالجة ValueError. يحدث هذا الخطأ عندما تكون قيمة ساعة غير رقمية وتُستدعى float() لتحويلها.",
+        "يتم تنفيذ جسم هذا except فقط إذا كانت إحدى الساعات المبلّغ عنها في السطر ليست رقمًا. خلاف ذلك يتم تخطيه."
+      ]
+    },
+    "20": {
+      "comments": [
+        {
+          "content": "هذه العبارة تطبع إلى المخرج القياسي الافتراضي رسالة الخطأ التي تسببت في ValueError. النص المطبوع يتبعه حرف نهاية السطر."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints to the default standard output stream the error that caused the ValueError. The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تطبع إلى المخرج القياسي الافتراضي رسالة الخطأ التي تسببت في ValueError. النص المطبوع يتبعه حرف نهاية السطر."
+      ]
+    },
+    "21": {
+      "comments": [
+        {
+          "content": "هذه العبارة تدمج محتوى السلاسل والمتغير name والمتغير total لطباعة إجمالي الساعات التي عملها كل موظف. ندمج المحتويات باستخدام عامل +. المتغير name سلسلة لذلك يمكن دمجه مباشرة، أما total فهو رقم ويجب تحويله إلى سلسلة عبر str() قبل دمجه."
+        },
+        {
+          "content": "لاحظ أن الدمج والطباعة يتمان في سطر واحد؛ لا حاجة لتخزين السلسلة المدموجة في متغير ثم طباعتها في سطر آخر."
+        },
+        {
+          "content": "عامل + ينشئ سلسلة جديدة من محتويات معامله الموصولة، وهذه السلسلة تُطبع بواسطة الدالة print متبوعة بحرف نهاية السطر."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement concatenates the content of the given strings, variable name, and total to print the total hours each employee has worked. We concatenate the content of these variables using the + operator. Variable name has a string value and we can use the + operator to concatenate its content with other strings. Variable total, on the other hand, is a number and its value can be concatenated with strings only when it's explicitly converted to a string using the str function."
+        },
+        {
+          "content": "Note that the concatenating and printing are done in the same line. That is, we don't have to store the concatenated string to a new variable at first and then print it in the next line."
+        },
+        {
+          "content": "Note that the + operator creates a new string from the contents of its operands joined. This string will be printed by the print function and followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تدمج محتوى السلاسل والمتغير name والمتغير total لطباعة إجمالي الساعات التي عملها كل موظف. ندمج المحتويات باستخدام عامل +. المتغير name سلسلة لذلك يمكن دمجه مباشرة، أما total فهو رقم ويجب تحويله إلى سلسلة عبر str() قبل دمجه.",
+        "لاحظ أن الدمج والطباعة يتمان في سطر واحد؛ لا حاجة لتخزين السلسلة المدموجة في متغير ثم طباعتها في سطر آخر.",
+        "عامل + ينشئ سلسلة جديدة من محتويات معامله الموصولة، وهذه السلسلة تُطبع بواسطة الدالة print متبوعة بحرف نهاية السطر."
+      ]
+    },
+    "22": {
+      "comments": [],
+      "blank": false
+    },
+    "23": {
+      "comments": [
+        {
+          "content": "انتهينا من قراءة الملف؛ لذلك نستخدم close() لإغلاقه وتحرير أي موارد نظام احتُجزت للملف المفتوح."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We're done with reading the file; therefore, we use close() to close it and free up any system resources taken up by the open file."
+        }
+      ],
+      "commentList": [
+        "انتهينا من قراءة الملف؛ لذلك نستخدم close() لإغلاقه وتحرير أي موارد نظام احتُجزت للملف المفتوح."
+      ]
+    },
+    "24": {
+      "comments": [],
+      "blank": false
+    },
+    "25": {
+      "comments": [
+        {
+          "content": "نحتاج إلى معالجة FileNotFoundError. يحدث هذا الخطأ عندما لا يمكن العثور على الملف."
+        },
+        {
+          "content": "يتم تنفيذ جسم هذا except فقط إذا لم يُعثر على الملف. خلاف ذلك يتم تخطيه."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to handle the FileNotFoundError. This error occurs when the file could not be found."
+        },
+        {
+          "content": "The body of this except block gets executed only if the file could not be found. Otherwise, the body of this except statement is skipped."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى معالجة FileNotFoundError. يحدث هذا الخطأ عندما لا يمكن العثور على الملف.",
+        "يتم تنفيذ جسم هذا except فقط إذا لم يُعثر على الملف. خلاف ذلك يتم تخطيه."
+      ]
+    },
+    "26": {
+      "comments": [
+        {
+          "content": "هذه العبارة تطبع إلى المخرج القياسي الافتراضي رسالة الخطأ الناتجة عن FileNotFoundError. النص المطبوع يتبعه حرف نهاية السطر."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints to the default standard output stream the error that caused the FileNotFoundError. The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تطبع إلى المخرج القياسي الافتراضي رسالة الخطأ الناتجة عن FileNotFoundError. النص المطبوع يتبعه حرف نهاية السطر."
+      ]
+    },
+    "27": {
+      "comments": [
+        {
+          "content": "نحتاج إلى معالجة IOError. يحدث هذا الخطأ عندما يقع خطأ أثناء محاولة قراءة أو إغلاق الملف."
+        },
+        {
+          "content": "يتم تنفيذ جسم هذا except فقط إذا حدث خطأ عند محاولة قراءة/إغلاق الملف. خلاف ذلك يتم تخطيه."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to handle the IOError. This error occurs when an error occurs when trying to read/close the file."
+        },
+        {
+          "content": "The body of this except block gets executed only if an error occurs when trying to read/close the file. Otherwise, the body of this except statement is skipped."
+        }
+      ],
+      "commentList": [
+        "نحتاج إلى معالجة IOError. يحدث هذا الخطأ عندما يقع خطأ أثناء محاولة قراءة أو إغلاق الملف.",
+        "يتم تنفيذ جسم هذا except فقط إذا حدث خطأ عند محاولة قراءة/إغلاق الملف. خلاف ذلك يتم تخطيه."
+      ]
+    },
+    "28": {
+      "comments": [
+        {
+          "content": "هذه العبارة تطبع إلى المخرج القياسي الافتراضي رسالة الخطأ الناتجة عن IOError. النص المطبوع يتبعه حرف نهاية السطر."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints to the default standard output stream the error that caused the IOError. The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تطبع إلى المخرج القياسي الافتراضي رسالة الخطأ الناتجة عن IOError. النص المطبوع يتبعه حرف نهاية السطر."
+      ]
+    },
+    "29": {
+      "comments": [],
+      "blank": false
+    },
+    "30": {
+      "comments": [
+        {
+          "content": "نحتاج لقراءة المسار الكامل للملف الذي يدخله المستخدم. نستخدم الدالة input() لذلك. هذه العبارة تطلب من المستخدم إدخال المسار الكامل للملف، ثم تقرأ النص وتخزنه في المتغير name. القيمة المخزنة في name تكون سلسلة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to read the full file path that the user enters. To do this, we need to use the input() function. This statement prompts the user to enter the full path for a file, then reads the text entered by the user and places it in the variable name. The value that will be stored in variable name is a string."
+        }
+      ],
+      "commentList": [
+        "نحتاج لقراءة المسار الكامل للملف الذي يدخله المستخدم. نستخدم الدالة input() لذلك. هذه العبارة تطلب من المستخدم إدخال المسار الكامل للملف، ثم تقرأ النص وتخزنه في المتغير name. القيمة المخزنة في name تكون سلسلة."
+      ]
+    },
+    "31": {
+      "comments": [
+        {
+          "content": "هذه العبارة تنادي الدالة report_work_hours وتمرر المتغير name كوسيطة. لاحظ أن استدعاء الدالة يجب أن يتم بعد تعريفها."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement calls the report_work_hours function and passes the name as its arguments. Note that the function call must be done after the function is declared."
+        }
+      ],
+      "commentList": [
+        "هذه العبارة تنادي الدالة report_work_hours وتمرر المتغير name كوسيطة. لاحظ أن استدعاء الدالة يجب أن يتم بعد تعريفها."
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "eid = tokens[0]",
+      "description": "",
+      "untr_code": "eid = tokens[0]",
+      "untr_description": ""
+    },
+    {
+      "code": "except IndexError :",
+      "description": "",
+      "untr_code": "except IndexError :",
+      "untr_description": ""
+    },
+    {
+      "code": "except KeyError :",
+      "description": "",
+      "untr_code": "except KeyError :",
+      "untr_description": ""
+    },
+    {
+      "code": "print(\"Error in the employee's name.\")",
+      "description": "",
+      "untr_code": "print(\"Error in the employee's name.\")",
+      "untr_description": ""
+    }
+  ],
+  "programInput": "/Users/hours2.txt",
+  "collaborator_emails": [
+    "zainakhalil002@gmail.com",
+    "peterb@pitt.edu"
+  ],
+  "extraFiles": [],
+  "iso_language_code": "ar",
+  "updated_at": "2026-10-20T15:04:56.732Z",
+  "stat": {
+    "size": 806451,
+    "lastTimeModified": 1760983008197.0476
+  },
+  "untr_name": "Reporting the Total Hours Each Employee Worked (Case 2) ",
+  "untr_description": "Suppose we have an input file that contains information about how many hours each employee of a company has worked. The file looks like the following (Employee's identification number, Employee's name, Hours):\\n101 Erica 7.5 8.5 10.25 8 8.5\\n783 Erin 10.5 11.5 12 11 10.75\\n114 Simone 8 8 8\\n...\\nConstruct a program that reads this file and calculates the total number of hours worked by each individual. Make sure that the program handles each specific exception that could occur. ",
+  "untr_code": "#Step 1: Define the function\ndef report_work_hours(file_name):\n    #Step 1.1: Enclose the code that might throw an exception within the try block\n    try :\n        #Step 1.1.1: Open the file and process each line in the file\n        myfile = open( file_name, \"r\")\n        for line in myfile:\n            tokens = line.split()\n            #Try to get the id of the employee as a number\n            try :\n                eid = int(tokens[0])\n            except ValueError :\n                print(\"Error in the employee's id.\")\n            name = tokens[1]\n            total = 0.0;\n            for i in range(2, len(tokens)) :\n                try :\n                    total += float(tokens[i])\n                except ValueError:\n                    print(\"Error in the employee's hour.\")\n            print(\"Total hours worked by \" + name  + \" = \" + str(total))\n        #Step 1.1.2: Close the file\n        myfile.close()\n    #Step 1.2: Handle all possible exceptions that may be thrown in the try block \n    except FileNotFoundError:\n        print(\"File not found\")\n    except IOError:\n        print(\"Problem with the file!\")\n#Step 2: Call the function\nname = input(\"Enter the full path of a file: \")\nreport_work_hours(name)",
+  "translations": {
+    "en": "6a91ae6632e78ede45c116b3"
+  }
+}

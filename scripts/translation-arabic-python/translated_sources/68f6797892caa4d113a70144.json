@@ -1,0 +1,551 @@
+{
+  "id": "68f6797892caa4d113a70144",
+  "user": "moh70@pitt.edu",
+  "archived": false,
+  "name": "طباعة جدول اعداد الفائزين بالميداليات مع مجاميع الصفوف والاعمدة",
+  "description": "افترض ان لدينا مصفوفة مقاس 7x4 تخزن عدد الميداليات التي فازت بها سبع دول في مسابقات التزحلق على الجليد في الالعاب الاولمبية الشتوية. تبدو هذه المصفوفة كما يلي:\\n[[ \"Canada\", 1, 0, 1 ],\\n [ \"China\", 1, 1, 0 ],\\n ...]\\nكل صف من هذه المصفوفة يقابل تعداد الميداليات للدولة الموجودة في ذلك الصف. العنصران الثاني والثالث والرابع داخل الصف يمثلون على التوالي عدد ميداليات الذهب والفضة والبرونز التي فازت بها الدولة في ذلك الصف.\\nانشئ برنامجا يأخذ هذه المصفوفة ويطبع جدولا لعداد الميداليات مع مجاميع لكل صف ولكل عمود. مجاميع الاعمدة هي مجموع ميداليات الذهب والفضة والبرونز التي فُزت في المنافسة. ناتج الطباعة يجب ان يبدو كالتالي:\\n      Country    Gold  Silver  Bronze   Total\\n         Canada        1       0       1          2\\n            China        1       1       0          2\\n           ...\\nColumn Total      4       4       4",
+  "tags": [
+    "python-intro",
+    "arabic;color=yellow",
+    "llm-translation;color=blue",
+    "gpt5mini;color=purple",
+    "validation-pending;color=orange"
+  ],
+  "language": "PYTHON",
+  "filename": "py_print_medals_row_column_total.py",
+  "code": "#Khatwa 1: Taerif matriss 7x4 tahtawi 3la 3adad almiedaliyat allathee kasabat-ha saba3a dawlat\nmedal_counts = [[ \"CAN\", 1, 0, 1 ],\n                [ \"CHN\", 1, 1, 0 ],\n                [ \"GER\", 0, 0, 1 ],\n                [ \"KOR\", 1, 0, 0 ],\n                [ \"JPN\", 0, 1, 1 ],\n                [ \"RUS\", 0, 1, 1 ],\n                [ \"USA\", 1, 1, 0 ]]\n#Khatwa 2: Insha2 qaa'ima li-takhzin majmu3at al-a3mad\ncolumn_totals = [0] * ( len(medal_counts[0]) - 1 )\n#Khatwa 3: Tabee3 ra's al-jaadwal l-natija\nprint(\"{:>4s}{:>3s}{:>3s}{:>3s}{:>4s}\".format(\"Alism\",\"Dh\",\"Fd\",\"Br\",\"Almajmu\"))\n#Khatwa 4: Tadaruj 3la ashoof al-sufuf fi matriss medal_counts\nfor i in range(len(medal_counts)):\n    #Khatwa 4.1: Ta3yeen qiyam ibtida'iyya lil-mutaghayyirat allati nahtaj-ha li-tabee3a al-saff i\n    line = \"{:>4s}\".format(medal_counts[i][0])\n    row_total = 0\n    #Khatwa 4.2: Tadaruj 3la al-aemud allati tahtawi 3la a3dad almiedaliyat  \n    for j in range(1, len(medal_counts[0])):\n        #Khatwa 4.2.1: Iltihaaq a3dad almiedaliyat bi-mahtawa al-saff i\n        line += \"{:>3d}\".format(medal_counts[i][j])\n        #Khatwa 4.2.2: Ta تحديث majmu3 al-saff lil-saff i \n        row_total += medal_counts[i][j]\n        #Khatwa 4.2.3: Ta تحديث majmu3 al-3amud lil-3amud j \n        column_totals[j-1] += medal_counts[i][j]\n    #Khatwa 4.3: Idfa' majmu3 al-saff ila mahtawa al-jaadwal lil-saff i\n    line += \"{:>3d}\".format(row_total)\n    #Khatwa 4.4: Tabee3 mahtawa al-jaadwal lil-saff i\n    print(line)\n#Khatwa 5: Tabee3 majamu3at al-aemud\nline = \"{:>4s}\".format(\"Almajmu\")\nfor j in range(len(column_totals)):\n    line += \"{:>3d}\".format(column_totals[j])\nprint(line)",
+  "lines": {
+    "1": {
+      "comments": [],
+      "blank": false
+    },
+    "2": {
+      "comments": [
+        {
+          "content": "نحتاج لإنشاء جدول تعداد الميداليات. للقيام بذلك نستخدم قائمة ثنائية الابعاد (قائمة من القوائم) حيث كل صف يقابل اسم دولة، وعدد ميداليات الذهب والفضة والبرونز التي فازت بها تلك الدولة. هذا السطر ينشئ قائمة ثنائية الابعاد 7x4 اسمها medal_counts. كل صف في المصفوفة يقابل تعداد الميداليات للدولة في ذلك الصف. العنصران الثاني والثالث والرابع في كل صف يمثلون على التوالي عدد ميداليات الذهب والفضة والبرونز التي فازت بها الدولة في ذلك الصف."
+        },
+        {
+          "content": "لاحظ انه يمكن للقوائم ان تمتد عبر عدة اسطر اذا رغبنا في ذلك لانها محاطة بأقواس مربعة."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to create the table of medal counts. To do this, we use a two-dimensional list (a list of lists) where each row corresponds to country name, the number of gold, silver, and bronze medals won by one country. This statement creates a 7x4 two-dimensional list called medal_counts. Each row of the matrix corresponds to the medal counts for the country in that row. The second, third, and fourth numbers within a row represent the number of Gold, Silver, and Bronze medals won by the country in that row."
+        },
+        {
+          "content": "Note that lists can naturally span multiple lines if we want them to because they are contained by a pair of brackets."
+        }
+      ],
+      "commentList": [
+        "نحتاج لإنشاء جدول تعداد الميداليات. للقيام بذلك نستخدم قائمة ثنائية الابعاد (قائمة من القوائم) حيث كل صف يقابل اسم دولة، وعدد ميداليات الذهب والفضة والبرونز التي فازت بها تلك الدولة. هذا السطر ينشئ قائمة ثنائية الابعاد 7x4 اسمها medal_counts. كل صف في المصفوفة يقابل تعداد الميداليات للدولة في ذلك الصف. العنصران الثاني والثالث والرابع في كل صف يمثلون على التوالي عدد ميداليات الذهب والفضة والبرونز التي فازت بها الدولة في ذلك الصف.",
+        "لاحظ انه يمكن للقوائم ان تمتد عبر عدة اسطر اذا رغبنا في ذلك لانها محاطة بأقواس مربعة."
+      ]
+    },
+    "3": {
+      "comments": [],
+      "blank": false
+    },
+    "4": {
+      "comments": [],
+      "blank": false
+    },
+    "5": {
+      "comments": [],
+      "blank": false
+    },
+    "6": {
+      "comments": [],
+      "blank": false
+    },
+    "7": {
+      "comments": [],
+      "blank": false
+    },
+    "8": {
+      "comments": [],
+      "blank": false
+    },
+    "9": {
+      "comments": [],
+      "blank": false
+    },
+    "10": {
+      "comments": [
+        {
+          "content": "نريد حساب مجاميع الاعمدة. للقيام بذلك نحتاج لقائمة طولها len(medal_counts[0]) - 1. لا نحتاج لحساب مجموع العمود الاول في المصفوفة لان هذا العمود يخزن اسماء الدول."
+        },
+        {
+          "content": "في هذا السطر ننشئ القائمة ونملأها بصفر لاننا لم نبدأ بعد في حساب مجاميع الاعمدة."
+        },
+        {
+          "content": "نستخدم عامل التكرار * لانشاء القائمة. عامل التكرار يصنع N نسخ من هذه القائمة ويجمعهم معا في قائمة واحدة، حيث N هو عدد الاعمدة في medal_counts التي تخزن ميداليات كل دولة، هنا 3. لاحظ انه عندما يكون المعامل على يسار * قائمة، يصبح عامل التكرار وليس عملية ضرب."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "We want to calculate the column totals. To do this, we need a list of length len(medal_counts[0]) - 1. We don't need to calculate the column total for the first column of the matrix because it stores the countries names."
+        },
+        {
+          "content": "In this statement, we create the list and fill it with 0s because we have not started computing the column totals yet."
+        },
+        {
+          "content": "We use the repetition operator * to create the list column_totals. The repetition operator makes N copies of this list and joins them all together into a single list, where N is the number of columns in the medal_counts that stores the medals each country won, here, 3. Note that when the operand on the left side of the * is a list, it becomes the repetition operator and not the multiplication."
+        }
+      ],
+      "commentList": [
+        "نريد حساب مجاميع الاعمدة. للقيام بذلك نحتاج لقائمة طولها len(medal_counts[0]) - 1. لا نحتاج لحساب مجموع العمود الاول في المصفوفة لان هذا العمود يخزن اسماء الدول.",
+        "في هذا السطر ننشئ القائمة ونملأها بصفر لاننا لم نبدأ بعد في حساب مجاميع الاعمدة.",
+        "نستخدم عامل التكرار * لانشاء القائمة. عامل التكرار يصنع N نسخ من هذه القائمة ويجمعهم معا في قائمة واحدة، حيث N هو عدد الاعمدة في medal_counts التي تخزن ميداليات كل دولة، هنا 3. لاحظ انه عندما يكون المعامل على يسار * قائمة، يصبح عامل التكرار وليس عملية ضرب."
+      ]
+    },
+    "11": {
+      "comments": [],
+      "blank": false
+    },
+    "12": {
+      "comments": [
+        {
+          "content": "نريد طباعة رأس للجدول. اعمدة الجدول من اليسار الى اليمين تمثل الدولة، وعدد ميداليات الذهب والفضة والبرونز التي فازت بها الدولة، واخيرا مجموع الصف الذي هو مجموع الميداليات التي فازت بها الدولة. نريد تنسيق الجدول بحيث تكون جميع القيم محاذاة لليمين مع فراغ كاف بين الاعمدة. لهذا الغرض نستدعي الدالة format.<br>نستخدم {:>4s} لمحاذاة المعامل النصي الاول (أي اسم) الى اليمين في حقل عرضه 4 احرف، و {:>3s}/{:>4s} لمحاذاة باقي المعاملات النصية الى اليمين في حقول بعرض 3/4 احرف على التوالي."
+        },
+        {
+          "content": "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين ثم تليها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع s يتطلب معامل نصي. سيحدث خطأ اذا كان المعامل ليس نصا، مثلا اذا كان عددا صحيحا او فاصلا عائما."
+        },
+        {
+          "content": "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+        },
+        {
+          "content": "النص المطبع يتبعه محرف نهاية السطر في نهايته."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We want to print a header for the table. The columns of the table from left to right represent the country, the number of gold, silver, and bronze medals the country won, and finally, the row total that is the total medals the country won. We want to format the table so that all values are right-aligned with sufficient spacing between columns. For this purpose, we call format function.<br>We use {:>4s} to right-justify the first string argument of the format function (i.e., Country) in a field that is 4-characters wide, {:>3s}/{:>4s} to right-justify remaining string argument of the format function in a field that is 3-characters/4-characters wide."
+        },
+        {
+          "content": "Notice that the format specification inside a pair of curly braces starts with a : and followed by the text that specifies how the value should be presented, including the field width, alignment, and the data type code. The data type s requires a string argument. An error will occur if the argument is not a string, for instance, if the argument is an integer or a float."
+        },
+        {
+          "content": "This function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function."
+        },
+        {
+          "content": "The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "نريد طباعة رأس للجدول. اعمدة الجدول من اليسار الى اليمين تمثل الدولة، وعدد ميداليات الذهب والفضة والبرونز التي فازت بها الدولة، واخيرا مجموع الصف الذي هو مجموع الميداليات التي فازت بها الدولة. نريد تنسيق الجدول بحيث تكون جميع القيم محاذاة لليمين مع فراغ كاف بين الاعمدة. لهذا الغرض نستدعي الدالة format.<br>نستخدم {:>4s} لمحاذاة المعامل النصي الاول (أي اسم) الى اليمين في حقل عرضه 4 احرف، و {:>3s}/{:>4s} لمحاذاة باقي المعاملات النصية الى اليمين في حقول بعرض 3/4 احرف على التوالي.",
+        "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين ثم تليها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع s يتطلب معامل نصي. سيحدث خطأ اذا كان المعامل ليس نصا، مثلا اذا كان عددا صحيحا او فاصلا عائما.",
+        "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format.",
+        "النص المطبع يتبعه محرف نهاية السطر في نهايته."
+      ]
+    },
+    "13": {
+      "comments": [],
+      "blank": false
+    },
+    "14": {
+      "comments": [
+        {
+          "content": "نحتاج الى معالجة بيانات تعداد الميداليات وطباعتها مع عدد الميداليات والمجموع لكل دولة (مجاميع الصفوف). هذه البيانات المخزنة في medal_counts هي قائمة ثنائية الابعاد؛ لذلك نحتاج لاستخدام حلقات for متداخلة لمعالجة جميع عناصرها وطباعها في شكل جدول. هذا السطر هو حلقة for الخارجية في الحلقات المتداخلة ويعالج البيانات صفا صفا."
+        },
+        {
+          "content": "للتكرار على الصفوف في medal_counts نحتاج فهارس تبدأ من 0 حتى عدد الصفوف ناقص واحد. نحصل على تتابع الفهارس هذا باستدعاء range(len(medal_counts)). لاحظ ان len(medal_counts) تعيد عدد الصفوف في medal_counts."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to process the medal counts data and print medal counts and the total number of medals won for each country (row totals). This data, that is stored in medal_counts, is a two-dimensional list; therefore, we need to use nested for loops to process all of its elements and print the table. This statement is the outer for loop in the nested loop and it processes the data stored in medal_counts row by row."
+        },
+        {
+          "content": "To iterate over the rows in the medal_counts, we need the indexes to start at 0 with every integer number up to but not including the number of rows. We get this sequence by calling the range(len(medal_counts)) function. Note that the function len(medal_counts) returns the number of rows in the medal_counts."
+        }
+      ],
+      "commentList": [
+        "نحتاج الى معالجة بيانات تعداد الميداليات وطباعتها مع عدد الميداليات والمجموع لكل دولة (مجاميع الصفوف). هذه البيانات المخزنة في medal_counts هي قائمة ثنائية الابعاد؛ لذلك نحتاج لاستخدام حلقات for متداخلة لمعالجة جميع عناصرها وطباعها في شكل جدول. هذا السطر هو حلقة for الخارجية في الحلقات المتداخلة ويعالج البيانات صفا صفا.",
+        "للتكرار على الصفوف في medal_counts نحتاج فهارس تبدأ من 0 حتى عدد الصفوف ناقص واحد. نحصل على تتابع الفهارس هذا باستدعاء range(len(medal_counts)). لاحظ ان len(medal_counts) تعيد عدد الصفوف في medal_counts."
+      ]
+    },
+    "15": {
+      "comments": [],
+      "blank": false
+    },
+    "16": {
+      "comments": [
+        {
+          "content": "يبدأ محتوى كل صف في جدول المخرجات باسم الدولة. كما نريد تنسيق صف الجدول باستخدام نفس تنسيق رأس الجدول. لذلك، مشابه لطباعة الرأس، نستدعي دالة format.<br>نستخدم {:>4s} لمحواذاة اسم الدولة في الصف i (الموجود في medal_counts[i][0]) الى اليمين في حقل عرضه 4 احرف."
+        },
+        {
+          "content": "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين وتتبعها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع s يتطلب معامل نصي. سيحدث خطأ اذا كان المعامل ليس نصا، مثلا اذا كان عددا صحيحا او فاصلا عائما."
+        },
+        {
+          "content": "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "The content of each row in the output table starts with the country name. We also want to format the table row using the same format that we applied to the table header. So, similar to printing the table header, we call format function.<br>We use {:>4s} to right-justify the name of the country at row i (which is stored at medal_counts[i][0]) in a field that is 4-characters wide."
+        },
+        {
+          "content": "Notice that the format specification inside a pair of curly braces starts with a : and followed by the text that specifies how the value should be presented, including the field width, alignment, and the data type code. The data type s requires a string argument. An error will occur if the argument is not a string, for instance, if the argument is an integer or a float."
+        },
+        {
+          "content": "This function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function."
+        }
+      ],
+      "commentList": [
+        "يبدأ محتوى كل صف في جدول المخرجات باسم الدولة. كما نريد تنسيق صف الجدول باستخدام نفس تنسيق رأس الجدول. لذلك، مشابه لطباعة الرأس، نستدعي دالة format.<br>نستخدم {:>4s} لمحواذاة اسم الدولة في الصف i (الموجود في medal_counts[i][0]) الى اليمين في حقل عرضه 4 احرف.",
+        "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين وتتبعها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع s يتطلب معامل نصي. سيحدث خطأ اذا كان المعامل ليس نصا، مثلا اذا كان عددا صحيحا او فاصلا عائما.",
+        "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+      ]
+    },
+    "17": {
+      "comments": [
+        {
+          "content": "نحتاج متغير row_total لحساب مجموع الميداليات التي فازت بها الدولة في الصف i. نحتاج لتعيينه الى 0 في كل مرة نعالج فيها صفا ونحسب مجموع الصف. لاحظ ان هذا السطر لا يمكن وضعه داخل الحلقة الداخلية او خارج الحلقة الخارجية."
+        },
+        {
+          "content": "لا يمكننا وضع هذا السطر داخل الحلقة الداخلية لان في كل تكرار من الحلقة الداخلية سيتم تعيين row_total الى 0 وهذا يعني ان مجموع الصف سيصبح دائما مساويا لعدد ميداليات البرونز فقط بغض النظر عن بقية الميداليات. ولا يمكن وضعه خارج الحلقة الخارجية ايضا لان في هذه الحالة سيظهر المتغير كمجموع لمجاميع الصفوف لكل الصفوف السابقة ايضا. لذا، المكان الصحيح لوضع هذا السطر هو داخل حلقة الصفوف قبل الدخول للحلقة الداخلية."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need variable row_total to calculate the total number of medals won by the country at row i. We need to set it to 0 every time that we want to process a row and calculate the row total. Note that this statement cannot be placed inside the inner loop or outside the outer loop."
+        },
+        {
+          "content": "We cannot place this statement inside the inner loop because in every iteration of the inner loop variable row_total would be set to 0 and that means that row total would be always equal to the number of bronze medals no matter what the remaining medal counts are. We cannot place this statement outside the outer loop either because in that case total would show the sum of the row totals in each row and all its preceding rows. Therefore, the only place that we could place this statement is in the outer loop body before reaching to the inner loop."
+        }
+      ],
+      "commentList": [
+        "نحتاج متغير row_total لحساب مجموع الميداليات التي فازت بها الدولة في الصف i. نحتاج لتعيينه الى 0 في كل مرة نعالج فيها صفا ونحسب مجموع الصف. لاحظ ان هذا السطر لا يمكن وضعه داخل الحلقة الداخلية او خارج الحلقة الخارجية.",
+        "لا يمكننا وضع هذا السطر داخل الحلقة الداخلية لان في كل تكرار من الحلقة الداخلية سيتم تعيين row_total الى 0 وهذا يعني ان مجموع الصف سيصبح دائما مساويا لعدد ميداليات البرونز فقط بغض النظر عن بقية الميداليات. ولا يمكن وضعه خارج الحلقة الخارجية ايضا لان في هذه الحالة سيظهر المتغير كمجموع لمجاميع الصفوف لكل الصفوف السابقة ايضا. لذا، المكان الصحيح لوضع هذا السطر هو داخل حلقة الصفوف قبل الدخول للحلقة الداخلية."
+      ]
+    },
+    "18": {
+      "comments": [],
+      "blank": false
+    },
+    "19": {
+      "comments": [
+        {
+          "content": "هذا السطر هو الحلقة الداخلية للحلقات المتداخلة. هو يعالج عدد الميداليات للدولة في الصف i. للتكرار على عناصر الميداليات في الصف i نحتاج الاطلاع على العنصرين الثاني والثالث والرابع في كل صف. لذلك نحتاج فهارس للاعمدة تبدأ من 1 حتى عدد الاعمدة ناقص واحد. نحصل على هذا التتابع باستدعاء range(1,len(medal_counts[0]))."
+        },
+        {
+          "content": "لاحظ ان len(medal_counts[0]) تعيد عدد الاعمدة في medal_counts. ايضا، لاحظ ان اسم المتغير الذي نختاره لمؤشر الحلقة الداخلية يجب ان يكون مختلفا عن اسم مؤشر الحلقة الخارجية. هنا اخترنا i لمؤشر الصف و j لمؤشر العمود."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement is the inner loop of the nested loop. It processes the number of the medals of the country at row i. To iterate over the number of medals in row i, we need to check the second, third and fourth element in each row. Therefore, we need the column indexes to start at 1 with every integer number up to but not including the number of columns. We get this sequence by calling the range(1,len(medal_counts[0])) function."
+        },
+        {
+          "content": "Note that the function len(medal_counts[0]) returns the number of columns in the medal_counts. Also, note that the name that we choose for the index in the inner loop should be different from the index name in the outer for loop. Here, we choose i for the row index and j for the column index."
+        }
+      ],
+      "commentList": [
+        "هذا السطر هو الحلقة الداخلية للحلقات المتداخلة. هو يعالج عدد الميداليات للدولة في الصف i. للتكرار على عناصر الميداليات في الصف i نحتاج الاطلاع على العنصرين الثاني والثالث والرابع في كل صف. لذلك نحتاج فهارس للاعمدة تبدأ من 1 حتى عدد الاعمدة ناقص واحد. نحصل على هذا التتابع باستدعاء range(1,len(medal_counts[0])).",
+        "لاحظ ان len(medal_counts[0]) تعيد عدد الاعمدة في medal_counts. ايضا، لاحظ ان اسم المتغير الذي نختاره لمؤشر الحلقة الداخلية يجب ان يكون مختلفا عن اسم مؤشر الحلقة الخارجية. هنا اخترنا i لمؤشر الصف و j لمؤشر العمود."
+      ]
+    },
+    "20": {
+      "comments": [],
+      "blank": false
+    },
+    "21": {
+      "comments": [
+        {
+          "content": "نلصق محتوى صف المخرجات i مع عدد الميداليات في الصف i والعمود j من المصفوفة. كما نريد تنسيق صف الجدول باستخدام نفس تنسيق الرأس. لذا، مشابه لطباعة الرأس، نستدعي دالة format.<br>نستخدم {:>3d} لمحواذاة عدد الميداليات في الحقل بعرض 3 احرف الى اليمين."
+        },
+        {
+          "content": "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين وتليها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع d يتطلب معامل عددي صحيح. سيحدث خطأ اذا كان المعامل ليس عددا صحيحا او فاصلا عائما."
+        },
+        {
+          "content": "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We concatenate the content of the row i of the output table with the number of the medals at row i and column j of the the matrix. We also want to format the table row using the same format that we applied to the table header. So, similar to printing the table header, we call format function.<br>We use {:>3d} to right-justify the number of the medals, at row i and column j of the matrix, in a field that is 3-characters wide. "
+        },
+        {
+          "content": "Notice that the format specification inside a pair of curly braces starts with a : and followed by the text that specifies how the value should be presented, including the field width, alignment, and the data type code. The data type d requires a decimal argument. An error will occur if the argument is not a string, for instance, if the argument is an integer or a float."
+        },
+        {
+          "content": "This function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function."
+        }
+      ],
+      "commentList": [
+        "نلصق محتوى صف المخرجات i مع عدد الميداليات في الصف i والعمود j من المصفوفة. كما نريد تنسيق صف الجدول باستخدام نفس تنسيق الرأس. لذا، مشابه لطباعة الرأس، نستدعي دالة format.<br>نستخدم {:>3d} لمحواذاة عدد الميداليات في الحقل بعرض 3 احرف الى اليمين.",
+        "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين وتليها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع d يتطلب معامل عددي صحيح. سيحدث خطأ اذا كان المعامل ليس عددا صحيحا او فاصلا عائما.",
+        "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+      ]
+    },
+    "22": {
+      "comments": [],
+      "blank": false
+    },
+    "23": {
+      "comments": [
+        {
+          "content": "نحتاج لتراكم عدد الميداليات المختلفة (ذهب، فضة، برونز) التي فازت بها الدولة في الصف i. لذا، في كل تكرار من الحلقة الداخلية، يضاف عنصر المصفوفة medal_counts[i][j] الى متغير row_total ويخزن هناك."
+        },
+        {
+          "content": "عامل الاختصار += يضيف قيمة العنصر في الصف i والعمود j من القائمة الثنائية الابعاد medal_counts (اي العنصر medal_counts[i][j]) الى قيمة المتغير row_total ويحفظ الناتج في row_total. وبالتالي هذا السطر مكافئ للسطر row_total = row_total + medal_counts[i][j]."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We need to accumulate the number of different medals (gold, silver, bronze) won by the country at row i. So, in each iteration of the inner loop, the number of the medals at row i and column j of the matrix is added to and stored back into the variable row_total."
+        },
+        {
+          "content": "The += operator adds the value of the element in row i and column j of the two-dimensional list medals_counts (i.e., element medal_counts[i][j]) to the value of the variable row_total and the result is stored in the variable row_total. Thus, this statement is equivalent to the statement row_total = row_total + medal_counts[i][j]."
+        }
+      ],
+      "commentList": [
+        "نحتاج لتراكم عدد الميداليات المختلفة (ذهب، فضة، برونز) التي فازت بها الدولة في الصف i. لذا، في كل تكرار من الحلقة الداخلية، يضاف عنصر المصفوفة medal_counts[i][j] الى متغير row_total ويخزن هناك.",
+        "عامل الاختصار += يضيف قيمة العنصر في الصف i والعمود j من القائمة الثنائية الابعاد medal_counts (اي العنصر medal_counts[i][j]) الى قيمة المتغير row_total ويحفظ الناتج في row_total. وبالتالي هذا السطر مكافئ للسطر row_total = row_total + medal_counts[i][j]."
+      ]
+    },
+    "24": {
+      "comments": [],
+      "blank": false
+    },
+    "25": {
+      "comments": [
+        {
+          "content": "هذا السطر يضيف قيمة العنصر الحالي في الصف i والعمود j الى العنصر في الفهرس j-1 من القائمة column_totals. لاحظ ان column_totals[j-1] يخزن مجموع العمود j في المصفوفة المشار اليها بالمتغير medal_counts."
+        },
+        {
+          "content": "اذا كان j يساوي 1، فإنه يضيف العنصر الحالي الى column_totals[0] الذي يخزن مجموع ميداليات الذهب في المنافسة؛ اذا كان j يساوي 2، فإنه يضيف العنصر الى column_totals[1] الذي يخزن مجموع الفضية؛ واذا كان j يساوي 3، يضيفه الى column_totals[2] الذي يخزن مجموع البرونز."
+        },
+        {
+          "content": "لاحظ ان عامل الجمع المختصر += يضيف قيمة العنصر medal_counts[i][j] الى قيمة عنصر القائمة column_totals[j-1] ويخزن الناتج في نفس عنصر القائمة column_totals[j-1]. وبالتالي السطر مكافئ للعبارة column_totals[j-1] = column_totals[j-1] + medal_counts[i][j]."
+        }
+      ],
+      "blank": true,
+      "untr_comments": [
+        {
+          "content": "This statement adds the value of the current element in row i and column j to the element in the index j-1 of the list column_totals. Note that column_totals[j-1] stores the column total for the column j in the matrix referred by variable medals_counts."
+        },
+        {
+          "content": "If j is 1, it adds the current element to the column_totals[0] that stores total gold medals won in the competition; if j is 2, it adds the current element to the column_totals[1] that stores total silver medals won in the competition; and if j is 3, it adds the current element to the column_totals[2] that stores total bronze medals won in the competition."
+        },
+        {
+          "content": "Note that the += operator adds the value of the element in row i and column j of the medal_counts (i.e., element medal_counts[i][j]) to the value of the list element column_totals[j-1] and the result is stored in the list element column_totals[j-1]. Thus, this statement is equivalent to the statement column_totals[j-1] = column_totals[j-1] + medal_counts[i][j]."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يضيف قيمة العنصر الحالي في الصف i والعمود j الى العنصر في الفهرس j-1 من القائمة column_totals. لاحظ ان column_totals[j-1] يخزن مجموع العمود j في المصفوفة المشار اليها بالمتغير medal_counts.",
+        "اذا كان j يساوي 1، فإنه يضيف العنصر الحالي الى column_totals[0] الذي يخزن مجموع ميداليات الذهب في المنافسة؛ اذا كان j يساوي 2، فإنه يضيف العنصر الى column_totals[1] الذي يخزن مجموع الفضية؛ واذا كان j يساوي 3، يضيفه الى column_totals[2] الذي يخزن مجموع البرونز.",
+        "لاحظ ان عامل الجمع المختصر += يضيف قيمة العنصر medal_counts[i][j] الى قيمة عنصر القائمة column_totals[j-1] ويخزن الناتج في نفس عنصر القائمة column_totals[j-1]. وبالتالي السطر مكافئ للعبارة column_totals[j-1] = column_totals[j-1] + medal_counts[i][j]."
+      ]
+    },
+    "26": {
+      "comments": [],
+      "blank": false
+    },
+    "27": {
+      "comments": [
+        {
+          "content": "نلصق محتوى صف المخرجات i مع مجموع الصف الذي هو العدد الكلي للميداليات التي فازت بها الدولة في الصف i. كما نريد تنسيق صف الجدول بنفس تنسيق الرأس. لذا نستخدم {:>3d} لمحواذاة مجموع الصف في حقل عرضه 3 احرف."
+        },
+        {
+          "content": "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين وتليها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع d يتطلب معامل عددي صحيح. سيحدث خطأ اذا كان المعامل ليس عددا صحيحا او فاصلا عائما."
+        },
+        {
+          "content": "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We concatenate the content of the row i of the output table with the row total that is the total number of the medals won by the country at row i. We also want to format the table row using the same format that we applied to the table header. So, similar to the printing the table header, we call format function.<br>Here, we use {:>3d} to right-justify the row total in a field that is 3-characters wide. "
+        },
+        {
+          "content": "Notice that the format specification inside a pair of curly braces starts with a : and followed by the text that specifies how the value should be presented, including the field width, alignment, and the data type code. The data type d requires a decimal argument. An error will occur if the argument is not a string, for instance, if the argument is an integer or a float."
+        },
+        {
+          "content": "This function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function."
+        }
+      ],
+      "commentList": [
+        "نلصق محتوى صف المخرجات i مع مجموع الصف الذي هو العدد الكلي للميداليات التي فازت بها الدولة في الصف i. كما نريد تنسيق صف الجدول بنفس تنسيق الرأس. لذا نستخدم {:>3d} لمحواذاة مجموع الصف في حقل عرضه 3 احرف.",
+        "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين وتليها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع d يتطلب معامل عددي صحيح. سيحدث خطأ اذا كان المعامل ليس عددا صحيحا او فاصلا عائما.",
+        "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+      ]
+    },
+    "28": {
+      "comments": [],
+      "blank": false
+    },
+    "29": {
+      "comments": [
+        {
+          "content": "هذا السطر يطبع محتوى جدول المخرجات للدولة في الصف i. النص المطبع يتبعه محرف نهاية السطر في نهايته."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints the content of the output table for the country at row i. The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يطبع محتوى جدول المخرجات للدولة في الصف i. النص المطبع يتبعه محرف نهاية السطر في نهايته."
+      ]
+    },
+    "30": {
+      "comments": [],
+      "blank": false
+    },
+    "31": {
+      "comments": [
+        {
+          "content": "نريد طباعة مجاميع الاعمدة. كما نرغب في تنسيق هذا الصف الاخير من الجدول بنفس تنسيق الرأس. لذا نستدعي دالة format مماثلة للطباعة.<br>نستخدم {:>4s} لمحواذاة المعامل النصي في حقل عرضه 4 احرف."
+        },
+        {
+          "content": "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين وتليها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع s يتطلب معامل نصي. سيحدث خطأ اذا كان المعامل ليس نصا، مثلا اذا كان عددا صحيحا او فاصلا عائما."
+        },
+        {
+          "content": "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We want to print the column totals. We also want to format this last row of the table using the same format that we applied to the table header. So, similar to printing the table header, we call format function.<br>We use {:>4s} to right-justify the string argument of the format function in a field that is 4-characters wide."
+        },
+        {
+          "content": "Notice that the format specification inside a pair of curly braces starts with a : and followed by the text that specifies how the value should be presented, including the field width, alignment, and the data type code. The data type s requires a string argument. An error will occur if the argument is not a string, for instance, if the argument is an integer or a float."
+        },
+        {
+          "content": "This function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function."
+        }
+      ],
+      "commentList": [
+        "نريد طباعة مجاميع الاعمدة. كما نرغب في تنسيق هذا الصف الاخير من الجدول بنفس تنسيق الرأس. لذا نستدعي دالة format مماثلة للطباعة.<br>نستخدم {:>4s} لمحواذاة المعامل النصي في حقل عرضه 4 احرف.",
+        "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين وتليها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع s يتطلب معامل نصي. سيحدث خطأ اذا كان المعامل ليس نصا، مثلا اذا كان عددا صحيحا او فاصلا عائما.",
+        "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+      ]
+    },
+    "32": {
+      "comments": [
+        {
+          "content": "نريد طباعة مجاميع الاعمدة المخزنة في القائمة column_totals. للتكرار على عناصر هذه القائمة نحتاج فهارس تبدأ من 0 حتى عدد عناصر القائمة ناقص واحد. نحصل على ذلك باستدعاء range(len(column_totals)). لاحظ ان len(column_totals) تعيد عدد عناصر القائمة column_totals."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We want to print the column totals stored in the list column_totals. To iterate over the individual elements in this list, we need the indexes to start at 0 with every integer number up to but not including the number of elements in the list column_totals. We get this sequence by calling the range(len(column_totals)) function. Note that the function len(column_totals) returns the number of elements in the list column_totals."
+        }
+      ],
+      "commentList": [
+        "نريد طباعة مجاميع الاعمدة المخزنة في القائمة column_totals. للتكرار على عناصر هذه القائمة نحتاج فهارس تبدأ من 0 حتى عدد عناصر القائمة ناقص واحد. نحصل على ذلك باستدعاء range(len(column_totals)). لاحظ ان len(column_totals) تعيد عدد عناصر القائمة column_totals."
+      ]
+    },
+    "33": {
+      "comments": [
+        {
+          "content": "نلصق مجاميع الاعمدة لصف الجدول الاخير. كما نريد تنسيقه بنفس طريقة رأس الجدول. لذا نستدعي دالة format.<br>نستخدم {:>3d} لمحواذاة كل مجموع عمود في حقل عرضه 3 احرف."
+        },
+        {
+          "content": "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين وتليها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع d يتطلب معامل عددي صحيح. سيحدث خطأ اذا كان المعامل ليس عددا صحيحا او فاصلا عائما."
+        },
+        {
+          "content": "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "We concatenate the column totals for the last row of the output table. We also want to format the table row using the same format that we applied to the table header. So, similar to printing the table header, we call format function.<br>We use {:>3d} to right-justify the column total in a field that is 3-characters wide. "
+        },
+        {
+          "content": "Notice that the format specification inside a pair of curly braces starts with a : and followed by the text that specifies how the value should be presented, including the field width, alignment, and the data type code. The data type d requires a decimal argument. An error will occur if the argument is not a string, for instance, if the argument is an integer or a float."
+        },
+        {
+          "content": "This function returns the result of replacing each {…} placeholder in the template string with its corresponding argument passed to the format function."
+        }
+      ],
+      "commentList": [
+        "نلصق مجاميع الاعمدة لصف الجدول الاخير. كما نريد تنسيقه بنفس طريقة رأس الجدول. لذا نستدعي دالة format.<br>نستخدم {:>3d} لمحواذاة كل مجموع عمود في حقل عرضه 3 احرف.",
+        "لاحظ ان مواصفة التنسيق داخل الاقواس المعقوفة تبدأ بنقطتين وتليها النص الذي يحدد كيفية عرض القيمة، بما في ذلك عرض الحقل والمحاذاة ونوع البيانات. كود النوع d يتطلب معامل عددي صحيح. سيحدث خطأ اذا كان المعامل ليس عددا صحيحا او فاصلا عائما.",
+        "هذه الدالة تعيد نتيجة استبدال كل عنصر نائب {…} في سلسلة القالب بالمعامل المقابل الممرر الى دالة format."
+      ]
+    },
+    "34": {
+      "comments": [
+        {
+          "content": "هذا السطر يطبع محتوى الصف الاخير من الجدول. النص المطبع يتبعه محرف نهاية السطر في نهايته."
+        }
+      ],
+      "blank": false,
+      "untr_comments": [
+        {
+          "content": "This statement prints the content of the last row of the output table. The printed text is followed by the end-of-line character at the end."
+        }
+      ],
+      "commentList": [
+        "هذا السطر يطبع محتوى الصف الاخير من الجدول. النص المطبع يتبعه محرف نهاية السطر في نهايته."
+      ]
+    }
+  },
+  "distractors": [
+    {
+      "code": "column_totals = [0]",
+      "description": "",
+      "untr_code": "column_totals = [0]",
+      "untr_description": ""
+    },
+    {
+      "code": "column_totals = [0] * ( len(medal_counts) )",
+      "description": "",
+      "untr_code": "column_totals = [0] * ( len(medal_counts) )",
+      "untr_description": ""
+    },
+    {
+      "code": "column_totals[i-1] += medal_counts[i][j];",
+      "description": "",
+      "untr_code": "column_totals[i-1] += medal_counts[i][j];",
+      "untr_description": ""
+    },
+    {
+      "code": "column_totals[i-1] = medal_counts[i][j];",
+      "description": "",
+      "untr_code": "column_totals[i-1] = medal_counts[i][j];",
+      "untr_description": ""
+    },
+    {
+      "code": "column_totals[j-1] += medal_counts[j][i];",
+      "description": "",
+      "untr_code": "column_totals[j-1] += medal_counts[j][i];",
+      "untr_description": ""
+    }
+  ],
+  "programInput": "",
+  "collaborator_emails": [
+    "zainakhalil002@gmail.com",
+    "peterb@pitt.edu"
+  ],
+  "extraFiles": [],
+  "iso_language_code": "ar",
+  "updated_at": "2026-10-20T15:05:00.527Z",
+  "stat": {
+    "size": 65529,
+    "lastTimeModified": 1760983418661.1711
+  },
+  "untr_name": "Printing Table of Medal Winner Counts with Row and Column Totals",
+  "untr_description": "Assume that we have a 7x4 matrix that stores the number of medals that seven countries won in the skating competitions at the Winter Olympic. This matrix looks like as follows:\\n[[ \"Canada\", 1, 0, 1 ],\\n [ \"China\", 1, 1, 0 ],\\n ...]\\nEach row of this matrix corresponds to the medal counts for the country in that row. The second, third, and fourth numbers within a row represent the number of Gold, Silver, and Bronze medals won by the corresponding country in that row.\\nConstruct a program that takes this matrix and prints a table of medal counts with row and column totals. The column totals are the sum of the gold, silver, and bronze medals won in the competition. The output table should look like as follows:\\n      Country    Gold  Silver  Bronze   Total\\n         Canada        1       0       1          2\\n            China        1       1       0          2\\n           ...\\nColumn Total      4       4       4",
+  "untr_code": "#Step 1: Define a 7x4 matrix that stores the number of medals won by seven countries\nmedal_counts = [[ \"CAN\", 1, 0, 1 ],\n                [ \"CHN\", 1, 1, 0 ],\n                [ \"GER\", 0, 0, 1 ],\n                [ \"KOR\", 1, 0, 0 ],\n                [ \"JPN\", 0, 1, 1 ],\n                [ \"RUS\", 0, 1, 1 ],\n                [ \"USA\", 1, 1, 0 ]]\n#Step 2: Create a list to store column totals\ncolumn_totals = [0] * ( len(medal_counts[0]) - 1 )\n#Step 3: Print the header of the output table\nprint(\"{:>4s}{:>3s}{:>3s}{:>3s}{:>4s}\".format(\"Name\",\"G\",\"S\",\"B\",\"All\"))\n#Step 4: Iterate through the rows in the medal counts matrix\nfor i in range(len(medal_counts)):\n    #Step 4.1: Assign initial values to variables we need for printing row i\n    line = \"{:>4s}\".format(medal_counts[i][0])\n    row_total = 0\n    #Step 4.2: Iterate through the columns that have medal counts  \n    for j in range(1, len(medal_counts[0])):\n        #Step 4.2.1: Append medal counts to the content of row i\n        line += \"{:>3d}\".format(medal_counts[i][j])\n        #Step 4.2.2: Update the row total for row i \n        row_total += medal_counts[i][j]\n        #Step 4.2.3: Update the column total for the column j \n        column_totals[j-1] += medal_counts[i][j]\n    #Step 4.3: Add the row total to the content of the output table for row i\n    line += \"{:>3d}\".format(row_total)\n    #Step 4.4: Print the content of the output table for row i\n    print(line)\n#Step 5: Print the column totals\nline = \"{:>4s}\".format(\"All\")\nfor j in range(len(column_totals)):\n    line += \"{:>3d}\".format(column_totals[j])\nprint(line)",
+  "translations": {
+    "en": "6a91ae6932e78ede45c116db"
+  }
+}
