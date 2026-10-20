@@ -128,11 +128,14 @@ export class SourcesService {
       const orClauses: any[] = [
         { name: qRegex },
         { description: qRegex },
+        { untr_name: qRegex },
+        { untr_description: qRegex },
         { language: qRegex },
         { iso_language_code: qRegex },
         { tags: qRegex },
         { user: qRegex },
         { collaborator_emails: qRegex },
+        { _id: q },
       ];
       if (q.length === 24 && /^[0-9a-fA-F]{24}$/.test(q)) {
         orClauses.push({ _id: new Types.ObjectId(q) });
@@ -153,10 +156,16 @@ export class SourcesService {
       }
     }
 
-    let sortStage: any = { _id: -1 };
+    let sortStage: any = { effective_created_at: -1, _id: -1 };
     switch (params.sort) {
       case 'date_asc':
-        sortStage = { _id: 1 };
+        sortStage = { effective_created_at: 1, _id: 1 };
+        break;
+      case 'updated_desc':
+        sortStage = { effective_updated_at: -1, _id: -1 };
+        break;
+      case 'updated_asc':
+        sortStage = { effective_updated_at: 1, _id: 1 };
         break;
       case 'name_asc':
         sortStage = { name: 1, _id: -1 };
@@ -172,7 +181,7 @@ export class SourcesService {
         break;
       case 'date_desc':
       default:
-        sortStage = { _id: -1 };
+        sortStage = { effective_created_at: -1, _id: -1 };
         break;
     }
 
@@ -180,6 +189,42 @@ export class SourcesService {
       { $match: matchConditions },
       {
         $addFields: {
+          effective_created_at: {
+            $ifNull: [
+              '$created_at',
+              {
+                $ifNull: [
+                  {
+                    $convert: {
+                      input: '$_id',
+                      to: 'date',
+                      onError: null,
+                      onNull: null,
+                    },
+                  },
+                  { $ifNull: ['$updated_at', new Date(0)] },
+                ],
+              },
+            ],
+          },
+          effective_updated_at: {
+            $ifNull: [
+              '$updated_at',
+              {
+                $ifNull: [
+                  '$created_at',
+                  {
+                    $convert: {
+                      input: '$_id',
+                      to: 'date',
+                      onError: null,
+                      onNull: null,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
           blank_lines_count: {
             $cond: {
               if: { $eq: [{ $type: '$lines' }, 'object'] },
@@ -237,14 +282,16 @@ export class SourcesService {
               _id: 1,
               name: 1,
               description: 1,
+              untr_name: 1,
+              untr_description: 1,
               tags: 1,
               iso_language_code: 1,
               language: 1,
               user: 1,
               collaborator_emails: 1,
               translations: 1,
-              created_at: 1,
-              updated_at: 1,
+              created_at: { $ifNull: ['$created_at', '$effective_created_at'] },
+              updated_at: { $ifNull: ['$updated_at', '$effective_updated_at'] },
               archived: 1,
               blank_lines_count: 1,
             }

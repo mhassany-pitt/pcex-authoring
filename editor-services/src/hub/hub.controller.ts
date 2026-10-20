@@ -30,10 +30,10 @@ export class HubController {
       }, {});
 
     return (await this.service.list({ key })).map(activity => {
-      const { id, name, items, iso_language_code, 
+      const { id, name, description, untr_name, untr_description, items, iso_language_code, 
         translations, user, collaborator_emails,
         created_at, updated_at } = useId(activity);
-      return { id, name, items, author: users[user], 
+      return { id, name, description, untr_name, untr_description, items, author: users[user], 
         iso_language_code, translations, 
         collaborators: collaborator_emails,
         created_at, updated_at };

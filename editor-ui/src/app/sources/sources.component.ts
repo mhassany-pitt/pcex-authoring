@@ -106,6 +106,8 @@ export class SourcesComponent implements OnInit, OnDestroy {
   highlightedId: string | null = null;
   highlightTimeout: any;
   private queryParamsSub?: Subscription;
+  private loadSub?: Subscription;
+  isTypingSearch = false;
 
   // Options Definitions
   ownerOptions = [
@@ -120,6 +122,7 @@ export class SourcesComponent implements OnInit, OnDestroy {
   ];
 
   sortOptions = [
+    { label: 'Recently Modified', value: 'updated_desc' },
     { label: 'Date Created (Newest)', value: 'date_desc' },
     { label: 'Date Created (Oldest)', value: 'date_asc' },
     { label: 'Name (A – Z)', value: 'name_asc' },
@@ -216,9 +219,13 @@ export class SourcesComponent implements OnInit, OnDestroy {
     window.removeEventListener('scroll', this.onScrollListener, true);
     window.removeEventListener('pointerdown', this.onInteractionListener, true);
     window.removeEventListener('keydown', this.onInteractionListener, true);
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
     if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
     this.queryParamsSub?.unsubscribe();
+    this.loadSub?.unsubscribe();
   }
 
   parseQueryParams(params: any): boolean {
@@ -240,9 +247,11 @@ export class SourcesComponent implements OnInit, OnDestroy {
     };
 
     const newQuery = (params['q'] || '').trim();
-    if (newQuery !== this.searchQuery) {
-      this.searchQuery = newQuery;
-      changed = true;
+    if (!this.isTypingSearch) {
+      if (newQuery !== this.searchQuery) {
+        this.searchQuery = newQuery;
+        changed = true;
+      }
     }
 
     const newOwner = (params['owner'] && ['all', 'mine', 'shared'].includes(params['owner'])) ? params['owner'] : 'all';
@@ -380,7 +389,11 @@ export class SourcesComponent implements OnInit, OnDestroy {
 
   // Filter Removal Helpers
   clearFilters() {
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    this.isTypingSearch = false;
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
     this.searchQuery = '';
     this.selectedOwner = 'all';
     this.selectedAuthors = [];
@@ -395,7 +408,11 @@ export class SourcesComponent implements OnInit, OnDestroy {
   }
 
   clearSearch() {
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    this.isTypingSearch = false;
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
     this.searchQuery = '';
     this.onFilterChange();
   }
@@ -448,11 +465,16 @@ export class SourcesComponent implements OnInit, OnDestroy {
       const d = new Date(source.created_at);
       if (!isNaN(d.getTime())) return d;
     }
+    if (source.updated_at) {
+      const d = new Date(source.updated_at);
+      if (!isNaN(d.getTime())) return d;
+    }
     if (source.id && typeof source.id === 'string' && source.id.length === 24) {
       try {
         const timestamp = parseInt(source.id.substring(0, 8), 16) * 1000;
         const d = new Date(timestamp);
-        if (!isNaN(d.getTime())) return d;
+        const yr = d.getFullYear();
+        if (!isNaN(d.getTime()) && yr >= 2015 && yr <= new Date().getFullYear() + 1) return d;
       } catch (e) {}
     }
     return null;
@@ -494,7 +516,7 @@ export class SourcesComponent implements OnInit, OnDestroy {
     if (this.selectedSort && this.selectedSort !== 'date_desc') queryParams.sort = this.selectedSort;
     if (this.archived) queryParams.archived = 'true';
 
-    this.router.navigate([], {
+    return this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
       replaceUrl: replace,
@@ -502,11 +524,17 @@ export class SourcesComponent implements OnInit, OnDestroy {
   }
 
   onSearchInput() {
+    this.isTypingSearch = true;
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
+      this.searchTimeout = null;
       this.page = 1;
       this.reload();
-      this.updateUrlParams(true);
+      this.updateUrlParams(true).finally(() => {
+        if (!this.searchTimeout) {
+          this.isTypingSearch = false;
+        }
+      });
     }, 250);
   }
 
@@ -526,8 +554,11 @@ export class SourcesComponent implements OnInit, OnDestroy {
 
   // Load Data
   reload(then?: () => void) {
+    if (this.loadSub) {
+      this.loadSub.unsubscribe();
+    }
     this.isLoading = true;
-    this.api.sources({
+    this.loadSub = this.api.sources({
       page: this.page,
       limit: this.pageSize,
       sort: this.selectedSort,
@@ -540,8 +571,8 @@ export class SourcesComponent implements OnInit, OnDestroy {
       trans: this.hasTranslationsFilter ? 'true' : undefined,
       tags: this.selectedTags?.length ? this.selectedTags.join(',') : undefined,
       archived: this.archived,
-    }).subscribe(
-      (res: any) => {
+    }).subscribe({
+      next: (res: any) => {
         this.sources = res.items || [];
         this.filteredSources = this.sources;
         this.totalRecords = res.total || 0;
@@ -551,11 +582,11 @@ export class SourcesComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         then?.();
       },
-      (error: any) => {
+      error: (error: any) => {
         console.error('Error fetching sources:', error);
         this.isLoading = false;
       }
-    );
+    });
   }
 
   // Source Actions

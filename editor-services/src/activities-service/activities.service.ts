@@ -186,6 +186,9 @@ export class ActivitiesService {
       const qRegex = new RegExp(escapeRegex(q), 'i');
       const orClauses: any[] = [
         { name: qRegex },
+        { description: qRegex },
+        { untr_name: qRegex },
+        { untr_description: qRegex },
         { user: qRegex },
         { language: qRegex },
         { iso_language_code: qRegex },
@@ -194,9 +197,12 @@ export class ActivitiesService {
         { 'items.item': qRegex },
         { 'items.details.name': qRegex },
         { 'items.details.description': qRegex },
+        { 'items.details.untr_name': qRegex },
+        { 'items.details.untr_description': qRegex },
         { 'items.details.language': qRegex },
         { 'items.details.iso_language_code': qRegex },
         { 'items.details.tags': qRegex },
+        { _id: q },
       ];
       if (q.length === 24 && /^[0-9a-fA-F]{24}$/.test(q)) {
         orClauses.push({ _id: new Types.ObjectId(q) });
@@ -225,10 +231,16 @@ export class ActivitiesService {
       }
     }
 
-    let sortStage: any = { _id: -1 };
+    let sortStage: any = { effective_created_at: -1, _id: -1 };
     switch (params.sort) {
       case 'date_asc':
-        sortStage = { _id: 1 };
+        sortStage = { effective_created_at: 1, _id: 1 };
+        break;
+      case 'updated_desc':
+        sortStage = { effective_updated_at: -1, _id: -1 };
+        break;
+      case 'updated_asc':
+        sortStage = { effective_updated_at: 1, _id: 1 };
         break;
       case 'name_asc':
         sortStage = { name: 1, _id: -1 };
@@ -244,7 +256,7 @@ export class ActivitiesService {
         break;
       case 'date_desc':
       default:
-        sortStage = { _id: -1 };
+        sortStage = { effective_created_at: -1, _id: -1 };
         break;
     }
 
@@ -252,6 +264,42 @@ export class ActivitiesService {
       { $match: matchConditions },
       {
         $addFields: {
+          effective_created_at: {
+            $ifNull: [
+              '$created_at',
+              {
+                $ifNull: [
+                  {
+                    $convert: {
+                      input: '$_id',
+                      to: 'date',
+                      onError: null,
+                      onNull: null,
+                    },
+                  },
+                  { $ifNull: ['$updated_at', new Date(0)] },
+                ],
+              },
+            ],
+          },
+          effective_updated_at: {
+            $ifNull: [
+              '$updated_at',
+              {
+                $ifNull: [
+                  '$created_at',
+                  {
+                    $convert: {
+                      input: '$_id',
+                      to: 'date',
+                      onError: null,
+                      onNull: null,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
           items_count: {
             $cond: {
               if: { $isArray: '$items' },
@@ -278,14 +326,17 @@ export class ActivitiesService {
             $project: {
               _id: 1,
               name: 1,
+              description: 1,
+              untr_name: 1,
+              untr_description: 1,
               items: 1,
               linkings: 1,
               user: 1,
               iso_language_code: 1,
               translations: 1,
               collaborator_emails: 1,
-              created_at: 1,
-              updated_at: 1,
+              created_at: { $ifNull: ['$created_at', '$effective_created_at'] },
+              updated_at: { $ifNull: ['$updated_at', '$effective_updated_at'] },
               published: 1,
               archived: 1,
               items_count: 1,

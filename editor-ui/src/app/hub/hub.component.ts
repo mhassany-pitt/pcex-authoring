@@ -42,6 +42,7 @@ export class HubComponent implements OnInit, OnDestroy {
   highlightedId: string | null = null;
   highlightTimeout: any;
   private queryParamsSub?: Subscription;
+  isTypingSearch = false;
 
   // Filter option lists
   availableAuthors: { label: string; value: string }[] = [];
@@ -55,6 +56,7 @@ export class HubComponent implements OnInit, OnDestroy {
   ];
 
   sortOptions = [
+    { label: 'Recently Modified', value: 'updated_desc' },
     { label: 'Date Created (Newest)', value: 'date_desc' },
     { label: 'Date Created (Oldest)', value: 'date_asc' },
     { label: 'Name (A – Z)', value: 'name_asc' },
@@ -156,7 +158,10 @@ export class HubComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
     if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
     this.queryParamsSub?.unsubscribe();
   }
@@ -180,9 +185,11 @@ export class HubComponent implements OnInit, OnDestroy {
     };
 
     const newQuery = (params['q'] || '').trim();
-    if (newQuery !== this.searchQuery) {
-      this.searchQuery = newQuery;
-      changed = true;
+    if (!this.isTypingSearch) {
+      if (newQuery !== this.searchQuery) {
+        this.searchQuery = newQuery;
+        changed = true;
+      }
     }
 
     const newAuthors = parseArray('authors', 'author');
@@ -241,7 +248,7 @@ export class HubComponent implements OnInit, OnDestroy {
     if (this.selectedTags?.length) queryParams.tags = this.selectedTags.join(',');
     if (this.selectedSort && this.selectedSort !== 'date_desc') queryParams.sort = this.selectedSort;
 
-    this.router.navigate([], {
+    return this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
       replaceUrl: replace,
@@ -275,12 +282,12 @@ export class HubComponent implements OnInit, OnDestroy {
             const itemLang = item.details?.iso_language_code ? this.getLanguageName(item.details.iso_language_code) : '';
             const itemProg = item.details?.language || '';
             const tags = (item.details?.tags || []).join(' ');
-            return `${item.details?.name || ''} ${item.details?.description || ''} ${itemProg} ${itemLang} ${tags}`;
+            return `${item.details?.name || ''} ${item.details?.untr_name || ''} ${item.details?.description || ''} ${item.details?.untr_description || ''} ${itemProg} ${itemLang} ${tags}`;
           }).join(' ');
 
           const collabs = (activity.collaborators || []).join(' ');
 
-          activity._filter_details = `${activity.id} ${activity.name || ''} ${actLang} ${activity.author_name} ${activity.author?.email || ''} ${collabs} ${itemsText}`.toLowerCase();
+          activity._filter_details = `${activity.id} ${activity.name || ''} ${activity.untr_name || ''} ${activity.description || ''} ${activity.untr_description || ''} ${actLang} ${activity.author_name} ${activity.author?.email || ''} ${collabs} ${itemsText}`.toLowerCase();
           return activity;
         });
 
@@ -413,6 +420,10 @@ export class HubComponent implements OnInit, OnDestroy {
     // Sorting
     this.filteredActivities.sort((a, b) => {
       switch (this.selectedSort) {
+        case 'updated_desc':
+          return this.getUpdatedTime(b) - this.getUpdatedTime(a);
+        case 'updated_asc':
+          return this.getUpdatedTime(a) - this.getUpdatedTime(b);
         case 'date_asc':
           return this.getCreationTime(a) - this.getCreationTime(b);
         case 'name_desc':
@@ -431,10 +442,21 @@ export class HubComponent implements OnInit, OnDestroy {
   }
 
   getCreationDate(activity: any): Date | null {
-    if (activity.created_at) return new Date(activity.created_at);
-    if (activity.id && typeof activity.id === 'string' && activity.id.length === 24) {
-      const timestamp = parseInt(activity.id.substring(0, 8), 16) * 1000;
-      if (!isNaN(timestamp)) return new Date(timestamp);
+    if (activity?.created_at) {
+      const d = new Date(activity.created_at);
+      if (!isNaN(d.getTime())) return d;
+    }
+    if (activity?.updated_at) {
+      const d = new Date(activity.updated_at);
+      if (!isNaN(d.getTime())) return d;
+    }
+    if (activity?.id && typeof activity.id === 'string' && activity.id.length >= 8) {
+      try {
+        const timestamp = parseInt(activity.id.substring(0, 8), 16) * 1000;
+        const d = new Date(timestamp);
+        const yr = d.getFullYear();
+        if (!isNaN(d.getTime()) && yr >= 2015 && yr <= new Date().getFullYear() + 1) return d;
+      } catch (e) {}
     }
     return null;
   }
@@ -444,12 +466,31 @@ export class HubComponent implements OnInit, OnDestroy {
     return d ? d.getTime() : 0;
   }
 
+  getUpdatedDate(activity: any): Date | null {
+    if (activity?.updated_at) {
+      const d = new Date(activity.updated_at);
+      if (!isNaN(d.getTime())) return d;
+    }
+    return this.getCreationDate(activity);
+  }
+
+  getUpdatedTime(activity: any): number {
+    const d = this.getUpdatedDate(activity);
+    return d ? d.getTime() : 0;
+  }
+
   onSearchInput() {
+    this.isTypingSearch = true;
     this.applyFilters();
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
-      this.updateUrlParams(true);
-    }, 200);
+      this.searchTimeout = null;
+      this.updateUrlParams(true).finally(() => {
+        if (!this.searchTimeout) {
+          this.isTypingSearch = false;
+        }
+      });
+    }, 250);
   }
 
   onFilterChange() {
@@ -458,13 +499,22 @@ export class HubComponent implements OnInit, OnDestroy {
   }
 
   clearSearch() {
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    this.isTypingSearch = false;
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
     this.searchQuery = '';
-    this.onFilterChange();
+    this.applyFilters();
+    this.updateUrlParams(false);
   }
 
   clearFilters() {
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    this.isTypingSearch = false;
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
     this.searchQuery = '';
     this.selectedAuthors = [];
     this.selectedProgLangs = [];
@@ -473,7 +523,8 @@ export class HubComponent implements OnInit, OnDestroy {
     this.hasTranslationsFilter = false;
     this.selectedTags = [];
     this.selectedSort = 'date_desc';
-    this.onFilterChange();
+    this.applyFilters();
+    this.updateUrlParams(false);
   }
 
   removeAuthor(author: string) {

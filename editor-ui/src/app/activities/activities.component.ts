@@ -118,6 +118,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   ];
 
   sortOptions = [
+    { label: 'Recently Modified', value: 'updated_desc' },
     { label: 'Date Created (Newest)', value: 'date_desc' },
     { label: 'Date Created (Oldest)', value: 'date_asc' },
     { label: 'Name (A – Z)', value: 'name_asc' },
@@ -205,7 +206,6 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     if (this.hasTranslationsFilter) count++;
     count += this.selectedItemCounts?.length || 0;
     count += this.selectedTags?.length || 0;
-    if (this.selectedSort !== 'date_desc') count++;
     if (this.archived) count++;
     return count;
   }
@@ -221,6 +221,8 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   highlightTimeout: any;
   searchTimeout: any;
   private queryParamsSub?: Subscription;
+  private loadSub?: Subscription;
+  isTypingSearch = false;
 
   private lastDropdownOpenTime = 0;
 
@@ -336,9 +338,13 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     window.removeEventListener('scroll', this.onScrollListener, true);
     window.removeEventListener('pointerdown', this.onInteractionListener, true);
     window.removeEventListener('keydown', this.onInteractionListener, true);
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
     if (this.highlightTimeout) clearTimeout(this.highlightTimeout);
     this.queryParamsSub?.unsubscribe();
+    this.loadSub?.unsubscribe();
   }
 
   parseQueryParams(params: any): boolean {
@@ -360,9 +366,11 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     };
 
     const newQuery = (params['q'] || '').trim();
-    if (newQuery !== this.searchQuery) {
-      this.searchQuery = newQuery;
-      changed = true;
+    if (!this.isTypingSearch) {
+      if (newQuery !== this.searchQuery) {
+        this.searchQuery = newQuery;
+        changed = true;
+      }
     }
 
     const newOwner = (params['owner'] && ['all', 'mine', 'shared'].includes(params['owner'])) ? params['owner'] : 'all';
@@ -493,7 +501,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.router.navigate([], {
+    return this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
       replaceUrl: replace,
@@ -501,11 +509,17 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   onSearchInput() {
+    this.isTypingSearch = true;
     if (this.searchTimeout) clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
+      this.searchTimeout = null;
       this.page = 1;
       this.reload();
-      this.updateUrlParams(true);
+      this.updateUrlParams(true).finally(() => {
+        if (!this.searchTimeout) {
+          this.isTypingSearch = false;
+        }
+      });
     }, 250);
   }
 
@@ -524,7 +538,11 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   clearFilters() {
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    this.isTypingSearch = false;
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
     this.searchQuery = '';
     this.selectedOwner = 'all';
     this.selectedAuthors = [];
@@ -541,7 +559,11 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   clearSearch() {
-    if (this.searchTimeout) clearTimeout(this.searchTimeout);
+    this.isTypingSearch = false;
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
     this.searchQuery = '';
     this.onFilterChange();
   }
@@ -601,11 +623,16 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       const d = new Date(activity.created_at);
       if (!isNaN(d.getTime())) return d;
     }
+    if (activity?.updated_at) {
+      const d = new Date(activity.updated_at);
+      if (!isNaN(d.getTime())) return d;
+    }
     if (activity?.id && typeof activity.id === 'string' && activity.id.length >= 8) {
       try {
         const time = parseInt(activity.id.substring(0, 8), 16) * 1000;
         const d = new Date(time);
-        if (!isNaN(d.getTime())) return d;
+        const yr = d.getFullYear();
+        if (!isNaN(d.getTime()) && yr >= 2015 && yr <= new Date().getFullYear() + 1) return d;
       } catch (e) {}
     }
     return null;
@@ -613,6 +640,19 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
   getCreationTime(activity: any): number {
     const d = this.getCreationDate(activity);
+    return d ? d.getTime() : 0;
+  }
+
+  getUpdatedDate(activity: any): Date | null {
+    if (activity?.updated_at) {
+      const d = new Date(activity.updated_at);
+      if (!isNaN(d.getTime())) return d;
+    }
+    return this.getCreationDate(activity);
+  }
+
+  getUpdatedTime(activity: any): number {
+    const d = this.getUpdatedDate(activity);
     return d ? d.getTime() : 0;
   }
 
@@ -694,9 +734,12 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   }
 
   reload(then?: () => void) {
+    if (this.loadSub) {
+      this.loadSub.unsubscribe();
+    }
     this.create = false;
     this.isLoading = true;
-    this.api.activities({
+    this.loadSub = this.api.activities({
       page: this.page,
       limit: this.pageSize,
       sort: this.selectedSort,
@@ -711,8 +754,8 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       counts: this.selectedItemCounts?.length ? this.selectedItemCounts.join(',') : undefined,
       tags: this.selectedTags?.length ? this.selectedTags.join(',') : undefined,
       archived: this.archived,
-    }).subscribe(
-      (res: any) => {
+    }).subscribe({
+      next: (res: any) => {
         this.activities = res.items || [];
         this.filteredActivities = this.activities;
         this.totalRecords = res.total || 0;
@@ -734,11 +777,11 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         then?.();
       },
-      (error: any) => {
+      error: (error: any) => {
         console.error(error);
         this.isLoading = false;
       }
-    );
+    });
   }
 
   download(activity: any) {
