@@ -32,6 +32,22 @@ export class GptGenaiController {
     return await this.keyvalueService.put(req.user.email, 'gpt-config', body.value);
   }
 
+  @Post('test')
+  @UseGuards(AuthenticatedGuard)
+  async testConfig(@Req() req: any, @Body() body: any) {
+    try {
+      const config = body?.config || (await this.keyvalueService.get(req.user.email, 'gpt-config'))?.value || {};
+      const validated = await this.service.validate({ ...config });
+      const result = await this.service.testConfig(validated);
+      return result;
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err?.message || String(err)
+      };
+    }
+  }
+
   @Post()
   @UseGuards(AuthenticatedGuard)
   async generate(@Req() req: any, @Res() res: Response, @Body() body: any) {

@@ -63,6 +63,10 @@ export class SourcesService {
     return this.http.put(`${environment.apiUrl}/keyvalues/gpt-config`, { value: config }, { withCredentials: true });
   }
 
+  testGptConfig(config: any) {
+    return this.http.post(`${environment.apiUrl}/gpt-genai/test`, { config }, { withCredentials: true });
+  }
+
   clone(id: string, options?: { allUsers?: boolean }) {
     return this.http.post(`${environment.apiUrl}/sources/${id}/clone${options?.allUsers ? '?allUsers=true' : ''}`, {}, { withCredentials: true });
   }

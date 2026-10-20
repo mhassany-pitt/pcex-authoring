@@ -329,7 +329,7 @@
             </div>
 
             <!-- identify and explain lines -->
-            <button pButton type="button" [title]="modelHasChanged ? 'Default model has changed - click to configure and reset' : 'Configure GPT (globally)'"
+            <button pButton type="button" [title]="modelHasChanged ? 'Default model has changed - click to configure and reset' : 'Configure LLM (globally)'"
               icon="pi pi-cog"
               [class]="modelHasChanged ? 'p-button-sm p-button-warning' : 'p-button-sm p-button-help p-button-outlined'"
               (click)="loadOpenAIGPTConfig()">
@@ -616,9 +616,9 @@
 </p-dialog>
 
 <!-- gpt-config -->
-<p-dialog *ngIf="_v['show-gpt-config']" [(visible)]="_v['show-gpt-config']" header="OPENAI-GPT CONFIGURATION"
-  [modal]="true" [style]="{'width': '35rem'}" (onShow)="log({ type: 'open-gpt-config' })"
-  (onHide)="log({ type: 'close-gpt-config' }); modelResetSuccess = false;">
+<p-dialog *ngIf="_v['show-gpt-config']" [(visible)]="_v['show-gpt-config']" header="OPENAI-COMPATIBLE LLM CONFIGURATION"
+  [modal]="true" [style]="{'width': '38rem'}" (onShow)="log({ type: 'open-gpt-config' })"
+  (onHide)="log({ type: 'close-gpt-config' }); modelResetSuccess = false; testConfigResult = null;">
   <form #form="ngForm" (ngSubmit)="saveOpenAIGPTConfig()" class="flex flex-col gap-2">
     <div *ngIf="modelHasChanged" class="p-3 bg-amber-50 border border-amber-300 rounded text-amber-900 text-xs flex flex-col gap-1">
       <div class="font-bold flex items-center gap-1.5 text-amber-800">
@@ -635,9 +635,14 @@
       <span>Default model restored to <strong>{{ defaultGptConfig.model }}</strong>. Click <strong>SAVE</strong> to apply.</span>
     </div>
 
-    <span class="text-xs text-gray-600">
-      You need an API key if you specify a model other than the default model or a custom baseURL. The default model and baseURL use the server's configured settings.
-    </span>
+    <div class="text-xs text-gray-600 flex flex-col gap-1">
+      <span>
+        Configure any OpenAI-compatible LLM endpoint (e.g., OpenAI, Ollama, vLLM, LiteLLM). All defined JSON parameters are passed directly to the model API.
+      </span>
+      <span class="text-slate-500">
+        <strong>Note:</strong> Make sure to provide model-specific parameters if required by your model (such as <code>max_tokens</code> or <code>max_completion_tokens</code>, and <code>temperature</code>).
+      </span>
+    </div>
     <textarea pInputTextarea name="gpt-config" [placeholder]="GPT_CONF_PLACEHOLDER" rows="10"
       [(ngModel)]="openAIGPTConfig" [required]="true" class="p-inputtext-sm w-full border-gray-200"></textarea>
 
@@ -651,11 +656,35 @@
     </span>
     <!-- ---------- -->
 
-    <div class="flex items-center gap-2">
-      <button pButton type="button" label="RESET" class="p-button-sm p-button-secondary uppercase tracking-tight"
-        (click)="resetOpenAIGPTConfig()">
-      </button>
-      <button pButton type="submit" label="SAVE" class="p-button-sm p-button-help uppercase tracking-tight" [disabled]="form.invalid">
+    <div *ngIf="testConfigResult && testConfigResult.success"
+      class="p-2.5 bg-green-50 border border-green-300 rounded text-green-800 text-xs flex items-start gap-1.5">
+      <i class="pi pi-check-circle text-sm mt-0.5"></i>
+      <div>
+        <strong>Connection successful!</strong> Model <em>{{ testConfigResult.model }}</em> responded:
+        <div class="mt-1 p-1 bg-white border border-green-200 rounded font-mono text-[11px] text-green-900">{{ testConfigResult.output }}</div>
+      </div>
+    </div>
+
+    <div *ngIf="testConfigResult && !testConfigResult.success"
+      class="p-2.5 bg-red-50 border border-red-300 rounded text-red-800 text-xs flex items-start gap-1.5">
+      <i class="pi pi-times-circle text-sm mt-0.5"></i>
+      <div>
+        <strong>Connection failed:</strong>
+        <div class="mt-1 font-mono text-[11px] text-red-700 whitespace-pre-wrap">{{ testConfigResult.error }}</div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between gap-2 mt-1">
+      <div class="flex items-center gap-2">
+        <button pButton type="button" label="RESET" class="p-button-sm p-button-secondary uppercase tracking-tight"
+          (click)="resetOpenAIGPTConfig()">
+        </button>
+        <button pButton type="button" label="TEST CONFIGURATION" icon="pi pi-bolt"
+          class="p-button-sm p-button-outlined p-button-info uppercase tracking-tight"
+          [loading]="testingGptConfig" (click)="testOpenAIGPTConfig()">
+        </button>
+      </div>
+      <button pButton type="submit" label="SAVE" class="p-button-sm p-button-help uppercase tracking-tight" [disabled]="form.invalid || testingGptConfig">
       </button>
     </div>
   </form>

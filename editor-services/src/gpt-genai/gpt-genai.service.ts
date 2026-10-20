@@ -322,8 +322,9 @@ export class GptGenaiService {
 
   getDefaultConfig() {
     return {
-      model: this.config.get('OPENAI_MODEL') || 'qwen3.5:397b-cloud',
+      model: this.config.get('OPENAI_MODEL') || 'glm-5.3-flash:cloud',
       baseURL: this.config.get('OPENAI_BASE_URL') || 'https://ollama.com/v1',
+      max_tokens: parseInt(this.config.get('OPENAI_MAX_TOKENS') || '32000', 10),
     };
   }
 
@@ -336,7 +337,13 @@ export class GptGenaiService {
     const userApiKey = config.apiKey || config.api_key;
 
     config.model = userModel || defaultModel;
-    config.baseURL = userBaseURL || defaultBaseURL;
+    if (userBaseURL) {
+      config.baseURL = userBaseURL;
+    } else if (!userModel && !userApiKey) {
+      config.baseURL = defaultBaseURL;
+    } else {
+      config.baseURL = undefined;
+    }
 
     const isDefaultModel = (!userModel || userModel === defaultModel);
     const isDefaultBaseURL = (!userBaseURL || userBaseURL === defaultBaseURL);
@@ -354,6 +361,18 @@ export class GptGenaiService {
 
     config.apiKey = userApiKey || serverApiKey || 'ollama';
     return config;
+  }
+
+  async testConfig(config: any) {
+    const input = [
+      { role: 'user', content: 'Say "Hello World!" and nothing else.' }
+    ];
+    const response = await this.promptGPT({ config, input, format: { type: 'text' } });
+    return {
+      success: true,
+      model: config.model,
+      output: (response.output_text || '').trim()
+    };
   }
 
   private async promptGPT({ input, config, format }, onProgress?: (event: any) => void): Promise<any> {
@@ -383,7 +402,7 @@ export class GptGenaiService {
       organization: orgId,
     });
 
-    const isCustomOrOllama = !!baseUrl;
+    const isCustomOrOllama = !!baseUrl && !baseUrl.includes('api.openai.com');
 
     if (!onProgress && !isCustomOrOllama && (openai as any).responses?.create) {
       try {
@@ -400,11 +419,9 @@ export class GptGenaiService {
       content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content)
     }));
 
-    const defaultMaxTokens = parseInt(this.config.get('OPENAI_MAX_TOKENS') || '32000', 10);
     const chatPayload: any = {
       model,
       messages,
-      max_tokens: params.max_tokens || params.max_completion_tokens || defaultMaxTokens,
       ...params
     };
 

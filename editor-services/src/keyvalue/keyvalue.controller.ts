@@ -21,8 +21,9 @@ export class KeyValueController {
             return {
                 value: keyvalue?.value || null,
                 defaults: {
-                    model: this.config.get('OPENAI_MODEL') || 'qwen3.5:397b-cloud',
+                    model: this.config.get('OPENAI_MODEL') || 'glm-5.3-flash:cloud',
                     baseURL: this.config.get('OPENAI_BASE_URL') || 'https://ollama.com/v1',
+                    max_tokens: parseInt(this.config.get('OPENAI_MAX_TOKENS') || '32000', 10),
                 }
             };
         }

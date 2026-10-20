@@ -98,21 +98,29 @@ export class EditorComponent implements OnInit, OnDestroy {
     }, true);
   }
 
-  defaultGptConfig: { model: string, baseURL: string } = {
-    model: "qwen3.5:397b-cloud",
-    baseURL: "https://ollama.com/v1"
+  defaultGptConfig: { model: string, baseURL: string, max_tokens?: number, temperature?: number } = {
+    model: "glm-5.3-flash:cloud",
+    baseURL: "https://ollama.com/v1",
+    max_tokens: 32000
   };
   modelHasChanged = false;
   outdatedModel: string = '';
   modelResetSuccess = false;
+  testingGptConfig = false;
+  testConfigResult: { success: boolean; model?: string; output?: string; error?: string } | null = null;
 
   get gptConfigPlaceholder(): string {
-    return JSON.stringify({
-      model: this.defaultGptConfig?.model || "qwen3.5:397b-cloud",
+    const conf: any = {
+      model: this.defaultGptConfig?.model || "glm-5.3-flash:cloud",
       baseURL: this.defaultGptConfig?.baseURL || "https://ollama.com/v1",
+      max_tokens: this.defaultGptConfig?.max_tokens ?? 32000,
       // apiKey: "<<YOUR_API_KEY>>",
-      // organization: "<<YOUR_ORGANIZATION>>",
-    }, null, 2);
+      // temperature: 0.2, // optional, omit to use model default
+    };
+    if (this.defaultGptConfig?.temperature !== undefined) {
+      conf.temperature = this.defaultGptConfig.temperature;
+    }
+    return JSON.stringify(conf, null, 2);
   }
 
   get GPT_CONF_PLACEHOLDER(): string {
@@ -1701,9 +1709,54 @@ export class EditorComponent implements OnInit, OnDestroy {
     this.openAIGPTConfig = this.gptConfigPlaceholder;
     this.modelHasChanged = false;
     this.modelResetSuccess = true;
+    this.testConfigResult = null;
+  }
+
+  testOpenAIGPTConfig() {
+    let parsedConfig: any = {};
+    try {
+      if (this.openAIGPTConfig && this.openAIGPTConfig.trim().length > 0) {
+        parsedConfig = JSON.parse(this.openAIGPTConfig);
+      }
+    } catch (e) {
+      this.messages.add({
+        severity: 'error',
+        summary: 'Invalid JSON',
+        detail: 'Please check your LLM configuration JSON syntax.'
+      });
+      return;
+    }
+    this.testingGptConfig = true;
+    this.testConfigResult = null;
+    this.api.testGptConfig(parsedConfig).subscribe({
+      next: (resp: any) => {
+        this.testingGptConfig = false;
+        if (resp && resp.success) {
+          this.testConfigResult = {
+            success: true,
+            model: resp.model,
+            output: resp.output
+          };
+        } else {
+          this.testConfigResult = {
+            success: false,
+            error: resp?.error || 'Unknown error occurred while connecting to model.'
+          };
+        }
+      },
+      error: (err: any) => {
+        this.testingGptConfig = false;
+        const msg = err?.error?.error || err?.error?.message || err?.message || 'Failed to reach backend test endpoint.';
+        this.testConfigResult = {
+          success: false,
+          error: typeof msg === 'object' ? JSON.stringify(msg) : String(msg)
+        };
+      }
+    });
   }
 
   loadOpenAIGPTConfig(then?: () => void) {
+    this.testConfigResult = null;
     this.api.loadGptConfig().subscribe({
       next: (resp: any) => {
         if (resp?.defaults) {
@@ -1746,7 +1799,7 @@ export class EditorComponent implements OnInit, OnDestroy {
       error: (err: any) => this.messages.add({
         severity: 'error',
         summary: 'Error',
-        detail: 'Failed to load OpenAI-GPT configuration'
+        detail: 'Failed to load LLM configuration'
       }),
     });
   }
@@ -1761,7 +1814,7 @@ export class EditorComponent implements OnInit, OnDestroy {
       this.messages.add({
         severity: 'error',
         summary: 'Invalid JSON',
-        detail: 'Please check your OpenAI-GPT configuration JSON syntax.'
+        detail: 'Please check your LLM configuration JSON syntax.'
       });
       return;
     }
@@ -1778,7 +1831,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         else this.messages.add({
           severity: 'success',
           summary: 'Success',
-          detail: 'OpenAI-GPT configuration saved successfully'
+          detail: 'LLM configuration saved successfully'
         });
       },
       error: (err: any) => {
@@ -1786,7 +1839,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.messages.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to save OpenAI-GPT configuration'
+          detail: 'Failed to save LLM configuration'
         });
       },
       complete: () => delete this._v['show-gpt-config']
