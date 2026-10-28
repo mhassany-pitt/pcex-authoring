@@ -1,0 +1,97 @@
+{
+  "id": "TableCreation7_version_1_pt",
+  "catalog_id": "6954bccff9187b06cf83749b",
+  "provider": "AnnEx",
+  "title": "Assertion Creation (1) pt",
+  "language": "Sql",
+  "paws_id": 1387,
+  "authors": [
+    {
+      "name": "Rafael Araujo",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-sql/TableCreation7_version_1_pt",
+  "description": "",
+  "code": "CREATE TABLE sailors\n   (sid INTEGER,\n    sname CHAR(10),\n    rating INTEGER,\n    age REAL,\n    PRIMARY KEY (sid),\n    CHECK\n    ((SELECT COUNT(S.sid) \n     FROM sailor S) + \n    (SELECT COUNT(B.sid) \n     FROM boats B)\n     < 100));",
+  "line_count": 12,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "CREATE TABLE sailors",
+      "explanation": "Esse exemplo mostra a criacao de uma tabela para marinheiros. Sempre que um novo marinheiro for adicionado deve-se verificar se a soma do numero de marinheiros e o numero de barcos nao sejam maiores que 100. <b>** Esse exemplo esta relacionado com o proximo exemplo.</b>"
+    },
+    {
+      "line_no": 2,
+      "code": "   (sid INTEGER,",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "    sname CHAR(10),",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "    rating INTEGER,",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "    age REAL,",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "    PRIMARY KEY (sid),",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "    CHECK",
+      "explanation": "Esse exemplo especifica que o numero total de marinheiros e de barcos deve ser menor que 100. No entanto, esse exemplo esta ERRADO. Esta restricao que verifica ambas as tabelas 'sailors' e 'boats' pertence a tabela 'sailors' recursivamente. Se nao existir nenhum marinheiro (tabela vazia), o numero de barcos podera ser um valor qualquer!"
+    },
+    {
+      "line_no": 8,
+      "code": "    ((SELECT COUNT(S.sid) ",
+      "explanation": "<b>Esse primeiro exemplo esta ERRADO.</b> Se a tabela 'sailors' estiver vazia, o numero de tuplas para os barcos podera ser qualquer coisa! Ela retorna o numero identificador do marinheiro. A consulta mais interna e' executada primeiro."
+    },
+    {
+      "line_no": 9,
+      "code": "     FROM sailor S) + ",
+      "explanation": "Duas consultas diferentes sao ligadas utilizando sinal de adicao (+). Ambos os resultados da consulta sao somados."
+    },
+    {
+      "line_no": 10,
+      "code": "    (SELECT COUNT(B.sid) ",
+      "explanation": "Essa consulta retorna o numero de barcos."
+    },
+    {
+      "line_no": 11,
+      "code": "     FROM boats B)",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "     < 100));",
+      "explanation": "Os resultados somados das duas subconsultas sao comparados com o valor 100. Se o valor da soma for menor que 100, a condicao e' satisfeita e a tupla fara' parte do resultado final."
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  },
+  "iso_language_code": "pt"
+}

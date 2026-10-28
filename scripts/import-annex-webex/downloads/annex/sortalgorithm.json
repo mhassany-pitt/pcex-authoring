@@ -1,0 +1,501 @@
+{
+  "id": "sortalgorithm",
+  "catalog_id": "6954bccff9187b06cf837716",
+  "provider": "AnnEx",
+  "title": "SortAlgorithm",
+  "language": "C++",
+  "paws_id": 722,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-cpp/sortalgorithm",
+  "description": "",
+  "code": "/* Fig. 16.1: fig16_01.c\n   The selection sort algorithm. */\n#define SIZE 10\n#include <stdio.h>\n#include <stdlib.h>\n#include <time.h>\n\n/* function prototypes */\nvoid selectionSort( int array[], int length );\nvoid swap( int array[], int first, int second );\nvoid printPass( int array[], int length, int pass, int index );\n\nint main( void )\n{\n   int array[ SIZE ]; /* declare the array of ints to be sorted */\n   int i; /* int used in for loop */\n    \n   srand( time( NULL ) ); /* seed the rand function */\n   \n   for ( i = 0; i < SIZE; i++ )\n      array[ i ] = rand() % 90 + 10; /* give each element a value */\n       \n   printf( \"Unsorted array:\\n\" );\n    \n   for ( i = 0; i < SIZE; i++ ) /* print the array */\n      printf( \"%d  \", array[ i ] );\n        \n   printf( \"\\n\\n\" );\n   selectionSort( array, SIZE );\n   printf( \"Sorted array:\\n\" );\n    \n   for ( i = 0; i < SIZE; i++ ) /* print the array */\n      printf( \"%d  \", array[ i ] );\n        \n   return 0;\n} /* end function main */\n\n\n/* function that selection sorts the array */\nvoid selectionSort( int array[], int length )\n{\n   int smallest; /* index of smallest element */\n   int i, j; /* ints used in for loops */\n    \n   /* loop over length - 1 elements */\n   for ( i = 0; i < length - 1; i++ ) {\n      smallest = i; /* first index of remaining array */\n        \n      /* loop to find index of smallest element */\n      for ( j = i + 1; j < length; j++ )\n         if ( array[ j ] < array[ smallest ] )\n            smallest = j;\n                \n      swap( array, i, smallest ); /* swap smallest element */\n      printPass( array, length, i + 1, smallest ); /* output pass */\n   } /* end for */\n} /* end function selectionSort */\n\n/* function that swaps two elements in the array */\nvoid swap( int array[], int first, int second )\n{\n   int temp; /* temporary integer */\n   temp = array[ first ];\n   array[ first ] = array[ second ];\n   array[ second ] = temp;\n} /* end function swap */\n\n/* function that prints a pass of the algorithm */\nvoid printPass( int array[], int length, int pass, int index )\n{\n   int i; /* int used in for loop */\n    \n   printf( \"After pass %2d: \", pass );\n    \n   /* output elements till selected item */\n   for ( i = 0; i < index; i++ )\n      printf( \"%d  \", array[ i ] );\n        \n   printf( \"%d* \", array[ index ] ); /* indicate swap */\n    \n   /* finish outputting array */\n   for ( i = index + 1; i < length; i++ )\n      printf( \"%d  \", array[ i ] );\n        \n   printf( \"\\n               \" ); /* for alignment */\n   \n   /* indicate amount of array that is sorted */\n   for ( i = 0; i < pass; i++ )\n      printf( \"--  \" );\n    \n   printf( \"\\n\" ); /* add newline */\n} /* end function printPass */\n} /* end function printPass */",
+  "line_count": 93,
+  "has_explanations": false,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "/* Fig. 16.1: fig16_01.c",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "   The selection sort algorithm. */",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "#define SIZE 10",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "#include <stdlib.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "#include <time.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "/* function prototypes */",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "void selectionSort( int array[], int length );",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "void swap( int array[], int first, int second );",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": "void printPass( int array[], int length, int pass, int index );",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "int main( void )",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "   int array[ SIZE ]; /* declare the array of ints to be sorted */",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "code": "   int i; /* int used in for loop */",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "    ",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "   srand( time( NULL ) ); /* seed the rand function */",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "   ",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "code": "   for ( i = 0; i < SIZE; i++ )",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "code": "      array[ i ] = rand() % 90 + 10; /* give each element a value */",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "       ",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "   printf( \"Unsorted array:\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "code": "    ",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "code": "   for ( i = 0; i < SIZE; i++ ) /* print the array */",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "      printf( \"%d  \", array[ i ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "code": "        ",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "   printf( \"\\n\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "   selectionSort( array, SIZE );",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "   printf( \"Sorted array:\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "    ",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "   for ( i = 0; i < SIZE; i++ ) /* print the array */",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "      printf( \"%d  \", array[ i ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "        ",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "   return 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "} /* end function main */",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "/* function that selection sorts the array */",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "void selectionSort( int array[], int length )",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "   int smallest; /* index of smallest element */",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "   int i, j; /* ints used in for loops */",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "    ",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "   /* loop over length - 1 elements */",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "   for ( i = 0; i < length - 1; i++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "      smallest = i; /* first index of remaining array */",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "        ",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "code": "      /* loop to find index of smallest element */",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "      for ( j = i + 1; j < length; j++ )",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "         if ( array[ j ] < array[ smallest ] )",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "            smallest = j;",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "code": "                ",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "      swap( array, i, smallest ); /* swap smallest element */",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "      printPass( array, length, i + 1, smallest ); /* output pass */",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "   } /* end for */",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "} /* end function selectionSort */",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "code": "/* function that swaps two elements in the array */",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "void swap( int array[], int first, int second )",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "   int temp; /* temporary integer */",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "   temp = array[ first ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "code": "   array[ first ] = array[ second ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "   array[ second ] = temp;",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "} /* end function swap */",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "code": "/* function that prints a pass of the algorithm */",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "code": "void printPass( int array[], int length, int pass, int index )",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "code": "   int i; /* int used in for loop */",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "code": "    ",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "code": "   printf( \"After pass %2d: \", pass );",
+      "explanation": ""
+    },
+    {
+      "line_no": 74,
+      "code": "    ",
+      "explanation": ""
+    },
+    {
+      "line_no": 75,
+      "code": "   /* output elements till selected item */",
+      "explanation": ""
+    },
+    {
+      "line_no": 76,
+      "code": "   for ( i = 0; i < index; i++ )",
+      "explanation": ""
+    },
+    {
+      "line_no": 77,
+      "code": "      printf( \"%d  \", array[ i ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "code": "        ",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "code": "   printf( \"%d* \", array[ index ] ); /* indicate swap */",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "code": "    ",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "code": "   /* finish outputting array */",
+      "explanation": ""
+    },
+    {
+      "line_no": 82,
+      "code": "   for ( i = index + 1; i < length; i++ )",
+      "explanation": ""
+    },
+    {
+      "line_no": 83,
+      "code": "      printf( \"%d  \", array[ i ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 84,
+      "code": "        ",
+      "explanation": ""
+    },
+    {
+      "line_no": 85,
+      "code": "   printf( \"\\n               \" ); /* for alignment */",
+      "explanation": ""
+    },
+    {
+      "line_no": 86,
+      "code": "   ",
+      "explanation": ""
+    },
+    {
+      "line_no": 87,
+      "code": "   /* indicate amount of array that is sorted */",
+      "explanation": ""
+    },
+    {
+      "line_no": 88,
+      "code": "   for ( i = 0; i < pass; i++ )",
+      "explanation": ""
+    },
+    {
+      "line_no": 89,
+      "code": "      printf( \"--  \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 90,
+      "code": "    ",
+      "explanation": ""
+    },
+    {
+      "line_no": 91,
+      "code": "   printf( \"\\n\" ); /* add newline */",
+      "explanation": ""
+    },
+    {
+      "line_no": 92,
+      "code": "} /* end function printPass */",
+      "explanation": ""
+    },
+    {
+      "line_no": 93,
+      "code": "} /* end function printPass */",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

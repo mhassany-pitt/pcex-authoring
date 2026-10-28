@@ -1,0 +1,328 @@
+{
+  "id": "longestline.c",
+  "catalog_id": "6954bccff9187b06cf83763c",
+  "provider": "WebEx",
+  "title": "IS12:: longestline.c (12.2)",
+  "language": "C",
+  "source_origin": "webex_cache",
+  "paws_id": 817,
+  "authors": [
+    {
+      "name": "Peter Brusilovsky",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://adapt2.sis.pitt.edu/web_ex_NV0FGdaHzy/Dissection2?act=longestline.c&svc=progvis&sid=demo",
+  "description": "",
+  "code": "/* Example 12.2;    Longest line\n   Source: K&R2, p 29 (see also better version on p. 61)\n*/\n#include <stdio.h>\n#define MAXLINE 1000 /* maximum input line size */\nint getline(char line[ ], int maxline);\nvoid copy(char to[ ], char from[ ]);\n/* print longest input line */\nmain()\n{\n    int len; /* current line length */\n    int max; /* maximum length seen so far */\n    char line[MAXLINE]; /* current input line */\n    char longest [MAXLINE]; /*longest line saved here */\n    max = 0;\n    while ((len = getline(line, MAXLINE)) > 0)\n        if (len > max) {\n            max = len;\n            copy(longest, line);\n        }\n        if (max > 0) /* there was a line */\n            printf(\"%s\", longest);\n        return 0;\n}\n/* getline: read a line into s,  return length */\nint getline(char s[ ], int lim)\n{\n    int c, i;\n    for (i = 0; i < lim-1 &&(c=getchar())!= EOF && c != '\\n'; ++i)\n        s[i] = c;\n    if (c == '\\n') {\n        s[i] = c;\n        ++i;\n    }\n    s[i] = '\u0000';\n    return i;\n}\n/* copy: copy 'from' into 'to'; assume to is big enough */\nvoid copy(char to[ ], char from[ ]) {\n    int i = 0;\n    while((to[i] = from [i]) != '\u0000')\n        ++i;\n}",
+  "line_count": 43,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "sub": null,
+      "code": "/* Example 12.2;    Longest line",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "sub": null,
+      "code": "   Source: K&R2, p 29 (see also better version on p. 61)",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "sub": null,
+      "code": "*/",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "sub": null,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "sub": 5,
+      "code": "#define MAXLINE 1000 /* maximum input line size */",
+      "explanation": "Limit your search to a reasonable limit.  Use a string constant, set only once, for this purpose. Note that it is in all capital letters."
+    },
+    {
+      "line_no": 6,
+      "sub": 6,
+      "code": "int getline(char line[ ], int maxline);",
+      "explanation": "\u000eO??U`?describes the function that will be used in the main function.  The complete code for the function will be written out elsewhere.  It describes the types, quantity, and order of the arguments the function accepts and the data type of its output."
+    },
+    {
+      "line_no": 7,
+      "sub": 7,
+      "code": "void copy(char to[ ], char from[ ]);",
+      "explanation": "This line and the one above it (see comment) are called function prototypes.  The names of the two character arrays in the function \"copy\" are helpfully named \"to\" and \"from.\""
+    },
+    {
+      "line_no": 8,
+      "sub": null,
+      "code": "/* print longest input line */",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "sub": null,
+      "code": "main()",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "sub": null,
+      "code": "    int len; /* current line length */",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "sub": null,
+      "code": "    int max; /* maximum length seen so far */",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "sub": null,
+      "code": "    char line[MAXLINE]; /* current input line */",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "sub": null,
+      "code": "    char longest [MAXLINE]; /*longest line saved here */",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "sub": 15,
+      "code": "    max = 0;",
+      "explanation": "Initially, the current longest length is set to zero, until a longer one is found."
+    },
+    {
+      "line_no": 16,
+      "sub": 16,
+      "code": "    while ((len = getline(line, MAXLINE)) > 0)",
+      "explanation": "As long as there is new input to search, the outer loop continues on to the next line.  It processes each line by running an inner loop.  See function below for code that runs whenever \"getline\" is called.  In this case, the limit is set to \"MAXLINE\" ."
+    },
+    {
+      "line_no": 17,
+      "sub": 17,
+      "code": "        if (len > max) {",
+      "explanation": "Every time the outer, searching loop runs, the inner loop compares values, then processes the line only if the present line is longer than the current maximum, using an inner loop."
+    },
+    {
+      "line_no": 18,
+      "sub": 18,
+      "code": "            max = len;",
+      "explanation": "When a greater value is found in the next line, the new value is placed into \"max\" the variable that stores the current maximum."
+    },
+    {
+      "line_no": 19,
+      "sub": 19,
+      "code": "            copy(longest, line);",
+      "explanation": "This function copies the characters from one array to another.  Strings are arrays of characters."
+    },
+    {
+      "line_no": 20,
+      "sub": 20,
+      "code": "        }",
+      "explanation": "End of If statement that compares lengths.  Also, end of While loop, because it had only one statement (the If ) , and thus needs no curly brackets."
+    },
+    {
+      "line_no": 21,
+      "sub": null,
+      "code": "        if (max > 0) /* there was a line */",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "sub": 22,
+      "code": "            printf(\"%s\", longest);",
+      "explanation": "Print out the result of your search."
+    },
+    {
+      "line_no": 23,
+      "sub": null,
+      "code": "        return 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "sub": 24,
+      "code": "}",
+      "explanation": "End of main."
+    },
+    {
+      "line_no": 25,
+      "sub": null,
+      "code": "/* getline: read a line into s,  return length */",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "sub": 26,
+      "code": "int getline(char s[ ], int lim)",
+      "explanation": "This is the beginning of the code for the function \"getline\".  Overall, it reads the next line into an array and returns the length."
+    },
+    {
+      "line_no": 27,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "sub": null,
+      "code": "    int c, i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "sub": 29,
+      "code": "    for (i = 0; i < lim-1 &&(c=getchar())!= EOF && c != '\\n'; ++i)",
+      "explanation": "As long as there is a character to read, and not a carriage return, the length is counted (in the value of \"i\").  A carriage return will throw it out of the loop.  It will stop when it reaches one less than the limit set above (MAXLINE).  Since it starts"
+    },
+    {
+      "line_no": 30,
+      "sub": 30,
+      "code": "        s[i] = c;",
+      "explanation": "The \"i\"-th position of the array s is assigned the value of the current character read in."
+    },
+    {
+      "line_no": 31,
+      "sub": 31,
+      "code": "    if (c == '\\n') {",
+      "explanation": "If the character is a carriage return, this is obviously the end of the line and so it isn't processed in the previous inner loop.  However, it is still processed."
+    },
+    {
+      "line_no": 32,
+      "sub": 32,
+      "code": "        s[i] = c;",
+      "explanation": "The \"i\"-th position of the array s is assigned \"\n\".  It is the next to last position in the array."
+    },
+    {
+      "line_no": 33,
+      "sub": null,
+      "code": "        ++i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "sub": 35,
+      "code": "    }",
+      "explanation": "End of loop measuring length (\"getline\" function)."
+    },
+    {
+      "line_no": 35,
+      "sub": 36,
+      "code": "    s[i] = '\u0000';",
+      "explanation": "Assign \"\u0000\" to the end of the character array, as is usual for strings.  Even this character is counted, as the last line in either of the loops above ends with adding one more to \"I\".Even this character is counted, as the last line in either of the loops"
+    },
+    {
+      "line_no": 36,
+      "sub": 37,
+      "code": "    return i;",
+      "explanation": "The final length count is returned."
+    },
+    {
+      "line_no": 37,
+      "sub": 38,
+      "code": "}",
+      "explanation": "Closing bracket for the function \"getline\"."
+    },
+    {
+      "line_no": 38,
+      "sub": null,
+      "code": "/* copy: copy 'from' into 'to'; assume to is big enough */",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "sub": 40,
+      "code": "void copy(char to[ ], char from[ ]) {",
+      "explanation": "Beginning of the function \"copy\""
+    },
+    {
+      "line_no": 40,
+      "sub": 41,
+      "code": "    int i = 0;",
+      "explanation": "Start at the first array position, which is zero."
+    },
+    {
+      "line_no": 41,
+      "sub": 42,
+      "code": "    while((to[i] = from [i]) != '\u0000')",
+      "explanation": "The value of the \"I\"-th position of the array \"from\" is assigned to the same position of the array \"to\", as long as it doesn't equal \"\u0000\", the end of the string."
+    },
+    {
+      "line_no": 42,
+      "sub": null,
+      "code": "        ++i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "sub": 44,
+      "code": "}",
+      "explanation": "End of function getline."
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [
+      "TODO:add-prompt"
+    ],
+    "classification": {
+      "knowledge_components": {
+        "unspecified": {
+          "concepts": [
+            "variable_initialization",
+            "pre_increment",
+            "return",
+            "and",
+            "for",
+            "while",
+            "array_declaration",
+            "char",
+            "equal",
+            "simple_assignment",
+            "int",
+            "if",
+            "main_function",
+            "not_equal",
+            "less",
+            "greater",
+            "define",
+            "void",
+            "variable_declaration",
+            "include",
+            "function_declaration",
+            "printf",
+            "sub"
+          ]
+        }
+      }
+    },
+    "delivery": [
+      {
+        "protocol": "PITT"
+      },
+      {
+        "protocol": "HTML"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

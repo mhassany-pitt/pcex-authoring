@@ -1,0 +1,376 @@
+{
+  "id": "multi_selection",
+  "catalog_id": "6954bccff9187b06cf837440",
+  "provider": "AnnEx",
+  "title": "ISD::MultipleSelection.java",
+  "language": "Java",
+  "paws_id": 1567,
+  "authors": [
+    {
+      "name": "Banks Christopher",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-java/multi_selection",
+  "description": "",
+  "code": "// Fig. 12.15: MultipleSelection.java\n// Copying items from one List to another.\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.event.*;\n\npublic class MultipleSelection extends JFrame {\n   private JList colorList, copyList;\n   private JButton copy;\n   private String colorNames[] =\n      { \"Black\", \"Blue\", \"Cyan\", \"Dark Gray\", \"Gray\", \n        \"Green\", \"Light Gray\", \"Magenta\", \"Orange\", \"Pink\",\n        \"Red\", \"White\", \"Yellow\" };\n\n   public MultipleSelection()\n   {\n      super( \"Multiple Selection Lists\" );\n\n      Container c = getContentPane();\n      c.setLayout( new FlowLayout() );\n\n      colorList = new JList( colorNames );\n      colorList.setVisibleRowCount( 5 );\n      colorList.setFixedCellHeight( 15 );\n      colorList.setSelectionMode(\n         ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );\n      c.add( new JScrollPane( colorList ) );\n\n      // create copy button\n      copy = new JButton( \"Copy >>>\" );\n      copy.addActionListener(\n         new ActionListener() {\n            public void actionPerformed( ActionEvent e )\n            {\n               // place selected values in copyList\n               copyList.setListData(\n                  colorList.getSelectedValues() );\n            }\n         }\n      );\n      c.add( copy );\n\n      copyList = new JList( );\n      copyList.setVisibleRowCount( 5 );\n      copyList.setFixedCellWidth( 100 );\n      copyList.setFixedCellHeight( 15 );\n      copyList.setSelectionMode(\n         ListSelectionModel.SINGLE_INTERVAL_SELECTION );\n      c.add( new JScrollPane( copyList ) );\n\n      setSize( 300, 120 );\n      show();\n   }\n\n   public static void main( String args[] )\n   { \n      MultipleSelection app = new MultipleSelection();\n\n      app.addWindowListener(\n         new WindowAdapter() {\n            public void windowClosing( WindowEvent e )\n            {\n               System.exit( 0 );\n            }\n         }\n      );\n   }\n}",
+  "line_count": 68,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "// Fig. 12.15: MultipleSelection.java",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "// Copying items from one List to another.",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "import javax.swing.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "import java.awt.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "import java.awt.event.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "public class MultipleSelection extends JFrame {",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "   private JList colorList, copyList;",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "   private JButton copy;",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "   private String colorNames[] =",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": "      { \"Black\", \"Blue\", \"Cyan\", \"Dark Gray\", \"Gray\", ",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "        \"Green\", \"Light Gray\", \"Magenta\", \"Orange\", \"Pink\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "        \"Red\", \"White\", \"Yellow\" };",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "   public MultipleSelection()",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "      super( \"Multiple Selection Lists\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "      Container c = getContentPane();",
+      "explanation": "Create a Container object"
+    },
+    {
+      "line_no": 20,
+      "code": "      c.setLayout( new FlowLayout() );",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "      colorList = new JList( colorNames );",
+      "explanation": "Initialize the JList with an array of Strings."
+    },
+    {
+      "line_no": 23,
+      "code": "      colorList.setVisibleRowCount( 5 );",
+      "explanation": "Specify the number of items to appear at a time."
+    },
+    {
+      "line_no": 24,
+      "code": "      colorList.setFixedCellHeight( 15 );",
+      "explanation": "Set the cell height"
+    },
+    {
+      "line_no": 25,
+      "code": "      colorList.setSelectionMode(",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "         ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );",
+      "explanation": "Specify that list is to be MULTIPLE_INTERVAL_SELECTION"
+    },
+    {
+      "line_no": 27,
+      "code": "      c.add( new JScrollPane( colorList ) );",
+      "explanation": "attach component to Container c."
+    },
+    {
+      "line_no": 28,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "      // create copy button",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "      copy = new JButton( \"Copy >>>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "      copy.addActionListener(",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "         new ActionListener() {",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "            public void actionPerformed( ActionEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "            {",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "               // place selected values in copyList",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "               copyList.setListData(",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "                  colorList.getSelectedValues() );",
+      "explanation": "Use the array returned by getSelectedValues to set the items of copyList."
+    },
+    {
+      "line_no": 38,
+      "code": "            }",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "      );",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "      c.add( copy );",
+      "explanation": "attach component to Container c."
+    },
+    {
+      "line_no": 42,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "      copyList = new JList( );",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "      copyList.setVisibleRowCount( 5 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "      copyList.setFixedCellWidth( 100 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "      copyList.setFixedCellHeight( 15 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "      copyList.setSelectionMode(",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "         ListSelectionModel.SINGLE_INTERVAL_SELECTION );",
+      "explanation": "Select a contiguous group of items by holding Shift key."
+    },
+    {
+      "line_no": 49,
+      "code": "      c.add( new JScrollPane( copyList ) );",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "      setSize( 300, 120 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "      show();",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "   public static void main( String args[] )",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "   { ",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "      MultipleSelection app = new MultipleSelection();",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "code": "      app.addWindowListener(",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "         new WindowAdapter() {",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "            public void windowClosing( WindowEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "            {",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "               System.exit( 0 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "code": "            }",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "      );",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

@@ -1,0 +1,657 @@
+{
+  "id": "4-02_TicTacToe",
+  "catalog_id": "6954bccff9187b06cf837205",
+  "provider": "AnnEx",
+  "title": "4-02_TicTacToe",
+  "language": "Java",
+  "paws_id": 2381,
+  "authors": [
+    {
+      "name": "Kamil Akhuseyinoglu",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-java/4-02_TicTacToe",
+  "description": "",
+  "code": "/*\n * A simple game of Tic Tac Toe!\n * \n */\nimport java.util.Scanner;\n\npublic class TicTacToe {\n\n\t// This array stores the current state of the board.  Each element has\n\t//  one of three values:\n\t//  'X'\n\t//  'O'\n\t//  ' '  (for an empty spot)\n\tstatic char[][] theBoard = new char[3][3];\n\t\n\t// This method prints the current board on the screen.\n\tpublic static void printBoard() {\n\t\tfor (int i = 0; i < theBoard.length; i++) {\n\t\t\tfor (int j = 0; j < theBoard[i].length; j++) {\n\t\t\t\tSystem.out.print(theBoard[i][j] + \" \");\n\t\t\t}\n\t\t\tSystem.out.println();\n\t\t}\n\t}\n\t\n\t// This method determines whether the game is still going.  It returns\n\t//  true if the game is in progress, or false if the game is over.\n\tpublic static boolean isGameStillGoing() {\n\t\t// Check for victory by X\n\t\tif (\ttheBoard[0][0] == 'X' && theBoard[0][1] == 'X' && theBoard[0][2] == 'X'\t||\n\t\t\t\ttheBoard[1][0] == 'X' && theBoard[1][1] == 'X' && theBoard[1][2] == 'X' ||\n\t\t\t\ttheBoard[2][0] == 'X' && theBoard[2][1] == 'X' && theBoard[2][2] == 'X' ||\n\t\t\t\ttheBoard[0][0] == 'X' && theBoard[1][0] == 'X' && theBoard[2][0] == 'X' ||\n\t\t\t\ttheBoard[0][1] == 'X' && theBoard[1][1] == 'X' && theBoard[2][1] == 'X' ||\n\t\t\t\ttheBoard[0][2] == 'X' && theBoard[1][2] == 'X' && theBoard[2][2] == 'X' ||\n\t\t\t\ttheBoard[0][0] == 'X' && theBoard[1][1] == 'X' && theBoard[2][2] == 'X' ||\n\t\t\t\ttheBoard[0][2] == 'X' && theBoard[1][1] == 'X' && theBoard[2][0] == 'X' ) {\n\t\t\treturn false;\n\t\t}\n\t\t\n\t\t// Check for victory by O\n\t\tif (\ttheBoard[0][0] == 'O' && theBoard[0][1] == 'O' && theBoard[0][2] == 'O'\t||\n\t\t\t\ttheBoard[1][0] == 'O' && theBoard[1][1] == 'O' && theBoard[1][2] == 'O' ||\n\t\t\t\ttheBoard[2][0] == 'O' && theBoard[2][1] == 'O' && theBoard[2][2] == 'O' ||\n\t\t\t\ttheBoard[0][0] == 'O' && theBoard[1][0] == 'O' && theBoard[2][0] == 'O' ||\n\t\t\t\ttheBoard[0][1] == 'O' && theBoard[1][1] == 'O' && theBoard[2][1] == 'O' ||\n\t\t\t\ttheBoard[0][2] == 'O' && theBoard[1][2] == 'O' && theBoard[2][2] == 'O' ||\n\t\t\t\ttheBoard[0][0] == 'O' && theBoard[1][1] == 'O' && theBoard[2][2] == 'O' ||\n\t\t\t\ttheBoard[0][2] == 'O' && theBoard[1][1] == 'O' && theBoard[2][0] == 'O' ) {\n\t\t\treturn false;\n\t\t}\n\t\t\n\t\t// Check for stalemate\n\t\tfor (int i = 0; i < theBoard.length; i++) {\n\t\t\tfor (int j = 0; j < theBoard[i].length; j++) {\n\t\t\t\tif (theBoard[i][j] == 0)\t// Empty spaces left - game must still be going!\n\t\t\t\t\treturn true;\n\t\t\t}\n\t\t}\n\n\t\t// The only way for this point to be reached is if the method hasn't\n\t\t//  returned anything yet.  This must mean that neither player has won,\n\t\t//  and there are no empty spaces left.  Must be a stalemate!\n\t\treturn false;\n\t}\n\n\t// Run this method to play the game!\n\tpublic static void playGame() {\n\t\tScanner s = new Scanner(System.in);\n\t\t\n\t\twhile (isGameStillGoing()) {\n\t\t\t// Have player X move\n\t\t\tSystem.out.println(\"Player X's turn!\");\n\t\t\tSystem.out.println(\"Enter the row and column where you'd like to make your move!\");\n\t\t\tint row = s.nextInt(), col = s.nextInt();\n\t\t\ttheBoard[row][col] = 'X';\n\t\t\tprintBoard();\n\t\t\t\n\t\t\t// Player X's turn might have ended the game, so we need to check\n\t\t\t//  this condition immediately here.\n\t\t\tif (!isGameStillGoing())\n\t\t\t\tbreak;\n\t\t\t\n\t\t\t// Have player O move\n\t\t\tSystem.out.println(\"Player O's turn!\");\n\t\t\tSystem.out.println(\"Enter the row and column where you'd like to make your move!\");\n\t\t\trow = s.nextInt();\n\t\t\tcol = s.nextInt();\n\t\t\ttheBoard[row][col] = 'O';\n\t\t\tprintBoard();\n\t\t}\n\t}\n\t\n\tpublic static void main(String[] args) {\n//\t\ttheBoard[0][0] = 'X';\n//\t\ttheBoard[0][2] = 'O';\n//\t\ttheBoard[1][1] = 'X';\n//\t\ttheBoard[2][2] = 'O';\n//\t\ttheBoard[1][2] = 'O';\n//\t\tprintBoard();\n//\t\tSystem.out.println(isGameStillGoing());\n\t\t\n\t\tplayGame();\n\t}\n\n}",
+  "line_count": 106,
+  "has_explanations": false,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "/*",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": " * A simple game of Tic Tac Toe!",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": " * ",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": " */",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "import java.util.Scanner;",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "public class TicTacToe {",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "\t// This array stores the current state of the board.  Each element has",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "\t//  one of three values:",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": "\t//  'X'",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "\t//  'O'",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "\t//  ' '  (for an empty spot)",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "\tstatic char[][] theBoard = new char[3][3];",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "\t",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "code": "\t// This method prints the current board on the screen.",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "\tpublic static void printBoard() {",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "\t\tfor (int i = 0; i < theBoard.length; i++) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "\t\t\tfor (int j = 0; j < theBoard[i].length; j++) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "code": "\t\t\t\tSystem.out.print(theBoard[i][j] + \" \");",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "code": "\t\t\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "\t\t\tSystem.out.println();",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "\t\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "code": "\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "code": "\t",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "\t// This method determines whether the game is still going.  It returns",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "code": "\t//  true if the game is in progress, or false if the game is over.",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "\tpublic static boolean isGameStillGoing() {",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "\t\t// Check for victory by X",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "\t\tif (\ttheBoard[0][0] == 'X' && theBoard[0][1] == 'X' && theBoard[0][2] == 'X'\t||",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "\t\t\t\ttheBoard[1][0] == 'X' && theBoard[1][1] == 'X' && theBoard[1][2] == 'X' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "\t\t\t\ttheBoard[2][0] == 'X' && theBoard[2][1] == 'X' && theBoard[2][2] == 'X' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "\t\t\t\ttheBoard[0][0] == 'X' && theBoard[1][0] == 'X' && theBoard[2][0] == 'X' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "\t\t\t\ttheBoard[0][1] == 'X' && theBoard[1][1] == 'X' && theBoard[2][1] == 'X' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "\t\t\t\ttheBoard[0][2] == 'X' && theBoard[1][2] == 'X' && theBoard[2][2] == 'X' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "\t\t\t\ttheBoard[0][0] == 'X' && theBoard[1][1] == 'X' && theBoard[2][2] == 'X' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "\t\t\t\ttheBoard[0][2] == 'X' && theBoard[1][1] == 'X' && theBoard[2][0] == 'X' ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "\t\t\treturn false;",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "\t\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "\t\t",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "\t\t// Check for victory by O",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "\t\tif (\ttheBoard[0][0] == 'O' && theBoard[0][1] == 'O' && theBoard[0][2] == 'O'\t||",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "\t\t\t\ttheBoard[1][0] == 'O' && theBoard[1][1] == 'O' && theBoard[1][2] == 'O' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "\t\t\t\ttheBoard[2][0] == 'O' && theBoard[2][1] == 'O' && theBoard[2][2] == 'O' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "\t\t\t\ttheBoard[0][0] == 'O' && theBoard[1][0] == 'O' && theBoard[2][0] == 'O' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "\t\t\t\ttheBoard[0][1] == 'O' && theBoard[1][1] == 'O' && theBoard[2][1] == 'O' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "\t\t\t\ttheBoard[0][2] == 'O' && theBoard[1][2] == 'O' && theBoard[2][2] == 'O' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "\t\t\t\ttheBoard[0][0] == 'O' && theBoard[1][1] == 'O' && theBoard[2][2] == 'O' ||",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "code": "\t\t\t\ttheBoard[0][2] == 'O' && theBoard[1][1] == 'O' && theBoard[2][0] == 'O' ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "\t\t\treturn false;",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "\t\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "\t\t",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "code": "\t\t// Check for stalemate",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "\t\tfor (int i = 0; i < theBoard.length; i++) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "\t\t\tfor (int j = 0; j < theBoard[i].length; j++) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "\t\t\t\tif (theBoard[i][j] == 0)\t// Empty spaces left - game must still be going!",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "\t\t\t\t\treturn true;",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "\t\t\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "code": "\t\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "\t\t// The only way for this point to be reached is if the method hasn't",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "\t\t//  returned anything yet.  This must mean that neither player has won,",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "\t\t//  and there are no empty spaces left.  Must be a stalemate!",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "code": "\t\treturn false;",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "code": "\t// Run this method to play the game!",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "code": "\tpublic static void playGame() {",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "code": "\t\tScanner s = new Scanner(System.in);",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "code": "\t\t",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "code": "\t\twhile (isGameStillGoing()) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "code": "\t\t\t// Have player X move",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "code": "\t\t\tSystem.out.println(\"Player X's turn!\");",
+      "explanation": ""
+    },
+    {
+      "line_no": 74,
+      "code": "\t\t\tSystem.out.println(\"Enter the row and column where you'd like to make your move!\");",
+      "explanation": ""
+    },
+    {
+      "line_no": 75,
+      "code": "\t\t\tint row = s.nextInt(), col = s.nextInt();",
+      "explanation": ""
+    },
+    {
+      "line_no": 76,
+      "code": "\t\t\ttheBoard[row][col] = 'X';",
+      "explanation": ""
+    },
+    {
+      "line_no": 77,
+      "code": "\t\t\tprintBoard();",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "code": "\t\t\t",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "code": "\t\t\t// Player X's turn might have ended the game, so we need to check",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "code": "\t\t\t//  this condition immediately here.",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "code": "\t\t\tif (!isGameStillGoing())",
+      "explanation": ""
+    },
+    {
+      "line_no": 82,
+      "code": "\t\t\t\tbreak;",
+      "explanation": ""
+    },
+    {
+      "line_no": 83,
+      "code": "\t\t\t",
+      "explanation": ""
+    },
+    {
+      "line_no": 84,
+      "code": "\t\t\t// Have player O move",
+      "explanation": ""
+    },
+    {
+      "line_no": 85,
+      "code": "\t\t\tSystem.out.println(\"Player O's turn!\");",
+      "explanation": ""
+    },
+    {
+      "line_no": 86,
+      "code": "\t\t\tSystem.out.println(\"Enter the row and column where you'd like to make your move!\");",
+      "explanation": ""
+    },
+    {
+      "line_no": 87,
+      "code": "\t\t\trow = s.nextInt();",
+      "explanation": ""
+    },
+    {
+      "line_no": 88,
+      "code": "\t\t\tcol = s.nextInt();",
+      "explanation": ""
+    },
+    {
+      "line_no": 89,
+      "code": "\t\t\ttheBoard[row][col] = 'O';",
+      "explanation": ""
+    },
+    {
+      "line_no": 90,
+      "code": "\t\t\tprintBoard();",
+      "explanation": ""
+    },
+    {
+      "line_no": 91,
+      "code": "\t\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 92,
+      "code": "\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 93,
+      "code": "\t",
+      "explanation": ""
+    },
+    {
+      "line_no": 94,
+      "code": "\tpublic static void main(String[] args) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 95,
+      "code": "//\t\ttheBoard[0][0] = 'X';",
+      "explanation": ""
+    },
+    {
+      "line_no": 96,
+      "code": "//\t\ttheBoard[0][2] = 'O';",
+      "explanation": ""
+    },
+    {
+      "line_no": 97,
+      "code": "//\t\ttheBoard[1][1] = 'X';",
+      "explanation": ""
+    },
+    {
+      "line_no": 98,
+      "code": "//\t\ttheBoard[2][2] = 'O';",
+      "explanation": ""
+    },
+    {
+      "line_no": 99,
+      "code": "//\t\ttheBoard[1][2] = 'O';",
+      "explanation": ""
+    },
+    {
+      "line_no": 100,
+      "code": "//\t\tprintBoard();",
+      "explanation": ""
+    },
+    {
+      "line_no": 101,
+      "code": "//\t\tSystem.out.println(isGameStillGoing());",
+      "explanation": ""
+    },
+    {
+      "line_no": 102,
+      "code": "\t\t",
+      "explanation": ""
+    },
+    {
+      "line_no": 103,
+      "code": "\t\tplayGame();",
+      "explanation": ""
+    },
+    {
+      "line_no": 104,
+      "code": "\t}",
+      "explanation": ""
+    },
+    {
+      "line_no": 105,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 106,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {
+        "parser": {
+          "concepts": [
+            "ImportStatement",
+            "ClassDefinition",
+            "PublicClassSpecifier",
+            "MultiDimensionalArrayDataType",
+            "StaticFieldSpecifier",
+            "ClassField",
+            "InstanceFieldInitializationStatement",
+            "CharDataType",
+            "SimpleAssignmentExpression",
+            "MethodDefinition",
+            "PublicMethodSpecifier",
+            "StaticMethodSpecifier",
+            "VoidDataType",
+            "IntDataType",
+            "ForStatement",
+            "NestedForLoops",
+            "LessExpression",
+            "ArrayLength",
+            "PostIncrementExpression",
+            "InstanceFieldInvocation",
+            "ArrayElement",
+            "java.lang.System.out.print",
+            "ActualMethodParameter",
+            "StringAddition",
+            "StringDataType",
+            "StringLiteral",
+            "java.lang.System.out.println",
+            "BooleanDataType",
+            "IfStatement",
+            "EqualExpression",
+            "AndExpression",
+            "OrExpression",
+            "ReturnStatement",
+            "FALSE",
+            "TRUE",
+            "ObjectCreationStatement",
+            "ConstructorCall",
+            "WhileStatement",
+            "ObjectMethodInvocation",
+            "NotExpression",
+            "FormalMethodParameter"
+          ]
+        },
+        "java ontology v2": {
+          "concepts": [
+            "ActualMethodParameter",
+            "AndExpression",
+            "ArrayElement",
+            "ArrayLength",
+            "BooleanDataType",
+            "CharDataType",
+            "ClassDefinition",
+            "ClassField",
+            "ConstructorCall",
+            "EqualExpression",
+            "False",
+            "FormalMethodParameter",
+            "ForStatement",
+            "IfStatement",
+            "ImportStatement",
+            "InstanceFieldInitializationStatement",
+            "InstanceFieldInvocation",
+            "IntDataType",
+            "java.lang.System.out.print",
+            "java.lang.System.out.println",
+            "LessExpression",
+            "MethodDefinition",
+            "MultiDimensionalArrayDataType",
+            "NestedForLoops",
+            "NotExpression",
+            "ObjectCreationStatement",
+            "ObjectMethodInvocation",
+            "OrExpression",
+            "PostIncrementExpression",
+            "PublicClassSpecifier",
+            "PublicMethodSpecifier",
+            "ReturnStatement",
+            "SimpleAssignmentExpression",
+            "StaticFieldSpecifier",
+            "StaticMethodSpecifier",
+            "StringAddition",
+            "StringDataType",
+            "StringLiteral",
+            "True",
+            "VoidDataType",
+            "WhileStatement"
+          ]
+        }
+      }
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

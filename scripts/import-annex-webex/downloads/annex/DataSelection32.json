@@ -1,0 +1,118 @@
+{
+  "id": "DataSelection32",
+  "catalog_id": "6954bccff9187b06cf8376f6",
+  "provider": "AnnEx",
+  "title": "Aggregating Subquery",
+  "language": "Sql",
+  "paws_id": 452,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-sql/DataSelection32",
+  "description": "Aggregating Subquery",
+  "code": "SELECT branch_name \n     FROM account\n     GROUP BY branch_name\n     HAVING AVG(balance) >= ALL \n          (SELECT AVG(balance) \n           FROM account \n           GROUP BY branch_name);",
+  "line_count": 7,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "SELECT branch_name ",
+      "explanation": "Firstly, average value of all branches are calculated in subquery and then using ALL test, the average account value of each branch is compared with the subquery results."
+    },
+    {
+      "line_no": 2,
+      "code": "     FROM account",
+      "explanation": "This to find the branches with the largest average account balance. "
+    },
+    {
+      "line_no": 3,
+      "code": "     GROUP BY branch_name",
+      "explanation": "This is to group the account balance according to the branch."
+    },
+    {
+      "line_no": 4,
+      "code": "     HAVING AVG(balance) >= ALL ",
+      "explanation": "This is condition to find the largest average account value using ALL test. Just as the WHERE clause can be used to select and reject the individual rows, the HAVING clause can be used to select and reject row groups. The format of the HAVING clause parallels that of the WHERE clause, but this HAVING clause can be used as a GROUP search conditions. To perform this >= comparison, the balance is grouped by the branch_name and the average value is calculated. The calculated single value is compared with ALL average value of each branch and if they are smaller or equal to the single value, it yields TRUE."
+    },
+    {
+      "line_no": 5,
+      "code": "          (SELECT AVG(balance) ",
+      "explanation": "This is to calculated average account value of each branch."
+    },
+    {
+      "line_no": 6,
+      "code": "           FROM account ",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "           GROUP BY branch_name);",
+      "explanation": "This is to specify to group the balance value by branch and then the grouped value is calculated in AVG function."
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {
+        "expert": {
+          "concepts": [
+            "AllPredicate",
+            "TargetTableDeclaration",
+            "SelectClause",
+            "Timestamp",
+            "FromClause",
+            "AvgFunction",
+            "Boolean",
+            "GreaterThanOrEqualComparison",
+            "HavingClause",
+            "SelectStatement",
+            "Insertion",
+            "ComparisonOperation",
+            "SingleAttributeGrouping",
+            "SingleAttributeSelection",
+            "DataManipulationLanguage",
+            "NumericType",
+            "SimpleSubquery",
+            "SingleTableSelection"
+          ]
+        },
+        "sql_ontology": {
+          "concepts": [
+            "DateTimeType",
+            "AllPredicate",
+            "GroupByClause",
+            "GreaterThanOrEqualComparison",
+            "SelectStatement",
+            "BooleanType",
+            "SingleAttributeSelection",
+            "NumericType",
+            "HavingClause",
+            "SingleTableSelection",
+            "FromClause",
+            "AvgFunction",
+            "SelectClause"
+          ]
+        },
+        "sql concept": {
+          "concepts": [
+            "DataManipulationLanguage",
+            "Insertion",
+            "TargetTableDeclaration"
+          ]
+        }
+      }
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

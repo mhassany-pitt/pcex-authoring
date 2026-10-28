@@ -1,0 +1,496 @@
+{
+  "id": "post_servlet",
+  "catalog_id": "6954bccff9187b06cf837432",
+  "provider": "AnnEx",
+  "title": "ISD::HTTPPostServlet.java",
+  "language": "Java",
+  "paws_id": 1553,
+  "authors": [
+    {
+      "name": "Unknown",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-java/post_servlet",
+  "description": "",
+  "code": "// Fig. 19.7: HTTPPostServlet.java\n// A simple survey servlet\nimport javax.servlet.*;\nimport javax.servlet.http.*;\nimport java.text.*;\nimport java.io.*;\nimport java.util.*;\n\npublic class HTTPPostServlet extends HttpServlet {\n   private String animalNames[] =\n      { \"dog\", \"cat\", \"bird\", \"snake\", \"none\" };\n\n\n   public void doPost( HttpServletRequest request,\n                       HttpServletResponse response )\n      throws ServletException, IOException\n   {\n      int animals[] = null, total = 0;\n      File f = new File( \"survey.txt\" );\n\n      if ( f.exists() ) {\n         // Determine # of survey responses so far\n         try {\n            ObjectInputStream input = new ObjectInputStream(\n               new FileInputStream( f ) );\n\n            animals = (int []) input.readObject();\n            input.close();   // close stream\n\n            for ( int i = 0; i < animals.length; ++i )\n               total += animals[ i ];\n         }\n         catch( ClassNotFoundException cnfe ) {\n\t            cnfe.printStackTrace();\n         }\n      }\n      else\n         animals = new int[ 5 ];\n\n      // read current survey response\n      String value =\n         request.getParameter( \"animal\" );\n      ++total;   // update total of all responses\n\n      // determine which was selected and update its total\n      for ( int i = 0; i < animalNames.length; ++i )\n         if ( value.equals( animalNames[ i ] ) )\n            ++animals[ i ];\n\n      // write updated totals out to disk\n      ObjectOutputStream output = new ObjectOutputStream(\n         new FileOutputStream( f ) );\n\n      output.writeObject( animals );\n      output.flush();\n      output.close();\n\n      // Calculate percentages\n      double percentages[] = new double[ animals.length ];\n\n      for ( int i = 0; i < percentages.length; ++i )\n         percentages[ i ] = 100.0 * animals[ i ] / total;\n\n      // send a thank you message to client\n      response.setContentType( \"text/html\" ); // content type\n\n      PrintWriter responseOutput = response.getWriter();\n      StringBuffer buf = new StringBuffer();\n      buf.append( \"<html>\\n\" );\n      buf.append( \"<title>Thank you!</title>\\n\" );\n      buf.append( \"Thank you for participating.\\n\" );\n      buf.append( \"<BR>Results:\\n<PRE>\" );\n\n      DecimalFormat twoDigits = new DecimalFormat(\"#0.00\" );\n      for ( int i = 0; i < percentages.length; ++i ) {\n         buf.append( \"<BR>\" );\n         buf.append( animalNames[ i ] );\n         buf.append( \": \" );\n         buf.append( twoDigits.format( percentages[ i ] ) );\n         buf.append( \"%  responses: \" );\n         buf.append( animals[ i ] );\n         buf.append( \"\\n\" );\n      }\n\n      buf.append( \"\\n<BR><BR>Total responses: \" );\n      buf.append( total );\n      buf.append( \"</PRE>\\n</html>\" );\n\n      responseOutput.println( buf.toString() );\n      responseOutput.close();\n   }\n}",
+  "line_count": 92,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "// Fig. 19.7: HTTPPostServlet.java",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "// A simple survey servlet",
+      "explanation": "Used to post data to server-side form handler (i.e. surveys)"
+    },
+    {
+      "line_no": 3,
+      "code": "import javax.servlet.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "import javax.servlet.http.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "import java.text.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "import java.io.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "import java.util.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "public class HTTPPostServlet extends HttpServlet {",
+      "explanation": "Extending HttpServlet allows processing of GET and POST requests."
+    },
+    {
+      "line_no": 10,
+      "code": "   private String animalNames[] =",
+      "explanation": "Array for animal names\r\n"
+    },
+    {
+      "line_no": 11,
+      "code": "      { \"dog\", \"cat\", \"bird\", \"snake\", \"none\" };",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "   public void doPost( HttpServletRequest request,",
+      "explanation": "Responds to POST requests (default BAD_REQUEST), Same arguments as doGet (client request, server response)"
+    },
+    {
+      "line_no": 15,
+      "code": "                       HttpServletResponse response )",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "code": "      throws ServletException, IOException",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "      int animals[] = null, total = 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "      File f = new File( \"survey.txt\" );",
+      "explanation": "Open survey.txt, load animals array"
+    },
+    {
+      "line_no": 20,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "code": "      if ( f.exists() ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "         // Determine # of survey responses so far",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "         try {",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "code": "            ObjectInputStream input = new ObjectInputStream(",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "code": "               new FileInputStream( f ) );",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "code": "            animals = (int []) input.readObject();",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "            input.close();   // close stream",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "            for ( int i = 0; i < animals.length; ++i )",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "               total += animals[ i ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "         catch( ClassNotFoundException cnfe ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "\t            cnfe.printStackTrace();",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "      else",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "         animals = new int[ 5 ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "      // read current survey response",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "      String value =",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "         request.getParameter( \"animal\" );",
+      "explanation": "Use request (HttpServletRequest) method, getParameter to get value of animal."
+    },
+    {
+      "line_no": 43,
+      "code": "      ++total;   // update total of all responses",
+      "explanation": "total incremented, percentages calculated"
+    },
+    {
+      "line_no": 44,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "      // determine which was selected and update its total",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "      for ( int i = 0; i < animalNames.length; ++i )",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "         if ( value.equals( animalNames[ i ] ) )",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "            ++animals[ i ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "      // write updated totals out to disk",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "      ObjectOutputStream output = new ObjectOutputStream(",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "         new FileOutputStream( f ) );",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "      output.writeObject( animals );",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "      output.flush();",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "      output.close();",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "      // Calculate percentages",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "code": "      double percentages[] = new double[ animals.length ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "      for ( int i = 0; i < percentages.length; ++i )",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "         percentages[ i ] = 100.0 * animals[ i ] / total;",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "code": "      // send a thank you message to client",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "      response.setContentType( \"text/html\" ); // content type",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "code": "      PrintWriter responseOutput = response.getWriter();",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "code": "      StringBuffer buf = new StringBuffer();",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "code": "      buf.append( \"<html>\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "code": "      buf.append( \"<title>Thank you!</title>\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "code": "      buf.append( \"Thank you for participating.\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "code": "      buf.append( \"<BR>Results:\\n<PRE>\" );",
+      "explanation": "<PRE> tag, Preformatted text, fixed-width"
+    },
+    {
+      "line_no": 73,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 74,
+      "code": "      DecimalFormat twoDigits = new DecimalFormat(\"#0.00\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 75,
+      "code": "      for ( int i = 0; i < percentages.length; ++i ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 76,
+      "code": "         buf.append( \"<BR>\" );",
+      "explanation": "<BR> tag specifies the line break"
+    },
+    {
+      "line_no": 77,
+      "code": "         buf.append( animalNames[ i ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "code": "         buf.append( \": \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "code": "         buf.append( twoDigits.format( percentages[ i ] ) );",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "code": "         buf.append( \"%  responses: \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "code": "         buf.append( animals[ i ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 82,
+      "code": "         buf.append( \"\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 83,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 84,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 85,
+      "code": "      buf.append( \"\\n<BR><BR>Total responses: \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 86,
+      "code": "      buf.append( total );",
+      "explanation": ""
+    },
+    {
+      "line_no": 87,
+      "code": "      buf.append( \"</PRE>\\n</html>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 88,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 89,
+      "code": "      responseOutput.println( buf.toString() );",
+      "explanation": ""
+    },
+    {
+      "line_no": 90,
+      "code": "      responseOutput.close();",
+      "explanation": ""
+    },
+    {
+      "line_no": 91,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 92,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

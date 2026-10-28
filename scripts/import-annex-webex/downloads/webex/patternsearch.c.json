@@ -1,0 +1,342 @@
+{
+  "id": "patternsearch.c",
+  "catalog_id": "6954bccff9187b06cf83763d",
+  "provider": "WebEx",
+  "title": "IS12:: patternsearch.c (12.3)",
+  "language": "C",
+  "source_origin": "webex_cache",
+  "paws_id": 818,
+  "authors": [
+    {
+      "name": "Peter Brusilovsky",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://adapt2.sis.pitt.edu/web_ex_NV0FGdaHzy/Dissection2?act=patternsearch.c&svc=progvis&sid=demo",
+  "description": "",
+  "code": "/*       Example 12.3: Pattern Search\n          Source: K&R2, p 69\n*/\n#include <stdio.h>\n#define MAXLINE 1000 /* maximum input line size */\nint getline(char line[ ], int maxline);\nint strindex(char source[ ], char searchfor[ ]);\n  char pattern[ ] = \"ould\";\n/* find all lines matching pattern */\nmain()\n{\n     char line[MAXLINE]; /* current input line */\n     int found = 0;\n     while (getline(line, MAXLINE) > 0)\n          if (strindex(line, pattern) >= 0) {\n                    printf(\"%s\", line);\n                    found++;\n          }\n     return found;\n}\n/* getline: read a line into s,  return length */\nint getline(char s[ ], int lim)\n{\n     int c, i;\n     for (i = 0; i < lim-1 &&(c=getchar())!= EOF && c != '\\n'; ++i)\n               s[i] = c;\n     if (c == '\\n') {\n               s[i] = c;\n               ++i;\n     }\n     s[i] = '\u0000';\n     return i;\n}\n/* strindex: return index of t in s, -1 if none */\nint strindex(char s[ ], char t[ ])\n{\n     int i, j, k;\n     for(i = 0; s[i] != '\u0000'; i++) {\n          for(j = i, k = 0; t[k] != '\u0000' && s[j] == t[k]; j++, k++)\n               ;\n          if (k > 0 && t[k] == '\u0000')\n               return i;\n     }\nreturn -1;\n}",
+  "line_count": 45,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "sub": null,
+      "code": "/*       Example 12.3: Pattern Search",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "sub": null,
+      "code": "          Source: K&R2, p 69",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "sub": null,
+      "code": "*/",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "sub": null,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "sub": 5,
+      "code": "#define MAXLINE 1000 /* maximum input line size */",
+      "explanation": "Limit your search to a reasonable limit.  Use a string constant, set only once, for this purpose. Note that it is in all capital letters."
+    },
+    {
+      "line_no": 6,
+      "sub": 6,
+      "code": "int getline(char line[ ], int maxline);",
+      "explanation": "Function prototype used in main and defined below.  A limit is set to the amount of processing allowed with the value \"maxline\"."
+    },
+    {
+      "line_no": 7,
+      "sub": 7,
+      "code": "int strindex(char source[ ], char searchfor[ ]);",
+      "explanation": "The function prototype for \"strindex\" inputs two arrays and returns an integer.  In order to understand the program, it is good to read over the function definitions below."
+    },
+    {
+      "line_no": 8,
+      "sub": 8,
+      "code": "  char pattern[ ] = \"ould\";",
+      "explanation": "The array \"pattern[]\" contains what to look for, in this case \"ould\" ."
+    },
+    {
+      "line_no": 9,
+      "sub": null,
+      "code": "/* find all lines matching pattern */",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "sub": null,
+      "code": "main()",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "sub": null,
+      "code": "     char line[MAXLINE]; /* current input line */",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "sub": 13,
+      "code": "     int found = 0;",
+      "explanation": "Initially, no lines have been searched.  \"Found\" is set to zero."
+    },
+    {
+      "line_no": 14,
+      "sub": 14,
+      "code": "     while (getline(line, MAXLINE) > 0)",
+      "explanation": "Up to a given maximum, the line length is measured.  If it exists (>0), then continue through the while loop.  Otherwise, return \"found\" as zero, only."
+    },
+    {
+      "line_no": 15,
+      "sub": 15,
+      "code": "          if (strindex(line, pattern) >= 0) {",
+      "explanation": "If the matching pattern is found (see \"strindex\" function below), then print the line."
+    },
+    {
+      "line_no": 16,
+      "sub": 16,
+      "code": "                    printf(\"%s\", line);",
+      "explanation": "This prints the line when the pattern is found."
+    },
+    {
+      "line_no": 17,
+      "sub": 17,
+      "code": "                    found++;",
+      "explanation": "This counts the number of lines which contain the pattern."
+    },
+    {
+      "line_no": 18,
+      "sub": 18,
+      "code": "          }",
+      "explanation": "End of If and also end of While loop, which encloses only the If statement block -- thus not requiring extra brackets."
+    },
+    {
+      "line_no": 19,
+      "sub": null,
+      "code": "     return found;",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "sub": 20,
+      "code": "}",
+      "explanation": "End of main."
+    },
+    {
+      "line_no": 21,
+      "sub": null,
+      "code": "/* getline: read a line into s,  return length */",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "sub": 22,
+      "code": "int getline(char s[ ], int lim)",
+      "explanation": "This is the beginning of the code for the function \"getline\".  Overall, it reads the next line into an array and returns the length.  It is the same as in the Longest Line example."
+    },
+    {
+      "line_no": 23,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "sub": null,
+      "code": "     int c, i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "sub": 25,
+      "code": "     for (i = 0; i < lim-1 &&(c=getchar())!= EOF && c != '\\n'; ++i)",
+      "explanation": "As long as there is a character to read, and not a carriage return, the length is counted (in the value of \"i\").  A carriage return will throw it out of the loop.  It will stop when it reaches one less than the limit set above (MAXLINE).  Since it starts"
+    },
+    {
+      "line_no": 26,
+      "sub": 26,
+      "code": "               s[i] = c;",
+      "explanation": "The \"i\"-th position of the array s is assigned the value of the current character read in."
+    },
+    {
+      "line_no": 27,
+      "sub": 27,
+      "code": "     if (c == '\\n') {",
+      "explanation": "If the character is a carriage return, this is obviously the end of the line and so it isn't processed in the previous inner loop.  However, it is still processed."
+    },
+    {
+      "line_no": 28,
+      "sub": 28,
+      "code": "               s[i] = c;",
+      "explanation": "The \"i\"-th position of the array s is assigned \"\n\".  It is the next to last position in the array."
+    },
+    {
+      "line_no": 29,
+      "sub": null,
+      "code": "               ++i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "sub": 30,
+      "code": "     }",
+      "explanation": "End of loop measuring length (\"getline\" function)."
+    },
+    {
+      "line_no": 31,
+      "sub": 31,
+      "code": "     s[i] = '\u0000';",
+      "explanation": "Assign \"\u0000\" to the end of the character array, as is usual for strings.  Even this character is counted, as the last line in either of the loops above ends with adding one more to \"I\".Even this character is counted, as the last line in either of the loops"
+    },
+    {
+      "line_no": 32,
+      "sub": 32,
+      "code": "     return i;",
+      "explanation": "The final length count is returned."
+    },
+    {
+      "line_no": 33,
+      "sub": 33,
+      "code": "}",
+      "explanation": "Closing bracket for the function \"getline\"."
+    },
+    {
+      "line_no": 34,
+      "sub": null,
+      "code": "/* strindex: return index of t in s, -1 if none */",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "sub": 35,
+      "code": "int strindex(char s[ ], char t[ ])",
+      "explanation": "Beginning of function \"strindex\"."
+    },
+    {
+      "line_no": 36,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "sub": 37,
+      "code": "     int i, j, k;",
+      "explanation": "Each loop is given its own counter variable, and a third variable is used to pass values between them, without changing the original value."
+    },
+    {
+      "line_no": 38,
+      "sub": 38,
+      "code": "     for(i = 0; s[i] != '\u0000'; i++) {",
+      "explanation": "The array s[] is traversed one at a time, from beginning, s[0], to end (= '\u0000').  This is the outer loop. Each time it runs once, the inner loops spin completely."
+    },
+    {
+      "line_no": 39,
+      "sub": 39,
+      "code": "          for(j = i, k = 0; t[k] != '\u0000' && s[j] == t[k]; j++, k++)",
+      "explanation": "Passing the outer loop's array position for s into the beginning value for j, the nested loop begins to cycle.  As long as"
+    },
+    {
+      "line_no": 40,
+      "sub": 40,
+      "code": "               ;",
+      "explanation": "Nothing happens when this conditional statement is true, other than increment j and k.  Actually, it is checking to see if every character in t[ ] is also found in s[ ]."
+    },
+    {
+      "line_no": 41,
+      "sub": 41,
+      "code": "          if (k > 0 && t[k] == '\u0000')",
+      "explanation": "If something has been found before this (k>0) and the last character is \"\u0000\", then return I.  This shows that the whole pattern has been found."
+    },
+    {
+      "line_no": 42,
+      "sub": 42,
+      "code": "               return i;",
+      "explanation": "If the above line is true, I has preserved the beginning position of the pattern within s[]."
+    },
+    {
+      "line_no": 43,
+      "sub": null,
+      "code": "     }",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "sub": 44,
+      "code": "return -1;",
+      "explanation": "If nothing is found, return -1."
+    },
+    {
+      "line_no": 45,
+      "sub": 45,
+      "code": "}",
+      "explanation": "End of function \"strindex\"."
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [
+      "TODO:add-prompt"
+    ],
+    "classification": {
+      "knowledge_components": {
+        "unspecified": {
+          "concepts": [
+            "variable_initialization",
+            "pre_increment",
+            "return",
+            "and",
+            "for",
+            "while",
+            "array_declaration",
+            "char",
+            "equal",
+            "post_increment",
+            "simple_assignment",
+            "int",
+            "greater_equal",
+            "if",
+            "main_function",
+            "not_equal",
+            "less",
+            "greater",
+            "define",
+            "void",
+            "variable_declaration",
+            "include",
+            "function_declaration",
+            "printf",
+            "sub"
+          ]
+        }
+      }
+    },
+    "delivery": [
+      {
+        "protocol": "PITT"
+      },
+      {
+        "protocol": "HTML"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

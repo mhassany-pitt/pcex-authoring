@@ -1,0 +1,471 @@
+{
+  "id": "update_credit_prog",
+  "catalog_id": "6954bccff9187b06cf837617",
+  "provider": "AnnEx",
+  "title": "update_credit_prog",
+  "language": "C++",
+  "paws_id": 774,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-cpp/update_credit_prog",
+  "description": "",
+  "code": "#include <stdio.h>\nint main( void )\n{ \n   int request;    \t\t /* request number */\n   int account;    \t\t /* account number */\n   double balance;  \t\t/*  account balance */\n   char name[ 30 ];\t\t /* account name */\n   FILE *cfPtr;     \t\t/*  clients.dat file pointer */\n\n   /* fopen opens the file; exits program if file cannot be opened */\n\n   if ( ( cfPtr = fopen( \"clients.dat\", \"r\" ) ) == NULL ) {\n      printf( \"File could not be opened\\n\" );\n   } /* end if */\n   else {\n      /* display request options */\n      printf( \"Enter request\\n\"\n         \" 1 - List accounts with zero balances\\n\"\n         \" 2 - List accounts with credit balances\\n\"\n         \" 3 - List accounts with debit balances\\n\"\n         \" 4 - End of run\\n? \" );\n      scanf( \"%d\", &request );\n\n      /* process user's request */\n\n      while ( request != 4 ) { \n         /* read account, name and balance from file */\n         fscanf( cfPtr, \"%d%s%lf\", &account, name, &balance );\n\n         switch ( request ) { \n\n            case 1:\n               printf( \"\\nAccounts with zero balances:\\n\" );\n               /* read file contents (until eof) */\n               while ( !feof( cfPtr ) ) { \n                  if ( balance == 0 ) {\n                     printf( \"%-10d%-13s%7.2f\\n\", \n                        account, name, balance );\n                  } /* end if */\n                  /* read account, name and balance from file */\n                  fscanf( cfPtr, \"%d%s%lf\", \n                     &account, name, &balance );\n               } /* end while */\n               break;\n            case 2:\n               printf( \"\\nAccounts with credit balances:\\n\" );\n               /* read file contents (until eof) */\n               while ( !feof( cfPtr ) ) { \n                  if ( balance < 0 ) {\n                     printf( \"%-10d%-13s%7.2f\\n\", \n                        account, name, balance );\n                  } /* end if */\n                  /* read account, name and balance from file */\n                  fscanf( cfPtr, \"%d%s%lf\", \n                     &account, name, &balance );\n               } /* end while */\n\n               break;\n\n            case 3:\n               printf( \"\\nAccounts with debit balances:\\n\" );\n               /* read file contents (until eof) */\n               while ( !feof( cfPtr ) ) { \n                  if ( balance > 0 ) {\n                     printf( \"%-10d%-13s%7.2f\\n\", \n                        account, name, balance );\n                  } /* end if */\n                  /* read account, name and balance from file */\n                  fscanf( cfPtr, \"%d%s%lf\", \n                     &account, name, &balance );\n               } /* end while */\n\n               break;           \n            \n         } /* end switch */ \n\n         rewind( cfPtr ); \t\t\t /* return cfPtr to beginning of file */\n\n         printf( \"\\n? \" );\n         scanf( \"%d\", &request );\n      } /* end while */\n      printf( \"End of run.\\n\" );\n      fclose( cfPtr ); \t\t\t/* fclose closes the file */\n   } /* end else */\n   return 0; \t\t\t\t/* indicates successful termination */\n} /* end main */\n} /* end main */",
+  "line_count": 87,
+  "has_explanations": false,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "int main( void )",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "{ ",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "   int request;    \t\t /* request number */",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "   int account;    \t\t /* account number */",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "   double balance;  \t\t/*  account balance */",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "   char name[ 30 ];\t\t /* account name */",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "   FILE *cfPtr;     \t\t/*  clients.dat file pointer */",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "   /* fopen opens the file; exits program if file cannot be opened */",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "   if ( ( cfPtr = fopen( \"clients.dat\", \"r\" ) ) == NULL ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "      printf( \"File could not be opened\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "   } /* end if */",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "   else {",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "code": "      /* display request options */",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "      printf( \"Enter request\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "         \" 1 - List accounts with zero balances\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "         \" 2 - List accounts with credit balances\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "code": "         \" 3 - List accounts with debit balances\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "code": "         \" 4 - End of run\\n? \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "      scanf( \"%d\", &request );",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "code": "      /* process user's request */",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "      while ( request != 4 ) { ",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "code": "         /* read account, name and balance from file */",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "         fscanf( cfPtr, \"%d%s%lf\", &account, name, &balance );",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "         switch ( request ) { ",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "            case 1:",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "               printf( \"\\nAccounts with zero balances:\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "               /* read file contents (until eof) */",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "               while ( !feof( cfPtr ) ) { ",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "                  if ( balance == 0 ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "                     printf( \"%-10d%-13s%7.2f\\n\", ",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "                        account, name, balance );",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "                  } /* end if */",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "                  /* read account, name and balance from file */",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "                  fscanf( cfPtr, \"%d%s%lf\", ",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "                     &account, name, &balance );",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "               } /* end while */",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "               break;",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "            case 2:",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "               printf( \"\\nAccounts with credit balances:\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "               /* read file contents (until eof) */",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "               while ( !feof( cfPtr ) ) { ",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "code": "                  if ( balance < 0 ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "                     printf( \"%-10d%-13s%7.2f\\n\", ",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "                        account, name, balance );",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "                  } /* end if */",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "code": "                  /* read account, name and balance from file */",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "                  fscanf( cfPtr, \"%d%s%lf\", ",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "                     &account, name, &balance );",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "               } /* end while */",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "               break;",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "            case 3:",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "               printf( \"\\nAccounts with debit balances:\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "               /* read file contents (until eof) */",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "               while ( !feof( cfPtr ) ) { ",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "code": "                  if ( balance > 0 ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "                     printf( \"%-10d%-13s%7.2f\\n\", ",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "                        account, name, balance );",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "code": "                  } /* end if */",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "code": "                  /* read account, name and balance from file */",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "code": "                  fscanf( cfPtr, \"%d%s%lf\", ",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "code": "                     &account, name, &balance );",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "code": "               } /* end while */",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "code": "               break;           ",
+      "explanation": ""
+    },
+    {
+      "line_no": 74,
+      "code": "            ",
+      "explanation": ""
+    },
+    {
+      "line_no": 75,
+      "code": "         } /* end switch */ ",
+      "explanation": ""
+    },
+    {
+      "line_no": 76,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 77,
+      "code": "         rewind( cfPtr ); \t\t\t /* return cfPtr to beginning of file */",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "code": "         printf( \"\\n? \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "code": "         scanf( \"%d\", &request );",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "code": "      } /* end while */",
+      "explanation": ""
+    },
+    {
+      "line_no": 82,
+      "code": "      printf( \"End of run.\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 83,
+      "code": "      fclose( cfPtr ); \t\t\t/* fclose closes the file */",
+      "explanation": ""
+    },
+    {
+      "line_no": 84,
+      "code": "   } /* end else */",
+      "explanation": ""
+    },
+    {
+      "line_no": 85,
+      "code": "   return 0; \t\t\t\t/* indicates successful termination */",
+      "explanation": ""
+    },
+    {
+      "line_no": 86,
+      "code": "} /* end main */",
+      "explanation": ""
+    },
+    {
+      "line_no": 87,
+      "code": "} /* end main */",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

@@ -1,0 +1,390 @@
+{
+  "id": "battleship.c",
+  "catalog_id": "6954bccff9187b06cf837641",
+  "provider": "WebEx",
+  "title": "IS12:: battleship.c (15.1)",
+  "language": "C",
+  "source_origin": "webex_cache",
+  "paws_id": 822,
+  "authors": [
+    {
+      "name": "Peter Brusilovsky",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://adapt2.sis.pitt.edu/web_ex_NV0FGdaHzy/Dissection2?act=battleship.c&svc=progvis&sid=demo",
+  "description": "",
+  "code": "/* Example 15.1: Naval Battle\n        Author: Peter Brusilovsky */\n\n#include <stdio.h>\n#define FSIZE 5\n#define SHIP 1\n#define EMPTY 0\n#define DESTROYED 2\n\nstatic int battlefield[FSIZE][FSIZE] = {\n {1, 0, 1, 0, 0}, /* row A */\n {0, 0, 0, 0, 1}, /* row B */\n {0, 0, 1, 0, 0}, /* row C */\n {0, 0, 0, 0, 0}, /* row D */\n {1, 0, 0, 0, 1}, /* row E */ };\n\nint react(char c, int r);\n\nmain() {\n        int col;\n        char ch_row;\n\n        printf(\"Enter your move like 5 A\\n\");\n        printf(\"Enter 0 X to exit\\n\");\n        /* reads and process hits */\n        do{\n                printf(\"You move: \");\n                scanf(\"%d %c\", &col, &ch_row);\n\n        } while(react(ch_row, col) > 0);\n        return 0; }\n\nint react(char r, int col)\n{\n    int row;\n    if (col == 0) {\n        printf(\"Good Bye!\\n\");\n        return 0;\n    }\n                row = r - 'A';\n                if(row < 0 || row > 4)\n                        printf(\"Row %c is not possible!\\n\", r);\n                else if (col <1 || col >5)\n                        printf(\"Column %d is not possible!\\n\", col);\n                else if (battlefield[row][col-1] == SHIP) {\n                        printf(\"Hit!\\n\");\n                        battlefield[row][col-1] = DESTROYED;\n                } else if (battlefield[row][col-1] == DESTROYED)\n                        printf(\"This ship has been already destroyed!\\n\");\n                else\n                        printf(\"Miss...\\n\");\n                return 1;\n}",
+  "line_count": 53,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "sub": null,
+      "code": "/* Example 15.1: Naval Battle",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "sub": null,
+      "code": "        Author: Peter Brusilovsky */",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "sub": null,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "sub": 5,
+      "code": "#define FSIZE 5",
+      "explanation": "Size of array"
+    },
+    {
+      "line_no": 6,
+      "sub": 6,
+      "code": "#define SHIP 1",
+      "explanation": "Give meaning to numbers"
+    },
+    {
+      "line_no": 7,
+      "sub": null,
+      "code": "#define EMPTY 0",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "sub": null,
+      "code": "#define DESTROYED 2",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "sub": 10,
+      "code": "static int battlefield[FSIZE][FSIZE] = {",
+      "explanation": "Array of FSIZE size.  The entire array is initialized, row by row."
+    },
+    {
+      "line_no": 11,
+      "sub": 11,
+      "code": " {1, 0, 1, 0, 0}, /* row A */",
+      "explanation": "The entire array is initialized, row by row."
+    },
+    {
+      "line_no": 12,
+      "sub": 12,
+      "code": " {0, 0, 0, 0, 1}, /* row B */",
+      "explanation": "The entire array is initialized, row by row."
+    },
+    {
+      "line_no": 13,
+      "sub": 13,
+      "code": " {0, 0, 1, 0, 0}, /* row C */",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "sub": 14,
+      "code": " {0, 0, 0, 0, 0}, /* row D */",
+      "explanation": "The entire array is initialized, row by row."
+    },
+    {
+      "line_no": 15,
+      "sub": 15,
+      "code": " {1, 0, 0, 0, 1}, /* row E */ };",
+      "explanation": "The entire array is initialized, row by row."
+    },
+    {
+      "line_no": 16,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "sub": 17,
+      "code": "int react(char c, int r);",
+      "explanation": "Function to interpret moves. One is taken in as a char, then other as an int."
+    },
+    {
+      "line_no": 18,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "sub": null,
+      "code": "main() {",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "sub": null,
+      "code": "        int col;",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "sub": null,
+      "code": "        char ch_row;",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "sub": null,
+      "code": "        printf(\"Enter your move like 5 A\\n\");",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "sub": null,
+      "code": "        printf(\"Enter 0 X to exit\\n\");",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "sub": null,
+      "code": "        /* reads and process hits */",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "sub": null,
+      "code": "        do{",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "sub": null,
+      "code": "                printf(\"You move: \");",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "sub": 28,
+      "code": "                scanf(\"%d %c\", &col, &ch_row);",
+      "explanation": "Moves are entered by column then row."
+    },
+    {
+      "line_no": 29,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "sub": 30,
+      "code": "        } while(react(ch_row, col) > 0);",
+      "explanation": "Then, the order is switched for the function \"react\""
+    },
+    {
+      "line_no": 31,
+      "sub": null,
+      "code": "        return 0; }",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "sub": null,
+      "code": "int react(char r, int col)",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "sub": null,
+      "code": "    int row;",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "sub": 36,
+      "code": "    if (col == 0) {",
+      "explanation": "If zero is entered, the program quits.  A second value must be entered, though, because of scanf (needs 2 values)."
+    },
+    {
+      "line_no": 37,
+      "sub": null,
+      "code": "        printf(\"Good Bye!\\n\");",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "sub": null,
+      "code": "        return 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "sub": null,
+      "code": "    }",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "sub": 40,
+      "code": "                row = r - 'A';",
+      "explanation": "By subtracting 'A' from the decimal value of the char ch_row, the results for  A to E will be int row 0 to 4."
+    },
+    {
+      "line_no": 41,
+      "sub": 41,
+      "code": "                if(row < 0 || row > 4)",
+      "explanation": "Nothing else but A to E ( 0 to 4 above) will be accepted."
+    },
+    {
+      "line_no": 42,
+      "sub": 42,
+      "code": "                        printf(\"Row %c is not possible!\\n\", r);",
+      "explanation": "The wrong value is printed out."
+    },
+    {
+      "line_no": 43,
+      "sub": 43,
+      "code": "                else if (col <1 || col >5)",
+      "explanation": "Only columns 1 to 5 will be accepted.  This is more straightforward."
+    },
+    {
+      "line_no": 44,
+      "sub": null,
+      "code": "                        printf(\"Column %d is not possible!\\n\", col);",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "sub": 45,
+      "code": "                else if (battlefield[row][col-1] == SHIP) {",
+      "explanation": "If a ship is in that position, a hit will be scored."
+    },
+    {
+      "line_no": 46,
+      "sub": null,
+      "code": "                        printf(\"Hit!\\n\");",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "sub": 47,
+      "code": "                        battlefield[row][col-1] = DESTROYED;",
+      "explanation": "If hit, the value changes to DESTROYED, which is 2."
+    },
+    {
+      "line_no": 48,
+      "sub": 48,
+      "code": "                } else if (battlefield[row][col-1] == DESTROYED)",
+      "explanation": "If  it's already been destroyed (value 2), only a message is printed, and nothing is changed."
+    },
+    {
+      "line_no": 49,
+      "sub": null,
+      "code": "                        printf(\"This ship has been already destroyed!\\n\");",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "sub": null,
+      "code": "                else",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "sub": 51,
+      "code": "                        printf(\"Miss...\\n\");",
+      "explanation": "If not 1 or 2, it's a miss. (SHIP 1, DESTROYED 2)"
+    },
+    {
+      "line_no": 52,
+      "sub": null,
+      "code": "                return 1;",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [
+      "TODO:add-prompt"
+    ],
+    "classification": {
+      "knowledge_components": {
+        "unspecified": {
+          "concepts": [
+            "multi_dimensional_array",
+            "variable_initialization",
+            "return",
+            "do",
+            "if_else",
+            "static",
+            "array_declaration",
+            "reference",
+            "char",
+            "equal",
+            "simple_assignment",
+            "int",
+            "if",
+            "or",
+            "main_function",
+            "less",
+            "greater",
+            "define",
+            "void",
+            "variable_declaration",
+            "sub",
+            "function_declaration",
+            "include",
+            "printf",
+            "scanf"
+          ]
+        }
+      }
+    },
+    "delivery": [
+      {
+        "protocol": "PITT"
+      },
+      {
+        "protocol": "HTML"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

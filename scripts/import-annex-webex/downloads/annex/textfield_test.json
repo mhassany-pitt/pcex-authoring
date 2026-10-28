@@ -1,0 +1,446 @@
+{
+  "id": "textfield_test",
+  "catalog_id": "6954bccff9187b06cf83743b",
+  "provider": "AnnEx",
+  "title": "ISD::TextFieldTest.java",
+  "language": "Java",
+  "paws_id": 1562,
+  "authors": [
+    {
+      "name": "Unknown",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-java/textfield_test",
+  "description": "",
+  "code": "// Fig. 12.7: TextFieldTest.java\n// Demonstrating the JTextField class.\nimport java.awt.*;\nimport java.awt.event.*;\nimport javax.swing.*;\n\npublic class TextFieldTest extends JFrame {\n   private JTextField text1, text2, text3;\n   private JPasswordField password;\n\n   public TextFieldTest()\n   {\n      super( \"Testing JTextField and JPasswordField\" );\n\n      Container c = getContentPane();\n      c.setLayout( new FlowLayout() );\n\n      // construct textfield with default sizing\n      text1 = new JTextField( 10 );\n      c.add( text1 );\n\n      // construct textfield with default text\n      text2 = new JTextField( \"Enter text here\" );\n      c.add( text2 );\n\n      // construct textfield with default text and\n      // 20 visible elements and no event handler\n      text3 = new JTextField( \"Uneditable text field\", 20 );\n      text3.setEditable( false );\n      c.add( text3 );\n\n      // construct textfield with default text\n      password = new JPasswordField( \"Hidden text\" );\n      c.add( password );\n\n      TextFieldHandler handler = new TextFieldHandler();\n      text1.addActionListener( handler );\n      text2.addActionListener( handler );\n      text3.addActionListener( handler );\n      password.addActionListener( handler );\n\n      setSize( 325, 100 );\n      show();\n   }\n\n   public static void main( String args[] )\n   {\n      TextFieldTest app = new TextFieldTest();\n\n      app.addWindowListener(\n         new WindowAdapter() {\n            public void windowClosing( WindowEvent e )\n            {\n               System.exit( 0 );\n            }\n         }\n      );\n   }\n\n   // inner class for event handling\n   private class TextFieldHandler implements ActionListener {\n      public void actionPerformed( ActionEvent e )\n      {\n         String s = \"\";\n\n         if ( e.getSource() == text1 )\n            s = \"text1: \" + e.getActionCommand();\n         else if ( e.getSource() == text2 )\n            s = \"text2: \" + e.getActionCommand();\n         else if ( e.getSource() == text3 )\n            s = \"text3: \" + e.getActionCommand();\n         else if ( e.getSource() == password ) {\n            JPasswordField pwd =\n               (JPasswordField) e.getSource();\n            s = \"password: \" +\n                new String( pwd.getPassword() );\n         }\n\n         JOptionPane.showMessageDialog( null, s );\n      }\n   }\n}",
+  "line_count": 82,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "// Fig. 12.7: TextFieldTest.java",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "// Demonstrating the JTextField class.",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "import java.awt.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "import java.awt.event.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "import javax.swing.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "public class TextFieldTest extends JFrame {",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "   private JTextField text1, text2, text3;",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "   private JPasswordField password;",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": "   public TextFieldTest()",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "      super( \"Testing JTextField and JPasswordField\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "      Container c = getContentPane();",
+      "explanation": "Create a Container object."
+    },
+    {
+      "line_no": 16,
+      "code": "      c.setLayout( new FlowLayout() );",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "      // construct textfield with default sizing",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "      text1 = new JTextField( 10 );",
+      "explanation": "Create new JTextField objects"
+    },
+    {
+      "line_no": 20,
+      "code": "      c.add( text1 );",
+      "explanation": "attach component to Container c."
+    },
+    {
+      "line_no": 21,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "      // construct textfield with default text",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "      text2 = new JTextField( \"Enter text here\" );",
+      "explanation": "Create new JTextField objects"
+    },
+    {
+      "line_no": 24,
+      "code": "      c.add( text2 );",
+      "explanation": "attach component to Container c."
+    },
+    {
+      "line_no": 25,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "      // construct textfield with default text and",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "code": "      // 20 visible elements and no event handler",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "      text3 = new JTextField( \"Uneditable text field\", 20 );",
+      "explanation": "Create new JTextField objects"
+    },
+    {
+      "line_no": 29,
+      "code": "      text3.setEditable( false );",
+      "explanation": "This text field cannot be modified (has a gray background).  It can still generate events."
+    },
+    {
+      "line_no": 30,
+      "code": "      c.add( text3 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "      // construct textfield with default text",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "      password = new JPasswordField( \"Hidden text\" );",
+      "explanation": "JPasswordField initialized with text, which appears as asterisks."
+    },
+    {
+      "line_no": 34,
+      "code": "      c.add( password );",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "      TextFieldHandler handler = new TextFieldHandler();",
+      "explanation": "Register event handlers.  Good practice to use an inner class as an event handler."
+    },
+    {
+      "line_no": 37,
+      "code": "      text1.addActionListener( handler );",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "      text2.addActionListener( handler );",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "      text3.addActionListener( handler );",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "      password.addActionListener( handler );",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "      setSize( 325, 100 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "      show();",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "   public static void main( String args[] )",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "      TextFieldTest app = new TextFieldTest();",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "      app.addWindowListener(",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "         new WindowAdapter() {",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "            public void windowClosing( WindowEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "code": "            {",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "               System.exit( 0 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "            }",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "      );",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "   // inner class for event handling",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "   private class TextFieldHandler implements ActionListener {",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "      public void actionPerformed( ActionEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "      {",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "code": "         String s = \"\";",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "         if ( e.getSource() == text1 )",
+      "explanation": "getSource returns a Component reference to component that generated event"
+    },
+    {
+      "line_no": 67,
+      "code": "            s = \"text1: \" + e.getActionCommand();",
+      "explanation": "Use getActionCommand to get the text in the text field that had the event."
+    },
+    {
+      "line_no": 68,
+      "code": "         else if ( e.getSource() == text2 )",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "code": "            s = \"text2: \" + e.getActionCommand();",
+      "explanation": "getActionCommand Returns text in JTextField that generated event"
+    },
+    {
+      "line_no": 70,
+      "code": "         else if ( e.getSource() == text3 )",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "code": "            s = \"text3: \" + e.getActionCommand();",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "code": "         else if ( e.getSource() == password ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "code": "            JPasswordField pwd =",
+      "explanation": "e.getSource() returns a Component reference, which is cast to a JPasswordField"
+    },
+    {
+      "line_no": 74,
+      "code": "               (JPasswordField) e.getSource();",
+      "explanation": "e.getSource() returns a Component reference, which is cast to a JPasswordField"
+    },
+    {
+      "line_no": 75,
+      "code": "            s = \"password: \" +",
+      "explanation": ""
+    },
+    {
+      "line_no": 76,
+      "code": "                new String( pwd.getPassword() );",
+      "explanation": "getPassword() returns password as an array of type char, new String() transforms it into type String"
+    },
+    {
+      "line_no": 77,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "code": "         JOptionPane.showMessageDialog( null, s );",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 82,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

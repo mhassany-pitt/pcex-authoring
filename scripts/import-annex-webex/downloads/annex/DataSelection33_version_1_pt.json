@@ -1,0 +1,72 @@
+{
+  "id": "DataSelection33_version_1_pt",
+  "catalog_id": "6954bccff9187b06cf83746c",
+  "provider": "AnnEx",
+  "title": "Derived Relations pt",
+  "language": "Sql",
+  "paws_id": 1434,
+  "authors": [
+    {
+      "name": "Rafael Araujo",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-sql/DataSelection33_version_1_pt",
+  "description": "",
+  "code": "SELECT branch_name, avg_balance\n     FROM\n          (SELECT branch_name, AVG(balance)\n           FROM account\n           GROUP BY branch_name)\n           AS branch_avg(branch_name, avg_balance))\n    WHERE avg_balance > 1200;",
+  "line_count": 7,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "SELECT branch_name, avg_balance",
+      "explanation": "Nesse exemplo, uma subconsulta derivada e' usada na clausula FROM. Os nomes das colunas retornadas pela consulta principal nao e' mais da tabela original 'account'. Agora os nomes sao apelidos vindos da subconsulta derivada."
+    },
+    {
+      "line_no": 2,
+      "code": "     FROM",
+      "explanation": "O SQL permite que uma subconsulta seja utilizada na clausula FROM, chamada de tabela derivada."
+    },
+    {
+      "line_no": 3,
+      "code": "          (SELECT branch_name, AVG(balance)",
+      "explanation": "Essa subconsulta seleciona o nome e a media de saldo das contas das agencias."
+    },
+    {
+      "line_no": 4,
+      "code": "           FROM account",
+      "explanation": "Observe que nao e' necessario usar a clausula HAVING, visto que a tabela temporaria <i>branch_avg</i> e' calculada na clausula FROM e os atributos da tabela temporaria <i>branch_avg</i> podem ser utilizados diretamente na clausula WHERE."
+    },
+    {
+      "line_no": 5,
+      "code": "           GROUP BY branch_name)",
+      "explanation": "Essa clausula GROUP BY e' usada na tabela derivada."
+    },
+    {
+      "line_no": 6,
+      "code": "           AS branch_avg(branch_name, avg_balance))",
+      "explanation": "A subconsulta derivada e suas duas colunas sao renomeadas usando uma tupla. Portanto, a subconsulta e' chamada de 'branch_avg', a primeira coluna de 'branch_name' e a segunda coluna de 'avg_balance'."
+    },
+    {
+      "line_no": 7,
+      "code": "    WHERE avg_balance > 1200;",
+      "explanation": "Para limitar o valor da coluna 'avg_balance', a clausula WHERE e' utilizada. Nao e' necessario utilizar a clausula HAVING, visto que a subconsulta derivada gera uma tabela temporaria e o valor testado, avg_balance, pode ser lido diretamente dessa tabela."
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  },
+  "iso_language_code": "pt"
+}

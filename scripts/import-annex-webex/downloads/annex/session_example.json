@@ -1,0 +1,536 @@
+{
+  "id": "session_example",
+  "catalog_id": "6954bccff9187b06cf837448",
+  "provider": "AnnEx",
+  "title": "ISD::SessionExample.java",
+  "language": "Java",
+  "paws_id": 1575,
+  "authors": [
+    {
+      "name": "Unknown",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-java/session_example",
+  "description": "",
+  "code": "// Fig. 19.13: SessionExample.java\n// Using sessions.\nimport javax.servlet.*;\nimport javax.servlet.http.*;\nimport java.io.*;\n\npublic class SessionExample extends HttpServlet {\n   private final static String names[] =\n      { \"C\", \"C++\", \"Java\", \"Visual Basic 6\" };\n   private final static String isbn[] = {\n      \"0-13-226119-7\", \"0-13-528910-6\",\n      \"0-13-012507-5\", \"0-13-528910-6\" };\n \n   public void doPost( HttpServletRequest request,\n                       HttpServletResponse response )\n      throws ServletException, IOException\n   {\n      PrintWriter output;\n      String language = request.getParameter( \"lang\" );\n\n      // Get the user's session object.\n      // Create a session (true) if one does not exist.\n      HttpSession session = request.getSession( true );\n\n      // add a value for user's choice to session\n      session.putValue( language, getISBN( language ) );\n\n      response.setContentType( \"text/html\" );\n      output = response.getWriter();\n\n      // send HTML page to client\n      output.println( \"<HTML><HEAD><TITLE>\" );\n      output.println( \"Sessions\" );\n      output.println( \"</TITLE></HEAD><BODY>\" );\n      output.println( \"<P>Welcome to Sessions!<BR>\" );\n      output.println( \"<P>\" );\n      output.println( language );\n      output.println( \" is a great language.\" );\n      output.println( \"</BODY></HTML>\" );\n\n      output.close();    // close stream\n   }\n\n   public void doGet( HttpServletRequest request,\n                      HttpServletResponse response )\n                      throws ServletException, IOException\n   {\n      PrintWriter output;\n\n      // Get the user's session object.\n      // Don't create a session (false) if one does not exist.\n      HttpSession session = request.getSession( false );\n\n      // get names of session object's values\n      String valueNames[];\n\n      if ( session != null )\n         valueNames = session.getValueNames();\n      else\n         valueNames = null;\n\n      response.setContentType( \"text/html\" ); \n      output = response.getWriter();\n\n      output.println( \"<HTML><HEAD><TITLE>\" );\n      output.println( \"Sessions II\" );\n      output.println( \"</TITLE></HEAD><BODY>\" );\n\n      if ( valueNames != null && valueNames.length != 0 ) {\n         output.println( \"<H1>Recommendations</H1>\" );\n\n         // get value for each name in valueNames\n         for ( int i = 0; i < valueNames.length; i++ ) {\n            String value =\n               (String) session.getValue( valueNames[ i ] );\n\n            output.println(\n               valueNames[ i ] + \" How to Program. \" +\n               \"ISBN#: \" + value + \"<BR>\" );\n         }\n      }\n      else {\n         output.println( \"<H1>No Recommendations</H1>\" );\n         output.println( \"You did not select a language or\" );\n         output.println( \"the session has expired.\" );\n      }\n\n      output.println( \"</BODY></HTML>\" );\n      output.close();    // close stream\n   }\n\n   private String getISBN( String lang )\n   {\n      for ( int i = 0; i < names.length; ++i )\n         if ( lang.equals( names[ i ] ) )\n            return isbn[ i ];\n\n       return \"\";  // no matching string found\n   }\n}",
+  "line_count": 100,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "// Fig. 19.13: SessionExample.java",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "// Using sessions.",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "import javax.servlet.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "import javax.servlet.http.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "import java.io.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "public class SessionExample extends HttpServlet {",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "   private final static String names[] =",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "      { \"C\", \"C++\", \"Java\", \"Visual Basic 6\" };",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "   private final static String isbn[] = {",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": "      \"0-13-226119-7\", \"0-13-528910-6\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "      \"0-13-012507-5\", \"0-13-528910-6\" };",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": " ",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "   public void doPost( HttpServletRequest request,",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "                       HttpServletResponse response )",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "code": "      throws ServletException, IOException",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "      PrintWriter output;",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "      String language = request.getParameter( \"lang\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "code": "      // Get the user's session object.",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "      // Create a session (true) if one does not exist.",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "      HttpSession session = request.getSession( true );",
+      "explanation": "Load HttpSession if exists, create if does not.\r\n"
+    },
+    {
+      "line_no": 24,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "code": "      // add a value for user's choice to session",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "      session.putValue( language, getISBN( language ) );",
+      "explanation": "Set name/value pair."
+    },
+    {
+      "line_no": 27,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "      response.setContentType( \"text/html\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "      output = response.getWriter();",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "      // send HTML page to client",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "      output.println( \"<HTML><HEAD><TITLE>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "      output.println( \"Sessions\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "      output.println( \"</TITLE></HEAD><BODY>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "      output.println( \"<P>Welcome to Sessions!<BR>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "      output.println( \"<P>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "      output.println( language );",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "      output.println( \" is a great language.\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "      output.println( \"</BODY></HTML>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "      output.close();    // close stream",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "   public void doGet( HttpServletRequest request,",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "                      HttpServletResponse response )",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "                      throws ServletException, IOException",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "      PrintWriter output;",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "      // Get the user's session object.",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "      // Don't create a session (false) if one does not exist.",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "      HttpSession session = request.getSession( false );",
+      "explanation": "Do not create object if does not exist.  session set to null.\r\n"
+    },
+    {
+      "line_no": 53,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "      // get names of session object's values",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "      String valueNames[];",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "      if ( session != null )",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "         valueNames = session.getValueNames();",
+      "explanation": "Put names into array."
+    },
+    {
+      "line_no": 59,
+      "code": "      else",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "         valueNames = null;",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "      response.setContentType( \"text/html\" ); ",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "      output = response.getWriter();",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "      output.println( \"<HTML><HEAD><TITLE>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "      output.println( \"Sessions II\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "code": "      output.println( \"</TITLE></HEAD><BODY>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "code": "      if ( valueNames != null && valueNames.length != 0 ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "code": "         output.println( \"<H1>Recommendations</H1>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "code": "         // get value for each name in valueNames",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "code": "         for ( int i = 0; i < valueNames.length; i++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 74,
+      "code": "            String value =",
+      "explanation": ""
+    },
+    {
+      "line_no": 75,
+      "code": "               (String) session.getValue( valueNames[ i ] );",
+      "explanation": "Get value associated with name.\r\n"
+    },
+    {
+      "line_no": 76,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 77,
+      "code": "            output.println(",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "code": "               valueNames[ i ] + \" How to Program. \" +",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "code": "               \"ISBN#: \" + value + \"<BR>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 82,
+      "code": "      else {",
+      "explanation": ""
+    },
+    {
+      "line_no": 83,
+      "code": "         output.println( \"<H1>No Recommendations</H1>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 84,
+      "code": "         output.println( \"You did not select a language or\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 85,
+      "code": "         output.println( \"the session has expired.\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 86,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 87,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 88,
+      "code": "      output.println( \"</BODY></HTML>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 89,
+      "code": "      output.close();    // close stream",
+      "explanation": ""
+    },
+    {
+      "line_no": 90,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 91,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 92,
+      "code": "   private String getISBN( String lang )",
+      "explanation": ""
+    },
+    {
+      "line_no": 93,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 94,
+      "code": "      for ( int i = 0; i < names.length; ++i )",
+      "explanation": ""
+    },
+    {
+      "line_no": 95,
+      "code": "         if ( lang.equals( names[ i ] ) )",
+      "explanation": ""
+    },
+    {
+      "line_no": 96,
+      "code": "            return isbn[ i ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 97,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 98,
+      "code": "       return \"\";  // no matching string found",
+      "explanation": ""
+    },
+    {
+      "line_no": 99,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 100,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

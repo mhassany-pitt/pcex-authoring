@@ -1,0 +1,546 @@
+{
+  "id": "fig06_19.c",
+  "catalog_id": "6954bccff9187b06cf837682",
+  "provider": "WebEx",
+  "title": "fig06_19.c",
+  "language": "C++",
+  "source_origin": "webex_cache",
+  "paws_id": 644,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://adapt2.sis.pitt.edu/web_ex_NV0FGdaHzy/Dissection2?act=fig06_19.c&svc=progvis&sid=demo",
+  "description": "",
+  "code": "/* Fig. 6.19: fig06_19.c\n   Binary search of an array */\n#include <stdio.h>\n#define SIZE 15\n\nint binarySearch( const int b[], int searchKey, int low, int high );\nvoid printHeader( void );\nvoid printRow( const int b[], int low, int mid, int high );\n\nint main( void )\n{\n   int a[ SIZE ];\n   int i;\n   int key;\n   int result;\n\n   for ( i = 0; i < SIZE; i++ ) {\n      a[ i ] = 2 * i;\n   }\n   printf( \"Enter a number between 0 and 28: \" );\n   scanf( \"%d\", &key );\n   printHeader();\n\n   result = binarySearch( a, key, 0, SIZE - 1 );\n   if ( result != -1 ) {\n      printf( \"\\n%d found in array element %d\\n\", key, result );\n   }\n   else {\n      printf( \"\\n%d not found\\n\", key );\n   }\n   return 0;\n}\n\nint binarySearch( const int b[], int searchKey, int low, int high )\n{\n   int middle;\n   while ( low <= high ) {\n      middle = ( low + high ) / 2;\n      printRow( b, low, middle, high );\n\n      if ( searchKey == b[ middle ] ) {\n         return middle;\n      }\n      else if ( searchKey < b[ middle ] ) {\n         high = middle - 1;\n      }\n\n      else {\n         low = middle + 1;\n      }\n   }\n   return -1;\n}\n\nvoid printHeader( void )\n{\n   int i;\n   printf( \"\\nSubscripts:\\n\" );\n   for ( i = 0; i < SIZE; i++ ) {\n      printf( \"%3d \", i );\n   }\n   printf( \"\\n\" );\n   for ( i = 1; i <= 4 * SIZE; i++ ) {\n      printf( \"-\" );\n   }\n   printf( \"\" );\n}\n\nvoid printRow( const int b[], int low, int mid, int high )\n{\n   int i;\n   for ( i = 0; i < SIZE; i++ ) {\n      if ( i < low || i > high ) {\n         printf( \"    \" );\n      }\n      else if ( i == mid ) {\n         printf( \"%3d*\", b[ i ] );\n      }\n      else {\n         printf( \"%3d \", b[ i ] );\n      }\n   }\n   printf( \"\\n\" );\n}",
+  "line_count": 84,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "sub": null,
+      "code": "/* Fig. 6.19: fig06_19.c",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "sub": null,
+      "code": "   Binary search of an array */",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "sub": null,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "sub": null,
+      "code": "#define SIZE 15",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "sub": null,
+      "code": "int binarySearch( const int b[], int searchKey, int low, int high );",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "sub": null,
+      "code": "void printHeader( void );",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "sub": null,
+      "code": "void printRow( const int b[], int low, int mid, int high );",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "sub": null,
+      "code": "int main( void )",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "sub": null,
+      "code": "   int a[ SIZE ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "sub": null,
+      "code": "   int i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "sub": null,
+      "code": "   int key;",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "sub": null,
+      "code": "   int result;",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "sub": null,
+      "code": "   for ( i = 0; i < SIZE; i++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "sub": null,
+      "code": "      a[ i ] = 2 * i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "sub": null,
+      "code": "   printf( \"Enter a number between 0 and 28: \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "sub": null,
+      "code": "   scanf( \"%d\", &key );",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "sub": null,
+      "code": "   printHeader();",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "sub": null,
+      "code": "   result = binarySearch( a, key, 0, SIZE - 1 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "sub": null,
+      "code": "   if ( result != -1 ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "sub": null,
+      "code": "      printf( \"\\n%d found in array element %d\\n\", key, result );",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "sub": null,
+      "code": "   else {",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "sub": null,
+      "code": "      printf( \"\\n%d not found\\n\", key );",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "sub": null,
+      "code": "   return 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "sub": 34,
+      "code": "int binarySearch( const int b[], int searchKey, int low, int high )",
+      "explanation": "function to perform binary search of an array."
+    },
+    {
+      "line_no": 35,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "sub": 36,
+      "code": "   int middle;",
+      "explanation": "variable to hold middle element of array."
+    },
+    {
+      "line_no": 37,
+      "sub": 37,
+      "code": "   while ( low <= high ) {",
+      "explanation": "loop until low subscript is greater than high subscript."
+    },
+    {
+      "line_no": 38,
+      "sub": 38,
+      "code": "      middle = ( low + high ) / 2;",
+      "explanation": "determine middle element of subarray being searched."
+    },
+    {
+      "line_no": 39,
+      "sub": 39,
+      "code": "      printRow( b, low, middle, high );",
+      "explanation": "display subarray used in this loop iteration."
+    },
+    {
+      "line_no": 40,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "sub": 41,
+      "code": "      if ( searchKey == b[ middle ] ) {",
+      "explanation": "if searchKey matched middle element, return middle."
+    },
+    {
+      "line_no": 42,
+      "sub": 42,
+      "code": "         return middle;",
+      "explanation": "If value is found, return its index."
+    },
+    {
+      "line_no": 43,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "sub": 44,
+      "code": "      else if ( searchKey < b[ middle ] ) {",
+      "explanation": "if searchKey less than middle element, set new high."
+    },
+    {
+      "line_no": 45,
+      "sub": 45,
+      "code": "         high = middle - 1;",
+      "explanation": "If value is too high, search the left half of array."
+    },
+    {
+      "line_no": 46,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "sub": 48,
+      "code": "      else {",
+      "explanation": "if searchKey greater than middle element, set new low."
+    },
+    {
+      "line_no": 49,
+      "sub": 49,
+      "code": "         low = middle + 1;",
+      "explanation": "If value is too low, search the right half of array."
+    },
+    {
+      "line_no": 50,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "sub": 52,
+      "code": "   return -1;",
+      "explanation": "searchKey not found."
+    },
+    {
+      "line_no": 53,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "sub": null,
+      "code": "void printHeader( void )",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "sub": null,
+      "code": "   int i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "sub": null,
+      "code": "   printf( \"\\nSubscripts:\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "sub": null,
+      "code": "   for ( i = 0; i < SIZE; i++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "sub": null,
+      "code": "      printf( \"%3d \", i );",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "sub": null,
+      "code": "   printf( \"\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "sub": null,
+      "code": "   for ( i = 1; i <= 4 * SIZE; i++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "sub": null,
+      "code": "      printf( \"-\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "sub": null,
+      "code": "   printf( \"\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "sub": null,
+      "code": "void printRow( const int b[], int low, int mid, int high )",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "sub": null,
+      "code": "   int i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "sub": 72,
+      "code": "   for ( i = 0; i < SIZE; i++ ) {",
+      "explanation": "loop through entire array."
+    },
+    {
+      "line_no": 73,
+      "sub": 73,
+      "code": "      if ( i < low || i > high ) {",
+      "explanation": "display spaces if outside current subarray range."
+    },
+    {
+      "line_no": 74,
+      "sub": null,
+      "code": "         printf( \"    \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 75,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 76,
+      "sub": null,
+      "code": "      else if ( i == mid ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 77,
+      "sub": null,
+      "code": "         printf( \"%3d*\", b[ i ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "sub": null,
+      "code": "      else {",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "sub": null,
+      "code": "         printf( \"%3d \", b[ i ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 82,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 83,
+      "sub": null,
+      "code": "   printf( \"\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 84,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [
+      "TODO:add-prompt"
+    ],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "PITT"
+      },
+      {
+        "protocol": "HTML"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

@@ -1,0 +1,406 @@
+{
+  "id": "checkbox_test",
+  "catalog_id": "6954bccff9187b06cf83743c",
+  "provider": "AnnEx",
+  "title": "ISD::CheckBoxTest.java",
+  "language": "Java",
+  "paws_id": 1563,
+  "authors": [
+    {
+      "name": "Unknown",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-java/checkbox_test",
+  "description": "",
+  "code": "// Fig. 12.11: CheckBoxTest.java\n// Creating Checkbox buttons.\nimport java.awt.*;\nimport java.awt.event.*;\nimport javax.swing.*;\n\npublic class CheckBoxTest extends JFrame {\n   private JTextField t;\n   private JCheckBox bold, italic;\n\n   public CheckBoxTest()\n   {\n      super( \"JCheckBox Test\" );\n\n      Container c = getContentPane();\n      c.setLayout(new FlowLayout());\n\n      t = new JTextField( \"Watch the font style change\", 20);\n      t.setFont( new Font( \"TimesRoman\", Font.PLAIN, 14 ) );\n      c.add( t );\n\n      // create checkbox objects\n      bold = new JCheckBox( \"Bold\" );\n      c.add( bold );\n\n      italic = new JCheckBox( \"Italic\" );\n      c.add( italic );\n\n      CheckBoxHandler handler = new CheckBoxHandler();\n      bold.addItemListener( handler );\n      italic.addItemListener( handler );\n\n      setSize( 275, 100 );\n      show();\n   }\n\n   public static void main( String args[] )\n   {\n      CheckBoxTest app = new CheckBoxTest();\n\n      app.addWindowListener(\n         new WindowAdapter() {\n            public void windowClosing( WindowEvent e )\n            {\n               System.exit( 0 );\n            }\n         }\n      );\n   }\n\n   private class CheckBoxHandler implements ItemListener {\n      private int valBold = Font.PLAIN;\n      private int valItalic = Font.PLAIN;\n\n      public void itemStateChanged( ItemEvent e )\n      {\n         if ( e.getSource() == bold )\n            if ( e.getStateChange() == ItemEvent.SELECTED )\n               valBold = Font.BOLD;\n            else\n               valBold = Font.PLAIN;\n\n         if ( e.getSource() == italic )\n            if ( e.getStateChange() == ItemEvent.SELECTED )\n               valItalic = Font.ITALIC;\n            else\n               valItalic = Font.PLAIN;\n\n         t.setFont(\n            new Font( \"TimesRoman\", valBold + valItalic, 14 ) );\n         t.repaint();\n      }\n   }\n}",
+  "line_count": 74,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "// Fig. 12.11: CheckBoxTest.java",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "// Creating Checkbox buttons.",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "import java.awt.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "import java.awt.event.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "import javax.swing.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "public class CheckBoxTest extends JFrame {",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "   private JTextField t;",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "   private JCheckBox bold, italic;",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": "   public CheckBoxTest()",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "      super( \"JCheckBox Test\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "      Container c = getContentPane();",
+      "explanation": "Create a Container object."
+    },
+    {
+      "line_no": 16,
+      "code": "      c.setLayout(new FlowLayout());",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "      t = new JTextField( \"Watch the font style change\", 20);",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "      t.setFont( new Font( \"TimesRoman\", Font.PLAIN, 14 ) );",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "code": "      c.add( t );",
+      "explanation": "attach component to Container c."
+    },
+    {
+      "line_no": 21,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "      // create checkbox objects",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "      bold = new JCheckBox( \"Bold\" );",
+      "explanation": "Create JCheckBoxes"
+    },
+    {
+      "line_no": 24,
+      "code": "      c.add( bold );",
+      "explanation": "attach component to Container c."
+    },
+    {
+      "line_no": 25,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "      italic = new JCheckBox( \"Italic\" );",
+      "explanation": "Create JCheckBoxes"
+    },
+    {
+      "line_no": 27,
+      "code": "      c.add( italic );",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "      CheckBoxHandler handler = new CheckBoxHandler();",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "      bold.addItemListener( handler );",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "      italic.addItemListener( handler );",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "      setSize( 275, 100 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "      show();",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "   public static void main( String args[] )",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "      CheckBoxTest app = new CheckBoxTest();",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "      app.addWindowListener(",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "         new WindowAdapter() {",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "            public void windowClosing( WindowEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "            {",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "               System.exit( 0 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "            }",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "      );",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "   private class CheckBoxHandler implements ItemListener {",
+      "explanation": "Because CheckBoxHandler implements ItemListener, it must define method itemStateChanged"
+    },
+    {
+      "line_no": 52,
+      "code": "      private int valBold = Font.PLAIN;",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "code": "      private int valItalic = Font.PLAIN;",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "      public void itemStateChanged( ItemEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "      {",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "         if ( e.getSource() == bold )",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "            if ( e.getStateChange() == ItemEvent.SELECTED )",
+      "explanation": "getStateChange returns ItemEvent.SELECTED or ItemEvent.DESELECTED"
+    },
+    {
+      "line_no": 59,
+      "code": "               valBold = Font.BOLD;",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "            else",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "               valBold = Font.PLAIN;",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "         if ( e.getSource() == italic )",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "code": "            if ( e.getStateChange() == ItemEvent.SELECTED )",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "               valItalic = Font.ITALIC;",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "            else",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "code": "               valItalic = Font.PLAIN;",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "code": "         t.setFont(",
+      "explanation": "Use setFont to update the JTextField."
+    },
+    {
+      "line_no": 70,
+      "code": "            new Font( \"TimesRoman\", valBold + valItalic, 14 ) );",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "code": "         t.repaint();",
+      "explanation": "Call repaint to update the screen.\r\n"
+    },
+    {
+      "line_no": 72,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 74,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

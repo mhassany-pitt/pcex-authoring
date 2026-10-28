@@ -1,0 +1,570 @@
+{
+  "id": "fig06_22.c",
+  "catalog_id": "6954bccff9187b06cf837684",
+  "provider": "WebEx",
+  "title": "fig06_22.c",
+  "language": "C++",
+  "source_origin": "webex_cache",
+  "paws_id": 646,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://adapt2.sis.pitt.edu/web_ex_NV0FGdaHzy/Dissection2?act=fig06_22.c&svc=progvis&sid=demo",
+  "description": "",
+  "code": "/* Fig. 6.22: fig06_22.c\n   Double-subscripted array example */\n#include <stdio.h>\n#define STUDENTS 3\n#define EXAMS 4\n\nint minimum( const int grades[][ EXAMS ], int pupils, int tests );\nint maximum( const int grades[][ EXAMS ], int pupils, int tests );\ndouble average( const int setOfGrades[], int tests );\nvoid printArray( const int grades[][ EXAMS ], int pupils, int tests );\n\nint main( void )\n{\n   int student;\n   const int studentGrades[ STUDENTS ][ EXAMS ] =\n      { { 77, 68, 86, 73 },\n        { 96, 87, 89, 78 },\n        { 70, 90, 86, 81 } };\n\n   printf( \"The array is:\\n\" );\n   printArray( studentGrades, STUDENTS, EXAMS );\n\n   printf( \"\\n\\nLowest grade: %d\\nHighest grade: %d\\n\",\n      minimum( studentGrades, STUDENTS, EXAMS ),\n      maximum( studentGrades, STUDENTS, EXAMS ) );\n\n   for ( student = 0; student < STUDENTS; student++ ) {\n      printf( \"The average grade for student %d is %.2f\\n\",\n         student, average( studentGrades[ student ], EXAMS ) );\n   }\n   return 0;\n}\n\nint minimum( const int grades[][ EXAMS ], int pupils, int tests )\n{\n   int i;\n   int j;\n   int lowGrade = 100;\n\n   for ( i = 0; i < pupils; i++ ) {\n      for ( j = 0; j < tests; j++ ) {\n         if ( grades[ i ][ j ] < lowGrade ) {\n            lowGrade = grades[ i ][ j ];\n         }\n      }\n   }\n   return lowGrade;\n}\n\nint maximum( const int grades[][ EXAMS ], int pupils, int tests )\n{\n   int i;\n   int j;\n   int highGrade = 0;\n\n   for ( i = 0; i < pupils; i++ ) {\n      for ( j = 0; j < tests; j++ ) {\n         if ( grades[ i ][ j ] > highGrade ) {\n            highGrade = grades[ i ][ j ];\n         }\n      }\n   }\n   return highGrade;\n}\n\ndouble average( const int setOfGrades[], int tests )\n{\n   int i;\n   int total = 0;\n   for ( i = 0; i < tests; i++ ) {\n      total += setOfGrades[ i ];\n   }\n   return ( double ) total / tests;\n}\n\nvoid printArray( const int grades[][ EXAMS ], int pupils, int tests )\n{\n   int i;\n   int j;\n   printf( \"                 [0]  [1]  [2]  [3]\" );\n\n   for ( i = 0; i < pupils; i++ ) {\n      printf( \"\\nstudentGrades[%d] \", i );\n      for ( j = 0; j < tests; j++ ) {\n         printf( \"%-5d\", grades[ i ][ j ] );\n      }\n   }\n}",
+  "line_count": 88,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "sub": null,
+      "code": "/* Fig. 6.22: fig06_22.c",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "sub": null,
+      "code": "   Double-subscripted array example */",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "sub": null,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "sub": null,
+      "code": "#define STUDENTS 3",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "sub": null,
+      "code": "#define EXAMS 4",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "sub": null,
+      "code": "int minimum( const int grades[][ EXAMS ], int pupils, int tests );",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "sub": null,
+      "code": "int maximum( const int grades[][ EXAMS ], int pupils, int tests );",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "sub": null,
+      "code": "double average( const int setOfGrades[], int tests );",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "sub": null,
+      "code": "void printArray( const int grades[][ EXAMS ], int pupils, int tests );",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "sub": null,
+      "code": "int main( void )",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "sub": null,
+      "code": "   int student;",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "sub": 15,
+      "code": "   const int studentGrades[ STUDENTS ][ EXAMS ] =",
+      "explanation": "initialize student grades for three students (rows)."
+    },
+    {
+      "line_no": 16,
+      "sub": null,
+      "code": "      { { 77, 68, 86, 73 },",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "sub": 17,
+      "code": "        { 96, 87, 89, 78 },",
+      "explanation": "Each row in the array corresponds to a single studentÃ¢ÂÂs set of grades."
+    },
+    {
+      "line_no": 18,
+      "sub": null,
+      "code": "        { 70, 90, 86, 81 } };",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "sub": null,
+      "code": "   printf( \"The array is:\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "sub": null,
+      "code": "   printArray( studentGrades, STUDENTS, EXAMS );",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "sub": null,
+      "code": "   printf( \"\\n\\nLowest grade: %d\\nHighest grade: %d\\n\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "sub": null,
+      "code": "      minimum( studentGrades, STUDENTS, EXAMS ),",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "sub": null,
+      "code": "      maximum( studentGrades, STUDENTS, EXAMS ) );",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "sub": 27,
+      "code": "   for ( student = 0; student < STUDENTS; student++ ) {",
+      "explanation": "calculate average grade for each student."
+    },
+    {
+      "line_no": 28,
+      "sub": null,
+      "code": "      printf( \"The average grade for student %d is %.2f\\n\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "sub": 29,
+      "code": "         student, average( studentGrades[ student ], EXAMS ) );",
+      "explanation": "average function is passed a row of the array."
+    },
+    {
+      "line_no": 30,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "sub": null,
+      "code": "   return 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "sub": 34,
+      "code": "int minimum( const int grades[][ EXAMS ], int pupils, int tests )",
+      "explanation": "Find the minimum grade."
+    },
+    {
+      "line_no": 35,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "sub": null,
+      "code": "   int i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "sub": null,
+      "code": "   int j;",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "sub": null,
+      "code": "   int lowGrade = 100;",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "sub": 40,
+      "code": "   for ( i = 0; i < pupils; i++ ) {",
+      "explanation": "loop through rows of grades."
+    },
+    {
+      "line_no": 41,
+      "sub": 41,
+      "code": "      for ( j = 0; j < tests; j++ ) {",
+      "explanation": "loop through columns of grades."
+    },
+    {
+      "line_no": 42,
+      "sub": null,
+      "code": "         if ( grades[ i ][ j ] < lowGrade ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "sub": null,
+      "code": "            lowGrade = grades[ i ][ j ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "sub": null,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "sub": 47,
+      "code": "   return lowGrade;",
+      "explanation": "return minimum grade."
+    },
+    {
+      "line_no": 48,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "sub": 50,
+      "code": "int maximum( const int grades[][ EXAMS ], int pupils, int tests )",
+      "explanation": "Find the maximum grade."
+    },
+    {
+      "line_no": 51,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "sub": null,
+      "code": "   int i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "sub": null,
+      "code": "   int j;",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "sub": null,
+      "code": "   int highGrade = 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "sub": null,
+      "code": "   for ( i = 0; i < pupils; i++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "sub": null,
+      "code": "      for ( j = 0; j < tests; j++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "sub": null,
+      "code": "         if ( grades[ i ][ j ] > highGrade ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "sub": null,
+      "code": "            highGrade = grades[ i ][ j ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "sub": null,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "sub": 63,
+      "code": "   return highGrade;",
+      "explanation": "return maximum grade."
+    },
+    {
+      "line_no": 64,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "sub": 66,
+      "code": "double average( const int setOfGrades[], int tests )",
+      "explanation": "Determine the average grade for a particular student."
+    },
+    {
+      "line_no": 67,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "sub": null,
+      "code": "   int i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "sub": null,
+      "code": "   int total = 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "sub": null,
+      "code": "   for ( i = 0; i < tests; i++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "sub": 71,
+      "code": "      total += setOfGrades[ i ];",
+      "explanation": "total all grades for one student."
+    },
+    {
+      "line_no": 72,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "sub": null,
+      "code": "   return ( double ) total / tests;",
+      "explanation": ""
+    },
+    {
+      "line_no": 74,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 75,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 76,
+      "sub": null,
+      "code": "void printArray( const int grades[][ EXAMS ], int pupils, int tests )",
+      "explanation": ""
+    },
+    {
+      "line_no": 77,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "sub": null,
+      "code": "   int i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "sub": null,
+      "code": "   int j;",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "sub": null,
+      "code": "   printf( \"                 [0]  [1]  [2]  [3]\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 82,
+      "sub": null,
+      "code": "   for ( i = 0; i < pupils; i++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 83,
+      "sub": null,
+      "code": "      printf( \"\\nstudentGrades[%d] \", i );",
+      "explanation": ""
+    },
+    {
+      "line_no": 84,
+      "sub": null,
+      "code": "      for ( j = 0; j < tests; j++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 85,
+      "sub": null,
+      "code": "         printf( \"%-5d\", grades[ i ][ j ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 86,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 87,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 88,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [
+      "TODO:add-prompt"
+    ],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "PITT"
+      },
+      {
+        "protocol": "HTML"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

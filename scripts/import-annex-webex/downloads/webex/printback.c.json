@@ -1,0 +1,513 @@
+{
+  "id": "printback.c",
+  "catalog_id": "6954bccff9187b06cf837643",
+  "provider": "WebEx",
+  "title": "IS12:: printback.c (15.3)",
+  "language": "C",
+  "source_origin": "webex_cache",
+  "paws_id": 824,
+  "authors": [
+    {
+      "name": "Peter Brusilovsky",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://adapt2.sis.pitt.edu/web_ex_NV0FGdaHzy/Dissection2?act=printback.c&svc=progvis&sid=demo",
+  "description": "",
+  "code": "/*\n    Example: backward printing of text with pointers\n    Inspired by: K&R2, p108\n    Modified by Peter Brusilovsky\n*/\n\n#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXLINES 5000\n\nstatic char *lineptr[MAXLINES];\n\nvoid copy(char *, char *);\nint getline(char *, int);\nint readlines();\nvoid printbackwards(int);\n\nvoid main() {\n    int nlines; /* counter of input lines read */\n\n    nlines = readlines();\n    printbackwards(nlines);\n}\n\n#define MAXLEN 1000\nint readlines()\n{\n    int len, nlines;\n    char *p, line [MAXLEN];\n\n    nlines = 0;\n    while((len = getline(line, MAXLEN)) > 0) {\n        p = (char *) malloc(len+1);\n        copy(p, line);\n        lineptr[nlines] = p;\n        ++ nlines;\n    }\n    return nlines;\n}\n\nvoid printbackwards(int n)\n{\n    while(n > 0) {\n        printf(\"%s\", lineptr[n-1]);\n        --n;\n    }\n}\n\n/* getline: read a line into s,  return length */\n\nint getline(char *s, int lim)\n{\n    int c, i;\n\n    for (i = 0; i < lim-1 &&(c=getchar())!= EOF && c != '\\n'; ++i)\n        s[i] = c;\n    if (c == '\\n') {\n        s[i] = c;\n        ++i;\n    }\n    s[i] = '\u0000';\n    return i;\n}\n\n/* copy: copy 'from' into 'to'; assume to is big enough */\nvoid copy(char *to, char *from)\n{\n    int i = 0;\n\n    while((to[i] = from [i]) != '\u0000')\n        ++i;\n}",
+  "line_count": 73,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "sub": null,
+      "code": "/*",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "sub": null,
+      "code": "    Example: backward printing of text with pointers",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "sub": null,
+      "code": "    Inspired by: K&R2, p108",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "sub": null,
+      "code": "    Modified by Peter Brusilovsky",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "sub": null,
+      "code": "*/",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "sub": null,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "sub": null,
+      "code": "#include <stdlib.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "sub": null,
+      "code": "#define MAXLINES 5000",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "sub": 12,
+      "code": "static char *lineptr[MAXLINES];",
+      "explanation": "This is an array of pointers to characters. Each element of this array will hold a pointed to string of text. This array is deifined outside of functions and will be accessible to all functions."
+    },
+    {
+      "line_no": 13,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "sub": null,
+      "code": "void copy(char *, char *);",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "sub": null,
+      "code": "int getline(char *, int);",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "sub": null,
+      "code": "int readlines();",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "sub": null,
+      "code": "void printbackwards(int);",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "sub": null,
+      "code": "void main() {",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "sub": null,
+      "code": "    int nlines; /* counter of input lines read */",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "sub": 22,
+      "code": "    nlines = readlines();",
+      "explanation": "The function readlines() will read lines from the user, allocate space for them, and attach pointers to these lines to the elements of lineptr. It will return the number of lines read."
+    },
+    {
+      "line_no": 23,
+      "sub": 23,
+      "code": "    printbackwards(nlines);",
+      "explanation": "This function simply prints lines that we have read from last to first. Parameter nlines tells us where to start."
+    },
+    {
+      "line_no": 24,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "sub": null,
+      "code": "#define MAXLEN 1000",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "sub": 27,
+      "code": "int readlines()",
+      "explanation": "The function readlines does not need parameters since it will read information from the user, allocate it in new memory, and store the pointers in the global array lineptr[]"
+    },
+    {
+      "line_no": 28,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "sub": 29,
+      "code": "    int len, nlines;",
+      "explanation": "Variable nlines will count the number of lines read."
+    },
+    {
+      "line_no": 30,
+      "sub": 30,
+      "code": "    char *p, line [MAXLEN];",
+      "explanation": "Buffer line will be used to store temporary the line read from the standard input."
+    },
+    {
+      "line_no": 31,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "sub": null,
+      "code": "    nlines = 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "sub": 33,
+      "code": "    while((len = getline(line, MAXLEN)) > 0) {",
+      "explanation": "During the evaluation of the loop condition, a line will be read from the standard input and saved in the buffer line."
+    },
+    {
+      "line_no": 34,
+      "sub": 34,
+      "code": "        p = (char *) malloc(len+1);",
+      "explanation": "We request exactly as much space from free memory (heap) as we need to store the line just read. The allocated chunk of memory will be attached to poiter p."
+    },
+    {
+      "line_no": 35,
+      "sub": 35,
+      "code": "        copy(p, line);",
+      "explanation": "We now copy the line just read to just permanent storage."
+    },
+    {
+      "line_no": 36,
+      "sub": 36,
+      "code": "        lineptr[nlines] = p;",
+      "explanation": "Pointe to the line is assigned to the current element of the global array of pointers lineptr"
+    },
+    {
+      "line_no": 37,
+      "sub": null,
+      "code": "        ++ nlines;",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "sub": null,
+      "code": "    }",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "sub": 39,
+      "code": "    return nlines;",
+      "explanation": "Total number of lines read is returned."
+    },
+    {
+      "line_no": 40,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "sub": 42,
+      "code": "void printbackwards(int n)",
+      "explanation": "The function printbackwards needs only one parameter since it will print strings stpored under the pointers from the global array lineptr[]"
+    },
+    {
+      "line_no": 43,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "sub": 44,
+      "code": "    while(n > 0) {",
+      "explanation": "This loop will go through the array lineptr from n-1 to 0"
+    },
+    {
+      "line_no": 45,
+      "sub": 45,
+      "code": "        printf(\"%s\", lineptr[n-1]);",
+      "explanation": "In each iteraction we simply print the current line stored in lineptr"
+    },
+    {
+      "line_no": 46,
+      "sub": null,
+      "code": "        --n;",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "sub": null,
+      "code": "    }",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "sub": null,
+      "code": "/* getline: read a line into s,  return length */",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "sub": null,
+      "code": "int getline(char *s, int lim)",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "sub": null,
+      "code": "    int c, i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "sub": null,
+      "code": "    for (i = 0; i < lim-1 &&(c=getchar())!= EOF && c != '\\n'; ++i)",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "sub": null,
+      "code": "        s[i] = c;",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "sub": null,
+      "code": "    if (c == '\\n') {",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "sub": null,
+      "code": "        s[i] = c;",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "sub": null,
+      "code": "        ++i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "sub": null,
+      "code": "    }",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "sub": null,
+      "code": "    s[i] = '\u0000';",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "sub": null,
+      "code": "    return i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "sub": null,
+      "code": "/* copy: copy 'from' into 'to'; assume to is big enough */",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "sub": null,
+      "code": "void copy(char *to, char *from)",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "sub": null,
+      "code": "    int i = 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "sub": null,
+      "code": "    while((to[i] = from [i]) != '\u0000')",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "sub": null,
+      "code": "        ++i;",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [
+      "TODO:add-prompt"
+    ],
+    "classification": {
+      "knowledge_components": {
+        "unspecified": {
+          "concepts": [
+            "variable_initialization",
+            "pre_decrement",
+            "pre_increment",
+            "return",
+            "and",
+            "for",
+            "while",
+            "static",
+            "array_declaration",
+            "char",
+            "explicit_type_cast",
+            "equal",
+            "simple_assignment",
+            "int",
+            "if",
+            "add",
+            "pointer_declaration",
+            "main_function",
+            "not_equal",
+            "less",
+            "greater",
+            "define",
+            "void",
+            "variable_declaration",
+            "include",
+            "function_declaration",
+            "printf",
+            "sub"
+          ]
+        }
+      }
+    },
+    "delivery": [
+      {
+        "protocol": "PITT"
+      },
+      {
+        "protocol": "HTML"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "id": "TableCreation7",
+  "catalog_id": "6954bccff9187b06cf8376b9",
+  "provider": "AnnEx",
+  "title": "Assertion Creation (1)",
+  "language": "Sql",
+  "paws_id": 421,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-sql/TableCreation7",
+  "description": "Assertion Creation (1)",
+  "code": "CREATE TABLE sailors\n   (sid INTEGER,\n    sname CHAR(10),\n    rating INTEGER,\n    age REAL,\n    PRIMARY KEY (sid),\n    CHECK\n    ((SELECT COUNT(S.sid) \n     FROM sailor S) + \n    (SELECT COUNT(B.sid) \n     FROM boats B)\n     < 100));",
+  "line_count": 12,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "CREATE TABLE sailors",
+      "explanation": "This example is to create table for sailors and everything to insert sailor it is required to check whether the sum of the number of sailors and the number of boats are not exceeded 100. <b>** This example is connected to the next example.</b> "
+    },
+    {
+      "line_no": 2,
+      "code": "   (sid INTEGER,",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "    sname CHAR(10),",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "    rating INTEGER,",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "    age REAL,",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "    PRIMARY KEY (sid),",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "    CHECK",
+      "explanation": "This example is to specify the total number of sailors and boats should be less 100. However, this example is WRONG. This check constraint which checks both 'sailor' and 'boats' tables belongs to 'sailors' table itself recursively. If sailors is empty, the number of Boats tuples can be anything!"
+    },
+    {
+      "line_no": 8,
+      "code": "    ((SELECT COUNT(S.sid) ",
+      "explanation": "<b>This first example is WRONG.</b> If sailors is empty, the number of Boats tuples can be anything! It returns the number sailor id. The most nested query is executed firstly. "
+    },
+    {
+      "line_no": 9,
+      "code": "     FROM sailor S) + ",
+      "explanation": "Two separate queries are linked using summation sign. Both query results are sum up. "
+    },
+    {
+      "line_no": 10,
+      "code": "    (SELECT COUNT(B.sid) ",
+      "explanation": "This query returns the number of boats."
+    },
+    {
+      "line_no": 11,
+      "code": "     FROM boats B)",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "     < 100));",
+      "explanation": "The summed results of two subqueries is compared with '100' and if the value is less than 100, the condition is satisfied. "
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {
+        "expert": {
+          "concepts": [
+            "AdditionExpression",
+            "SQLBasicConcept",
+            "SimpleSubQuery",
+            "Rule",
+            "CountFunction",
+            "StringType",
+            "TableAlias",
+            "Assertion",
+            "SubstringExtraction",
+            "Float",
+            "SelectClause",
+            "FromClause",
+            "TableAlteration",
+            "AttributeName",
+            "AttributeSpecification",
+            "TupleSelectionCondition",
+            "SelectStatement",
+            "UniqueKeyConstraint",
+            "BracketCharacter",
+            "CheckConstraint",
+            "NumericType",
+            "CommaCharacter",
+            "LessThanComparison",
+            "SingleAttributeSelection",
+            "CreateTableClause",
+            "CreateTableStatement",
+            "DatabaseManagement",
+            "SingleTableSelection",
+            "PrimaryKeyClause",
+            "Double",
+            "PrimaryKeyConstraint"
+          ]
+        },
+        "sql_ontology": {
+          "concepts": [
+            "SubQuery",
+            "AttributeName",
+            "CheckConstraint",
+            "CommaCharacter",
+            "PrimaryKeyConstraint",
+            "PrimaryKeyClause",
+            "SingleTableSelection",
+            "CreateTableStatement",
+            "SelectClause",
+            "Assertion",
+            "Double",
+            "SingleAttributeSelection",
+            "FixedLengthCharacterString",
+            "CreateTableClause",
+            "UniqueKeyConstraint",
+            "LessThanOrEqualComparison",
+            "Integer",
+            "Float",
+            "AttributeSpecification",
+            "FromClause",
+            "AdditionExpression",
+            "SelectStatement",
+            "AlterTableStatement",
+            "BracketCharacter"
+          ]
+        },
+        "sql concept": {
+          "concepts": [
+            "TupleSelectionCondition",
+            "Rule",
+            "SubstringExtraction"
+          ]
+        }
+      }
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

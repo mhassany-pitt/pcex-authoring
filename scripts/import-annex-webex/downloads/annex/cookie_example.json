@@ -1,0 +1,456 @@
+{
+  "id": "cookie_example",
+  "catalog_id": "6954bccff9187b06cf837447",
+  "provider": "AnnEx",
+  "title": "ISD::CookieExample.java",
+  "language": "Java",
+  "paws_id": 1574,
+  "authors": [
+    {
+      "name": "Laney Jesse",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-java/cookie_example",
+  "description": "",
+  "code": "// Fig. 19.9: CookieExample.java\n// Using cookies.\nimport javax.servlet.*;\nimport javax.servlet.http.*;\nimport java.io.*;\n\npublic class CookieExample extends HttpServlet {\n   private String names[] = { \"C\", \"C++\", \"Java\",\n                              \"Visual Basic 6\" };\n   private String isbn[] = {\n      \"0-13-226119-7\", \"0-13-528910-6\",\n      \"0-13-012507-5\", \"0-13-528910-6\" };\n\n   public void doPost( HttpServletRequest request,\n                       HttpServletResponse response )\n      throws ServletException, IOException\n   {\n      PrintWriter output;\n      String language = request.getParameter( \"lang\" );\n\n      Cookie c = new Cookie( language, getISBN( language ) );\n      c.setMaxAge( 120 );  // seconds until cookie removed\n      response.addCookie( c );  // must precede getWriter\n      \n      response.setContentType( \"text/html\" );\n      output = response.getWriter();         \n\n      // send HTML page to client\n      output.println( \"<HTML><HEAD><TITLE>\" );\n      output.println( \"Cookies\" );\n      output.println( \"</TITLE></HEAD><BODY>\" );\n      output.println( \"<P>Welcome to Cookies!<BR>\" );\n      output.println( \"<P>\" );\n      output.println( language );\n      output.println( \" is a great language.\" );\n      output.println( \"</BODY></HTML>\" );\n\n      output.close();    // close stream\n   }\n\n   public void doGet( HttpServletRequest request,\n                      HttpServletResponse response )\n                      throws ServletException, IOException\n   {\n      PrintWriter output;\n      Cookie cookies[];\n\n      cookies = request.getCookies(); // get client's cookies\n\n      response.setContentType( \"text/html\" );\n      output = response.getWriter();\n\n      output.println( \"<HTML><HEAD><TITLE>\" );\n      output.println( \"Cookies II\" );\n      output.println( \"</TITLE></HEAD><BODY>\" );\n\n      if ( cookies != null ) {\n         output.println( \"<H1>Recommendations</H1>\" );\n\n         // get the name of each cookie\n         for ( int i = 0; i < cookies.length; i++ ) \n            output.println(\n               cookies[ i ].getName() + \" How to Program. \" +\n               \"ISBN#: \" + cookies[ i ].getValue() + \"<BR>\" );\n      }\n      else {\n         output.println( \"<H1>No Recommendations</H1>\" );\n         output.println( \"You did not select a language or\" );\n         output.println( \"the cookies have expired.\" );\n      }\n\n      output.println( \"</BODY></HTML>\" );\n      output.close();    // close stream\n   }\n\n   private String getISBN( String lang )\n   {\n      for ( int i = 0; i < names.length; ++i )\n         if ( lang.equals( names[ i ] ) )\n            return isbn[ i ];\n\n      return \"\";  // no matching string found\n   }\n}",
+  "line_count": 84,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "// Fig. 19.9: CookieExample.java",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "// Using cookies.",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "import javax.servlet.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "import javax.servlet.http.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "import java.io.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "public class CookieExample extends HttpServlet {",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "   private String names[] = { \"C\", \"C++\", \"Java\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "                              \"Visual Basic 6\" };",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "   private String isbn[] = {",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": "      \"0-13-226119-7\", \"0-13-528910-6\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "      \"0-13-012507-5\", \"0-13-528910-6\" };",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "   public void doPost( HttpServletRequest request,",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "                       HttpServletResponse response )",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "code": "      throws ServletException, IOException",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "      PrintWriter output;",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "      String language = request.getParameter( \"lang\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "code": "      Cookie c = new Cookie( language, getISBN( language ) );",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "      c.setMaxAge( 120 );  // seconds until cookie removed",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "      response.addCookie( c );  // must precede getWriter",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "code": "      ",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "code": "      response.setContentType( \"text/html\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "      output = response.getWriter();         ",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "      // send HTML page to client",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "      output.println( \"<HTML><HEAD><TITLE>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "      output.println( \"Cookies\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "      output.println( \"</TITLE></HEAD><BODY>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "      output.println( \"<P>Welcome to Cookies!<BR>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "      output.println( \"<P>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "      output.println( language );",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "      output.println( \" is a great language.\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "      output.println( \"</BODY></HTML>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "      output.close();    // close stream",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "   public void doGet( HttpServletRequest request,",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "                      HttpServletResponse response )",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "                      throws ServletException, IOException",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "      PrintWriter output;",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "      Cookie cookies[];",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "      cookies = request.getCookies(); // get client's cookies",
+      "explanation": "Returns array of Cookies.\r\n"
+    },
+    {
+      "line_no": 49,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "      response.setContentType( \"text/html\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "      output = response.getWriter();",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "code": "      output.println( \"<HTML><HEAD><TITLE>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "      output.println( \"Cookies II\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "      output.println( \"</TITLE></HEAD><BODY>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "      if ( cookies != null ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "         output.println( \"<H1>Recommendations</H1>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "         // get the name of each cookie",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "         for ( int i = 0; i < cookies.length; i++ ) ",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "            output.println(",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "               cookies[ i ].getName() + \" How to Program. \" +",
+      "explanation": "Use cookies to determine recommended book and ISBN.\r\n"
+    },
+    {
+      "line_no": 64,
+      "code": "               \"ISBN#: \" + cookies[ i ].getValue() + \"<BR>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "      else {",
+      "explanation": "If cookies have expired, no recommendations.\r\n"
+    },
+    {
+      "line_no": 67,
+      "code": "         output.println( \"<H1>No Recommendations</H1>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "code": "         output.println( \"You did not select a language or\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "code": "         output.println( \"the cookies have expired.\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "code": "      output.println( \"</BODY></HTML>\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "code": "      output.close();    // close stream",
+      "explanation": ""
+    },
+    {
+      "line_no": 74,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 75,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 76,
+      "code": "   private String getISBN( String lang )",
+      "explanation": ""
+    },
+    {
+      "line_no": 77,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "code": "      for ( int i = 0; i < names.length; ++i )",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "code": "         if ( lang.equals( names[ i ] ) )",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "code": "            return isbn[ i ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 82,
+      "code": "      return \"\";  // no matching string found",
+      "explanation": ""
+    },
+    {
+      "line_no": 83,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 84,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

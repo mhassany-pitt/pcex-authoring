@@ -1,0 +1,931 @@
+{
+  "id": "call_by_reference2",
+  "catalog_id": "6954bccff9187b06cf8376f9",
+  "provider": "AnnEx",
+  "title": "Call By Reference2",
+  "language": "C++",
+  "paws_id": 709,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-cpp/call_by_reference2",
+  "description": "",
+  "code": "/*\tCalculate the tax due or the refund for a family based\n\ton the following imaginary formula.\n\t1. For each dependent deduct $1,000 from income.\n\t2. Determine tax rate from the following brackets:\n\t       bracket    taxable income       tax rate\n\t          1             <= 10000           2%\n\t          2        10001 - 20000           5%\n\t          3        20001 - 30000           7%\n\t          4        30001 - 50000          10%\n\t          5        50001 and up           15%\n\tThen print the amount of tax or the refund.\n\n\t   Written by: \n\t   Date: \n*/\n#include <stdio.h>\n\n#define LOWEST  0000000.00\n#define HIGHEST 1000000.00\n\n#define LIMIT1    10000.00\n#define LIMIT2    20000.00\n#define LIMIT3    30000.00\n#define LIMIT4    50000.00\n\n#define RATE1 02\n#define RATE2 05\n#define RATE3 07\n#define RATE4 10\n#define RATE5 15\n\n#define DEDN_PER_DPNDNT 1000\n\n//\tFunction Declarations \nvoid getData   (double* totalIncome, double* taxPaid,\n                int*    numOfDpndnts);\n\nvoid calcTaxes (double  totalIncome, \n                double  taxPaid,\n                int     numOfDpndnts,\n                double* taxableIncome,\n                double* totalTax, \n                double* taxDue);\n\nvoid printInformation (double totalIncome,\n                       double taxPaid, \n                       int    numOfDpndnts, \n                       double totalTax,\n                       double paidTax,\n                       double taxDue);\n\n\n\ndouble bracketTax (double income,\n                   double startLimit,\n                   double stopLimit,\n                   int    rate);\n\nint main (void)\n{\n//\tLocal Declarations\n\tint    numOfDpndnts;\n\tdouble taxDue;\n\tdouble taxPaid;\n\tdouble totalIncome;\n\tdouble taxableIncome;\n\tdouble totalTax;\n\n//\tStatements \n\tgetData   (&totalIncome,  &taxPaid, &numOfDpndnts);\n\tcalcTaxes (totalIncome,    taxPaid,  numOfDpndnts,\n\t           &taxableIncome, &totalTax, &taxDue);\n\tprintInformation (totalIncome,  taxableIncome,\n\t                  numOfDpndnts, totalTax,\n\t                  taxPaid,      taxDue);\n\treturn 0;\n}\t// main \n\n/*\t=================== getData ================== \n\tThis function reads tax data from the keyboard.\n\t   Pre  Nothing\n\t   Post Reads totalIncome, taxPaid, & numOfDpndnts\n*/\nvoid getData ( double* totalIncome, double* taxPaid,\n               int*    numOfDpndnts)\n{\n//\tStatements \n\tprintf(\"Enter your total income for last year: \");\n\tscanf (\"%lf\", totalIncome);\n\n\tprintf(\"Enter total of payroll deductions    : \");\n\tscanf (\"%lf\", taxPaid);\n\n\tprintf(\"Enter the number of dependents       : \");\n\tscanf (\"%d\", numOfDpndnts);\n\treturn;\n}\t// getData\n\n/*\t================= calcTaxes ================= \n\tThis function calculates the taxes due.\n\t   Pre  Given-income, numOfDpndnts, & taxPaid\n\t   Post Tax income, total tax, and tax due\n\t        calculated\n*/\n\nvoid calcTaxes (double  totInc, \n                double  taxPaid, \n                int     numOfDpndnts, \n                double* taxableInc,\n                double* totTax, \n                double* taxDue) \n{\n//\tStatements \n\t*taxableInc = totInc - \n\t                (numOfDpndnts* DEDN_PER_DPNDNT);\n\t*totTax = \n\t    bracketTax(*taxableInc, LOWEST, LIMIT1,  RATE1)\n\t  + bracketTax(*taxableInc, LIMIT1, LIMIT2,  RATE2)\n\t  + bracketTax(*taxableInc, LIMIT2, LIMIT3,  RATE3)\n\t  + bracketTax(*taxableInc, LIMIT3, LIMIT4,  RATE4)\n\t  + bracketTax(*taxableInc, LIMIT4, HIGHEST, RATE5);\n\n\t*taxDue = *totTax - taxPaid;\n\treturn;\n}\t// calcTaxes \n\n/*\t================= printInformation =================\n\tThis function prints a table showing all information.\n\t   Pre  The parameter list\n\t   Post Prints the table\n*/\nvoid printInformation (double totalIncome, \n                       double income, \n                       int    numDpndnts, \n                       double totalTax, \n                       double paidTax, \n                       double dueTax) \n{\n//\tStatements \n\tprintf(\"\\nTotal income          :%10.2f\\n\", \n\t       totalIncome);\n\tprintf(\"Number of dependents  :%7d\\n\",    numDpndnts);\n\tprintf(\"Taxable income        :%10.2f\\n\", income);\n\tprintf(\"Total tax             :%10.2f\\n\", totalTax);\n\tprintf(\"Tax already paid      :%10.2f\\n\", paidTax);\n\n\tif (dueTax >= 0.0)\n\t    printf(\"Tax due               :%10.2f\\n\", dueTax);\n\telse\n\t    printf(\"Refund                :%10.2f\\n\", -dueTax);\n\treturn;\n}\t// printInformation \n\n/*\t================== bracketTax ================== \n\tCalculates the tax for a particular bracket.\n\t   Pre    The taxableIncome\n\t   Post   Returns the tax for a particular bracket\n*/\n\n\n\n\ndouble bracketTax (double income,    double startLimit,\n                   double stopLimit, int    rate)\n{ \n//\tLocal Declarations \n\tdouble tax;\n\n//\tStatements \n\tif (income <= startLimit)\n\t    tax = 0.0;\n\telse\n\t    if (income > startLimit && income <= stopLimit) \n\t        tax = (income - startLimit) * rate / 100.00;\n\t    else\n\t        tax = (stopLimit - startLimit) * rate / 100.00;\n\n\treturn tax;\n}\t// bracketTax ",
+  "line_count": 179,
+  "has_explanations": false,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "/*\tCalculate the tax due or the refund for a family based",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "\ton the following imaginary formula.",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "\t1. For each dependent deduct $1,000 from income.",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "\t2. Determine tax rate from the following brackets:",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "\t       bracket    taxable income       tax rate",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "\t          1             <= 10000           2%",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "\t          2        10001 - 20000           5%",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "\t          3        20001 - 30000           7%",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "\t          4        30001 - 50000          10%",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "\t          5        50001 and up           15%",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": "\tThen print the amount of tax or the refund.",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "\t   Written by: ",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "\t   Date: ",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "*/",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "#define LOWEST  0000000.00",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "#define HIGHEST 1000000.00",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "code": "#define LIMIT1    10000.00",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "#define LIMIT2    20000.00",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "#define LIMIT3    30000.00",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "code": "#define LIMIT4    50000.00",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "#define RATE1 02",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "code": "#define RATE2 05",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "#define RATE3 07",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "#define RATE4 10",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "#define RATE5 15",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "#define DEDN_PER_DPNDNT 1000",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "//\tFunction Declarations ",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "void getData   (double* totalIncome, double* taxPaid,",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "                int*    numOfDpndnts);",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "void calcTaxes (double  totalIncome, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "                double  taxPaid,",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "                int     numOfDpndnts,",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "                double* taxableIncome,",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "                double* totalTax, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "                double* taxDue);",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "void printInformation (double totalIncome,",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "                       double taxPaid, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "                       int    numOfDpndnts, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "                       double totalTax,",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "code": "                       double paidTax,",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "                       double taxDue);",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "double bracketTax (double income,",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "                   double startLimit,",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "                   double stopLimit,",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "                   int    rate);",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "code": "int main (void)",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "//\tLocal Declarations",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "\tint    numOfDpndnts;",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "\tdouble taxDue;",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "code": "\tdouble taxPaid;",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "\tdouble totalIncome;",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "\tdouble taxableIncome;",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "code": "\tdouble totalTax;",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "code": "//\tStatements ",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "code": "\tgetData   (&totalIncome,  &taxPaid, &numOfDpndnts);",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "code": "\tcalcTaxes (totalIncome,    taxPaid,  numOfDpndnts,",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "code": "\t           &taxableIncome, &totalTax, &taxDue);",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "code": "\tprintInformation (totalIncome,  taxableIncome,",
+      "explanation": ""
+    },
+    {
+      "line_no": 74,
+      "code": "\t                  numOfDpndnts, totalTax,",
+      "explanation": ""
+    },
+    {
+      "line_no": 75,
+      "code": "\t                  taxPaid,      taxDue);",
+      "explanation": ""
+    },
+    {
+      "line_no": 76,
+      "code": "\treturn 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 77,
+      "code": "}\t// main ",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "code": "/*\t=================== getData ================== ",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "code": "\tThis function reads tax data from the keyboard.",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "code": "\t   Pre  Nothing",
+      "explanation": ""
+    },
+    {
+      "line_no": 82,
+      "code": "\t   Post Reads totalIncome, taxPaid, & numOfDpndnts",
+      "explanation": ""
+    },
+    {
+      "line_no": 83,
+      "code": "*/",
+      "explanation": ""
+    },
+    {
+      "line_no": 84,
+      "code": "void getData ( double* totalIncome, double* taxPaid,",
+      "explanation": ""
+    },
+    {
+      "line_no": 85,
+      "code": "               int*    numOfDpndnts)",
+      "explanation": ""
+    },
+    {
+      "line_no": 86,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 87,
+      "code": "//\tStatements ",
+      "explanation": ""
+    },
+    {
+      "line_no": 88,
+      "code": "\tprintf(\"Enter your total income for last year: \");",
+      "explanation": ""
+    },
+    {
+      "line_no": 89,
+      "code": "\tscanf (\"%lf\", totalIncome);",
+      "explanation": ""
+    },
+    {
+      "line_no": 90,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 91,
+      "code": "\tprintf(\"Enter total of payroll deductions    : \");",
+      "explanation": ""
+    },
+    {
+      "line_no": 92,
+      "code": "\tscanf (\"%lf\", taxPaid);",
+      "explanation": ""
+    },
+    {
+      "line_no": 93,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 94,
+      "code": "\tprintf(\"Enter the number of dependents       : \");",
+      "explanation": ""
+    },
+    {
+      "line_no": 95,
+      "code": "\tscanf (\"%d\", numOfDpndnts);",
+      "explanation": ""
+    },
+    {
+      "line_no": 96,
+      "code": "\treturn;",
+      "explanation": ""
+    },
+    {
+      "line_no": 97,
+      "code": "}\t// getData",
+      "explanation": ""
+    },
+    {
+      "line_no": 98,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 99,
+      "code": "/*\t================= calcTaxes ================= ",
+      "explanation": ""
+    },
+    {
+      "line_no": 100,
+      "code": "\tThis function calculates the taxes due.",
+      "explanation": ""
+    },
+    {
+      "line_no": 101,
+      "code": "\t   Pre  Given-income, numOfDpndnts, & taxPaid",
+      "explanation": ""
+    },
+    {
+      "line_no": 102,
+      "code": "\t   Post Tax income, total tax, and tax due",
+      "explanation": ""
+    },
+    {
+      "line_no": 103,
+      "code": "\t        calculated",
+      "explanation": ""
+    },
+    {
+      "line_no": 104,
+      "code": "*/",
+      "explanation": ""
+    },
+    {
+      "line_no": 105,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 106,
+      "code": "void calcTaxes (double  totInc, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 107,
+      "code": "                double  taxPaid, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 108,
+      "code": "                int     numOfDpndnts, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 109,
+      "code": "                double* taxableInc,",
+      "explanation": ""
+    },
+    {
+      "line_no": 110,
+      "code": "                double* totTax, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 111,
+      "code": "                double* taxDue) ",
+      "explanation": ""
+    },
+    {
+      "line_no": 112,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 113,
+      "code": "//\tStatements ",
+      "explanation": ""
+    },
+    {
+      "line_no": 114,
+      "code": "\t*taxableInc = totInc - ",
+      "explanation": ""
+    },
+    {
+      "line_no": 115,
+      "code": "\t                (numOfDpndnts* DEDN_PER_DPNDNT);",
+      "explanation": ""
+    },
+    {
+      "line_no": 116,
+      "code": "\t*totTax = ",
+      "explanation": ""
+    },
+    {
+      "line_no": 117,
+      "code": "\t    bracketTax(*taxableInc, LOWEST, LIMIT1,  RATE1)",
+      "explanation": ""
+    },
+    {
+      "line_no": 118,
+      "code": "\t  + bracketTax(*taxableInc, LIMIT1, LIMIT2,  RATE2)",
+      "explanation": ""
+    },
+    {
+      "line_no": 119,
+      "code": "\t  + bracketTax(*taxableInc, LIMIT2, LIMIT3,  RATE3)",
+      "explanation": ""
+    },
+    {
+      "line_no": 120,
+      "code": "\t  + bracketTax(*taxableInc, LIMIT3, LIMIT4,  RATE4)",
+      "explanation": ""
+    },
+    {
+      "line_no": 121,
+      "code": "\t  + bracketTax(*taxableInc, LIMIT4, HIGHEST, RATE5);",
+      "explanation": ""
+    },
+    {
+      "line_no": 122,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 123,
+      "code": "\t*taxDue = *totTax - taxPaid;",
+      "explanation": ""
+    },
+    {
+      "line_no": 124,
+      "code": "\treturn;",
+      "explanation": ""
+    },
+    {
+      "line_no": 125,
+      "code": "}\t// calcTaxes ",
+      "explanation": ""
+    },
+    {
+      "line_no": 126,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 127,
+      "code": "/*\t================= printInformation =================",
+      "explanation": ""
+    },
+    {
+      "line_no": 128,
+      "code": "\tThis function prints a table showing all information.",
+      "explanation": ""
+    },
+    {
+      "line_no": 129,
+      "code": "\t   Pre  The parameter list",
+      "explanation": ""
+    },
+    {
+      "line_no": 130,
+      "code": "\t   Post Prints the table",
+      "explanation": ""
+    },
+    {
+      "line_no": 131,
+      "code": "*/",
+      "explanation": ""
+    },
+    {
+      "line_no": 132,
+      "code": "void printInformation (double totalIncome, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 133,
+      "code": "                       double income, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 134,
+      "code": "                       int    numDpndnts, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 135,
+      "code": "                       double totalTax, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 136,
+      "code": "                       double paidTax, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 137,
+      "code": "                       double dueTax) ",
+      "explanation": ""
+    },
+    {
+      "line_no": 138,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 139,
+      "code": "//\tStatements ",
+      "explanation": ""
+    },
+    {
+      "line_no": 140,
+      "code": "\tprintf(\"\\nTotal income          :%10.2f\\n\", ",
+      "explanation": ""
+    },
+    {
+      "line_no": 141,
+      "code": "\t       totalIncome);",
+      "explanation": ""
+    },
+    {
+      "line_no": 142,
+      "code": "\tprintf(\"Number of dependents  :%7d\\n\",    numDpndnts);",
+      "explanation": ""
+    },
+    {
+      "line_no": 143,
+      "code": "\tprintf(\"Taxable income        :%10.2f\\n\", income);",
+      "explanation": ""
+    },
+    {
+      "line_no": 144,
+      "code": "\tprintf(\"Total tax             :%10.2f\\n\", totalTax);",
+      "explanation": ""
+    },
+    {
+      "line_no": 145,
+      "code": "\tprintf(\"Tax already paid      :%10.2f\\n\", paidTax);",
+      "explanation": ""
+    },
+    {
+      "line_no": 146,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 147,
+      "code": "\tif (dueTax >= 0.0)",
+      "explanation": ""
+    },
+    {
+      "line_no": 148,
+      "code": "\t    printf(\"Tax due               :%10.2f\\n\", dueTax);",
+      "explanation": ""
+    },
+    {
+      "line_no": 149,
+      "code": "\telse",
+      "explanation": ""
+    },
+    {
+      "line_no": 150,
+      "code": "\t    printf(\"Refund                :%10.2f\\n\", -dueTax);",
+      "explanation": ""
+    },
+    {
+      "line_no": 151,
+      "code": "\treturn;",
+      "explanation": ""
+    },
+    {
+      "line_no": 152,
+      "code": "}\t// printInformation ",
+      "explanation": ""
+    },
+    {
+      "line_no": 153,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 154,
+      "code": "/*\t================== bracketTax ================== ",
+      "explanation": ""
+    },
+    {
+      "line_no": 155,
+      "code": "\tCalculates the tax for a particular bracket.",
+      "explanation": ""
+    },
+    {
+      "line_no": 156,
+      "code": "\t   Pre    The taxableIncome",
+      "explanation": ""
+    },
+    {
+      "line_no": 157,
+      "code": "\t   Post   Returns the tax for a particular bracket",
+      "explanation": ""
+    },
+    {
+      "line_no": 158,
+      "code": "*/",
+      "explanation": ""
+    },
+    {
+      "line_no": 159,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 160,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 161,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 162,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 163,
+      "code": "double bracketTax (double income,    double startLimit,",
+      "explanation": ""
+    },
+    {
+      "line_no": 164,
+      "code": "                   double stopLimit, int    rate)",
+      "explanation": ""
+    },
+    {
+      "line_no": 165,
+      "code": "{ ",
+      "explanation": ""
+    },
+    {
+      "line_no": 166,
+      "code": "//\tLocal Declarations ",
+      "explanation": ""
+    },
+    {
+      "line_no": 167,
+      "code": "\tdouble tax;",
+      "explanation": ""
+    },
+    {
+      "line_no": 168,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 169,
+      "code": "//\tStatements ",
+      "explanation": ""
+    },
+    {
+      "line_no": 170,
+      "code": "\tif (income <= startLimit)",
+      "explanation": ""
+    },
+    {
+      "line_no": 171,
+      "code": "\t    tax = 0.0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 172,
+      "code": "\telse",
+      "explanation": ""
+    },
+    {
+      "line_no": 173,
+      "code": "\t    if (income > startLimit && income <= stopLimit) ",
+      "explanation": ""
+    },
+    {
+      "line_no": 174,
+      "code": "\t        tax = (income - startLimit) * rate / 100.00;",
+      "explanation": ""
+    },
+    {
+      "line_no": 175,
+      "code": "\t    else",
+      "explanation": ""
+    },
+    {
+      "line_no": 176,
+      "code": "\t        tax = (stopLimit - startLimit) * rate / 100.00;",
+      "explanation": ""
+    },
+    {
+      "line_no": 177,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 178,
+      "code": "\treturn tax;",
+      "explanation": ""
+    },
+    {
+      "line_no": 179,
+      "code": "}\t// bracketTax ",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

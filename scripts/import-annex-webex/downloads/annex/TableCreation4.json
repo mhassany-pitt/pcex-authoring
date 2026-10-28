@@ -1,0 +1,154 @@
+{
+  "id": "TableCreation4",
+  "catalog_id": "6954bccff9187b06cf837693",
+  "provider": "AnnEx",
+  "title": "Foriegn Key",
+  "language": "Sql",
+  "paws_id": 402,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-sql/TableCreation4",
+  "description": "Foriegn Key",
+  "code": "CREATE TABLE Enrolled\n     (sid CHAR(20) NOT NULL,\n      cid CHAR(20) NOT NULL,\n      grade CHAR(2),\n      PRIMARY KEY (sid,  cid),\n      FOREIGN KEY (sid)\n      REFERENCES Students\n      ON DELETE CASCADE\n      ON UPDATE SET DEFAULT);",
+  "line_count": 9,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "CREATE TABLE Enrolled",
+      "explanation": "This table is to store student's enrollment information. There is separate table for 'Students' per se and it's primary key is 'sid.' "
+    },
+    {
+      "line_no": 2,
+      "code": "     (sid CHAR(20) NOT NULL,",
+      "explanation": "'sid' is student ID. Before being defined as a part of 'Enrolled' table, it is defined in 'Students' table."
+    },
+    {
+      "line_no": 3,
+      "code": "      cid CHAR(20) NOT NULL,",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "      grade CHAR(2),",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "      PRIMARY KEY (sid,  cid),",
+      "explanation": "For a given student and course,  there is a single grade."
+    },
+    {
+      "line_no": 6,
+      "code": "      FOREIGN KEY (sid)",
+      "explanation": "'Sid' in Enrolled table is a foreign key that references 'Students' table. Foreign key clause identify the table's relationships to other tables in the database. Columns forming the relationship is called as foreign key. "
+    },
+    {
+      "line_no": 7,
+      "code": "      REFERENCES Students",
+      "explanation": "This clause specifies that the foreign key 'sid' is referenced from 'student' table. Keyword 'REFERENCES' is followed by the table name where foreign key is actually defined. Specially, 'REFERENCES' is important part to specify the related table, and the 'FOREIGN KEY' and 'REFERENCES' keyword should not be separated by comma. If there is only table name after it, the DBMS will take the primary key of that table as the foreign key. "
+    },
+    {
+      "line_no": 8,
+      "code": "      ON DELETE CASCADE",
+      "explanation": "If a row of one or more foreign keys is deleted, the tuple in the foreign key will lose the value to point to. In this example, if the sid, 'ktl123' is deleted in the 'Students' table, the 'ktl123' tuple in this 'Enrolled' is unable to know the student's information any more, because it lose the reference point. Note that deleting a row from referring 'Enrolled' table never poses a problem. The DBMS enforces the default NO ACTION if no rule is explicitly specified. <Br>The CASCADE delete rule tells the DBMS that when a referred row is deleted, all of its pointed rows should automatically be delete from the foreign key."
+    },
+    {
+      "line_no": 9,
+      "code": "      ON UPDATE SET DEFAULT);",
+      "explanation": "If foreign key is modified by UPDATE statement, the new value should match the value in reference table 'Students'. The SET DEFAULT update rule tells the DBMS that when a value in a referred table is update, the the foreign key values in all of its corresponding rows should also be set to the default value. This rule can be different according the kind of database that you are using. In some DBMS, the restrict rule is defined as SET NULL. In this case, it is impossible to define this restrict rule into primary key of reference table. "
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {
+        "expert": {
+          "concepts": [
+            "AggregateOperation",
+            "StringType",
+            "SubQuery",
+            "Rule",
+            "FixedLengthCharacterString",
+            "ForeignKeyClause",
+            "ForeignKeyConstraint",
+            "AttributeName",
+            "AttributeSpecification",
+            "TupleSelectionCondition",
+            "ReferentialAction",
+            "BracketCharacter",
+            "CascadeOnReferentialAction",
+            "CaseChanging",
+            "SetNullOnReferentialAction",
+            "IntegrityConstraint",
+            "IntegrityOnDelete",
+            "CommaCharacter",
+            "IntegrityOnUpdate",
+            "CreateTableClause",
+            "CreateTableStatement",
+            "NotNullClause",
+            "NotNullConstraint",
+            "NullValue",
+            "DefaultValueClause",
+            "OnDeleteClause",
+            "OnUpdateClause",
+            "OrLogicOperation",
+            "PrimaryKeyClause",
+            "PrimaryKeyConstraint",
+            "ReferencesClause"
+          ]
+        },
+        "sql_ontology": {
+          "concepts": [
+            "SubQuery",
+            "AttributeName",
+            "CommaCharacter",
+            "PrimaryKeyConstraint",
+            "PrimaryKeyClause",
+            "CreateTableStatement",
+            "OrLogicalOperator",
+            "FixedLengthCharacterString",
+            "SetNullOnReferentialAction",
+            "CascadeOnReferentialAction",
+            "CreateTableClause",
+            "NotNullClause",
+            "ForeignKeyClause",
+            "ReferencesClause",
+            "ForeignKeyConstraint",
+            "AttributeSpecification",
+            "IntegrityOnDelete",
+            "IntegrityOnUpdate",
+            "BracketCharacter",
+            "DefaultValueClause",
+            "IntegrityConstraint",
+            "OnDeleteClause",
+            "OnUpdateClause"
+          ]
+        },
+        "sql concept": {
+          "concepts": [
+            "TupleSelectionCondition",
+            "Rule",
+            "NotNullConstraint",
+            "CaseChanging",
+            "NullValue",
+            "AggregateOperation"
+          ]
+        }
+      }
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

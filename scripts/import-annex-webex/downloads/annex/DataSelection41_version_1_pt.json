@@ -1,0 +1,77 @@
+{
+  "id": "DataSelection41_version_1_pt",
+  "catalog_id": "6954bccff9187b06cf83746b",
+  "provider": "AnnEx",
+  "title": "Aggregating Derived Relations pt",
+  "language": "Sql",
+  "paws_id": 1435,
+  "authors": [
+    {
+      "name": "Rafael Araujo",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-sql/DataSelection41_version_1_pt",
+  "description": "",
+  "code": "SELECT temp.rating, temp.average\n     FROM \n        (SELECT S.rating, AVG(S.age) AS avgage\n         FROM sailors S\n         GROUP BY S.rating) AS temp\n     WHERE temp.avgage = \n    (SELECT MIN(temp.avgage) \n     FROM temp);",
+  "line_count": 8,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "SELECT temp.rating, temp.average",
+      "explanation": "Para que o exemplo anterior fique correto, tabelas derivadas e comparacao usando a clausula WHERE podem ser utilizadas. Esse exemplo tambem e' usado para recuperar as avaliacoes cuja media de idade e' o menor valor das avaliacoes. O prefixo 'temp' no nome das colunas vem do nome da tabela derivada."
+    },
+    {
+      "line_no": 2,
+      "code": "     FROM ",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "        (SELECT S.rating, AVG(S.age) AS avgage",
+      "explanation": "Essa subconsulta e' usada dentro da clausula FROM da consulta principal, chamada de tabela derivada. Ela calcula a media de idade dos marinheiros para cada avaliacao. Os marinheiros sao agrupados pelas avaliacoes e a media de idade e' calculada em cada grupo. A coluna que contem o valor da media e' renomeada para 'avgage'."
+    },
+    {
+      "line_no": 4,
+      "code": "         FROM sailors S",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "         GROUP BY S.rating) AS temp",
+      "explanation": "A subconsulta derivada e' renomeada para 'temp'. Uma vez que foi renomeada, o novo nome pode ser usado nas consultas externas."
+    },
+    {
+      "line_no": 6,
+      "code": "     WHERE temp.avgage = ",
+      "explanation": "Os valores da coluna 'avgage' na tabela derivada sao comparados com a segunda subconsulta."
+    },
+    {
+      "line_no": 7,
+      "code": "    (SELECT MIN(temp.avgage) ",
+      "explanation": "Esta consulta calcula o valor minimo entre as medias de idade ('avgage') da tabela derivada, 'temp'."
+    },
+    {
+      "line_no": 8,
+      "code": "     FROM temp);",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  },
+  "iso_language_code": "pt"
+}

@@ -1,0 +1,72 @@
+{
+  "id": "DataSelection32_version_1_pt",
+  "catalog_id": "6954bccff9187b06cf837472",
+  "provider": "AnnEx",
+  "title": "Aggregating Subquery pt",
+  "language": "Sql",
+  "paws_id": 1428,
+  "authors": [
+    {
+      "name": "Rafael Araujo",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-sql/DataSelection32_version_1_pt",
+  "description": "",
+  "code": "SELECT branch_name \n     FROM account\n     GROUP BY branch_name\n     HAVING AVG(balance) >= ALL \n          (SELECT AVG(balance) \n           FROM account \n           GROUP BY branch_name);",
+  "line_count": 7,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "SELECT branch_name ",
+      "explanation": "Primeiro, o valor medio de todas as agencias e' calculado em uma subconsulta e entao, utilizando o teste ALL, o valor medio por conta de cada agencia e' comparado aos resultados da subconsulta."
+    },
+    {
+      "line_no": 2,
+      "code": "     FROM account",
+      "explanation": "Recuperando as agencias com maior media de saldo entre as contas."
+    },
+    {
+      "line_no": 3,
+      "code": "     GROUP BY branch_name",
+      "explanation": "Esta linha agrupa o saldo das contas de acordo com o nome das agencias."
+    },
+    {
+      "line_no": 4,
+      "code": "     HAVING AVG(balance) >= ALL ",
+      "explanation": "Essa condicao procura a maior media de saldo utilizando o teste ALL. Da mesma forma que a clausula WHERE e' utilizada para selecionar e elimitar linhas individuais, a clausula HAVING e' utilizada para selecionar e eliminar linhas agrupadas. O formato da clausula HAVING e' parecido com o formato da clausula WHERE, mas a clausula HAVING pode se usada como uma condicao de busca em grupos. Para que a comparacao >= seja realizada, o saldo e' agrupado pelo nome da agencia e a media e' calculada. O valor unico calculado e' comparado com todas as medias das agencias e se todos forem menores ou iguais ao valor comparado, a condicao retorna o resultado VERDADEIRO, fazendo com que a tupla pertenca ao resultado final."
+    },
+    {
+      "line_no": 5,
+      "code": "          (SELECT AVG(balance) ",
+      "explanation": "Esta linha calcula a media do saldo das contas de cada agencia."
+    },
+    {
+      "line_no": 6,
+      "code": "           FROM account ",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "           GROUP BY branch_name);",
+      "explanation": "Especifica o agrupamento do saldo pelo nome das agencias e para que o valor agrupado possa ser calculado pela funcao AVG."
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  },
+  "iso_language_code": "pt"
+}

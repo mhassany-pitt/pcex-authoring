@@ -1,0 +1,864 @@
+{
+  "id": "fig06_16.c",
+  "catalog_id": "6954bccff9187b06cf837680",
+  "provider": "WebEx",
+  "title": "fig06_16.c",
+  "language": "C++",
+  "source_origin": "webex_cache",
+  "paws_id": 642,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://adapt2.sis.pitt.edu/web_ex_NV0FGdaHzy/Dissection2?act=fig06_16.c&svc=progvis&sid=demo",
+  "description": "",
+  "code": "/* Fig. 6.16: fig06_16.c\n   This program introduces the topic of survey data analysis.\n   It computes the mean, median and mode of the data */\n#include <stdio.h>\n#define SIZE 99\n\nvoid mean( const int answer[] );\nvoid median( int answer[] );\nvoid mode( int freq[], const int answer[] ) ;\nvoid bubbleSort( int a[] );\nvoid printArray( const int a[] );\n\nint main( void )\n{\n   int frequency[ 10 ] = { 0 };\n   \n   int response[ SIZE ] =\n      { 6, 7, 8, 9, 8, 7, 8, 9, 8, 9,\n        7, 8, 9, 5, 9, 8, 7, 8, 7, 8,\n        6, 7, 8, 9, 3, 9, 8, 7, 8, 7,\n        7, 8, 9, 8, 9, 8, 9, 7, 8, 9,\n        6, 7, 8, 7, 8, 7, 9, 8, 9, 2,\n        7, 8, 9, 8, 9, 8, 9, 7, 5, 3,\n        5, 6, 7, 2, 5, 3, 9, 4, 6, 4,\n        7, 8, 9, 6, 8, 7, 8, 9, 7, 8,\n        7, 4, 4, 2, 5, 3, 8, 7, 5, 6,\n        4, 5, 6, 1, 6, 5, 7, 8, 7 };\n\n   mean( response );\n   median( response );\n   mode( frequency, response );\n   return 0;\n}\n\nvoid mean( const int answer[] )\n{\n   int j;\n   int total = 0;\n   printf( \"%s\\n%s\\n%s\\n\", \"********\", \"  Mean\", \"********\" );\n\n   for ( j = 0; j < SIZE; j++ ) {\n      total += answer[ j ];\n   }\n\n   printf( \"The mean is the average value of the data\\n\"\n           \"items. The mean is equal to the total of\\n\"\n           \"all the data items divided by the number\\n\"\n           \"of data items ( %d ). The mean value for\\n\"\n           \"this run is: %d / %d = %.4f\\n\\n\",\n           SIZE, total, SIZE, (  double  ) total / SIZE );\n}\n\nvoid median( int answer[] )\n{\n   printf( \"\\n%s\\n%s\\n%s\\n%s\",\n           \"********\", \" Median\", \"********\",\n           \"The unsorted array of responses is\" );\n\n   printArray( answer );\n   bubbleSort( answer );\n   printf( \"\\n\\nThe sorted array is\" );\n   printArray( answer );\n   printf( \"\\n\\nThe median is element %d of\\n\"\n           \"the sorted %d element array.\\n\"\n           \"For this run the median is %d\\n\\n\",\n           SIZE / 2, SIZE, answer[ SIZE / 2 ] );\n}\n\nvoid mode( int freq[], const int answer[] )\n{\n   int rating;\n   int j;\n   int h;\n   int largest = 0;\n   int modeValue = 0;\n\n   printf( \"\\n%s\\n%s\\n%s\\n\",\n           \"********\", \"  Mode\", \"********\" );\n\n   for ( rating = 1; rating <= 9; rating++ ) {\n      freq[ rating ] = 0;\n   }\n\n   for ( j = 0; j < SIZE; j++ ) {\n      ++freq[ answer[ j ] ];\n   }\n\n   printf( \"%s%11s%19s\\n\\n%54s\\n%54s\\n\\n\",\n           \"Response\", \"Frequency\", \"Histogram\",\n           \"1    1    2    2\", \"5    0    5    0    5\" );\n\n   for ( rating = 1; rating <= 9; rating++ ) {\n      printf( \"%8d%11d          \", rating, freq[ rating ] );\n\n      if ( freq[ rating ] > largest ) {\n         largest = freq[ rating ];\n         modeValue = rating;\n      }\n\n      for ( h = 1; h <= freq[ rating ]; h++ ) {\n         printf( \"*\" );\n      }\n      printf( \"\\n\" );\n   }\n\n   printf( \"The mode is the most frequent value.\\n\"\n           \"For this run the mode is %d which occurred\"\n           \" %d times.\\n\", modeValue, largest );\n}\n\nvoid bubbleSort( int a[] )\n{\n   int pass;\n   int j;\n   int hold;\n\n   for ( pass = 1; pass < SIZE; pass++ ) {\n      for ( j = 0; j < SIZE - 1; j++ ) {\n         if ( a[ j ] > a[ j + 1 ] ) {\n            hold = a[ j ];\n            a[ j ] = a[ j + 1 ];\n            a[ j + 1 ] = hold;\n         }\n      }\n   }\n}\n\nvoid printArray( const int a[] )\n{\n   int j;\n   for ( j = 0; j < SIZE; j++ ) {\n      if ( j % 20 == 0 ) {\n         printf( \"\\n\" );\n      }\n      printf( \"%2d\", a[ j ] );\n   }\n}",
+  "line_count": 137,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "sub": null,
+      "code": "/* Fig. 6.16: fig06_16.c",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "sub": null,
+      "code": "   This program introduces the topic of survey data analysis.",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "sub": null,
+      "code": "   It computes the mean, median and mode of the data */",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "sub": null,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "sub": null,
+      "code": "#define SIZE 99",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "sub": null,
+      "code": "void mean( const int answer[] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "sub": null,
+      "code": "void median( int answer[] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "sub": null,
+      "code": "void mode( int freq[], const int answer[] ) ;",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "sub": null,
+      "code": "void bubbleSort( int a[] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "sub": null,
+      "code": "void printArray( const int a[] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "sub": null,
+      "code": "int main( void )",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "sub": 15,
+      "code": "   int frequency[ 10 ] = { 0 };",
+      "explanation": "initialize array frequency."
+    },
+    {
+      "line_no": 16,
+      "sub": null,
+      "code": "   ",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "sub": null,
+      "code": "   int response[ SIZE ] =",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "sub": null,
+      "code": "      { 6, 7, 8, 9, 8, 7, 8, 9, 8, 9,",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "sub": null,
+      "code": "        7, 8, 9, 5, 9, 8, 7, 8, 7, 8,",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "sub": null,
+      "code": "        6, 7, 8, 9, 3, 9, 8, 7, 8, 7,",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "sub": null,
+      "code": "        7, 8, 9, 8, 9, 8, 9, 7, 8, 9,",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "sub": null,
+      "code": "        6, 7, 8, 7, 8, 7, 9, 8, 9, 2,",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "sub": null,
+      "code": "        7, 8, 9, 8, 9, 8, 9, 7, 5, 3,",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "sub": null,
+      "code": "        5, 6, 7, 2, 5, 3, 9, 4, 6, 4,",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "sub": null,
+      "code": "        7, 8, 9, 6, 8, 7, 8, 9, 7, 8,",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "sub": null,
+      "code": "        7, 4, 4, 2, 5, 3, 8, 7, 5, 6,",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "sub": null,
+      "code": "        4, 5, 6, 1, 6, 5, 7, 8, 7 };",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "sub": null,
+      "code": "   mean( response );",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "sub": null,
+      "code": "   median( response );",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "sub": null,
+      "code": "   mode( frequency, response );",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "sub": null,
+      "code": "   return 0;",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "sub": 35,
+      "code": "void mean( const int answer[] )",
+      "explanation": "calculate average of all response values."
+    },
+    {
+      "line_no": 36,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "sub": 37,
+      "code": "   int j;",
+      "explanation": "counter for totaling array elements."
+    },
+    {
+      "line_no": 38,
+      "sub": 38,
+      "code": "   int total = 0;",
+      "explanation": "variable to hold sum of array elements."
+    },
+    {
+      "line_no": 39,
+      "sub": null,
+      "code": "   printf( \"%s\\n%s\\n%s\\n\", \"********\", \"  Mean\", \"********\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "sub": null,
+      "code": "   for ( j = 0; j < SIZE; j++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "sub": null,
+      "code": "      total += answer[ j ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "sub": null,
+      "code": "   printf( \"The mean is the average value of the data\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "sub": null,
+      "code": "           \"items. The mean is equal to the total of\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "sub": null,
+      "code": "           \"all the data items divided by the number\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "sub": null,
+      "code": "           \"of data items ( %d ). The mean value for\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "sub": null,
+      "code": "           \"this run is: %d / %d = %.4f\\n\\n\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "sub": null,
+      "code": "           SIZE, total, SIZE, (  double  ) total / SIZE );",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "sub": 53,
+      "code": "void median( int answer[] )",
+      "explanation": "sort array and determine median element's value."
+    },
+    {
+      "line_no": 54,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "sub": null,
+      "code": "   printf( \"\\n%s\\n%s\\n%s\\n%s\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "sub": null,
+      "code": "           \"********\", \" Median\", \"********\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "sub": null,
+      "code": "           \"The unsorted array of responses is\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "sub": null,
+      "code": "   printArray( answer );",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "sub": null,
+      "code": "   bubbleSort( answer );",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "sub": null,
+      "code": "   printf( \"\\n\\nThe sorted array is\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "sub": null,
+      "code": "   printArray( answer );",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "sub": null,
+      "code": "   printf( \"\\n\\nThe median is element %d of\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "sub": null,
+      "code": "           \"the sorted %d element array.\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "sub": null,
+      "code": "           \"For this run the median is %d\\n\\n\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "sub": 66,
+      "code": "           SIZE / 2, SIZE, answer[ SIZE / 2 ] );",
+      "explanation": "Once the array is sorted, the median will be the value of the middle element."
+    },
+    {
+      "line_no": 67,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "sub": 69,
+      "code": "void mode( int freq[], const int answer[] )",
+      "explanation": "determine most frequent response."
+    },
+    {
+      "line_no": 70,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "sub": 71,
+      "code": "   int rating;",
+      "explanation": "counter for accessing elements 1-9 of array freq."
+    },
+    {
+      "line_no": 72,
+      "sub": 72,
+      "code": "   int j;",
+      "explanation": "counter for summarizing elements 0-98 of array answer."
+    },
+    {
+      "line_no": 73,
+      "sub": 73,
+      "code": "   int h;",
+      "explanation": "counter for diplaying histograms of elements in array freq."
+    },
+    {
+      "line_no": 74,
+      "sub": 74,
+      "code": "   int largest = 0;",
+      "explanation": "represents largest frequency."
+    },
+    {
+      "line_no": 75,
+      "sub": 75,
+      "code": "   int modeValue = 0;",
+      "explanation": "represents most frequent response."
+    },
+    {
+      "line_no": 76,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 77,
+      "sub": null,
+      "code": "   printf( \"\\n%s\\n%s\\n%s\\n\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "sub": null,
+      "code": "           \"********\", \"  Mode\", \"********\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 79,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 80,
+      "sub": null,
+      "code": "   for ( rating = 1; rating <= 9; rating++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 81,
+      "sub": 81,
+      "code": "      freq[ rating ] = 0;",
+      "explanation": "initialize frequencies to 0."
+    },
+    {
+      "line_no": 82,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 83,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 84,
+      "sub": null,
+      "code": "   for ( j = 0; j < SIZE; j++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 85,
+      "sub": 85,
+      "code": "      ++freq[ answer[ j ] ];",
+      "explanation": "summarize frequencies."
+    },
+    {
+      "line_no": 86,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 87,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 88,
+      "sub": null,
+      "code": "   printf( \"%s%11s%19s\\n\\n%54s\\n%54s\\n\\n\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 89,
+      "sub": null,
+      "code": "           \"Response\", \"Frequency\", \"Histogram\",",
+      "explanation": ""
+    },
+    {
+      "line_no": 90,
+      "sub": null,
+      "code": "           \"1    1    2    2\", \"5    0    5    0    5\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 91,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 92,
+      "sub": null,
+      "code": "   for ( rating = 1; rating <= 9; rating++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 93,
+      "sub": null,
+      "code": "      printf( \"%8d%11d          \", rating, freq[ rating ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 94,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 95,
+      "sub": 95,
+      "code": "      if ( freq[ rating ] > largest ) {",
+      "explanation": "keep track of mode value and largest frequency value."
+    },
+    {
+      "line_no": 96,
+      "sub": null,
+      "code": "         largest = freq[ rating ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 97,
+      "sub": null,
+      "code": "         modeValue = rating;",
+      "explanation": ""
+    },
+    {
+      "line_no": 98,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 99,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 100,
+      "sub": null,
+      "code": "      for ( h = 1; h <= freq[ rating ]; h++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 101,
+      "sub": null,
+      "code": "         printf( \"*\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 102,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 103,
+      "sub": null,
+      "code": "      printf( \"\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 104,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 105,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 106,
+      "sub": null,
+      "code": "   printf( \"The mode is the most frequent value.\\n\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 107,
+      "sub": null,
+      "code": "           \"For this run the mode is %d which occurred\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 108,
+      "sub": null,
+      "code": "           \" %d times.\\n\", modeValue, largest );",
+      "explanation": ""
+    },
+    {
+      "line_no": 109,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 110,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 111,
+      "sub": 111,
+      "code": "void bubbleSort( int a[] )",
+      "explanation": "function that sorts an array with bubble sort algorithm."
+    },
+    {
+      "line_no": 112,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 113,
+      "sub": 113,
+      "code": "   int pass;",
+      "explanation": "pass counter."
+    },
+    {
+      "line_no": 114,
+      "sub": 114,
+      "code": "   int j;",
+      "explanation": "comparison counter."
+    },
+    {
+      "line_no": 115,
+      "sub": 115,
+      "code": "   int hold;",
+      "explanation": "temporary location used to swap elements."
+    },
+    {
+      "line_no": 116,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 117,
+      "sub": 117,
+      "code": "   for ( pass = 1; pass < SIZE; pass++ ) {",
+      "explanation": "loop to control number of passes."
+    },
+    {
+      "line_no": 118,
+      "sub": 118,
+      "code": "      for ( j = 0; j < SIZE - 1; j++ ) {",
+      "explanation": "loop to control number of comparisons per pass."
+    },
+    {
+      "line_no": 119,
+      "sub": 119,
+      "code": "         if ( a[ j ] > a[ j + 1 ] ) {",
+      "explanation": "swap elements if out of order."
+    },
+    {
+      "line_no": 120,
+      "sub": null,
+      "code": "            hold = a[ j ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 121,
+      "sub": null,
+      "code": "            a[ j ] = a[ j + 1 ];",
+      "explanation": ""
+    },
+    {
+      "line_no": 122,
+      "sub": null,
+      "code": "            a[ j + 1 ] = hold;",
+      "explanation": ""
+    },
+    {
+      "line_no": 123,
+      "sub": null,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 124,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 125,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 126,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    },
+    {
+      "line_no": 127,
+      "sub": null,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 128,
+      "sub": null,
+      "code": "void printArray( const int a[] )",
+      "explanation": ""
+    },
+    {
+      "line_no": 129,
+      "sub": null,
+      "code": "{",
+      "explanation": ""
+    },
+    {
+      "line_no": 130,
+      "sub": null,
+      "code": "   int j;",
+      "explanation": ""
+    },
+    {
+      "line_no": 131,
+      "sub": null,
+      "code": "   for ( j = 0; j < SIZE; j++ ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 132,
+      "sub": 132,
+      "code": "      if ( j % 20 == 0 ) {",
+      "explanation": "begin new line every 20 values."
+    },
+    {
+      "line_no": 133,
+      "sub": null,
+      "code": "         printf( \"\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 134,
+      "sub": null,
+      "code": "      }",
+      "explanation": ""
+    },
+    {
+      "line_no": 135,
+      "sub": null,
+      "code": "      printf( \"%2d\", a[ j ] );",
+      "explanation": ""
+    },
+    {
+      "line_no": 136,
+      "sub": null,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 137,
+      "sub": null,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [
+      "TODO:add-prompt"
+    ],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "PITT"
+      },
+      {
+        "protocol": "HTML"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

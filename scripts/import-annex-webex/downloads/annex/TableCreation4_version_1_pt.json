@@ -1,0 +1,82 @@
+{
+  "id": "TableCreation4_version_1_pt",
+  "catalog_id": "6954bccff9187b06cf83749c",
+  "provider": "AnnEx",
+  "title": "Foreign Key pt",
+  "language": "Sql",
+  "paws_id": 1386,
+  "authors": [
+    {
+      "name": "Rafael Araujo",
+      "affiliation": "University of Pittsburgh"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-sql/TableCreation4_version_1_pt",
+  "description": "",
+  "code": "CREATE TABLE Enrolled\n     (sid CHAR(20) NOT NULL,\n      cid CHAR(20) NOT NULL,\n      grade CHAR(2),\n      PRIMARY KEY (sid,  cid),\n      FOREIGN KEY (sid)\n      REFERENCES Students\n      ON DELETE CASCADE\n      ON UPDATE SET DEFAULT);",
+  "line_count": 9,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "CREATE TABLE Enrolled",
+      "explanation": "Essa tabela armazena as informacoes de matricula dos alunos. Existe uma outra tabela para alunos (Students) cuja chave primaria e' 'sid'."
+    },
+    {
+      "line_no": 2,
+      "code": "     (sid CHAR(20) NOT NULL,",
+      "explanation": "A coluna 'sid' e' o identificador do aluno. Antes de ser definida como parte da tabela 'Enrolled', ela tambem foi definida na tabela 'Students'."
+    },
+    {
+      "line_no": 3,
+      "code": "      cid CHAR(20) NOT NULL,",
+      "explanation": "Coluna para armazenar o identificador da disciplina e possui tamanho fixo de 20 caracteres. Essa coluna nao pode conter valores nulos."
+    },
+    {
+      "line_no": 4,
+      "code": "      grade CHAR(2),",
+      "explanation": "Coluna para armazenar a nota do aluno na disciplina e possui tamanho fixo de 2 caracteres."
+    },
+    {
+      "line_no": 5,
+      "code": "      PRIMARY KEY (sid,  cid),",
+      "explanation": "Para cada aluno e disciplina, existe uma unica nota."
+    },
+    {
+      "line_no": 6,
+      "code": "      FOREIGN KEY (sid)",
+      "explanation": "A coluna 'sid' nesta tabela e' uma chave estrangeira que referencia a tabela 'Students'. A clausula FOREIGN KEY identifica o relacionamento da tabela com outras tabelas no banco de dados. As colunas que formam o relacionamento sao chamadas de chave estrangeira."
+    },
+    {
+      "line_no": 7,
+      "code": "      REFERENCES Students",
+      "explanation": "A palavra REFERENCES e' seguida pelo nome da tabela na qual a chave estrangeira 'sid' referencia. A palavra REFERENCES e' uma parte importante para especificar a tabela relacionada. As palavras-chave FOREIGN KEY e REFERENCES nao devem ser separadas por virgula. Se existir apenas o nome da tabela em seguida, o SGBD considera a chave primaria da tabela como a referencia para a chave estrangeira."
+    },
+    {
+      "line_no": 8,
+      "code": "      ON DELETE CASCADE",
+      "explanation": "Se uma linha de uma ou mais chaves estrangeiras for apagada, a tupla que contem a chave estrangeira perde a referencia. Nesse exemplo, se o aluno com sid 'ktl123' for apagado na tabela 'Students', a tupla que contem o sid 'ktl123' na tabela 'Enrolled' se torna incapaz de saber as informacoes do aluno, porque perde sua referencia. Perceba que ao excluir uma linha da tabela 'Enrolled' nao causa nenhum problema. Se nenhuma regra for definida explicitamente, o SGBD aplica a regra padrao NO ACTION. <br/> <br/>\nA regra DELETE CASCADE diz ao SGBD para apagar automaticamente as linhas que contem uma chave estrangeira quando uma linha referenciada for apagada."
+    },
+    {
+      "line_no": 9,
+      "code": "      ON UPDATE SET DEFAULT);",
+      "explanation": "Se uma chave estrangeira for modificada pela clausula UPDATE, o novo valor deve casar com o valor referenciado na tabela 'Students'. A regra SET DEFAULT diz ao SGBD que, quando um valor de uma linha referenciada por chaves estrangeiras for alterado, os valores da chave estrangeira em todas as linhas correspondetes devem ser alteradas para o valor padrao (default). Essa regra pode ser diferente de acordo com cada banco de dados. Em alguns SGBDs, a regra RESTRICT e' definida como SET NULL. Nesse caso, e' impossivel definir essa regra para uma chave primaria de uma tabela referenciada."
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  },
+  "iso_language_code": "pt"
+}

@@ -1,0 +1,331 @@
+{
+  "id": "write_info_rand_file",
+  "catalog_id": "6954bccff9187b06cf83761b",
+  "provider": "AnnEx",
+  "title": "write_info_rand_file",
+  "language": "C++",
+  "paws_id": 778,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-cpp/write_info_rand_file",
+  "description": "",
+  "code": "/* Writing to a random access file */\n#include <stdio.h>\n\n/* clientData structure definition */\nstruct clientData { \n   int acctNum;          \t\t\t/* account number */\n   char lastName[ 15 ];  \t\t/* account last name */\n   char firstName[ 10 ]; \t\t/* account first name */\n   double balance;       \t\t\t/* account balance */\n}; /* end structure clientData */\n \nint main( void ) \n{ \n   FILE *cfPtr; /* credit.dat file pointer */\n\n   /* create clientData with default information */\n   struct clientData client = { 0, \"\", \"\", 0.0 };\n\n   /* fopen opens the file; exits if file cannot be opened */\n   if ( ( cfPtr = fopen( \"credit.dat\", \"rb+\" ) ) == NULL ) {\n      printf( \"File could not be opened.\\n\" );\n   } /* end if */\n   else { \n\n      /* require user to specify account number */\n      printf( \"Enter account number\"\n         \" ( 1 to 100, 0 to end input )\\n? \" );\n      scanf( \"%d\", &client.acctNum );\n\n      /* user enters information, which is copied into file */\n      while ( client.acctNum != 0 ) { \n\n         /* user enters last name, first name and balance */\n         printf( \"Enter lastname, firstname, balance\\n? \" );\n        \n         /* set record lastName, firstName and balance value */\n         fscanf( stdin, \"%s%s%lf\", client.lastName, \n            client.firstName, &client.balance );\n\n\n         /* seek position in file to user-specified record */\n         fseek( cfPtr, ( client.acctNum - 1 ) * \n            sizeof( struct clientData ), SEEK_SET );\n\n         /* write user-specified information in file */\n         fwrite( &client, sizeof( struct clientData ), 1, cfPtr );\n\n         /* enable user to input another account number */\n         printf( \"Enter account number\\n? \" );\n         scanf( \"%d\", &client.acctNum );\n      } /* end while */\n\n      fclose( cfPtr ); \t\t\t/* fclose closes the file */\n   } /* end else */\n\n   return 0; \t\t\t\t/* indicates successful termination */\n\n} /* end main */\n} /* end main */",
+  "line_count": 59,
+  "has_explanations": false,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "/* Writing to a random access file */",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "#include <stdio.h>",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "/* clientData structure definition */",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "struct clientData { ",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "   int acctNum;          \t\t\t/* account number */",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "   char lastName[ 15 ];  \t\t/* account last name */",
+      "explanation": ""
+    },
+    {
+      "line_no": 8,
+      "code": "   char firstName[ 10 ]; \t\t/* account first name */",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "   double balance;       \t\t\t/* account balance */",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "}; /* end structure clientData */",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": " ",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "int main( void ) ",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "{ ",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "   FILE *cfPtr; /* credit.dat file pointer */",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "code": "   /* create clientData with default information */",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "   struct clientData client = { 0, \"\", \"\", 0.0 };",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "   /* fopen opens the file; exits if file cannot be opened */",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "code": "   if ( ( cfPtr = fopen( \"credit.dat\", \"rb+\" ) ) == NULL ) {",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "code": "      printf( \"File could not be opened.\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 22,
+      "code": "   } /* end if */",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "   else { ",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "code": "      /* require user to specify account number */",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "      printf( \"Enter account number\"",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "code": "         \" ( 1 to 100, 0 to end input )\\n? \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "      scanf( \"%d\", &client.acctNum );",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "      /* user enters information, which is copied into file */",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "      while ( client.acctNum != 0 ) { ",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 33,
+      "code": "         /* user enters last name, first name and balance */",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "         printf( \"Enter lastname, firstname, balance\\n? \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "        ",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "         /* set record lastName, firstName and balance value */",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "         fscanf( stdin, \"%s%s%lf\", client.lastName, ",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "            client.firstName, &client.balance );",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 40,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "         /* seek position in file to user-specified record */",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "         fseek( cfPtr, ( client.acctNum - 1 ) * ",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "            sizeof( struct clientData ), SEEK_SET );",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "         /* write user-specified information in file */",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "         fwrite( &client, sizeof( struct clientData ), 1, cfPtr );",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "         /* enable user to input another account number */",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "code": "         printf( \"Enter account number\\n? \" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "         scanf( \"%d\", &client.acctNum );",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "      } /* end while */",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 53,
+      "code": "      fclose( cfPtr ); \t\t\t/* fclose closes the file */",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "   } /* end else */",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "   return 0; \t\t\t\t/* indicates successful termination */",
+      "explanation": ""
+    },
+    {
+      "line_no": 57,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "} /* end main */",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "code": "} /* end main */",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

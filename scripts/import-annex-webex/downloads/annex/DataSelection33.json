@@ -1,0 +1,118 @@
+{
+  "id": "DataSelection33",
+  "catalog_id": "6954bccff9187b06cf8376f8",
+  "provider": "AnnEx",
+  "title": "Derived Relations",
+  "language": "Sql",
+  "paws_id": 453,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-sql/DataSelection33",
+  "description": "Derived Relations",
+  "code": "SELECT branch_name, avg_balance\n     FROM\n          (SELECT branch_name, AVG(balance)\n           FROM account\n           GROUP BY branch_name)\n           AS branch_avg(branch_name, avg_balance))\n    WHERE avg_balance > 1200;",
+  "line_count": 7,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "SELECT branch_name, avg_balance",
+      "explanation": "In this example, an derived subquery is used in the FROM clause.  The column names used in this main query is not from the original 'account' table. It is aliase name from the derived subquery relation."
+    },
+    {
+      "line_no": 2,
+      "code": "     FROM",
+      "explanation": "SQL allows a subquery expression to be used in the FROM clause and this is the derived relations."
+    },
+    {
+      "line_no": 3,
+      "code": "          (SELECT branch_name, AVG(balance)",
+      "explanation": "This subquery is to select branch name and average account value of branch."
+    },
+    {
+      "line_no": 4,
+      "code": "           FROM account",
+      "explanation": "Note that we do not need to use the HAVING clause, since we compute the temporary relation <i>branch_avg</i> in the FROM clause, and the attributes of <i>branch_avg</i> can be used directly in the WHERE clause."
+    },
+    {
+      "line_no": 5,
+      "code": "           GROUP BY branch_name)",
+      "explanation": "This GROUP BY clause is used in derived relation."
+    },
+    {
+      "line_no": 6,
+      "code": "           AS branch_avg(branch_name, avg_balance))",
+      "explanation": "The derived subquery and the two columns are renamed using tuple variables, AS. Hence, the whole subquery is 'branch_avg', the first column is 'branch_name' and the second column is 'avg_balance'."
+    },
+    {
+      "line_no": 7,
+      "code": "    WHERE avg_balance > 1200;",
+      "explanation": "In order to limit the value of avg_balance column WHERE clause is used. Because the derived relations is temporal table and the test value, avg_balance, is read from the table directly, there is no need to used HAVING comparison."
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {
+        "expert": {
+          "concepts": [
+            "AsClause",
+            "RenamingAttribute",
+            "TableAlias",
+            "Assertion",
+            "SelectClause",
+            "Timestamp",
+            "FromClause",
+            "AvgFunction",
+            "GreaterThanComparison",
+            "BracketCharacter",
+            "SelectStatement",
+            "Insertion",
+            "CandidateKey",
+            "WhereClause",
+            "SingleAttributeGrouping",
+            "MultipleAttributeSelection",
+            "DerivedTable",
+            "SingleTableSelection"
+          ]
+        },
+        "sql_ontology": {
+          "concepts": [
+            "DateTimeType",
+            "Assertion",
+            "GroupByClause",
+            "GreaterThanComparison",
+            "SelectStatement",
+            "AsClause",
+            "BracketCharacter",
+            "DerivedTable",
+            "FromClause",
+            "SingleTableSelection",
+            "AvgFunction",
+            "MultipleAttributeSelection",
+            "WhereClause",
+            "SelectClause"
+          ]
+        },
+        "sql concept": {
+          "concepts": [
+            "Insertion",
+            "CandidateKey"
+          ]
+        }
+      }
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

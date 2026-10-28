@@ -1,0 +1,129 @@
+{
+  "id": "DataSelection41",
+  "catalog_id": "6954bccff9187b06cf837707",
+  "provider": "AnnEx",
+  "title": "Aggregating Derived Relations",
+  "language": "Sql",
+  "paws_id": 461,
+  "authors": [
+    {
+      "name": "Administrator",
+      "affiliation": ""
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-sql/DataSelection41",
+  "description": "Aggregating Derived Relations",
+  "code": "SELECT temp.rating, temp.average\n     FROM \n        (SELECT S.rating, AVG(S.age) AS avgage\n         FROM sailors S\n         GROUP BY S.rating) AS temp\n     WHERE temp.avgage = \n    (SELECT MIN(temp.avgage) \n     FROM temp);",
+  "line_count": 8,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "SELECT temp.rating, temp.average",
+      "explanation": "To make the previous example properly, derived relations and comparison using WHERE clause can be used. This example is also to select those ratings for which the average age is the minimum over all ratings. 'temp' in front of the each column is the name of derived relation."
+    },
+    {
+      "line_no": 2,
+      "code": "     FROM ",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "        (SELECT S.rating, AVG(S.age) AS avgage",
+      "explanation": "This subquery is used with FROM. So it is derived relation. It is to calculate average age of sailors for each ratings. The sailors are grouped by their ratings and the age is averaged over each group. The averaged value is renamed as 'avgage'."
+    },
+    {
+      "line_no": 4,
+      "code": "         FROM sailors S",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "         GROUP BY S.rating) AS temp",
+      "explanation": "The whole derived subquery is renamed as 'temp'. Once the derived relation is renamed, the new name can be used in outer query."
+    },
+    {
+      "line_no": 6,
+      "code": "     WHERE temp.avgage = ",
+      "explanation": "The avgage value in derived relation is compared with second subquery."
+    },
+    {
+      "line_no": 7,
+      "code": "    (SELECT MIN(temp.avgage) ",
+      "explanation": "This query is to calculate minimum average value ('avgage') in derived relation, 'temp'."
+    },
+    {
+      "line_no": 8,
+      "code": "     FROM temp);",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {
+        "expert": {
+          "concepts": [
+            "EqualComparison",
+            "ReferentialAction",
+            "AsClause",
+            "TableAlias",
+            "Timestamp",
+            "SelectClause",
+            "FromClause",
+            "UnionOperation",
+            "AvgFunction",
+            "CandidateKey",
+            "SelectStatement",
+            "WhereClause",
+            "ComparisonOperation",
+            "MinFunction",
+            "CountFunction",
+            "SimpleSubquery",
+            "SingleAttributeGrouping",
+            "MultipleAttributeSelection",
+            "DerivedTable",
+            "DotCharacter"
+          ]
+        },
+        "sql_ontology": {
+          "concepts": [
+            "MultipleAttributeSelection",
+            "EqualComparison",
+            "DateTimeType",
+            "DotCharacter",
+            "TableAlias",
+            "GroupByClause",
+            "SelectStatement",
+            "UnionOperation",
+            "SimpleSubquery",
+            "AsClause",
+            "DerivedTable",
+            "FromClause",
+            "AvgFunction",
+            "MinFunction",
+            "WhereClause",
+            "SelectClause",
+            "CountFunction"
+          ]
+        },
+        "sql concept": {
+          "concepts": [
+            "ReferentialAction",
+            "ComparisonOperation",
+            "CandidateKey"
+          ]
+        }
+      }
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}

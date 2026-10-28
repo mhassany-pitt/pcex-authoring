@@ -1,0 +1,426 @@
+{
+  "id": "key_demo",
+  "catalog_id": "6954bccff9187b06cf837446",
+  "provider": "AnnEx",
+  "title": "ISD::KeyDemo.java",
+  "language": "Java",
+  "paws_id": 1573,
+  "authors": [
+    {
+      "name": "Kitchens Kenyetta",
+      "affiliation": "Indiana University of Pennsylvania"
+    }
+  ],
+  "publisher": "",
+  "demo_url": "https://acos.cs.vt.edu/html/annotated/acos-annex-java/key_demo",
+  "description": "",
+  "code": "// Fig. 12.22: KeyDemo.java\n// Demonstrating keystroke events.\nimport javax.swing.*;\nimport java.awt.*;\nimport java.awt.event.*;\n\npublic class KeyDemo extends JFrame implements KeyListener {\n   private String line1 = \"\", line2 = \"\";\n   private String line3 = \"\";\n   private JTextArea textArea;\n\n   public KeyDemo()\n   {\n      super( \"Demonstrating Keystroke Events\" );\n\n      textArea = new JTextArea( 10, 15 );\n      textArea.setText( \"Press any key on the keyboard...\" );\n      textArea.setEnabled( false );\n\n      // allow frame to process Key events\n      addKeyListener( this );\n\n      getContentPane().add( textArea );  \n\n      setSize( 350, 100 );\n      show();\n   }\n\n   public void keyPressed( KeyEvent e )\n   {\n      line1 = \"Key pressed: \" +\n               e.getKeyText( e.getKeyCode() );\n      setLines2and3( e );\n   }\n\n   public void keyReleased( KeyEvent e )\n   {\n      line1 = \"Key released: \" +\n               e.getKeyText( e.getKeyCode() );\n      setLines2and3( e );\n   }\n\n   public void keyTyped( KeyEvent e )\n   {\n      line1 = \"Key typed: \" + e.getKeyChar();\n      setLines2and3( e );\n   }\n\n   private void setLines2and3( KeyEvent e )\n   {\n      line2 = \"This key is \" +\n              ( e.isActionKey() ? \"\" : \"not \" ) +\n              \"an action key\";\n\n      String temp = \n         e.getKeyModifiersText( e.getModifiers() );\n\n      line3 = \"Modifier keys pressed: \" +\n              ( temp.equals( \"\" ) ? \"none\" : temp );\n\n      textArea.setText(\n         line1 + \"\\n\" + line2 + \"\\n\" + line3 + \"\\n\" );\n   }\n\n   public static void main( String args[] )\n   {\n      KeyDemo app = new KeyDemo();\n\n      app.addWindowListener(\n         new WindowAdapter() {\n            public void windowClosing( WindowEvent e )\n            {\n               System.exit( 0 );\n            }\n         }\n      );\n   }\n}",
+  "line_count": 78,
+  "has_explanations": true,
+  "lines": [
+    {
+      "line_no": 1,
+      "code": "// Fig. 12.22: KeyDemo.java",
+      "explanation": ""
+    },
+    {
+      "line_no": 2,
+      "code": "// Demonstrating keystroke events.",
+      "explanation": ""
+    },
+    {
+      "line_no": 3,
+      "code": "import javax.swing.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 4,
+      "code": "import java.awt.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 5,
+      "code": "import java.awt.event.*;",
+      "explanation": ""
+    },
+    {
+      "line_no": 6,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 7,
+      "code": "public class KeyDemo extends JFrame implements KeyListener {",
+      "explanation": "Class implements interface KeyListener, so it must define the three required methods."
+    },
+    {
+      "line_no": 8,
+      "code": "   private String line1 = \"\", line2 = \"\";",
+      "explanation": ""
+    },
+    {
+      "line_no": 9,
+      "code": "   private String line3 = \"\";",
+      "explanation": ""
+    },
+    {
+      "line_no": 10,
+      "code": "   private JTextArea textArea;",
+      "explanation": ""
+    },
+    {
+      "line_no": 11,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 12,
+      "code": "   public KeyDemo()",
+      "explanation": ""
+    },
+    {
+      "line_no": 13,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 14,
+      "code": "      super( \"Demonstrating Keystroke Events\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 15,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 16,
+      "code": "      textArea = new JTextArea( 10, 15 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 17,
+      "code": "      textArea.setText( \"Press any key on the keyboard...\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 18,
+      "code": "      textArea.setEnabled( false );",
+      "explanation": ""
+    },
+    {
+      "line_no": 19,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 20,
+      "code": "      // allow frame to process Key events",
+      "explanation": ""
+    },
+    {
+      "line_no": 21,
+      "code": "      addKeyListener( this );",
+      "explanation": "Register the event handler."
+    },
+    {
+      "line_no": 22,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 23,
+      "code": "      getContentPane().add( textArea );  ",
+      "explanation": ""
+    },
+    {
+      "line_no": 24,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 25,
+      "code": "      setSize( 350, 100 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 26,
+      "code": "      show();",
+      "explanation": ""
+    },
+    {
+      "line_no": 27,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 28,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 29,
+      "code": "   public void keyPressed( KeyEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 30,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 31,
+      "code": "      line1 = \"Key pressed: \" +",
+      "explanation": ""
+    },
+    {
+      "line_no": 32,
+      "code": "               e.getKeyText( e.getKeyCode() );",
+      "explanation": "getKeyCode returns the virtual key code. getKeyText converts the key code to a String containing the name."
+    },
+    {
+      "line_no": 33,
+      "code": "      setLines2and3( e );",
+      "explanation": ""
+    },
+    {
+      "line_no": 34,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 35,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 36,
+      "code": "   public void keyReleased( KeyEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 37,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 38,
+      "code": "      line1 = \"Key released: \" +",
+      "explanation": ""
+    },
+    {
+      "line_no": 39,
+      "code": "               e.getKeyText( e.getKeyCode() );",
+      "explanation": "getKeyCode returns the virtual key code. getKeyText converts the key code to a String containing the name."
+    },
+    {
+      "line_no": 40,
+      "code": "      setLines2and3( e );",
+      "explanation": ""
+    },
+    {
+      "line_no": 41,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 42,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 43,
+      "code": "   public void keyTyped( KeyEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 44,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 45,
+      "code": "      line1 = \"Key typed: \" + e.getKeyChar();",
+      "explanation": ""
+    },
+    {
+      "line_no": 46,
+      "code": "      setLines2and3( e );",
+      "explanation": ""
+    },
+    {
+      "line_no": 47,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 48,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 49,
+      "code": "   private void setLines2and3( KeyEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 50,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 51,
+      "code": "      line2 = \"This key is \" +",
+      "explanation": ""
+    },
+    {
+      "line_no": 52,
+      "code": "              ( e.isActionKey() ? \"\" : \"not \" ) +",
+      "explanation": "Test if the key is an action key"
+    },
+    {
+      "line_no": 53,
+      "code": "              \"an action key\";",
+      "explanation": ""
+    },
+    {
+      "line_no": 54,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 55,
+      "code": "      String temp = ",
+      "explanation": ""
+    },
+    {
+      "line_no": 56,
+      "code": "         e.getKeyModifiersText( e.getModifiers() );",
+      "explanation": "getModifiers returns the modifier keys, and getKeyModifersText turns them into a String."
+    },
+    {
+      "line_no": 57,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 58,
+      "code": "      line3 = \"Modifier keys pressed: \" +",
+      "explanation": ""
+    },
+    {
+      "line_no": 59,
+      "code": "              ( temp.equals( \"\" ) ? \"none\" : temp );",
+      "explanation": ""
+    },
+    {
+      "line_no": 60,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 61,
+      "code": "      textArea.setText(",
+      "explanation": ""
+    },
+    {
+      "line_no": 62,
+      "code": "         line1 + \"\\n\" + line2 + \"\\n\" + line3 + \"\\n\" );",
+      "explanation": ""
+    },
+    {
+      "line_no": 63,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 64,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 65,
+      "code": "   public static void main( String args[] )",
+      "explanation": ""
+    },
+    {
+      "line_no": 66,
+      "code": "   {",
+      "explanation": ""
+    },
+    {
+      "line_no": 67,
+      "code": "      KeyDemo app = new KeyDemo();",
+      "explanation": ""
+    },
+    {
+      "line_no": 68,
+      "code": "",
+      "explanation": ""
+    },
+    {
+      "line_no": 69,
+      "code": "      app.addWindowListener(",
+      "explanation": ""
+    },
+    {
+      "line_no": 70,
+      "code": "         new WindowAdapter() {",
+      "explanation": ""
+    },
+    {
+      "line_no": 71,
+      "code": "            public void windowClosing( WindowEvent e )",
+      "explanation": ""
+    },
+    {
+      "line_no": 72,
+      "code": "            {",
+      "explanation": ""
+    },
+    {
+      "line_no": 73,
+      "code": "               System.exit( 0 );",
+      "explanation": ""
+    },
+    {
+      "line_no": 74,
+      "code": "            }",
+      "explanation": ""
+    },
+    {
+      "line_no": 75,
+      "code": "         }",
+      "explanation": ""
+    },
+    {
+      "line_no": 76,
+      "code": "      );",
+      "explanation": ""
+    },
+    {
+      "line_no": 77,
+      "code": "   }",
+      "explanation": ""
+    },
+    {
+      "line_no": 78,
+      "code": "}",
+      "explanation": ""
+    }
+  ],
+  "catalog_metadata": {
+    "tags": [],
+    "classification": {
+      "knowledge_components": {}
+    },
+    "delivery": [
+      {
+        "protocol": "SPLICE"
+      }
+    ],
+    "rights": {
+      "license": "MIT"
+    }
+  }
+}
