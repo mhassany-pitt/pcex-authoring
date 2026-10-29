@@ -63,7 +63,8 @@ export class ActivitiesService {
       totalCount,
       mineCount,
       publishedCount,
-      pawsCount
+      pawsCount,
+      [countsResult]
     ] = await Promise.all([
       this.activities.distinct('user', baseFilter),
       this.activities.distinct('language', baseFilter),
@@ -86,6 +87,55 @@ export class ActivitiesService {
           }
         ]
       }),
+      this.activities.aggregate([
+        { $match: baseFilter },
+        {
+          $facet: {
+            authors: [{ $sortByCount: '$user' }],
+            roles: [
+              { $unwind: '$items' },
+              { $sortByCount: '$items.type' }
+            ],
+            bundleLangs: [{ $sortByCount: '$language' }],
+            itemLangs: [
+              { $unwind: '$items' },
+              { $sortByCount: '$items.details.language' }
+            ],
+            bundleIso: [{ $sortByCount: '$iso_language_code' }],
+            itemIso: [
+              { $unwind: '$items' },
+              { $sortByCount: '$items.details.iso_language_code' }
+            ],
+            tags: [
+              { $unwind: '$items' },
+              { $unwind: '$items.details.tags' },
+              { $project: { tag: { $arrayElemAt: [{ $split: ['$items.details.tags', ';'] }, 0] } } },
+              { $sortByCount: '$tag' }
+            ],
+            mine: [
+              { $match: { user: params.user } },
+              { $count: 'count' }
+            ],
+            shared: [
+              { $match: { user: { $ne: params.user }, collaborator_emails: params.user } },
+              { $count: 'count' }
+            ],
+            trans: [
+              {
+                $match: {
+                  $or: [
+                    { translations: true },
+                    { translations: { $type: 'object', $ne: {} } },
+                    { 'items.details.translations': { $type: 'object', $ne: {} } }
+                  ]
+                }
+              },
+              { $count: 'count' }
+            ],
+            total: [{ $count: 'count' }]
+          }
+        }
+      ]),
     ]);
 
     const authors = (rawAuthors as string[]).filter(Boolean).sort((a, b) => a.localeCompare(b));
@@ -99,7 +149,42 @@ export class ActivitiesService {
       }
     }
     const tags = Array.from(tagsSet).sort((a, b) => a.localeCompare(b));
-    const filterOptions = { authors, codeLangs, langs, tags };
+
+    const codeLangCountMap = new Map<string, number>();
+    (countsResult?.bundleLangs || []).forEach((c: any) => {
+      if (c._id) codeLangCountMap.set(c._id, (codeLangCountMap.get(c._id) || 0) + c.count);
+    });
+    (countsResult?.itemLangs || []).forEach((c: any) => {
+      if (c._id) codeLangCountMap.set(c._id, (codeLangCountMap.get(c._id) || 0) + c.count);
+    });
+    const codeLangCounts = Array.from(codeLangCountMap.entries()).map(([label, value]) => ({ label, value }));
+
+    const isoCountMap = new Map<string, number>();
+    (countsResult?.bundleIso || []).forEach((c: any) => {
+      if (c._id) isoCountMap.set(c._id, (isoCountMap.get(c._id) || 0) + c.count);
+    });
+    (countsResult?.itemIso || []).forEach((c: any) => {
+      if (c._id) isoCountMap.set(c._id, (isoCountMap.get(c._id) || 0) + c.count);
+    });
+    const isoCounts = Array.from(isoCountMap.entries()).map(([label, value]) => ({ label, value }));
+
+    const filterOptions = {
+      authors,
+      codeLangs,
+      langs,
+      tags,
+      counts: {
+        authors: (countsResult?.authors || []).map((a: any) => ({ label: a._id, value: a.count })),
+        codeLangs: codeLangCounts,
+        langs: isoCounts,
+        tags: (countsResult?.tags || []).map((t: any) => ({ label: t._id, value: t.count })),
+        roles: (countsResult?.roles || []).map((r: any) => ({ label: r._id, value: r.count })),
+        mine: countsResult?.mine?.[0]?.count || mineCount,
+        shared: countsResult?.shared?.[0]?.count || 0,
+        trans: countsResult?.trans?.[0]?.count || 0,
+        total: totalCount,
+      }
+    };
     const counts = {
       total: totalCount,
       mine: mineCount,
@@ -166,7 +251,8 @@ export class ActivitiesService {
       andConditions.push({
         $or: [
           { translations: true },
-          { translations: { $type: 'object', $ne: {} } }
+          { translations: { $type: 'object', $ne: {} } },
+          { 'items.details.translations': { $type: 'object', $ne: {} } }
         ]
       });
     }

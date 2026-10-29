@@ -4,246 +4,368 @@
   <div class="container mx-auto max-w-7xl mt-24 mb-16 px-4">
     <!-- 2-Column Responsive Layout: Left Sidebar + Right Main Content -->
     <div class="flex flex-col lg:flex-row gap-6 items-start">
-      <!-- LEFT SIDEBAR -->
+      <!-- LEFT SIDEBAR: Course Authoring Facet Filter Panel -->
       <aside
         id="bundles-sidebar"
-        class="w-full lg:w-72 flex-shrink-0 bg-white border border-gray-300 rounded shadow-sm p-4 space-y-4 lg:sticky lg:top-24 max-h-[calc(100vh-7.5rem)] overflow-y-auto"
+        class="w-full lg:w-80 flex-shrink-0 flex flex-col gap-2 lg:sticky lg:top-24 self-start"
       >
-        <!-- Sidebar Header -->
-        <div
-          class="flex items-center justify-between pb-2 border-b border-gray-200"
-        >
-          <span
-            class="font-bold text-sm text-gray-700 uppercase tracking-tight flex items-center gap-1.5"
-          >
-            <i class="pi pi-filter text-blue-600"></i> Filters
-          </span>
-          <button
-            *ngIf="hasActiveFilters"
-            (click)="clearFilters()"
-            pButton
-            type="button"
-            label="Reset All"
-            class="p-button-text p-button-sm p-button-danger p-0 text-xs hover:underline"
-          ></button>
-        </div>
-
         <!-- 1. Search Box -->
-        <div class="space-y-1">
-          <label
-            class="text-xs font-bold text-gray-500 uppercase tracking-tight block"
-            >Search</label
-          >
-          <div class="relative w-full">
-            <i
-              class="pi pi-search absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"
-            ></i>
-            <input
-              pInputText
-              type="text"
-              [(ngModel)]="searchQuery"
-              (input)="onSearchInput()"
-              placeholder="Search bundles, items, tags..."
-              class="p-inputtext-sm w-full pl-8 pr-7 text-xs"
-            />
-            <i
-              *ngIf="searchQuery"
-              class="pi pi-times absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer text-xs"
-              (click)="clearSearch()"
-            ></i>
+        <div class="bg-gray-100 shadow-md relative border border-slate-200 rounded-t-lg">
+          <input
+            pInputText
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="onSearchInput()"
+            placeholder="Search bundles, items, tags..."
+            class="text-sm border-gray-100 w-full pl-3 pr-8 py-2.5 bg-white rounded-t-lg"
+          />
+          <i
+            *ngIf="searchQuery"
+            class="pi pi-times absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer text-xs"
+            (click)="clearSearch()"
+          ></i>
+        </div>
+
+        <!-- 2. Facet Panel -->
+        <div
+          class="border-l border-r border-b border-t-0 border-solid border-gray-200 p-3.5 rounded-b-md shadow-md bg-white relative overflow-y-auto flex flex-col items-start gap-2 max-h-[calc(100vh-14rem)]"
+        >
+          <!-- Top Header: Click to toggle & Matched / Reset Button -->
+          <div class="w-full flex items-center gap-2">
+            <div class="text-gray-400 text-xs uppercase font-semibold">
+              Click to toggle
+            </div>
+            <span class="grow"></span>
+            <div class="min-w-fit -my-1">
+              <p-button
+                *ngIf="hasActiveFilters"
+                [label]="totalRecords + ' Matched'"
+                icon="fa fa-times"
+                iconPos="right"
+                severity="danger"
+                [outlined]="true"
+                styleClass="px-2 py-0.5 text-xs items-center"
+                (click)="clearFilters()"
+              ></p-button>
+            </div>
           </div>
-        </div>
 
-        <!-- 2. Ownership -->
-        <div class="space-y-1">
-          <label
-            class="text-xs font-bold text-gray-500 uppercase tracking-tight block"
-            >Ownership</label
-          >
-          <p-selectButton
-            [options]="ownerOptions"
-            [(ngModel)]="selectedOwner"
-            (ngModelChange)="onFilterChange()"
-            styleClass="ownership-select-button w-full"
-          ></p-selectButton>
-        </div>
-
-        <!-- 3. Creator -->
-        <div class="space-y-1">
-          <label
-            class="text-xs font-bold text-gray-500 uppercase tracking-tight block"
-            >Creators</label
-          >
-          <p-multiSelect
-            [options]="availableAuthors"
-            [(ngModel)]="selectedAuthors"
-            (ngModelChange)="onFilterChange()"
-            placeholder="All Creators"
-            [filter]="true"
-            filterBy="label"
-            styleClass="w-full p-inputtext-sm text-xs"
-            [maxSelectedLabels]="2"
-            selectedItemsLabel="{0} selected"
-            appendTo="body"
-          ></p-multiSelect>
-        </div>
-
-        <!-- 4. Problem Composition -->
-        <div class="space-y-1">
-          <label
-            class="text-xs font-bold text-gray-500 uppercase tracking-tight block"
-            >Bundle Item Composition</label
-          >
-          <p-multiSelect
-            [options]="itemTypeOptions"
-            [(ngModel)]="selectedItemTypes"
-            (ngModelChange)="onFilterChange()"
-            placeholder="All Types"
-            styleClass="w-full p-inputtext-sm text-xs"
-            [maxSelectedLabels]="2"
-            selectedItemsLabel="{0} selected"
-            appendTo="body"
-          ></p-multiSelect>
-        </div>
-
-        <!-- 5. Programming Language -->
-        <div class="space-y-1">
-          <label
-            class="text-xs font-bold text-gray-500 uppercase tracking-tight block"
-            >Programming Language</label
-          >
-          <p-multiSelect
-            [options]="availableCodeLanguages"
-            [(ngModel)]="selectedCodeLanguages"
-            (ngModelChange)="onFilterChange()"
-            placeholder="All Code Languages"
-            [filter]="true"
-            filterBy="label"
-            styleClass="w-full p-inputtext-sm text-xs"
-            [maxSelectedLabels]="2"
-            selectedItemsLabel="{0} selected"
-            appendTo="body"
-          ></p-multiSelect>
-        </div>
-
-        <!-- 6. Spoken / Natural Language -->
-        <div class="space-y-1">
-          <label
-            class="text-xs font-bold text-gray-500 uppercase tracking-tight block"
-            >Natural Language</label
-          >
-          <p-multiSelect
-            [options]="availableLanguages"
-            [(ngModel)]="selectedLanguages"
-            (ngModelChange)="onFilterChange()"
-            placeholder="All Languages"
-            [filter]="true"
-            filterBy="label"
-            styleClass="w-full p-inputtext-sm text-xs"
-            [maxSelectedLabels]="2"
-            selectedItemsLabel="{0} selected"
-            appendTo="body"
-          ></p-multiSelect>
-        </div>
-
-        <!-- 7. Status & Integrations -->
-        <div class="space-y-1">
-          <label
-            class="text-xs font-bold text-gray-500 uppercase tracking-tight block"
-            >Status</label
-          >
-          <p-multiSelect
-            [options]="statusOptions"
-            [(ngModel)]="selectedStatuses"
-            (ngModelChange)="onFilterChange()"
-            placeholder="All Statuses"
-            styleClass="w-full p-inputtext-sm text-xs"
-            [maxSelectedLabels]="2"
-            selectedItemsLabel="{0} selected"
-            appendTo="body"
-          ></p-multiSelect>
-          <div class="space-y-1.5 pt-2">
-            <label
-              class="flex items-center gap-2 cursor-pointer select-none text-xs text-gray-700"
-            >
-              <p-checkbox
-                name="trans"
-                [binary]="true"
-                [(ngModel)]="hasTranslationsFilter"
-                (ngModelChange)="onFilterChange()"
-                class="p-checkbox-sm"
-              ></p-checkbox>
-              <span>Has Translations</span>
-            </label>
-            <label
-              class="flex items-center gap-2 cursor-pointer select-none text-xs text-gray-700"
-            >
-              <p-checkbox
-                name="archived"
-                [binary]="true"
-                [(ngModel)]="archived"
-                (ngModelChange)="toggleArchiveFilter()"
-                class="p-checkbox-sm"
-              ></p-checkbox>
-              <span>Include Archived</span>
-            </label>
+          <!-- Section: Ownership -->
+          <div class="w-full flex flex-wrap gap-1">
+            <div class="flex items-center gap-2 w-full">
+              <button
+                type="button"
+                class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
+                (click)="toggleQuickFilterSection('ownership')"
+                [attr.aria-expanded]="quickFilterSections.ownership"
+              >
+                Ownership:
+                <i
+                  class="fa"
+                  [class.fa-angle-down]="quickFilterSections.ownership"
+                  [class.fa-angle-right]="!quickFilterSections.ownership"
+                ></i>
+              </button>
+              <hr class="grow border-0 border-t border-gray-200 opacity-60" />
+            </div>
+            <div *ngIf="quickFilterSections.ownership" class="ml-2 text-xs leading-snug">
+              <a
+                *ngFor="let facet of ownershipKVs"
+                class="cursor-pointer hover:underline inline mr-1"
+                [class.font-bold]="isQuickFilterSelected('ownership', facet.key || facet.label)"
+                [class.text-blue-700]="isQuickFilterSelected('ownership', facet.key || facet.label)"
+                (click)="toggleQuickFilter('ownership', facet)"
+              >
+                {{ facet.label }} ({{ facet.value }}),
+              </a>
+            </div>
           </div>
-        </div>
 
-        <!-- 8. Bundle Item Count & Tags -->
-        <div class="space-y-2">
-          <div class="space-y-1">
-            <label
-              class="text-xs font-bold text-gray-500 uppercase tracking-tight block"
-              >Bundle Item Count</label
-            >
-            <p-multiSelect
-              [options]="itemCountOptions"
-              [(ngModel)]="selectedItemCounts"
-              (ngModelChange)="onFilterChange()"
-              placeholder="Any Count"
-              styleClass="w-full p-inputtext-sm text-xs"
-              [maxSelectedLabels]="2"
-              selectedItemsLabel="{0} selected"
-              appendTo="body"
-            ></p-multiSelect>
+          <!-- Section: Bundle Item Composition -->
+          <div class="w-full flex flex-wrap gap-1">
+            <div class="flex items-center gap-2 w-full">
+              <button
+                type="button"
+                class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
+                (click)="toggleQuickFilterSection('itemTypes')"
+                [attr.aria-expanded]="quickFilterSections.itemTypes"
+              >
+                Bundle Item Composition:
+                <i
+                  class="fa"
+                  [class.fa-angle-down]="quickFilterSections.itemTypes"
+                  [class.fa-angle-right]="!quickFilterSections.itemTypes"
+                ></i>
+              </button>
+              <hr class="grow border-0 border-t border-gray-200 opacity-60" />
+            </div>
+            <div *ngIf="quickFilterSections.itemTypes" class="ml-2 text-xs leading-snug">
+              <a
+                *ngFor="let facet of itemTypeKVs"
+                class="cursor-pointer hover:underline inline mr-1"
+                [class.font-bold]="isQuickFilterSelected('itemTypes', facet.key || facet.label)"
+                [class.text-blue-700]="isQuickFilterSelected('itemTypes', facet.key || facet.label)"
+                [class.text-gray-400]="!isQuickFilterSelected('itemTypes', facet.key || facet.label) && !isQuickFilterAvailable('itemTypes', facet.key || facet.label)"
+                (click)="toggleQuickFilter('itemTypes', facet)"
+              >
+                {{ facet.label }} ({{ facet.value }}),
+              </a>
+            </div>
           </div>
-          <div class="space-y-1">
-            <label
-              class="text-xs font-bold text-gray-500 uppercase tracking-tight block"
-              >Tags</label
-            >
-            <p-multiSelect
-              [options]="availableTags"
-              [(ngModel)]="selectedTags"
-              (ngModelChange)="onFilterChange()"
-              placeholder="All Tags"
-              [filter]="true"
-              filterBy="label"
-              styleClass="w-full p-inputtext-sm text-xs"
-              [maxSelectedLabels]="2"
-              selectedItemsLabel="{0} selected"
-              appendTo="body"
-            ></p-multiSelect>
-          </div>
-        </div>
 
-        <!-- Sidebar Bottom Action -->
-        <div class="pt-2 border-t border-gray-200">
-          <button
-            *ngIf="hasActiveFilters"
-            (click)="clearFilters()"
-            pButton
-            type="button"
-            label="Reset All Filters ({{ activeFiltersCount }})"
-            icon="pi pi-filter-slash"
-            class="p-button-outlined p-button-danger p-button-sm w-full text-xs sidebar-reset-btn"
-          ></button>
-          <div
-            *ngIf="!hasActiveFilters"
-            class="text-center text-xs text-gray-400 py-1"
-          >
-            Showing all bundles
+          <!-- Section: Programming Languages -->
+          <div class="w-full flex flex-wrap gap-1">
+            <div class="flex items-center gap-2 w-full">
+              <button
+                type="button"
+                class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
+                (click)="toggleQuickFilterSection('codeLangs')"
+                [attr.aria-expanded]="quickFilterSections.codeLangs"
+              >
+                Programming Languages:
+                <i
+                  class="fa"
+                  [class.fa-angle-down]="quickFilterSections.codeLangs"
+                  [class.fa-angle-right]="!quickFilterSections.codeLangs"
+                ></i>
+              </button>
+              <hr class="grow border-0 border-t border-gray-200 opacity-60" />
+            </div>
+            <div *ngIf="quickFilterSections.codeLangs" class="ml-2 text-xs leading-snug">
+              <a
+                *ngFor="let facet of plKVs"
+                class="cursor-pointer hover:underline inline mr-1"
+                [class.font-bold]="isQuickFilterSelected('codeLangs', facet.key || facet.label)"
+                [class.text-blue-700]="isQuickFilterSelected('codeLangs', facet.key || facet.label)"
+                [class.text-gray-400]="!isQuickFilterSelected('codeLangs', facet.key || facet.label) && !isQuickFilterAvailable('codeLangs', facet.key || facet.label)"
+                (click)="toggleQuickFilter('codeLangs', facet)"
+              >
+                {{ facet.label }} ({{ facet.value }}),
+              </a>
+              <span class="text-xs text-gray-400" *ngIf="!plKVs.length">No programming languages yet.</span>
+            </div>
+          </div>
+
+          <!-- Section: Creators -->
+          <div class="w-full flex flex-wrap gap-1">
+            <div class="flex items-center gap-2 w-full">
+              <button
+                type="button"
+                class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
+                (click)="toggleQuickFilterSection('authors')"
+                [attr.aria-expanded]="quickFilterSections.authors"
+              >
+                Creators:
+                <i
+                  class="fa"
+                  [class.fa-angle-down]="quickFilterSections.authors"
+                  [class.fa-angle-right]="!quickFilterSections.authors"
+                ></i>
+              </button>
+              <hr class="grow border-0 border-t border-gray-200 opacity-60" />
+              <a
+                *ngIf="hasMoreAuthors"
+                class="text-xs text-blue-600 cursor-pointer hover:underline whitespace-nowrap"
+                (click)="toggleAuthorsView()"
+              >
+                {{ showAllAuthors ? 'Show less' : 'Show all (' + filteredAuthorKVs.length + ')' }}
+              </a>
+              <input
+                type="text"
+                pInputText
+                placeholder="Filter creators ..."
+                class="text-xs px-2 py-0.5 w-28 rounded border border-gray-300"
+                [ngModel]="authorsQuery"
+                (ngModelChange)="onAuthorsQueryChange($event)"
+              />
+            </div>
+            <div *ngIf="quickFilterSections.authors" class="ml-2 text-xs leading-snug">
+              <a
+                *ngFor="let facet of visibleAuthorKVs"
+                class="cursor-pointer hover:underline inline mr-1"
+                [class.font-bold]="isQuickFilterSelected('authors', facet.key || facet.label)"
+                [class.text-blue-700]="isQuickFilterSelected('authors', facet.key || facet.label)"
+                [class.text-gray-400]="!isQuickFilterSelected('authors', facet.key || facet.label) && !isQuickFilterAvailable('authors', facet.key || facet.label)"
+                (click)="toggleQuickFilter('authors', facet)"
+              >
+                {{ facet.label }} ({{ facet.value }}),
+              </a>
+              <span class="text-xs text-gray-400" *ngIf="!filteredAuthorKVs.length">No creators yet.</span>
+            </div>
+          </div>
+
+          <!-- Section: Natural Languages -->
+          <div class="w-full flex flex-wrap gap-1">
+            <div class="flex items-center gap-2 w-full">
+              <button
+                type="button"
+                class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
+                (click)="toggleQuickFilterSection('languages')"
+                [attr.aria-expanded]="quickFilterSections.languages"
+              >
+                Natural Language:
+                <i
+                  class="fa"
+                  [class.fa-angle-down]="quickFilterSections.languages"
+                  [class.fa-angle-right]="!quickFilterSections.languages"
+                ></i>
+              </button>
+              <hr class="grow border-0 border-t border-gray-200 opacity-60" />
+            </div>
+            <div *ngIf="quickFilterSections.languages" class="ml-2 text-xs leading-snug">
+              <a
+                *ngFor="let facet of langKVs"
+                class="cursor-pointer hover:underline inline mr-1"
+                [class.font-bold]="isQuickFilterSelected('languages', facet.key || facet.label)"
+                [class.text-blue-700]="isQuickFilterSelected('languages', facet.key || facet.label)"
+                [class.text-gray-400]="!isQuickFilterSelected('languages', facet.key || facet.label) && !isQuickFilterAvailable('languages', facet.key || facet.label)"
+                (click)="toggleQuickFilter('languages', facet)"
+              >
+                {{ facet.label }} ({{ facet.value }}),
+              </a>
+              <span class="text-xs text-gray-400" *ngIf="!langKVs.length">No languages yet.</span>
+            </div>
+          </div>
+
+          <!-- Section: Status -->
+          <div class="w-full flex flex-wrap gap-1">
+            <div class="flex items-center gap-2 w-full">
+              <button
+                type="button"
+                class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
+                (click)="toggleQuickFilterSection('statuses')"
+                [attr.aria-expanded]="quickFilterSections.statuses"
+              >
+                Status:
+                <i
+                  class="fa"
+                  [class.fa-angle-down]="quickFilterSections.statuses"
+                  [class.fa-angle-right]="!quickFilterSections.statuses"
+                ></i>
+              </button>
+              <hr class="grow border-0 border-t border-gray-200 opacity-60" />
+            </div>
+            <div *ngIf="quickFilterSections.statuses" class="ml-2 text-xs leading-snug">
+              <a
+                *ngFor="let facet of statusKVs"
+                class="cursor-pointer hover:underline inline mr-1"
+                [class.font-bold]="isQuickFilterSelected('statuses', facet.key || facet.label)"
+                [class.text-blue-700]="isQuickFilterSelected('statuses', facet.key || facet.label)"
+                (click)="toggleQuickFilter('statuses', facet)"
+              >
+                {{ facet.label }} ({{ facet.value }}),
+              </a>
+            </div>
+          </div>
+
+          <!-- Section: Bundle Item Count -->
+          <div class="w-full flex flex-wrap gap-1">
+            <div class="flex items-center gap-2 w-full">
+              <button
+                type="button"
+                class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
+                (click)="toggleQuickFilterSection('itemCounts')"
+                [attr.aria-expanded]="quickFilterSections.itemCounts"
+              >
+                Bundle Item Count:
+                <i
+                  class="fa"
+                  [class.fa-angle-down]="quickFilterSections.itemCounts"
+                  [class.fa-angle-right]="!quickFilterSections.itemCounts"
+                ></i>
+              </button>
+              <hr class="grow border-0 border-t border-gray-200 opacity-60" />
+            </div>
+            <div *ngIf="quickFilterSections.itemCounts" class="ml-2 text-xs leading-snug">
+              <a
+                *ngFor="let facet of itemCountKVs"
+                class="cursor-pointer hover:underline inline mr-1"
+                [class.font-bold]="isQuickFilterSelected('itemCounts', facet.key || facet.label)"
+                [class.text-blue-700]="isQuickFilterSelected('itemCounts', facet.key || facet.label)"
+                (click)="toggleQuickFilter('itemCounts', facet)"
+              >
+                {{ facet.label }},
+              </a>
+            </div>
+          </div>
+
+          <!-- Section: Options -->
+          <div class="w-full flex flex-wrap gap-1">
+            <div class="flex items-center gap-2 w-full">
+              <button
+                type="button"
+                class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
+                (click)="toggleQuickFilterSection('options')"
+                [attr.aria-expanded]="quickFilterSections.options"
+              >
+                Options:
+                <i
+                  class="fa"
+                  [class.fa-angle-down]="quickFilterSections.options"
+                  [class.fa-angle-right]="!quickFilterSections.options"
+                ></i>
+              </button>
+              <hr class="grow border-0 border-t border-gray-200 opacity-60" />
+            </div>
+            <div *ngIf="quickFilterSections.options" class="ml-2 text-xs leading-snug">
+              <a
+                *ngFor="let facet of optionKVs"
+                class="cursor-pointer hover:underline inline mr-1"
+                [class.font-bold]="isQuickFilterSelected('options', facet.key || facet.label)"
+                [class.text-blue-700]="isQuickFilterSelected('options', facet.key || facet.label)"
+                (click)="toggleQuickFilter('options', facet)"
+              >
+                {{ facet.label }} ({{ facet.value }}),
+              </a>
+            </div>
+          </div>
+
+          <!-- Section: Tags -->
+          <div class="w-full flex flex-wrap gap-1">
+            <div class="flex items-center gap-2 w-full">
+              <button
+                type="button"
+                class="text-sm font-bold text-gray-600 inline-flex items-center justify-start gap-2 text-left cursor-pointer hover:underline bg-transparent border-0 p-0"
+                (click)="toggleQuickFilterSection('tags')"
+                [attr.aria-expanded]="quickFilterSections.tags"
+              >
+                Tags:
+                <i
+                  class="fa"
+                  [class.fa-angle-down]="quickFilterSections.tags"
+                  [class.fa-angle-right]="!quickFilterSections.tags"
+                ></i>
+              </button>
+              <hr class="grow border-0 border-t border-gray-200 opacity-60" />
+              <a
+                *ngIf="hasMoreTags"
+                class="text-xs text-blue-600 cursor-pointer hover:underline whitespace-nowrap"
+                (click)="toggleTagsView()"
+              >
+                {{ showAllTags ? 'Show less' : 'Show all (' + filteredTagKVs.length + ')' }}
+              </a>
+              <input
+                type="text"
+                pInputText
+                placeholder="Filter tags ..."
+                class="text-xs px-2 py-0.5 w-24 rounded border border-gray-300"
+                [ngModel]="tagsQuery"
+                (ngModelChange)="onTagsQueryChange($event)"
+              />
+            </div>
+            <div *ngIf="quickFilterSections.tags" class="ml-2 text-xs leading-snug">
+              <a
+                *ngFor="let facet of visibleTagKVs"
+                class="cursor-pointer hover:underline inline mr-1"
+                [class.font-bold]="isQuickFilterSelected('tags', facet.key || facet.label)"
+                [class.text-blue-700]="isQuickFilterSelected('tags', facet.key || facet.label)"
+                [class.text-gray-400]="!isQuickFilterSelected('tags', facet.key || facet.label) && !isQuickFilterAvailable('tags', facet.key || facet.label)"
+                (click)="toggleQuickFilter('tags', facet)"
+              >
+                {{ facet.label }} ({{ facet.value }}),
+              </a>
+              <span class="text-xs text-gray-400" *ngIf="!filteredTagKVs.length">No tags yet.</span>
+            </div>
           </div>
         </div>
       </aside>

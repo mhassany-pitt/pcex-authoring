@@ -8,6 +8,15 @@ import { getNavMenuBar, getPreviewLink, getPublishedLink, getTagLabel, getTagCla
 import { MessageService } from 'primeng/api';
 import { environment } from '../../environments/environment';
 
+export type FilterKV = { label: string; value: number; key?: string };
+export type HubQuickFilterSectionKey =
+  | 'roles'
+  | 'progLangs'
+  | 'authors'
+  | 'languages'
+  | 'options'
+  | 'tags';
+
 @Component({
   selector: 'app-hub',
   templateUrl: './hub.component.html',
@@ -49,6 +58,176 @@ export class HubComponent implements OnInit, OnDestroy {
   progLangOptions: { label: string; value: string }[] = [];
   availableLanguages: { label: string; value: string }[] = [];
   availableTags: { label: string; value: string }[] = [];
+
+  // Facet Accordion Sections
+  quickFilterSections: Record<HubQuickFilterSectionKey, boolean> = {
+    roles: true,
+    progLangs: true,
+    authors: true,
+    languages: false,
+    options: false,
+    tags: false,
+  };
+
+  // Facet counts and availability
+  roleKVs: FilterKV[] = [];
+  plKVs: FilterKV[] = [];
+  authorKVs: FilterKV[] = [];
+  langKVs: FilterKV[] = [];
+  optionKVs: FilterKV[] = [];
+  tagKVs: FilterKV[] = [];
+
+  // Authors inline search & pagination
+  authorsQuery = '';
+  showAllAuthors = false;
+  readonly authorsDefaultLimit = 15;
+
+  // Tags inline search & pagination
+  tagsQuery = '';
+  showAllTags = false;
+  readonly tagsDefaultLimit = 20;
+
+  toggleQuickFilterSection(key: HubQuickFilterSectionKey) {
+    this.quickFilterSections[key] = !this.quickFilterSections[key];
+  }
+
+  onAuthorsQueryChange(val: string) {
+    this.authorsQuery = val || '';
+    this.showAllAuthors = false;
+  }
+
+  toggleAuthorsView() {
+    this.showAllAuthors = !this.showAllAuthors;
+    if (this.showAllAuthors) {
+      this.quickFilterSections.authors = true;
+    }
+  }
+
+  get filteredAuthorKVs(): FilterKV[] {
+    const q = this.authorsQuery.trim().toLowerCase();
+    if (!q) return this.authorKVs;
+    return this.authorKVs.filter(kv => kv.label.toLowerCase().includes(q));
+  }
+
+  get visibleAuthorKVs(): FilterKV[] {
+    const filtered = this.filteredAuthorKVs;
+    if (this.showAllAuthors || filtered.length <= this.authorsDefaultLimit) {
+      return filtered;
+    }
+    return filtered.slice(0, this.authorsDefaultLimit);
+  }
+
+  get hasMoreAuthors(): boolean {
+    return this.filteredAuthorKVs.length > this.authorsDefaultLimit;
+  }
+
+  onTagsQueryChange(val: string) {
+    this.tagsQuery = val || '';
+    this.showAllTags = false;
+  }
+
+  toggleTagsView() {
+    this.showAllTags = !this.showAllTags;
+    if (this.showAllTags) {
+      this.quickFilterSections.tags = true;
+    }
+  }
+
+  get filteredTagKVs(): FilterKV[] {
+    const q = this.tagsQuery.trim().toLowerCase();
+    if (!q) return this.tagKVs;
+    return this.tagKVs.filter(kv => kv.label.toLowerCase().includes(q));
+  }
+
+  get visibleTagKVs(): FilterKV[] {
+    const filtered = this.filteredTagKVs;
+    if (this.showAllTags || filtered.length <= this.tagsDefaultLimit) {
+      return filtered;
+    }
+    return filtered.slice(0, this.tagsDefaultLimit);
+  }
+
+  get hasMoreTags(): boolean {
+    return this.filteredTagKVs.length > this.tagsDefaultLimit;
+  }
+
+  isQuickFilterSelected(field: string, keyOrLabel: string): boolean {
+    switch (field) {
+      case 'roles':
+        return this.selectedRoles.includes(keyOrLabel);
+      case 'progLangs':
+        return this.selectedProgLangs.includes(keyOrLabel);
+      case 'authors':
+        return this.selectedAuthors.includes(keyOrLabel);
+      case 'languages':
+        return this.selectedLanguages.includes(keyOrLabel);
+      case 'options':
+        return this.hasTranslationsFilter;
+      case 'tags':
+        return this.selectedTags.includes(keyOrLabel);
+      default:
+        return false;
+    }
+  }
+
+  isQuickFilterAvailable(field: string, keyOrLabel: string): boolean {
+    let list: FilterKV[] = [];
+    switch (field) {
+      case 'roles': list = this.roleKVs; break;
+      case 'progLangs': list = this.plKVs; break;
+      case 'authors': list = this.authorKVs; break;
+      case 'languages': list = this.langKVs; break;
+      case 'options': list = this.optionKVs; break;
+      case 'tags': list = this.tagKVs; break;
+    }
+    const found = list.find(kv => (kv.key || kv.label) === keyOrLabel || kv.label === keyOrLabel);
+    return !!(found && found.value > 0);
+  }
+
+  toggleQuickFilter(field: string, facet: FilterKV) {
+    const key = facet.key || facet.label;
+    switch (field) {
+      case 'roles':
+        if (this.selectedRoles.includes(key)) {
+          this.selectedRoles = this.selectedRoles.filter(r => r !== key);
+        } else {
+          this.selectedRoles = [...this.selectedRoles, key];
+        }
+        break;
+      case 'progLangs':
+        if (this.selectedProgLangs.includes(key)) {
+          this.selectedProgLangs = this.selectedProgLangs.filter(l => l !== key);
+        } else {
+          this.selectedProgLangs = [...this.selectedProgLangs, key];
+        }
+        break;
+      case 'authors':
+        if (this.selectedAuthors.includes(key)) {
+          this.selectedAuthors = this.selectedAuthors.filter(a => a !== key);
+        } else {
+          this.selectedAuthors = [...this.selectedAuthors, key];
+        }
+        break;
+      case 'languages':
+        if (this.selectedLanguages.includes(key)) {
+          this.selectedLanguages = this.selectedLanguages.filter(l => l !== key);
+        } else {
+          this.selectedLanguages = [...this.selectedLanguages, key];
+        }
+        break;
+      case 'options':
+        this.hasTranslationsFilter = !this.hasTranslationsFilter;
+        break;
+      case 'tags':
+        if (this.selectedTags.includes(key)) {
+          this.selectedTags = this.selectedTags.filter(t => t !== key);
+        } else {
+          this.selectedTags = [...this.selectedTags, key];
+        }
+        break;
+    }
+    this.onFilterChange();
+  }
 
   roleOptions = [
     { label: 'Worked-Example', value: 'example' },
@@ -357,65 +536,9 @@ export class HubComponent implements OnInit, OnDestroy {
   }
 
   applyFilters() {
-    const query = (this.searchQuery || '').trim().toLowerCase();
-
-    this.filteredActivities = this.activities.filter(activity => {
-      // 1. Authors filter
-      if (this.selectedAuthors?.length) {
-        if (!activity.author?.email || !this.selectedAuthors.includes(activity.author.email)) {
-          return false;
-        }
-      }
-
-      // 2. Programming Languages filter
-      if (this.selectedProgLangs?.length) {
-        const hasMatchingProgLang = (activity.items || []).some((item: any) =>
-          item.details?.language && this.selectedProgLangs.includes(item.details.language)
-        );
-        if (!hasMatchingProgLang) return false;
-      }
-
-      // 3. Natural Languages filter
-      if (this.selectedLanguages?.length) {
-        const hasMatchingLanguage = (activity.items || []).some((item: any) =>
-          item.details?.iso_language_code && this.selectedLanguages.includes(item.details.iso_language_code)
-        );
-        if (!hasMatchingLanguage) return false;
-      }
-
-      // 4. Role filter
-      if (this.selectedRoles?.length) {
-        const hasMatchingRole = (activity.items || []).some((item: any) =>
-          item.type && this.selectedRoles.includes(item.type)
-        );
-        if (!hasMatchingRole) return false;
-      }
-
-      // 5. Translations filter
-      if (this.hasTranslationsFilter) {
-        const hasTranslations = (activity.items || []).some((item: any) =>
-          item.details?.translations && Object.keys(item.details.translations).length > 0
-        );
-        if (!hasTranslations) return false;
-      }
-
-      // 6. Tags filter
-      if (this.selectedTags?.length) {
-        const bundleTags = new Set<string>();
-        (activity.items || []).forEach((item: any) => {
-          (item.details?.tags || []).forEach((t: string) => bundleTags.add(getTagLabel(t)));
-        });
-        const hasTagMatch = this.selectedTags.some(t => bundleTags.has(t));
-        if (!hasTagMatch) return false;
-      }
-
-      // 7. Search query filter
-      if (query) {
-        if (!activity._filter_details?.includes(query)) return false;
-      }
-
-      return true;
-    });
+    this.filteredActivities = this.activities.filter(activity =>
+      this.matchesFiltersExcept(activity, '')
+    );
 
     // Sorting
     this.filteredActivities.sort((a, b) => {
@@ -439,6 +562,167 @@ export class HubComponent implements OnInit, OnDestroy {
           return this.getCreationTime(b) - this.getCreationTime(a);
       }
     });
+
+    this.refreshAvailableFacetLabels();
+  }
+
+  matchesFiltersExcept(act: any, excludedField: string): boolean {
+    const q = (this.searchQuery || '').trim().toLowerCase();
+    if (excludedField !== 'q' && q) {
+      if (!act._filter_details?.includes(q)) return false;
+    }
+    if (excludedField !== 'authors' && this.selectedAuthors?.length) {
+      if (!act.author?.email || !this.selectedAuthors.includes(act.author.email)) return false;
+    }
+    if (excludedField !== 'roles' && this.selectedRoles?.length) {
+      const hasMatchingRole = (act.items || []).some((item: any) =>
+        item.type && this.selectedRoles.includes(item.type)
+      );
+      if (!hasMatchingRole) return false;
+    }
+    if (excludedField !== 'progLangs' && this.selectedProgLangs?.length) {
+      const hasMatchingProgLang = (act.items || []).some((item: any) =>
+        item.details?.language && this.selectedProgLangs.includes(item.details.language)
+      );
+      if (!hasMatchingProgLang) return false;
+    }
+    if (excludedField !== 'languages' && this.selectedLanguages?.length) {
+      const bundleCode = act.iso_language_code;
+      const bundleMatch = bundleCode && this.selectedLanguages.includes(bundleCode);
+      const itemMatch = (act.items || []).some((item: any) =>
+        item.details?.iso_language_code && this.selectedLanguages.includes(item.details.iso_language_code)
+      );
+      if (!bundleMatch && !itemMatch) return false;
+    }
+    if (excludedField !== 'trans' && this.hasTranslationsFilter) {
+      if (!this.matchesTranslations(act, true)) return false;
+    }
+    if (excludedField !== 'tags' && this.selectedTags?.length) {
+      const actTags = new Set<string>();
+      (act.items || []).forEach((item: any) => {
+        (item.details?.tags || []).forEach((t: string) => actTags.add(getTagLabel(t)));
+      });
+      const hasTagMatch = this.selectedTags.some(t => actTags.has(t));
+      if (!hasTagMatch) return false;
+    }
+    return true;
+  }
+
+  matchesTranslations(act: any, req: boolean): boolean {
+    if (!req) return true;
+    if (act.translations && typeof act.translations === 'object' && Object.keys(act.translations).length > 0) {
+      return true;
+    }
+    return (act.items || []).some((item: any) =>
+      item.details?.translations && typeof item.details.translations === 'object' && Object.keys(item.details.translations).length > 0
+    );
+  }
+
+  refreshAvailableFacetLabels() {
+    // 1. Roles counts (Worked-Example, Challenge)
+    const matchingRolesActs = this.activities.filter(act => this.matchesFiltersExcept(act, 'roles'));
+    let exCount = 0;
+    let chCount = 0;
+    matchingRolesActs.forEach(act => {
+      let hasEx = false;
+      let hasCh = false;
+      (act.items || []).forEach((item: any) => {
+        if (item.type === 'example') hasEx = true;
+        if (item.type === 'challenge') hasCh = true;
+      });
+      if (hasEx) exCount++;
+      if (hasCh) chCount++;
+    });
+    this.roleKVs = [
+      { label: 'Worked-Example', key: 'example', value: exCount },
+      { label: 'Challenge', key: 'challenge', value: chCount },
+    ];
+
+    // 2. Programming Languages counts
+    const matchingPlActs = this.activities.filter(act => this.matchesFiltersExcept(act, 'progLangs'));
+    const plCounts = new Map<string, number>();
+    this.progLangOptions.forEach(opt => plCounts.set(opt.value, 0));
+    matchingPlActs.forEach(act => {
+      const actLangs = new Set<string>();
+      (act.items || []).forEach((item: any) => {
+        if (item.details?.language) actLangs.add(item.details.language);
+      });
+      actLangs.forEach(lang => {
+        plCounts.set(lang, (plCounts.get(lang) || 0) + 1);
+      });
+    });
+    this.plKVs = Array.from(plCounts.entries())
+      .map(([lang, count]) => ({ label: lang.toUpperCase(), key: lang, value: count }))
+      .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
+
+    // 3. Authors counts
+    const matchingAuthorActs = this.activities.filter(act => this.matchesFiltersExcept(act, 'authors'));
+    const authorCounts = new Map<string, number>();
+    this.availableAuthors.forEach(a => authorCounts.set(a.value, 0));
+    matchingAuthorActs.forEach(act => {
+      if (act.author?.email) {
+        authorCounts.set(act.author.email, (authorCounts.get(act.author.email) || 0) + 1);
+      }
+    });
+    this.authorKVs = this.availableAuthors
+      .map(a => ({
+        label: a.label,
+        key: a.value,
+        value: authorCounts.get(a.value) || 0,
+      }))
+      .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
+
+    // 4. Natural Languages counts
+    const matchingLangActs = this.activities.filter(act => this.matchesFiltersExcept(act, 'languages'));
+    const langCounts = new Map<string, number>();
+    this.availableLanguages.forEach(l => langCounts.set(l.value, 0));
+    matchingLangActs.forEach(act => {
+      const actCodes = new Set<string>();
+      if (act.iso_language_code) actCodes.add(act.iso_language_code);
+      (act.items || []).forEach((item: any) => {
+        if (item.details?.iso_language_code) actCodes.add(item.details.iso_language_code);
+      });
+      actCodes.forEach(code => {
+        langCounts.set(code, (langCounts.get(code) || 0) + 1);
+      });
+    });
+    this.langKVs = this.availableLanguages
+      .map(l => ({
+        label: l.label,
+        key: l.value,
+        value: langCounts.get(l.value) || 0,
+      }))
+      .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
+
+    // 5. Options (Has Translations)
+    const matchingTransActs = this.activities.filter(act => this.matchesFiltersExcept(act, 'trans'));
+    let transCount = 0;
+    matchingTransActs.forEach(act => {
+      if (this.matchesTranslations(act, true)) transCount++;
+    });
+    this.optionKVs = [
+      { label: 'Has Translations', key: 'trans', value: transCount },
+    ];
+
+    // 6. Tags counts
+    const matchingTagActs = this.activities.filter(act => this.matchesFiltersExcept(act, 'tags'));
+    const tagCounts = new Map<string, number>();
+    this.availableTags.forEach(t => tagCounts.set(t.value, 0));
+    matchingTagActs.forEach(act => {
+      const actTags = new Set<string>();
+      (act.items || []).forEach((item: any) => {
+        (item.details?.tags || []).forEach((t: string) => {
+          const clean = getTagLabel(t);
+          if (clean) actTags.add(clean);
+        });
+      });
+      actTags.forEach(tag => {
+        tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+      });
+    });
+    this.tagKVs = Array.from(tagCounts.entries())
+      .map(([tag, count]) => ({ label: tag, key: tag, value: count }))
+      .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
   }
 
   getCreationDate(activity: any): Date | null {
@@ -523,6 +807,10 @@ export class HubComponent implements OnInit, OnDestroy {
     this.hasTranslationsFilter = false;
     this.selectedTags = [];
     this.selectedSort = 'date_desc';
+    this.authorsQuery = '';
+    this.showAllAuthors = false;
+    this.tagsQuery = '';
+    this.showAllTags = false;
     this.applyFilters();
     this.updateUrlParams(false);
   }

@@ -9,6 +9,16 @@ import { MultiSelect } from 'primeng/multiselect';
 import { Dropdown } from 'primeng/dropdown';
 import { getTagLabel, getTagClass, getTagStyle } from '../utilities';
 
+export type FilterKV = { label: string; value: number; key?: string };
+export type SourcesQuickFilterSectionKey =
+  | 'ownership'
+  | 'roles'
+  | 'progLangs'
+  | 'authors'
+  | 'languages'
+  | 'options'
+  | 'tags';
+
 @Component({
   selector: 'app-sources',
   templateUrl: './sources.component.html',
@@ -108,6 +118,266 @@ export class SourcesComponent implements OnInit, OnDestroy {
   private queryParamsSub?: Subscription;
   private loadSub?: Subscription;
   isTypingSearch = false;
+
+  // Facet Accordion Sections
+  quickFilterSections: Record<SourcesQuickFilterSectionKey, boolean> = {
+    ownership: true,
+    roles: true,
+    progLangs: true,
+    authors: true,
+    languages: false,
+    options: false,
+    tags: false,
+  };
+
+  authorsQuery = '';
+  showAllAuthors = false;
+  readonly authorsDefaultLimit = 15;
+
+  tagsQuery = '';
+  showAllTags = false;
+  readonly tagsDefaultLimit = 20;
+
+  toggleQuickFilterSection(key: SourcesQuickFilterSectionKey) {
+    this.quickFilterSections[key] = !this.quickFilterSections[key];
+  }
+
+  onAuthorsQueryChange(val: string) {
+    this.authorsQuery = val || '';
+    this.showAllAuthors = false;
+  }
+
+  toggleAuthorsView() {
+    this.showAllAuthors = !this.showAllAuthors;
+    if (this.showAllAuthors) {
+      this.quickFilterSections.authors = true;
+    }
+  }
+
+  get filteredAuthorKVs(): FilterKV[] {
+    const q = this.authorsQuery.trim().toLowerCase();
+    if (!q) return this.authorKVs;
+    return this.authorKVs.filter(kv => kv.label.toLowerCase().includes(q));
+  }
+
+  get visibleAuthorKVs(): FilterKV[] {
+    const filtered = this.filteredAuthorKVs;
+    if (this.showAllAuthors || filtered.length <= this.authorsDefaultLimit) {
+      return filtered;
+    }
+    return filtered.slice(0, this.authorsDefaultLimit);
+  }
+
+  get hasMoreAuthors(): boolean {
+    return this.filteredAuthorKVs.length > this.authorsDefaultLimit;
+  }
+
+  onTagsQueryChange(val: string) {
+    this.tagsQuery = val || '';
+    this.showAllTags = false;
+  }
+
+  toggleTagsView() {
+    this.showAllTags = !this.showAllTags;
+    if (this.showAllTags) {
+      this.quickFilterSections.tags = true;
+    }
+  }
+
+  get filteredTagKVs(): FilterKV[] {
+    const q = this.tagsQuery.trim().toLowerCase();
+    if (!q) return this.tagKVs;
+    return this.tagKVs.filter(kv => kv.label.toLowerCase().includes(q));
+  }
+
+  get visibleTagKVs(): FilterKV[] {
+    const filtered = this.filteredTagKVs;
+    if (this.showAllTags || filtered.length <= this.tagsDefaultLimit) {
+      return filtered;
+    }
+    return filtered.slice(0, this.tagsDefaultLimit);
+  }
+
+  get hasMoreTags(): boolean {
+    return this.filteredTagKVs.length > this.tagsDefaultLimit;
+  }
+
+  get ownershipKVs(): FilterKV[] {
+    const counts = (this.serverFilterOptions as any)?.counts;
+    return [
+      { label: 'All', key: 'all', value: counts?.total ?? this.totalRecords },
+      { label: 'Mine', key: 'mine', value: counts?.mine ?? 0 },
+      { label: 'Shared', key: 'shared', value: counts?.shared ?? 0 },
+    ];
+  }
+
+  get roleKVs(): FilterKV[] {
+    const counts = (this.serverFilterOptions as any)?.counts?.roles;
+    const findCount = (k: string) => {
+      const found = (counts || []).find((c: any) => c.label === k);
+      return found ? found.value : 0;
+    };
+    return [
+      { label: 'Worked-Example (0 blanks)', key: 'example', value: findCount('example') },
+      { label: 'Challenge (1–3 blanks)', key: 'challenge', value: findCount('challenge') },
+    ];
+  }
+
+  get plKVs(): FilterKV[] {
+    const counts = (this.serverFilterOptions as any)?.counts?.codeLangs;
+    const countMap = new Map<string, number>();
+    if (Array.isArray(counts)) {
+      counts.forEach((c: any) => countMap.set(c.label, c.value));
+    }
+    return (this.serverFilterOptions?.codeLangs || []).map(l => ({
+      label: l.toUpperCase(),
+      key: l,
+      value: countMap.get(l) ?? (countMap.get(l.toLowerCase()) ?? 0),
+    })).sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
+  }
+
+  get authorKVs(): FilterKV[] {
+    const counts = (this.serverFilterOptions as any)?.counts?.authors;
+    const countMap = new Map<string, number>();
+    if (Array.isArray(counts)) {
+      counts.forEach((c: any) => countMap.set(c.label, c.value));
+    }
+    return (this.serverFilterOptions?.authors || []).map(u => ({
+      label: u === this.app.user?.email ? `${u} (you)` : u,
+      key: u,
+      value: countMap.get(u) ?? 0,
+    })).sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
+  }
+
+  get langKVs(): FilterKV[] {
+    const counts = (this.serverFilterOptions as any)?.counts?.langs;
+    const countMap = new Map<string, number>();
+    if (Array.isArray(counts)) {
+      counts.forEach((c: any) => countMap.set(c.label, c.value));
+    }
+    return (this.serverFilterOptions?.langs || []).map(code => ({
+      label: this.getLanguageName(code) || code,
+      key: code,
+      value: countMap.get(code) ?? 0,
+    })).sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
+  }
+
+  get optionKVs(): FilterKV[] {
+    const counts = (this.serverFilterOptions as any)?.counts;
+    return [
+      { label: 'Has Translations', key: 'trans', value: counts?.trans ?? 0 },
+      { label: 'Include Archived', key: 'archived', value: counts?.archived ?? 0 },
+    ];
+  }
+
+  get tagKVs(): FilterKV[] {
+    const counts = (this.serverFilterOptions as any)?.counts?.tags;
+    const countMap = new Map<string, number>();
+    if (Array.isArray(counts)) {
+      counts.forEach((c: any) => countMap.set(c.label, c.value));
+    }
+    return (this.serverFilterOptions?.tags || []).map(t => ({
+      label: t,
+      key: t,
+      value: countMap.get(t) ?? 0,
+    })).sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
+  }
+
+  isQuickFilterSelected(field: string, keyOrLabel: string): boolean {
+    switch (field) {
+      case 'ownership':
+        return this.selectedOwner === keyOrLabel;
+      case 'roles':
+        return this.selectedRoles.includes(keyOrLabel);
+      case 'progLangs':
+        return this.selectedProgLangs.includes(keyOrLabel);
+      case 'authors':
+        return this.selectedAuthors.includes(keyOrLabel);
+      case 'languages':
+        return this.selectedLanguages.includes(keyOrLabel);
+      case 'options':
+        return keyOrLabel === 'trans' ? this.hasTranslationsFilter : (keyOrLabel === 'archived' ? this.archived : false);
+      case 'tags':
+        return this.selectedTags.includes(keyOrLabel);
+      default:
+        return false;
+    }
+  }
+
+  isQuickFilterAvailable(field: string, keyOrLabel: string): boolean {
+    let list: FilterKV[] = [];
+    switch (field) {
+      case 'ownership': list = this.ownershipKVs; break;
+      case 'roles': list = this.roleKVs; break;
+      case 'progLangs': list = this.plKVs; break;
+      case 'authors': list = this.authorKVs; break;
+      case 'languages': list = this.langKVs; break;
+      case 'options': list = this.optionKVs; break;
+      case 'tags': list = this.tagKVs; break;
+    }
+    const found = list.find(kv => (kv.key || kv.label) === keyOrLabel || kv.label === keyOrLabel);
+    if (!found) return false;
+    return (this.serverFilterOptions as any)?.counts ? found.value > 0 : true;
+  }
+
+  toggleQuickFilter(field: string, facet: FilterKV) {
+    const key = facet.key || facet.label;
+    switch (field) {
+      case 'ownership':
+        this.selectedOwner = key as any;
+        this.onFilterChange();
+        break;
+      case 'roles':
+        if (this.selectedRoles.includes(key)) {
+          this.selectedRoles = this.selectedRoles.filter(r => r !== key);
+        } else {
+          this.selectedRoles = [...this.selectedRoles, key];
+        }
+        this.onFilterChange();
+        break;
+      case 'progLangs':
+        if (this.selectedProgLangs.includes(key)) {
+          this.selectedProgLangs = this.selectedProgLangs.filter(l => l !== key);
+        } else {
+          this.selectedProgLangs = [...this.selectedProgLangs, key];
+        }
+        this.onFilterChange();
+        break;
+      case 'authors':
+        if (this.selectedAuthors.includes(key)) {
+          this.selectedAuthors = this.selectedAuthors.filter(a => a !== key);
+        } else {
+          this.selectedAuthors = [...this.selectedAuthors, key];
+        }
+        this.onFilterChange();
+        break;
+      case 'languages':
+        if (this.selectedLanguages.includes(key)) {
+          this.selectedLanguages = this.selectedLanguages.filter(l => l !== key);
+        } else {
+          this.selectedLanguages = [...this.selectedLanguages, key];
+        }
+        this.onFilterChange();
+        break;
+      case 'options':
+        if (key === 'trans') {
+          this.hasTranslationsFilter = !this.hasTranslationsFilter;
+          this.onFilterChange();
+        } else if (key === 'archived') {
+          this.archived = !this.archived;
+          this.toggleArchiveFilter();
+        }
+        break;
+      case 'tags':
+        if (this.selectedTags.includes(key)) {
+          this.selectedTags = this.selectedTags.filter(t => t !== key);
+        } else {
+          this.selectedTags = [...this.selectedTags, key];
+        }
+        this.onFilterChange();
+        break;
+    }
+  }
 
   // Options Definitions
   ownerOptions = [
@@ -403,6 +673,10 @@ export class SourcesComponent implements OnInit, OnDestroy {
     this.hasTranslationsFilter = false;
     this.selectedTags = [];
     this.selectedSort = 'date_desc';
+    this.authorsQuery = '';
+    this.showAllAuthors = false;
+    this.tagsQuery = '';
+    this.showAllTags = false;
     this.page = 1;
     this.onFilterChange();
   }

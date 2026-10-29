@@ -62,11 +62,56 @@ export class SourcesService {
       : { $or: [{ user: params.user }, { collaborator_emails: params.user }] };
     if (!params.archived) baseFilter['archived'] = { $ne: true };
 
-    const [rawAuthors, rawCodeLangs, rawLangs, rawTags] = await Promise.all([
+    const [rawAuthors, rawCodeLangs, rawLangs, rawTags, [countsResult]] = await Promise.all([
       this.sources.distinct('user', baseFilter),
       this.sources.distinct('language', baseFilter),
       this.sources.distinct('iso_language_code', baseFilter),
       this.sources.distinct('tags', baseFilter),
+      this.sources.aggregate([
+        { $match: baseFilter },
+        {
+          $facet: {
+            authors: [{ $sortByCount: '$user' }],
+            codeLangs: [{ $sortByCount: '$language' }],
+            langs: [{ $sortByCount: '$iso_language_code' }],
+            tags: [
+              { $unwind: '$tags' },
+              { $project: { tag: { $arrayElemAt: [{ $split: ['$tags', ';'] }, 0] } } },
+              { $sortByCount: '$tag' }
+            ],
+            roles: [
+              {
+                $project: {
+                  role: {
+                    $cond: [{ $gt: ['$blank_lines_count', 0] }, 'challenge', 'example']
+                  }
+                }
+              },
+              { $sortByCount: '$role' }
+            ],
+            mine: [
+              { $match: { user: params.user } },
+              { $count: 'count' }
+            ],
+            shared: [
+              { $match: { user: { $ne: params.user }, collaborator_emails: params.user } },
+              { $count: 'count' }
+            ],
+            trans: [
+              {
+                $match: {
+                  $or: [
+                    { translations: true },
+                    { translations: { $type: 'object', $ne: {} } }
+                  ]
+                }
+              },
+              { $count: 'count' }
+            ],
+            total: [{ $count: 'count' }]
+          }
+        }
+      ]),
     ]);
 
     const authors = (rawAuthors as string[]).filter(Boolean).sort((a, b) => a.localeCompare(b));
@@ -80,7 +125,23 @@ export class SourcesService {
       }
     }
     const tags = Array.from(tagsSet).sort((a, b) => a.localeCompare(b));
-    const filterOptions = { authors, codeLangs, langs, tags };
+    const filterOptions = {
+      authors,
+      codeLangs,
+      langs,
+      tags,
+      counts: {
+        authors: (countsResult?.authors || []).map((a: any) => ({ label: a._id, value: a.count })),
+        codeLangs: (countsResult?.codeLangs || []).map((c: any) => ({ label: c._id, value: c.count })),
+        langs: (countsResult?.langs || []).map((l: any) => ({ label: l._id, value: l.count })),
+        tags: (countsResult?.tags || []).map((t: any) => ({ label: t._id, value: t.count })),
+        roles: (countsResult?.roles || []).map((r: any) => ({ label: r._id, value: r.count })),
+        mine: countsResult?.mine?.[0]?.count || 0,
+        shared: countsResult?.shared?.[0]?.count || 0,
+        trans: countsResult?.trans?.[0]?.count || 0,
+        total: countsResult?.total?.[0]?.count || 0,
+      }
+    };
 
     const matchConditions: any = { ...baseFilter };
 
